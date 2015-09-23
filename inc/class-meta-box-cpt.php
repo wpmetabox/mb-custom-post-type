@@ -60,6 +60,7 @@ class Meta_Box_CPT
 				'new_item'           => $cpt['new_item'],
 				'edit_item'          => $cpt['edit_item'],
 				'view_item'          => $cpt['view_item'],
+				'update_item'        => $cpt['update_item'],
 				'all_items'          => $cpt['all_items'],
 				'search_items'       => $cpt['search_items'],
 				'parent_item_colon'  => $cpt['parent_item_colon'],
@@ -68,18 +69,18 @@ class Meta_Box_CPT
 			);
 
 			$args = array(
-				'labels'             => $labels,
-				'descriptions'	     => $cpt['descriptions'],
-				'public'             => $cpt['public'],
-				'show_ui'            => $cpt['show_ui'],
-				'show_in_menu'       => $cpt['show_in_menu'],
-				'query_var'          => $cpt['query_var'],
-				'rewrite'            => $cpt['rewrite'],
-				'capability_type'    => $cpt['capability_type'],
-				'hierarchical'       => $cpt['hierarchical'],
-				'menu_position'      => $cpt['menu_position'],
-				'supports'           => $cpt['supports'],
-				'menu_icon'			 => $cpt['menu_icon'],
+				'labels'          => $labels,
+				'descriptions'    => $cpt['descriptions'],
+				'public'          => $cpt['public'],
+				'show_ui'         => $cpt['show_ui'],
+				'show_in_menu'    => $cpt['show_in_menu'],
+				'query_var'       => $cpt['query_var'],
+				'rewrite'         => $cpt['rewrite'],
+				'capability_type' => $cpt['capability_type'],
+				'hierarchical'    => $cpt['hierarchical'],
+				'menu_position'   => $cpt['menu_position'],
+				'supports'        => $cpt['supports'],
+				'menu_icon'       => $cpt['menu_icon'],
 			);
 
 			register_post_type( $post_type, $args );
@@ -96,33 +97,33 @@ class Meta_Box_CPT
 		// This array stores all registered custom post types
 		$cpts   = array();
 		$mb_cpt = array(
-			'post_type'             => 'mb-post-type',
-			'name'                  => _x( 'MB Post Types', 'mb-cpt' ),
-			'singular_name'         => _x( 'MB Post Type', 'mb-cpt' ),
-			'menu_name'             => _x( 'MB Post Types', 'mb-cpt' ),
-			'name_admin_bar'        => _x( 'MB Post Type', 'mb-cpt' ),
-			'add_new'               => _x( 'Add New', 'meta-box', 'mb-cpt' ),
-			'add_new_item'          => __( 'Add New Post Type', 'mb-cpt' ),
-			'new_item'              => __( 'New Post Type', 'mb-cpt' ),
-			'edit_item'             => __( 'Edit Post Type', 'mb-cpt' ),
-			'update_item'           => __( 'Update Post Type', 'mb-cpt' ),
-			'view_item'             => __( 'View Post Type', 'mb-cpt' ),
-			'all_items'             => __( 'All Post Types', 'mb-cpt' ),
-			'search_items'          => __( 'Search Post Types', 'mb-cpt' ),
-			'parent_item_colon'     => __( 'Parent Post Types:', 'mb-cpt' ),
-			'not_found'             => __( 'No Post Types found.', 'mb-cpt' ),
-			'not_found_in_trash'    => __( 'No Post Types found in Trash.', 'mb-cpt' ),
-			'descriptions'          => __( 'Post Types GUI', 'mb-cpt' ),
-			'public'                => false,
-			'show_ui'               => true,
-			'show_in_menu'          => true,
-			'query_var'             => true,
-			'rewrite'               => array( 'slug' => 'mb-post-type' ),
-			'capability_type'       => 'post',
-			'hierarchical'          => false,
-			'menu_position'         => null,
-			'supports'              => false,
-			'menu_icon'			    => 'dashicons-editor-justify',
+			'post_type'          => 'mb-post-type',
+			'name'               => _x('MB Post Types', 'mb-cpt'),
+			'singular_name'      => _x('MB Post Type', 'mb-cpt'),
+			'menu_name'          => _x('MB Post Types', 'mb-cpt'),
+			'name_admin_bar'     => _x('MB Post Type', 'mb-cpt'),
+			'add_new'            => _x('Add New', 'meta-box', 'mb-cpt'),
+			'add_new_item'       => __('Add New Post Type', 'mb-cpt'),
+			'new_item'           => __('New Post Type', 'mb-cpt'),
+			'edit_item'          => __('Edit Post Type', 'mb-cpt'),
+			'update_item'        => __('Update Post Type', 'mb-cpt'),
+			'view_item'          => __('View Post Type', 'mb-cpt'),
+			'all_items'          => __('All Post Types', 'mb-cpt'),
+			'search_items'       => __('Search Post Types', 'mb-cpt'),
+			'parent_item_colon'  => __('Parent Post Types:', 'mb-cpt'),
+			'not_found'          => __('No Post Types found.', 'mb-cpt'),
+			'not_found_in_trash' => __('No Post Types found in Trash.', 'mb-cpt'),
+			'descriptions'       => __('Post Types GUI', 'mb-cpt'),
+			'public'             => false,
+			'show_ui'            => true,
+			'show_in_menu'       => true,
+			'query_var'          => true,
+			'rewrite'            => array('slug' => 'mb-post-type'),
+			'capability_type'    => 'post',
+			'hierarchical'       => false,
+			'menu_position'      => null,
+			'supports'           => false,
+			'menu_icon'          => 'dashicons-editor-justify',
 		);
 
 		$cpts[] = $mb_cpt;
@@ -147,11 +148,11 @@ class Meta_Box_CPT
 		$meta_boxes[] = array(
 			'id'       => 'arguments',
 			'title'    => 'Arguments',
-			'pages'    => array( 'mb-post-type' ),
+			'pages'    => array('mb-post-type'),
 			'context'  => 'normal',
 			'priority' => 'high',
 
-			'fields' => array(
+			'fields'   => array(
 				array(
 					'name'          => _x( 'Post Type', 'mb-cpt' ),
 					'id'            => $prefix . 'post_type',
@@ -190,11 +191,11 @@ class Meta_Box_CPT
 		$meta_boxes[] = array(
 			'id'       => 'labels',
 			'title'    => 'Labels',
-			'pages'    => array( 'mb-post-type' ),
+			'pages'    => array('mb-post-type'),
 			'context'  => 'normal',
 			'priority' => 'high',
 
-			'fields' => array(
+			'fields'   => array(
 				array(
 					'name'          => _x( 'Plural Name', 'mb-cpt' ),
 					'id'            => $prefix . 'name',
