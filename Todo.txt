@@ -1,0 +1,8 @@
+List of tasks have to do next
+
+1. Refresh permalink after create custom post type.
+2. Title, editor, thumbnail in Supports are always checked because of javascript, fix it.
+3. Fix slug if user enter special characters.
+4. Maybe update post meta that are not entered ( labels: add new, edit item, ..  )?
+5. Add Custom field meta box?
+6. Preview menu icon when select it.
