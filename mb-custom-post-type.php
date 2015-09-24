@@ -18,22 +18,14 @@ if ( ! defined( 'ABSPATH' ) )
 // ----------------------------------------------------------
 // Define plugin URL for loading static files or doing AJAX
 // ------------------------------------------------------------
-if ( ! defined( 'MB_CPT_URL' ) )
-{
-	define( 'MB_CPT_URL', plugin_dir_url( __FILE__ ) );
-}
-
+define( 'MB_CPT_URL', plugin_dir_url( __FILE__ ) );
 define( 'MB_CPT_CSS_URL', trailingslashit( MB_CPT_URL . 'css' ) );
 define( 'MB_CPT_JS_URL', trailingslashit( MB_CPT_URL . 'js' ) );
 
 // ------------------------------------------------------------
 // Plugin paths, for including files
 // ------------------------------------------------------------
-if ( ! defined( 'MB_CPT_DIR' ) )
-{
-	define( 'MB_CPT_DIR', plugin_dir_path( __FILE__ ) );
-}
-
+define( 'MB_CPT_DIR', plugin_dir_path( __FILE__ ) );
 define( 'MB_CPT_INC_DIR', trailingslashit( MB_CPT_DIR . 'inc' ) );
 
 if ( is_admin() )

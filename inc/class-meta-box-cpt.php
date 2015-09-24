@@ -305,18 +305,18 @@ class Meta_Box_CPT
 			),
 			'validation'    => array(
 				'rules'     => array(
-					'name'          => array(
+					$label_prefix . 'name'          => array(
 						'required'  => true,
 					),
-					'singular_name' => array(
+					$label_prefix . 'singular_name' => array(
 						'required'  => true,
 					),
 				),
 				'messages'  => array(
-					'name'          => array(
+					$label_prefix . 'name'          => array(
 						'required'  => __( 'Plural Name is required', 'mb-cpt' ),
 					),
-					'singular_name' => array(
+					$label_prefix . 'singular_name' => array(
 						'required'  => __( 'Singular Name is required', 'mb-cpt' ),
 					),
 				)
@@ -435,12 +435,12 @@ class Meta_Box_CPT
 			),
 			'validation'    => array(
 				'rules'     => array(
-					'post_type'  => array(
+					$args_prefix . 'post_type'  => array(
 						'required'  => true,
 					),
 				),
 				'messages'  => array(
-					'post_type'  => array(
+					$args_prefix . 'post_type'  => array(
 						'required'  => __( 'Slug is required', 'mb-cpt' ),
 					),
 				)
