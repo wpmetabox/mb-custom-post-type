@@ -57,6 +57,9 @@ class Meta_Box_CPT
 		{
 			register_post_type( $cpt['post_type'], $cpt );
 		}
+
+		// Refresh permalink
+		flush_rewrite_rules();
 	}
 
 	/**
@@ -169,7 +172,6 @@ class Meta_Box_CPT
 			'can_export'          => true,
 			'show_in_nav_menus'   => true,
 			'exclude_from_search' => false,
-			'taxonomies'          => array(),
 		);
 
 		$args = wp_parse_args( $args, $default_args );
@@ -470,31 +472,6 @@ class Meta_Box_CPT
 						'post-formats'      => __( 'Post Formats', 'mb-cpt' ),
 						'page-attributes'   => __( 'Page Attributes', 'mb-cpt' ),
 					),
-				),
-			),
-		);
-
-		// Get all taxonomies in Site
-		$taxonomies = get_taxonomies( array(), 'objects' );
-		$taxes       = array();
-		foreach ( $taxonomies as $tax )
-		{
-			$taxes[$tax->rewrite['slug']] = $tax->labels->singular_name;
-		}
-
-		// Taxonomies meta box
-		$meta_boxes[] = array(
-			'id'       => 'taxonomies',
-			'title'    => __( 'Taxonomies', 'mb-cpt' ),
-			'pages'    => array( 'mb-post-type' ),
-			'priority' => 'low',
-			'context'  => 'side',
-			'fields'   => array(
-				array(
-					'name'    => __( 'Registered taxonomies that will be used with this post type.', 'mb-cpt' ),
-					'id'      => $args_prefix . 'taxonomies',
-					'type'    => 'checkbox_list',
-					'options' => $taxes,
 				),
 			),
 		);
