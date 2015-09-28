@@ -25,6 +25,10 @@ class Meta_Box_CPT
 		add_filter( 'rwmb_meta_boxes', array( $this, 'register_meta_boxes' ) );
 		// Modify post information after save post
 		add_action( 'save_post', array( $this, 'save_post' ) );
+		// Change the output of post/bulk post updated messages
+		add_filter( 'post_updated_messages', array( $this, 'mb_cpt_updated_message' ), 10, 1 );
+		add_filter( 'bulk_post_updated_messages', array( $this, 'mb_cpt_bulk_post_updated_messages' ), 10, 2 );
+
 	}
 
 	/**
@@ -191,10 +195,10 @@ class Meta_Box_CPT
 		$label_prefix   = 'label_';
 		$args_prefix    = 'args_';
 
-		// Labels meta box
+		// Basic settings
 		$meta_boxes[] = array(
-			'id'       => 'labels',
-			'title'    => __( 'Labels', 'mb-cpt' ),
+			'id'       => 'basic',
+			'title'    => __( 'Basic', 'mb-cpt' ),
 			'pages'    => array( 'mb-post-type' ),
 			'context'  => 'normal',
 			'priority' => 'high',
@@ -213,6 +217,53 @@ class Meta_Box_CPT
 					'placeholder' => __( 'Singular Name', 'mb-cpt' ),
 					'size'        => 50,
 				),
+				array(
+					'name'        => __( 'Slug', 'mb-cpt' ),
+					'id'          => $args_prefix . 'post_type',
+					'type'        => 'text',
+					'placeholder' => __( 'Slug', 'mb-cpt' ),
+					'size'        => 50,
+				),
+				array(
+					'id'   => 'btn-advance',
+					'type' => 'button',
+					'std'  => __( 'Show Advance Settings', 'mb-cpt' ),
+				),
+			),
+			'validation'    => array(
+				'rules'     => array(
+					$label_prefix . 'name'          => array(
+						'required'  => true,
+					),
+					$label_prefix . 'singular_name' => array(
+						'required'  => true,
+					),
+					$args_prefix . 'post_type'      => array(
+						'required'  => true,
+					),
+				),
+				'messages'  => array(
+					$label_prefix . 'name'          => array(
+						'required'  => __( 'Plural Name is required', 'mb-cpt' ),
+					),
+					$label_prefix . 'singular_name' => array(
+						'required'  => __( 'Singular Name is required', 'mb-cpt' ),
+					),
+					$args_prefix . 'post_type'      => array(
+						'required'  => __( 'Slug is required', 'mb-cpt' ),
+					),
+				)
+			),
+		);
+
+		// Advance settings
+		$meta_boxes[] = array(
+			'id'            => 'advance',
+			'title'         => __( 'Advance', 'mb-cpt' ),
+			'pages'         => array( 'mb-post-type' ),
+			'context'       => 'normal',
+			'priority'      => 'high',
+			'fields'        => array(
 				array(
 					'name'        => __( 'Menu Name', 'mb-cpt' ),
 					'id'          => $label_prefix . 'menu_name',
@@ -304,42 +355,6 @@ class Meta_Box_CPT
 					'placeholder' => __( 'Not found in Trash', 'mb-cpt' ),
 					'size'        => 50,
 				),
-			),
-			'validation'    => array(
-				'rules'     => array(
-					$label_prefix . 'name'          => array(
-						'required'  => true,
-					),
-					$label_prefix . 'singular_name' => array(
-						'required'  => true,
-					),
-				),
-				'messages'  => array(
-					$label_prefix . 'name'          => array(
-						'required'  => __( 'Plural Name is required', 'mb-cpt' ),
-					),
-					$label_prefix . 'singular_name' => array(
-						'required'  => __( 'Singular Name is required', 'mb-cpt' ),
-					),
-				)
-			)
-		);
-
-		// Arguments meta box
-		$meta_boxes[] = array(
-			'id'            => 'arguments',
-			'title'         => __( 'Arguments', 'mb-cpt' ),
-			'pages'         => array( 'mb-post-type' ),
-			'context'       => 'normal',
-			'priority'      => 'high',
-			'fields'        => array(
-				array(
-					'name'        => __( 'Slug', 'mb-cpt' ),
-					'id'          => $args_prefix . 'post_type',
-					'type'        => 'text',
-					'placeholder' => __( 'Slug', 'mb-cpt' ),
-					'size'        => 50,
-				),
 				array(
 					'name'        => __( 'Description', 'mb-cpt' ),
 					'id'          => $args_prefix . 'description',
@@ -364,7 +379,7 @@ class Meta_Box_CPT
 					'id'   => $args_prefix . 'publicly_queryable',
 					'type' => 'checkbox',
 					'std'  => 1,
-					'desc' => __( 'Whether post_type queries can be performed from the front end.', 'mb-cpt' ),
+					'desc' => __( 'Whether post type queries can be performed from the front end.', 'mb-cpt' ),
 				),
 				array(
 					'name' => __( 'Show UI', 'mb-cpt' ),
@@ -378,7 +393,7 @@ class Meta_Box_CPT
 					'id'   => $args_prefix . 'show_in_menu',
 					'type' => 'checkbox',
 					'std'  => 1,
-					'desc' => __( 'Whether post_type is available for selection in menus.', 'mb-cpt' ),
+					'desc' => __( 'Whether post type is available for selection in menus.', 'mb-cpt' ),
 				),
 				array(
 					'name' => __( 'Query Var', 'mb-cpt' ),
@@ -414,14 +429,14 @@ class Meta_Box_CPT
 					'id'   => $args_prefix . 'can_export',
 					'type' => 'checkbox',
 					'std'  => 1,
-					'desc' => __( 'Can this post_type be exported.', 'mb-cpt' ),
+					'desc' => __( 'Can this post type be exported.', 'mb-cpt' ),
 				),
 				array(
 					'name' => __( 'Show In Nav Menus', 'mb-cpt' ),
 					'id'   => $args_prefix . 'show_in_nav_menus',
 					'type' => 'checkbox',
 					'std'  => 1,
-					'desc' => __( 'Whether post_type is available for selection in navigation menus.', 'mb-cpt' ),
+					'desc' => __( 'Whether post type is available for selection in navigation menus.', 'mb-cpt' ),
 				),
 				array(
 					'name' => __( 'Exclude From Search', 'mb-cpt' ),
@@ -435,21 +450,9 @@ class Meta_Box_CPT
 					'type' => 'number',
 				),
 			),
-			'validation'    => array(
-				'rules'     => array(
-					$args_prefix . 'post_type'  => array(
-						'required'  => true,
-					),
-				),
-				'messages'  => array(
-					$args_prefix . 'post_type'  => array(
-						'required'  => __( 'Slug is required', 'mb-cpt' ),
-					),
-				)
-			)
 		);
 
-		// Supports meta box
+		// Supports
 		$meta_boxes[] = array(
 			'id'       => 'supports',
 			'title'    => __( 'Supports', 'mb-cpt' ),
@@ -469,7 +472,6 @@ class Meta_Box_CPT
 						'trackbacks'        => __( 'Trackbacks', 'mb-cpt' ),
 						'comments'          => __( 'Comments', 'mb-cpt' ),
 						'revisions'         => __( 'Revisions', 'mb-cpt' ),
-						'post-formats'      => __( 'Post Formats', 'mb-cpt' ),
 						'page-attributes'   => __( 'Page Attributes', 'mb-cpt' ),
 					),
 				),
@@ -538,5 +540,82 @@ class Meta_Box_CPT
 		}
 
 		return ( isset( $_GET['post_type'] ) && $_GET['post_type'] === 'mb-post-type' );
+	}
+
+	/**
+	 * Custom updated wordpress messages
+	 *
+	 * @param array $messages
+	 *
+	 * @return array
+	 */
+	public function mb_cpt_updated_message( $messages )
+	{
+		$post = get_post();
+
+		$messages['mb-post-type'] = array(
+			0  => '', // Unused. Messages start at index 1.
+			1  => sprintf(
+				__( '%s updated.', 'mb-post-type' ),
+				$post->post_title
+			),
+			2  => __( 'Custom field updated.', 'mb-post-type' ),
+			3  => __( 'Custom field deleted.', 'mb-post-type' ),
+			4  => sprintf(
+				__( '%s updated.', 'mb-post-type' ),
+				$post->post_title
+			),
+			/* translators: %s: date and time of the revision */
+			5  => isset( $_GET['revision'] ) ? sprintf( __( '%s restored to revision from %s', 'mb-post-type' ), $post->post_title, wp_post_revision_title( (int) $_GET['revision'], false ) ) : false,
+			6  => sprintf(
+				__( '%s updated.', 'mb-post-type' ),
+				$post->post_title
+			),
+			7  => sprintf(
+				__( '%s updated.', 'mb-post-type' ),
+				$post->post_title
+			),
+			8  => sprintf(
+				__( '%s submitted.', 'mb-post-type' ),
+				$post->post_title
+			),
+			9  => sprintf(
+				__( '%s scheduled for: <strong>%s</strong>.', 'mb-post-type' ),
+				$post->post_title,
+				// translators: Publish box date format, see http://php.net/date
+				date_i18n( __( 'M j, Y @ G:i', 'mb-post-type' ), strtotime( $post->post_date ) )
+			),
+			10 => sprintf(
+				__( '%s draft updated.', 'mb-post-type' ),
+				$post->post_title
+			),
+		);
+
+		return $messages;
+	}
+
+	/**
+	 * Custom post management wordpress messages
+	 *
+	 * @param array $bulk_messages
+	 * @param array $bulk_counts
+	 *
+	 * @return array
+	 */
+	public function mb_cpt_bulk_post_updated_messages( $bulk_messages, $bulk_counts )
+	{
+		$singular   = __( 'post type', 'mb-cpt' );
+		$plural     = __( 'post types', 'mb-cpt' );
+
+		$bulk_messages['mb-post-type'] = array(
+			'updated'   => sprintf( __( '%s %s updated.', 'mb-cpt' ), $bulk_counts['updated'], $bulk_counts['updated'] > 1 ? $plural : $singular ),
+			'locked'    => sprintf( __( '%s %s not updated, somebody is editing it.', 'mb-cpt' ), $bulk_counts['locked'], $bulk_counts['locked'] > 1 ? $plural : $singular ),
+			'deleted'   => sprintf( __( '%s %s permanently deleted.', 'mb-cpt' ), $bulk_counts['deleted'], $bulk_counts['deleted'] > 1 ? $plural : $singular ),
+			'trashed'   => sprintf( __( '%s %s moved to the Trash.', 'mb-cpt' ), $bulk_counts['trashed'], $bulk_counts['trashed'] > 1 ? $plural : $singular ),
+			'untrashed' => sprintf( __( '%s %s restored from the Trash.', 'mb-cpt' ), $bulk_counts['untrashed'], $bulk_counts['untrashed'] > 1 ? $plural : $singular ),
+		);
+
+		return $bulk_messages;
+
 	}
 }

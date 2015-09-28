@@ -81,6 +81,33 @@ jQuery( function( $ )
 		return results === null ? "" : decodeURIComponent( results[1].replace( /\+/g, " " ) );
 	}
 
-	slugEntering();
-	defaultCheckedCheckbox();
+	/**
+	 * Show Advance Settings
+	 *
+	 * @return void
+	 */
+	function showAdvanceSettings()
+	{
+		$( '#btn-advance' ).on( 'click', function()
+		{
+			$( '#advance' ).css( 'display', 'block' );
+		} );
+	}
+
+	/**
+	 * Initializing
+	 *
+	 * return void
+	 */
+	function init()
+	{
+		// Hide Advance Settings
+		$( '#advance' ).css( 'display', 'none' );
+
+		slugEntering();
+		defaultCheckedCheckbox();
+		showAdvanceSettings();
+	}
+
+	init();
 } );
