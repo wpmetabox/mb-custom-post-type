@@ -1,4 +1,0 @@
-List of tasks have to do next
-
-1. Maybe update post meta that are not entered ( labels: add new, edit item, ..  )?
-2. Preview menu icon when select it?

@@ -1,7 +1,31 @@
 #misc-publishing-actions,
 #minor-publishing-actions,
 #save-post,
-#screen-options-link-wrap
+#screen-options-link-wrap,
+.hidden
 {
 	display: none !important;
+}
+
+.icon-single
+{
+	display: inline-block;
+	margin: 0 5px 5px 0;
+	border: 1px solid #dadada;
+	background: #FFF;
+	border-radius: 3px;
+	padding: 6px;
+	font-size: 18px;
+	width: 18px;
+	text-align: center;
+	line-height: 18px;
+}
+
+.icon-single:hover,
+.icon-single.active
+{
+	border-color: rgba(0, 0, 0, .1);
+	color: white;
+	background: #3c0;
+	text-shadow: 0 1px 0 rgba(0, 0, 0, .15);
 }
