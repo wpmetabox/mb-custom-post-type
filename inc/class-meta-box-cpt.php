@@ -1,4 +1,5 @@
 <?php
+
 /**
  * This class controls all operations of Meta Box Custom Post Type extension
  * for creating / modifying custom post type.
@@ -8,7 +9,7 @@ class Meta_Box_CPT
 	/**
 	 * @var bool Used to prevent duplicated calls like revisions, manual hook to wp_insert_post, etc.
 	 */
-	public $mb_cpt_saved = false;
+	public $saved = false;
 
 	/**
 	 * Initiating
@@ -26,8 +27,8 @@ class Meta_Box_CPT
 		// Modify post information after save post
 		add_action( 'save_post', array( $this, 'save_post' ) );
 		// Change the output of post/bulk post updated messages
-		add_filter( 'post_updated_messages', array( $this, 'mb_cpt_updated_message' ), 10, 1 );
-		add_filter( 'bulk_post_updated_messages', array( $this, 'mb_cpt_bulk_post_updated_messages' ), 10, 2 );
+		add_filter( 'post_updated_messages', array( $this, 'updated_message' ), 10, 1 );
+		add_filter( 'bulk_post_updated_messages', array( $this, 'bulk_updated_messages' ), 10, 2 );
 		// Add ng-controller to form
 		add_action( 'post_edit_form_tag', array( $this, 'add_ng_controller' ) );
 	}
@@ -44,7 +45,7 @@ class Meta_Box_CPT
 			return;
 		}
 
-		wp_register_script( 'angular', '//ajax.googleapis.com/ajax/libs/angularjs/1.3.2/angular.min.js', array(), '1.3.2', true );
+		wp_register_script( 'angular', 'https://ajax.googleapis.com/ajax/libs/angularjs/1.4.2/angular.min.js', array(), '1.4.2', true );
 		wp_enqueue_style( 'mb-cpt-css', MB_CPT_CSS_URL . 'styles.css', array(), '1.0.0', false );
 		wp_enqueue_script( 'mb-cpt-js', MB_CPT_JS_URL . 'scripts.js', array( 'jquery', 'angular' ), '1.0.0', false );
 
@@ -72,11 +73,11 @@ class Meta_Box_CPT
 	public function register_post_types()
 	{
 		// Get all registered custom post types
-		$cpts = $this->get_all_registered_post_types();
+		$post_types = $this->get_all_registered_post_types();
 
-		foreach ( $cpts as $cpt )
+		foreach ( $post_types as $post_type )
 		{
-			register_post_type( $cpt['post_type'], $cpt );
+			register_post_type( $post_type['post_type'], $post_type );
 		}
 
 		// Refresh permalink
@@ -91,10 +92,10 @@ class Meta_Box_CPT
 	public function get_all_registered_post_types()
 	{
 		// This array stores all registered custom post types
-		$cpts = array();
+		$post_types = array();
 
 		// Create mb-post-type post type to management/add/edit custom post types
-		$cpts[] = $this->set_up_post_type(
+		$post_types[] = $this->set_up_post_type(
 			array(
 				'name'          => __( 'Post Types', 'mb-cpt' ),
 				'singular_name' => __( 'Post Type', 'mb-cpt' ),
@@ -108,20 +109,20 @@ class Meta_Box_CPT
 		);
 
 		// Get all post where where post_type = mb-post-type
-		$mb_cpts = get_posts( array(
-			'posts_per_page' => -1,
+		$mb_post_types = get_posts( array(
+			'posts_per_page' => - 1,
 			'post_status'    => 'publish',
 			'post_type'      => 'mb-post-type',
 		) );
 
-		foreach ( $mb_cpts as $cpt )
+		foreach ( $mb_post_types as $post_type )
 		{
 			// Get all post meta from current post
-			$post_meta  = get_post_meta( $cpt->ID );
+			$post_meta = get_post_meta( $post_type->ID );
 			// Create array that contains Labels of this current custom post type
-			$labels     = array();
+			$labels = array();
 			// Create array that contains arguments of this current custom post type
-			$args       = array();
+			$args = array();
 
 			foreach ( $post_meta as $key => $value )
 			{
@@ -129,6 +130,7 @@ class Meta_Box_CPT
 				if ( false !== strpos( $key, 'label' ) )
 				{
 					$data = 1 == count( $value ) ? $value[0] : $value;
+
 					$labels[str_replace( 'label_', '', $key )] = $data;
 				}
 				// If post meta has prefix 'args' then add it to $args
@@ -136,21 +138,22 @@ class Meta_Box_CPT
 				{
 					$data = 1 == count( $value ) ? $value[0] : $value;
 					$data = is_numeric( $data ) ? ( 1 == intval( $data ) ? true : false ) : $data;
+
 					$args[str_replace( 'args_', '', $key )] = $data;
 				}
 			}
 
-			$cpts[] = $this->set_up_post_type( $labels, $args );
+			$post_types[] = $this->set_up_post_type( $labels, $args );
 		}
 
-		return $cpts;
+		return $post_types;
 	}
 
 	/**
 	 * Setup labels, arguments for a custom post type
 	 *
-	 * @param array     $labels
-	 * @param array     $args
+	 * @param array $labels
+	 * @param array $args
 	 *
 	 * @return array
 	 */
@@ -178,7 +181,7 @@ class Meta_Box_CPT
 		// Default arguments
 		$default_args = array(
 			'labels'              => $labels,
-			'description'        => sprintf( __( '%s GUI', 'mb-cpt' ), $labels['name'] ),
+			'description'         => sprintf( __( '%s GUI', 'mb-cpt' ), $labels['name'] ),
 			'public'              => true,
 			'publicly_queryable'  => true,
 			'show_ui'             => true,
@@ -209,169 +212,151 @@ class Meta_Box_CPT
 	 */
 	public function register_meta_boxes( $meta_boxes )
 	{
-		$label_prefix   = 'label_';
-		$args_prefix    = 'args_';
-		$basic_fields   = array(
+		$label_prefix    = 'label_';
+		$args_prefix     = 'args_';
+		$basic_fields    = array(
 			array(
 				'name'        => __( 'Plural Name', 'mb-cpt' ),
 				'id'          => $label_prefix . 'name',
 				'type'        => 'text',
 				'placeholder' => __( 'Plural Name', 'mb-cpt' ),
-				'size'        => 50,
 			),
 			array(
 				'name'        => __( 'Singular Name', 'mb-cpt' ),
 				'id'          => $label_prefix . 'singular_name',
 				'type'        => 'text',
 				'placeholder' => __( 'Singular Name', 'mb-cpt' ),
-				'size'        => 50,
 			),
 			array(
 				'name'        => __( 'Slug', 'mb-cpt' ),
 				'id'          => $args_prefix . 'post_type',
 				'type'        => 'text',
 				'placeholder' => __( 'Slug', 'mb-cpt' ),
-				'size'        => 50,
 			),
 		);
-		$advance_fields = array(
+		$advanced_fields = array(
 			array(
 				'name'        => __( 'Menu Name', 'mb-cpt' ),
 				'id'          => $label_prefix . 'menu_name',
 				'type'        => 'text',
 				'placeholder' => __( 'Menu Name', 'mb-cpt' ),
-				'size'        => 50,
 			),
 			array(
 				'name'        => __( 'Name Admin Bar', 'mb-cpt' ),
 				'id'          => $label_prefix . 'name_admin_bar',
 				'type'        => 'text',
 				'placeholder' => __( 'Name Admin Bar', 'mb-cpt' ),
-				'size'        => 50,
 			),
 			array(
 				'name'        => __( 'Parent Items:', 'mb-cpt' ),
 				'id'          => $label_prefix . 'parent_item_colon',
 				'type'        => 'text',
 				'placeholder' => __( 'Parent Items:', 'mb-cpt' ),
-				'size'        => 50,
 			),
 			array(
 				'name'        => __( 'All Items', 'mb-cpt' ),
 				'id'          => $label_prefix . 'all_items',
 				'type'        => 'text',
 				'placeholder' => __( 'All Items', 'mb-cpt' ),
-				'size'        => 50,
 			),
 			array(
 				'name'        => __( 'Add New Item', 'mb-cpt' ),
 				'id'          => $label_prefix . 'add_new_item',
 				'type'        => 'text',
 				'placeholder' => __( 'Add New Item', 'mb-cpt' ),
-				'size'        => 50,
 			),
 			array(
 				'name'        => __( 'Add New', 'mb-cpt' ),
 				'id'          => $label_prefix . 'add_new',
 				'type'        => 'text',
 				'placeholder' => __( 'Add New', 'mb-cpt' ),
-				'size'        => 50,
 			),
 			array(
 				'name'        => __( 'New Item', 'mb-cpt' ),
 				'id'          => $label_prefix . 'new_item',
 				'type'        => 'text',
 				'placeholder' => __( 'New Item', 'mb-cpt' ),
-				'size'        => 50,
 			),
 			array(
 				'name'        => __( 'Edit Item', 'mb-cpt' ),
 				'id'          => $label_prefix . 'edit_item',
 				'type'        => 'text',
 				'placeholder' => __( 'Edit Item', 'mb-cpt' ),
-				'size'        => 50,
 			),
 			array(
 				'name'        => __( 'Update Item', 'mb-cpt' ),
 				'id'          => $label_prefix . 'update_item',
 				'type'        => 'text',
 				'placeholder' => __( 'Update Item', 'mb-cpt' ),
-				'size'        => 50,
 			),
 			array(
 				'name'        => __( 'View Item', 'mb-cpt' ),
 				'id'          => $label_prefix . 'view_item',
 				'type'        => 'text',
 				'placeholder' => __( 'View Item', 'mb-cpt' ),
-				'size'        => 50,
 			),
 			array(
 				'name'        => __( 'Search Items', 'mb-cpt' ),
 				'id'          => $label_prefix . 'search_items',
 				'type'        => 'text',
 				'placeholder' => __( 'Search Items', 'mb-cpt' ),
-				'size'        => 50,
 			),
 			array(
 				'name'        => __( 'Not found', 'mb-cpt' ),
 				'id'          => $label_prefix . 'not_found',
 				'type'        => 'text',
 				'placeholder' => __( 'Not found', 'mb-cpt' ),
-				'size'        => 50,
 			),
 			array(
 				'name'        => __( 'Not found in Trash', 'mb-cpt' ),
 				'id'          => $label_prefix . 'not_found_in_trash',
 				'type'        => 'text',
 				'placeholder' => __( 'Not found in Trash', 'mb-cpt' ),
-				'size'        => 50,
 			),
 			array(
 				'name'    => __( 'Menu Icon', 'mb-cpt' ),
 				'id'      => $args_prefix . 'menu_icon',
 				'type'    => 'radio',
-				'options' => sl_icons(),
+				'options' => mb_cpt_get_dashicons(),
 			),
 		);
 
 		// Basic settings
 		$meta_boxes[] = array(
-			'id'       => 'basic',
-			'title'    => __( 'Basic', 'mb-cpt' ),
-			'pages'    => array( 'mb-post-type' ),
-			'context'  => 'normal',
-			'priority' => 'high',
-			'fields'   => array_merge(
+			'id'         => 'basic-settings',
+			'title'      => __( 'Basic Settings', 'mb-cpt' ),
+			'pages'      => array( 'mb-post-type' ),
+			'fields'     => array_merge(
 				$basic_fields,
 				array(
 					array(
-						'id'   => 'btn-advance',
+						'id'   => 'btn-toggle-advanced',
 						'type' => 'button',
-						'std'  => __( 'Advance Settings', 'mb-cpt' ),
+						'std'  => __( 'Advanced Settings', 'mb-cpt' ),
 					),
 				)
 			),
-			'validation'    => array(
-				'rules'     => array(
+			'validation' => array(
+				'rules'    => array(
 					$label_prefix . 'name'          => array(
-						'required'  => true,
+						'required' => true,
 					),
 					$label_prefix . 'singular_name' => array(
-						'required'  => true,
+						'required' => true,
 					),
 					$args_prefix . 'post_type'      => array(
-						'required'  => true,
+						'required' => true,
 					),
 				),
-				'messages'  => array(
+				'messages' => array(
 					$label_prefix . 'name'          => array(
-						'required'  => __( 'Plural Name is required', 'mb-cpt' ),
+						'required' => __( 'Plural name is required', 'mb-cpt' ),
 					),
 					$label_prefix . 'singular_name' => array(
-						'required'  => __( 'Singular Name is required', 'mb-cpt' ),
+						'required' => __( 'Singular name is required', 'mb-cpt' ),
 					),
 					$args_prefix . 'post_type'      => array(
-						'required'  => __( 'Slug is required', 'mb-cpt' ),
+						'required' => __( 'Slug is required', 'mb-cpt' ),
 					),
 				)
 			),
@@ -379,13 +364,11 @@ class Meta_Box_CPT
 
 		// Advance settings
 		$meta_boxes[] = array(
-			'id'            => 'advance',
-			'title'         => __( 'Advance', 'mb-cpt' ),
-			'pages'         => array( 'mb-post-type' ),
-			'context'       => 'normal',
-			'priority'      => 'high',
-			'fields'        => array_merge(
-				$advance_fields,
+			'id'     => 'advanced-settings',
+			'title'  => __( 'Advanced Settings', 'mb-cpt' ),
+			'pages'  => array( 'mb-post-type' ),
+			'fields' => array_merge(
+				$advanced_fields,
 				array(
 					array(
 						'name'        => __( 'Description', 'mb-cpt' ),
@@ -491,21 +474,22 @@ class Meta_Box_CPT
 					'id'      => $args_prefix . 'supports',
 					'type'    => 'checkbox_list',
 					'options' => array(
-						'title'             => __( 'Title', 'mb-cpt' ),
-						'editor'            => __( 'Editor', 'mb-cpt' ),
-						'author'            => __( 'Author', 'mb-cpt' ),
-						'thumbnail'         => __( 'Thumbnail', 'mb-cpt' ),
-						'excerpt'           => __( 'Excerpt', 'mb-cpt' ),
-						'trackbacks'        => __( 'Trackbacks', 'mb-cpt' ),
-						'comments'          => __( 'Comments', 'mb-cpt' ),
-						'revisions'         => __( 'Revisions', 'mb-cpt' ),
-						'page-attributes'   => __( 'Page Attributes', 'mb-cpt' ),
+						'title'           => __( 'Title', 'mb-cpt' ),
+						'editor'          => __( 'Editor', 'mb-cpt' ),
+						'author'          => __( 'Author', 'mb-cpt' ),
+						'thumbnail'       => __( 'Thumbnail', 'mb-cpt' ),
+						'excerpt'         => __( 'Excerpt', 'mb-cpt' ),
+						'trackbacks'      => __( 'Trackbacks', 'mb-cpt' ),
+						'comments'        => __( 'Comments', 'mb-cpt' ),
+						'revisions'       => __( 'Revisions', 'mb-cpt' ),
+						'page-attributes' => __( 'Page Attributes', 'mb-cpt' ),
 					),
 				),
 			),
 		);
 
-		$fields = array_merge( $basic_fields, $advance_fields );
+		$fields = array_merge( $basic_fields, $advanced_fields );
+
 		// Add ng-model attribute to all fields
 		foreach ( $fields as $field )
 		{
@@ -518,35 +502,35 @@ class Meta_Box_CPT
 	/**
 	 * Modify html output of field
 	 *
-	 * @param string    $field_html
-	 * @param array     $field
-	 * @param string    $meta
+	 * @param string $field_html
+	 * @param array  $field
+	 * @param string $meta
 	 *
 	 * @return string
 	 */
-	public function modify_field_html( $field_html, $field, $meta  )
+	public function modify_field_html( $field_html, $field, $meta )
 	{
 		if ( 'args_menu_icon' == $field['id'] )
 		{
 			$field_html = '';
-			$icons = sl_icons();
-			foreach ( $icons as $k=>$v )
+			$icons      = mb_cpt_get_dashicons();
+			foreach ( $icons as $icon )
 			{
-				$field_html .= sprintf('
-					<label class="icon-single %s">
+				$field_html .= sprintf( '
+					<label class="icon-single%s">
 						<i class="wp-menu-image dashicons-before %s"></i>
-						<input type="radio" name="args_menu_icon" value="%s" class="hidden" %s>
+						<input type="radio" name="args_menu_icon" value="%s" class="hidden"%s>
 					</label>',
-					$k == $meta ? 'active' : '',
-					$k,
-					$k,
-					$k == $meta ? 'checked="checked"' : ''
+					$icon == $meta ? ' active' : '',
+					$icon,
+					$icon,
+					checked( $icon, $meta, false )
 				);
 			}
 		}
 		else
 		{
-			$meta       = "'" . $meta . "'";
+			$meta       = "'$meta'";
 			$field_html = str_replace( '>', ' ng-model="' . $field['id'] . '" ng-init="' . $field['id'] . ' = ' . $meta . '" >', $field_html );
 		}
 		return $field_html;
@@ -563,12 +547,12 @@ class Meta_Box_CPT
 	{
 		// If post type of saved post is not mb-post-type or label_singular_name is empty
 		// or if this function is called to prevent duplicated calls like revisions, manual hook to wp_insert_post, etc.
-		if ( 'mb-post-type' !== get_post_type( $post_id ) || empty( $_POST['label_singular_name'] ) || true === $this->mb_cpt_saved )
+		if ( 'mb-post-type' !== get_post_type( $post_id ) || empty( $_POST['label_singular_name'] ) || true === $this->saved )
 		{
 			return;
 		}
 
-		$this->mb_cpt_saved = true;
+		$this->saved = true;
 
 		// Update post title
 		$post = array(
@@ -592,7 +576,7 @@ class Meta_Box_CPT
 		}
 
 		echo '<div class="error">';
-		_e ( 'Meta Box Custom Post Type requires Meta Box plugin to work. Please install it.', 'mb-cpt' );
+		_e( 'Meta Box Custom Post Type requires Meta Box plugin to work. Please install it.', 'mb-cpt' );
 		echo '</div>';
 	}
 
@@ -603,14 +587,8 @@ class Meta_Box_CPT
 	 */
 	public function is_mb_post_type()
 	{
-		if ( isset( $_GET['post'] ) )
-		{
-			$post = get_post( $_GET['post'] );
-
-			return ( ! empty( $post ) && $post->post_type === 'mb-post-type' );
-		}
-
-		return ( isset( $_GET['post_type'] ) && $_GET['post_type'] === 'mb-post-type' );
+		$screen = get_current_screen();
+		return 'post' === $screen->base && 'mb-post-type' === $screen->post_type;
 	}
 
 	/**
@@ -620,7 +598,7 @@ class Meta_Box_CPT
 	 *
 	 * @return array
 	 */
-	public function mb_cpt_updated_message( $messages )
+	public function updated_message( $messages )
 	{
 		$post = get_post();
 
@@ -673,21 +651,17 @@ class Meta_Box_CPT
 	 *
 	 * @return array
 	 */
-	public function mb_cpt_bulk_post_updated_messages( $bulk_messages, $bulk_counts )
+	public function bulk_updated_messages( $bulk_messages, $bulk_counts )
 	{
-		$singular   = __( 'post type', 'mb-cpt' );
-		$plural     = __( 'post types', 'mb-cpt' );
-
 		$bulk_messages['mb-post-type'] = array(
-			'updated'   => sprintf( __( '%s %s updated.', 'mb-cpt' ), $bulk_counts['updated'], $bulk_counts['updated'] > 1 ? $plural : $singular ),
-			'locked'    => sprintf( __( '%s %s not updated, somebody is editing it.', 'mb-cpt' ), $bulk_counts['locked'], $bulk_counts['locked'] > 1 ? $plural : $singular ),
-			'deleted'   => sprintf( __( '%s %s permanently deleted.', 'mb-cpt' ), $bulk_counts['deleted'], $bulk_counts['deleted'] > 1 ? $plural : $singular ),
-			'trashed'   => sprintf( __( '%s %s moved to the Trash.', 'mb-cpt' ), $bulk_counts['trashed'], $bulk_counts['trashed'] > 1 ? $plural : $singular ),
-			'untrashed' => sprintf( __( '%s %s restored from the Trash.', 'mb-cpt' ), $bulk_counts['untrashed'], $bulk_counts['untrashed'] > 1 ? $plural : $singular ),
+			'updated'   => sprintf( _n( '%s post type updated.', '%s post types updated.', $bulk_counts['updated'], 'mb-cpt' ), $bulk_counts['updated'] ),
+			'locked'    => sprintf( _n( '%s post type not updated, somebody is editing.', '%s post types not updated, somebody is editing.', $bulk_counts['locked'], 'mb-cpt' ), $bulk_counts['locked'] ),
+			'deleted'   => sprintf( _n( '%s post type permanently deleted.', '%s post types permanently deleted.', $bulk_counts['deleted'], 'mb-cpt' ), $bulk_counts['deleted'] ),
+			'trashed'   => sprintf( _n( '%s post type moved to the Trash.', '%s post types moved to the Trash.', $bulk_counts['trashed'], 'mb-cpt' ), $bulk_counts['trashed'] ),
+			'untrashed' => sprintf( _n( '%s post type restored from the Trash.', '%s post types restored from the Trash.', $bulk_counts['untrashed'], 'mb-cpt' ), $bulk_counts['untrashed'] ),
 		);
 
 		return $bulk_messages;
-
 	}
 
 	/**
@@ -697,10 +671,9 @@ class Meta_Box_CPT
 	 */
 	public function add_ng_controller()
 	{
-		if ( ! $this->is_mb_post_type() )
+		if ( $this->is_mb_post_type() )
 		{
-			return;
+			echo 'ng-controller="PostTypeController"';
 		}
-		echo 'ng-controller="PostTypeController"';
 	}
 }

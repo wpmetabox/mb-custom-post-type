@@ -1,11 +1,11 @@
 <?php
 /*
 Plugin Name: Meta Box Custom Post Type
-Plugin URI: http://www.metabox.io/plugins/mb-custom-post-type
+Plugin URI: https://www.metabox.io/plugins/mb-custom-post-type
 Description: Create Custom Post Type Extension for Meta Box Plugin
 Version: 1.0.0
 Author: Rilwis & Duc Doan
-Author URI: http://www.fitwp.com
+Author URI: https://metabox.io
 License: GPL2+
 */
 

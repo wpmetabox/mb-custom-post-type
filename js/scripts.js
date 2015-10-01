@@ -3,7 +3,7 @@
 
 /* global jQuery, angular, SlLabels */
 
-( function ( $, angular )
+(function ( $, angular )
 {
 	'use strict';
 
@@ -14,10 +14,10 @@
 		angular.bootstrap( $( '#post' ), ['mbPostType'] );
 	} );
 
-	app.controller( 'PostTypeController', [ '$scope', function( $scope )
+	app.controller( 'PostTypeController', ['$scope', function ( $scope )
 	{
 		// Watch the change of label_name and auto fill in inputs
-		$scope.$watch( 'label_name', function()
+		$scope.$watch( 'label_name', function ()
 		{
 			// If it is not add new page
 			if ( 'mb-post-type' !== getParameterByName( 'post_type' ) )
@@ -36,7 +36,7 @@
 		} );
 
 		// Watch the change of label_singular_name and auto fill in inputs
-		$scope.$watch( 'label_singular_name', function()
+		$scope.$watch( 'label_singular_name', function ()
 		{
 			// If it is not add new page
 			if ( 'mb-post-type' !== getParameterByName( 'post_type' ) )
@@ -52,7 +52,7 @@
 			$scope.label_view_item      = SlLabels.view_item + $scope.label_singular_name;
 			$scope.args_post_type       = stringToSlug( $scope.label_singular_name );
 		} );
-	} ] );
+	}] );
 
 	/**
 	 * Make some checkboxes in Supports Meta Box are checked by default
@@ -68,9 +68,9 @@
 		}
 
 		// Name of checkboxes that will be checked
-		var checkboxes = [ 'title', 'editor', 'thumbnail' ];
+		var checkboxes = ['title', 'editor', 'thumbnail'];
 
-		$.each( checkboxes, function( k, v )
+		$.each( checkboxes, function ( k, v )
 		{
 			$( 'input:checkbox[name="args_supports[]"][value=' + v + ']' ).attr( 'checked', 'checked' );
 		} );
@@ -94,7 +94,7 @@
 			to = "aaaaeeeeiiiioooouuuunc------",
 			i, l;
 
-		for ( i = 0, l = from.length ; i < l ; i++ )
+		for ( i = 0, l = from.length; i < l; i++ )
 		{
 			str = str.replace( new RegExp( from.charAt( i ), 'g' ), to.charAt( i ) );
 		}
@@ -113,7 +113,7 @@
 	 */
 	function slugEntering()
 	{
-		$( '#args_post_type' ).on( 'blur', function()
+		$( '#args_post_type' ).on( 'blur', function ()
 		{
 			var $this = $( this ), val = $this.val();
 			$this.val( stringToSlug( val ) );
@@ -129,7 +129,7 @@
 	 */
 	function getParameterByName( name )
 	{
-		name = name.replace( /[\[]/, "\\[").replace(/[\]]/, "\\]" );
+		name = name.replace( /[\[]/, "\\[" ).replace( /[\]]/, "\\]" );
 		var regex = new RegExp( "[\\?&]" + name + "=([^&#]*)" ),
 			results = regex.exec( location.search );
 		return results === null ? "" : decodeURIComponent( results[1].replace( /\+/g, " " ) );
@@ -142,9 +142,10 @@
 	 */
 	function toggleAdvanceSettings()
 	{
-		$( '#btn-advance' ).on( 'click', function()
+		$( '#advanced-settings' ).hide();
+		$( '#btn-toggle-advanced' ).on( 'click', function ()
 		{
-			$( '#advance' ).toggle();
+			$( '#advanced-settings' ).toggle();
 		} );
 	}
 
@@ -157,7 +158,7 @@
 	{
 		var $menuIcons = $( 'input[type="radio"][name="args_menu_icon"]' );
 
-		$menuIcons.on( 'click', function()
+		$menuIcons.on( 'click', function ()
 		{
 			var $this = $( this );
 			$menuIcons.closest( '.icon-single' ).removeClass( 'active' );

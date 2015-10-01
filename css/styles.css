@@ -7,7 +7,7 @@
 	display: none !important;
 }
 
-.icon-single
+.rwmb-radio-wrapper .rwmb-input .icon-single
 {
 	display: inline-block;
 	margin: 0 5px 5px 0;
@@ -21,8 +21,8 @@
 	line-height: 18px;
 }
 
-.icon-single:hover,
-.icon-single.active
+.rwmb-radio-wrapper .rwmb-input .icon-single:hover,
+.rwmb-radio-wrapper .rwmb-input .icon-single.active
 {
 	border-color: rgba(0, 0, 0, .1);
 	color: white;
