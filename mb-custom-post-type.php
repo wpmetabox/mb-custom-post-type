@@ -30,7 +30,9 @@ define( 'MB_CPT_INC_DIR', trailingslashit( MB_CPT_DIR . 'inc' ) );
 
 if ( is_admin() )
 {
-	require_once MB_CPT_INC_DIR . 'class-meta-box-cpt.php';
+	require_once MB_CPT_INC_DIR . 'class-mb-cpt-register.php';
+	require_once MB_CPT_INC_DIR . 'class-mb-cpt-edit.php';
 	require_once MB_CPT_INC_DIR . 'helper.php';
-	new Meta_Box_CPT;
+	new MB_CPT_Register;
+	new MB_CPT_Edit;
 }
