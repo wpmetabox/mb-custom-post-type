@@ -142,9 +142,11 @@
 	 */
 	function toggleAdvanceSettings()
 	{
+		$( '#label-settings' ).hide();
 		$( '#advanced-settings' ).hide();
 		$( '#btn-toggle-advanced' ).on( 'click', function ()
 		{
+			$( '#label-settings' ).toggle();
 			$( '#advanced-settings' ).toggle();
 		} );
 	}

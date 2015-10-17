@@ -69,9 +69,10 @@ class MB_CPT_Edit
 	 */
 	public function register_meta_boxes( $meta_boxes )
 	{
-		$label_prefix    = 'label_';
-		$args_prefix     = 'args_';
-		$basic_fields    = array(
+		$label_prefix       = 'label_';
+		$args_prefix        = 'args_';
+
+		$basic_fields       = array(
 			array(
 				'name'        => __( 'Plural Name', 'mb-cpt' ),
 				'id'          => $label_prefix . 'name',
@@ -91,7 +92,7 @@ class MB_CPT_Edit
 				'placeholder' => __( 'Slug', 'mb-cpt' ),
 			),
 		);
-		$advanced_fields = array(
+		$labels_fields      = array(
 			array(
 				'name'        => __( 'Menu Name', 'mb-cpt' ),
 				'id'          => $label_prefix . 'menu_name',
@@ -170,11 +171,101 @@ class MB_CPT_Edit
 				'type'        => 'text',
 				'placeholder' => __( 'Not found in Trash', 'mb-cpt' ),
 			),
+		);
+		$advanced_fields    = array(
 			array(
 				'name'    => __( 'Menu Icon', 'mb-cpt' ),
 				'id'      => $args_prefix . 'menu_icon',
 				'type'    => 'radio',
 				'options' => mb_cpt_get_dashicons(),
+			),
+			array(
+				'name'        => __( 'Description', 'mb-cpt' ),
+				'id'          => $args_prefix . 'description',
+				'type'        => 'textarea',
+				'placeholder' => __( 'Description', 'mb-cpt' ),
+			),
+			array(
+				'name' => __( 'Public', 'mb-cpt' ),
+				'id'   => $args_prefix . 'public',
+				'type' => 'checkbox',
+				'std'  => 1,
+				'desc' => __( 'Allow the post type appear in the Frontend', 'mb-cpt' ),
+			),
+			array(
+				'name' => __( 'Publicly Queryable', 'mb-cpt' ),
+				'id'   => $args_prefix . 'publicly_queryable',
+				'type' => 'checkbox',
+				'std'  => 1,
+				'desc' => __( 'Whether post type queries can be performed from the front end.', 'mb-cpt' ),
+			),
+			array(
+				'name' => __( 'Show UI', 'mb-cpt' ),
+				'id'   => $args_prefix . 'show_ui',
+				'type' => 'checkbox',
+				'std'  => 1,
+				'desc' => __( 'Whether to show the post type in the admin menu and where to show that menu. Note that show_ui must be true.', 'mb-cpt' ),
+			),
+			array(
+				'name' => __( 'Show In Menu', 'mb-cpt' ),
+				'id'   => $args_prefix . 'show_in_menu',
+				'type' => 'checkbox',
+				'std'  => 1,
+				'desc' => __( 'Whether post type is available for selection in menus.', 'mb-cpt' ),
+			),
+			array(
+				'name' => __( 'Query Var', 'mb-cpt' ),
+				'id'   => $args_prefix . 'query_var',
+				'type' => 'checkbox',
+				'std'  => 1,
+				'desc' => __( 'False to prevent queries, or string value of the query var to use for this post type.', 'mb-cpt' ),
+			),
+			array(
+				'name'    => __( 'Capability Type', 'mb-cpt' ),
+				'id'      => $args_prefix . 'capability_type',
+				'type'    => 'select',
+				'options' => array(
+					'post' => __( 'Post', 'mb-cpt' ),
+					'page' => __( 'Page', 'mb-cpt' ),
+				)
+			),
+			array(
+				'name' => __( 'Has Archive', 'mb-cpt' ),
+				'id'   => $args_prefix . 'has_archive',
+				'type' => 'checkbox',
+				'std'  => 1,
+				'desc' => __( 'Allow to have custom archive slug for CPT.', 'mb-cpt' ),
+			),
+			array(
+				'name' => __( 'Hierarchical', 'mb-cpt' ),
+				'id'   => $args_prefix . 'hierarchical',
+				'type' => 'checkbox',
+				'desc' => __( 'Whether the post type is hierarchical. Allows Parent to be specified.', 'mb-cpt' ),
+			),
+			array(
+				'name' => __( 'Can Export', 'mb-cpt' ),
+				'id'   => $args_prefix . 'can_export',
+				'type' => 'checkbox',
+				'std'  => 1,
+				'desc' => __( 'Can this post type be exported.', 'mb-cpt' ),
+			),
+			array(
+				'name' => __( 'Show In Nav Menus', 'mb-cpt' ),
+				'id'   => $args_prefix . 'show_in_nav_menus',
+				'type' => 'checkbox',
+				'std'  => 1,
+				'desc' => __( 'Whether post type is available for selection in navigation menus.', 'mb-cpt' ),
+			),
+			array(
+				'name' => __( 'Exclude From Search', 'mb-cpt' ),
+				'id'   => $args_prefix . 'exclude_from_search',
+				'type' => 'checkbox',
+				'desc' => __( 'Whether to exclude posts with this post type from search results.', 'mb-cpt' ),
+			),
+			array(
+				'name' => __( 'Menu Position', 'mb-cpt' ),
+				'id'   => $args_prefix . 'menu_position',
+				'type' => 'number',
 			),
 		);
 
@@ -189,7 +280,7 @@ class MB_CPT_Edit
 					array(
 						'id'   => 'btn-toggle-advanced',
 						'type' => 'button',
-						'std'  => __( 'Advanced Settings', 'mb-cpt' ),
+						'std'  => __( 'Advanced', 'mb-cpt' ),
 					),
 				)
 			),
@@ -219,104 +310,20 @@ class MB_CPT_Edit
 			),
 		);
 
-		// Advance settings
+		// Labels settings
+		$meta_boxes[] = array(
+			'id'         => 'label-settings',
+			'title'      => __( 'Labels Settings', 'mb-cpt' ),
+			'pages'      => array( 'mb-post-type' ),
+			'fields'     => $labels_fields,
+		);
+
+		// Advanced settings
 		$meta_boxes[] = array(
 			'id'     => 'advanced-settings',
 			'title'  => __( 'Advanced Settings', 'mb-cpt' ),
 			'pages'  => array( 'mb-post-type' ),
-			'fields' => array_merge(
-				$advanced_fields,
-				array(
-					array(
-						'name'        => __( 'Description', 'mb-cpt' ),
-						'id'          => $args_prefix . 'description',
-						'type'        => 'textarea',
-						'placeholder' => __( 'Description', 'mb-cpt' ),
-					),
-					array(
-						'name' => __( 'Public', 'mb-cpt' ),
-						'id'   => $args_prefix . 'public',
-						'type' => 'checkbox',
-						'std'  => 1,
-						'desc' => __( 'Allow the post type appear in the Frontend', 'mb-cpt' ),
-					),
-					array(
-						'name' => __( 'Publicly Queryable', 'mb-cpt' ),
-						'id'   => $args_prefix . 'publicly_queryable',
-						'type' => 'checkbox',
-						'std'  => 1,
-						'desc' => __( 'Whether post type queries can be performed from the front end.', 'mb-cpt' ),
-					),
-					array(
-						'name' => __( 'Show UI', 'mb-cpt' ),
-						'id'   => $args_prefix . 'show_ui',
-						'type' => 'checkbox',
-						'std'  => 1,
-						'desc' => __( 'Whether to show the post type in the admin menu and where to show that menu. Note that show_ui must be true.', 'mb-cpt' ),
-					),
-					array(
-						'name' => __( 'Show In Menu', 'mb-cpt' ),
-						'id'   => $args_prefix . 'show_in_menu',
-						'type' => 'checkbox',
-						'std'  => 1,
-						'desc' => __( 'Whether post type is available for selection in menus.', 'mb-cpt' ),
-					),
-					array(
-						'name' => __( 'Query Var', 'mb-cpt' ),
-						'id'   => $args_prefix . 'query_var',
-						'type' => 'checkbox',
-						'std'  => 1,
-						'desc' => __( 'False to prevent queries, or string value of the query var to use for this post type.', 'mb-cpt' ),
-					),
-					array(
-						'name'    => __( 'Capability Type', 'mb-cpt' ),
-						'id'      => $args_prefix . 'capability_type',
-						'type'    => 'select',
-						'options' => array(
-							'post' => __( 'Post', 'mb-cpt' ),
-							'page' => __( 'Page', 'mb-cpt' ),
-						)
-					),
-					array(
-						'name' => __( 'Has Archive', 'mb-cpt' ),
-						'id'   => $args_prefix . 'has_archive',
-						'type' => 'checkbox',
-						'std'  => 1,
-						'desc' => __( 'Allow to have custom archive slug for CPT.', 'mb-cpt' ),
-					),
-					array(
-						'name' => __( 'Hierarchical', 'mb-cpt' ),
-						'id'   => $args_prefix . 'hierarchical',
-						'type' => 'checkbox',
-						'desc' => __( 'Whether the post type is hierarchical. Allows Parent to be specified.', 'mb-cpt' ),
-					),
-					array(
-						'name' => __( 'Can Export', 'mb-cpt' ),
-						'id'   => $args_prefix . 'can_export',
-						'type' => 'checkbox',
-						'std'  => 1,
-						'desc' => __( 'Can this post type be exported.', 'mb-cpt' ),
-					),
-					array(
-						'name' => __( 'Show In Nav Menus', 'mb-cpt' ),
-						'id'   => $args_prefix . 'show_in_nav_menus',
-						'type' => 'checkbox',
-						'std'  => 1,
-						'desc' => __( 'Whether post type is available for selection in navigation menus.', 'mb-cpt' ),
-					),
-					array(
-						'name' => __( 'Exclude From Search', 'mb-cpt' ),
-						'id'   => $args_prefix . 'exclude_from_search',
-						'type' => 'checkbox',
-						'desc' => __( 'Whether to exclude posts with this post type from search results.', 'mb-cpt' ),
-					),
-					array(
-						'name' => __( 'Menu Position', 'mb-cpt' ),
-						'id'   => $args_prefix . 'menu_position',
-						'type' => 'number',
-					),
-				)
-			),
+			'fields' => $advanced_fields,
 		);
 
 		// Supports
@@ -345,7 +352,7 @@ class MB_CPT_Edit
 			),
 		);
 
-		$fields = array_merge( $basic_fields, $advanced_fields );
+		$fields = array_merge( $basic_fields, $labels_fields, $advanced_fields );
 
 		// Add ng-model attribute to all fields
 		foreach ( $fields as $field )
@@ -385,7 +392,7 @@ class MB_CPT_Edit
 				);
 			}
 		}
-		else
+		elseif ( false === strpos( $field['id'], 'args' ) || 'args_post_type' == $field['id'] )
 		{
 			$meta       = "'$meta'";
 			$field_html = str_replace( '>', ' ng-model="' . $field['id'] . '" ng-init="' . $field['id'] . ' = ' . $meta . '" >', $field_html );
