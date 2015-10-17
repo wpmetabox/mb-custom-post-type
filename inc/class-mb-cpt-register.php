@@ -166,9 +166,8 @@ class MB_CPT_Register
 	 */
 	public function updated_message( $messages )
 	{
-		$post = get_post();
-
-		$messages['mb-post-type'] = array(
+		$post       = get_post();
+		$message    = array(
 			0  => '', // Unused. Messages start at index 1.
 			1  => sprintf( __( '%s updated.', 'mb-cpt' ), $post->post_title ),
 			2  => __( 'Custom field updated.', 'mb-cpt' ),
@@ -188,6 +187,21 @@ class MB_CPT_Register
 			10 => sprintf( __( '%s draft updated.', 'mb-cpt' ), $post->post_title ),
 		);
 
+		// Get all post where where post_type = mb-post-type
+		$mb_post_types = get_posts( array(
+			'posts_per_page' => - 1,
+			'post_status'    => 'any',
+			'post_type'      => 'mb-post-type',
+		) );
+
+		foreach ( $mb_post_types as $post_type )
+		{
+			$slug               =  get_post_meta( $post_type->ID, 'args_post_type', true );
+			$messages[$slug]    = $message;
+		}
+
+		$messages['mb-post-type'] = $message;
+
 		return $messages;
 	}
 
@@ -201,13 +215,42 @@ class MB_CPT_Register
 	 */
 	public function bulk_updated_messages( $bulk_messages, $bulk_counts )
 	{
-		$bulk_messages['mb-post-type'] = array(
-			'updated'   => sprintf( _n( '%s post type updated.', '%s post types updated.', $bulk_counts['updated'], 'mb-cpt' ), $bulk_counts['updated'] ),
-			'locked'    => sprintf( _n( '%s post type not updated, somebody is editing.', '%s post types not updated, somebody is editing.', $bulk_counts['locked'], 'mb-cpt' ), $bulk_counts['locked'] ),
-			'deleted'   => sprintf( _n( '%s post type permanently deleted.', '%s post types permanently deleted.', $bulk_counts['deleted'], 'mb-cpt' ), $bulk_counts['deleted'] ),
-			'trashed'   => sprintf( _n( '%s post type moved to the Trash.', '%s post types moved to the Trash.', $bulk_counts['trashed'], 'mb-cpt' ), $bulk_counts['trashed'] ),
-			'untrashed' => sprintf( _n( '%s post type restored from the Trash.', '%s post types restored from the Trash.', $bulk_counts['untrashed'], 'mb-cpt' ), $bulk_counts['untrashed'] ),
+		// Get all post where where post_type = mb-post-type
+		$mb_post_types = get_posts( array(
+			'posts_per_page' => - 1,
+			'post_status'    => 'any',
+			'post_type'      => 'mb-post-type',
+		) );
+
+		$cpt = array(
+			'mb-post-type' => array(
+				'singular'  => __( 'post type', 'mb-cpt' ),
+				'plural'    => __( 'post types', 'mb-cpt' )
+			),
 		);
+
+		foreach ( $mb_post_types as $post_type )
+		{
+			$slug       = get_post_meta( $post_type->ID, 'args_post_type', true );
+			$cpt[$slug] = array(
+				'singular'  => get_post_meta( $post_type->ID, 'label_singular_name', true ),
+				'plural'    => get_post_meta( $post_type->ID, 'label_name', true ),
+			);
+		}
+
+		foreach ( $cpt as $key => $value )
+		{
+			$singular   = $value['singular'];
+			$plural     = $value['plural'];
+
+			$bulk_messages[$key] = array(
+				'updated'   => sprintf( _n( "%s $singular updated.", "%s $plural updated.", $bulk_counts['updated'], 'mb-cpt' ), $bulk_counts['updated'] ),
+				'locked'    => sprintf( _n( "%s $singular not updated, somebody is editing.", "%s $plural not updated, somebody is editing.", $bulk_counts['locked'], 'mb-cpt' ), $bulk_counts['locked'] ),
+				'deleted'   => sprintf( _n( "%s $singular permanently deleted.", "%s $plural permanently deleted.", $bulk_counts['deleted'], 'mb-cpt' ), $bulk_counts['deleted'] ),
+				'trashed'   => sprintf( _n( "%s $singular moved to the Trash.", "%s $plural moved to the Trash.", $bulk_counts['trashed'], 'mb-cpt' ), $bulk_counts['trashed'] ),
+				'untrashed' => sprintf( _n( "%s $singular restored from the Trash.", "%s $plural restored from the Trash.", $bulk_counts['untrashed'], 'mb-cpt' ), $bulk_counts['untrashed'] ),
+			);
+		}
 
 		return $bulk_messages;
 	}
