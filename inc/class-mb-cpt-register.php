@@ -166,25 +166,37 @@ class MB_CPT_Register
 	 */
 	public function updated_message( $messages )
 	{
-		$post    = get_post();
+		$post             = get_post();
+		$post_type_object = get_post_type_object( $post->post_type );
+		$label            = ucfirst( $post_type_object->labels->singular_name );
+		$label_lower      = strtolower( $label );
+
+		$permalink = get_permalink( $post );
+		if ( ! $permalink )
+		{
+			$permalink = '';
+		}
+		$preview_url = add_query_arg( 'preview', 'true', $permalink );
+
 		$message = array(
 			0  => '', // Unused. Messages start at index 1.
-			1  => sprintf( __( '%s updated.', 'mb-cpt' ), $post->post_title ),
+			1  => sprintf( __( '%s updated. <a href="%s">View %s.</a>', 'mb-cpt' ), $label, esc_url( $permalink ), $label_lower ),
 			2  => __( 'Custom field updated.', 'mb-cpt' ),
 			3  => __( 'Custom field deleted.', 'mb-cpt' ),
-			4  => sprintf( __( '%s updated.', 'mb-cpt' ), $post->post_title ),
+			4  => sprintf( __( '%s updated.', 'mb-cpt' ), $label ),
 			/* translators: %s: date and time of the revision */
-			5  => isset( $_GET['revision'] ) ? sprintf( __( '%s restored to revision from %s', 'mb-cpt' ), $post->post_title, wp_post_revision_title( (int) $_GET['revision'], false ) ) : false,
-			6  => sprintf( __( '%s updated.', 'mb-cpt' ), $post->post_title ),
-			7  => sprintf( __( '%s updated.', 'mb-cpt' ), $post->post_title ),
-			8  => sprintf( __( '%s submitted.', 'mb-cpt' ), $post->post_title ),
+			5  => isset( $_GET['revision'] ) ? sprintf( __( '%s restored to revision from %s.', 'mb-cpt' ), $label, wp_post_revision_title( (int) $_GET['revision'], false ) ) : false,
+			6  => sprintf( __( '%s published. <a href="%s">View %s</a>.', 'mb-cpt' ), $label, esc_url( $permalink ), $label_lower ),
+			7  => sprintf( __( '%s saved.', 'mb-cpt' ), $label ),
+			8  => sprintf( __( '%s submitted. <a target="_blank" href="%s">Preview %s</a>.', 'mb-cpt' ), $label, esc_url( $preview_url ), $label_lower ),
 			9  => sprintf(
-				__( '%s scheduled for: <strong>%s</strong>.', 'mb-cpt' ),
-				$post->post_title,
-				// translators: Publish box date format, see http://php.net/date
-				date_i18n( __( 'M j, Y @ G:i', 'mb-cpt' ), strtotime( $post->post_date ) )
+				__( '%s scheduled for: <strong>%s</strong>. <a target="_blank" href="%s">Preview %s</a>.', 'mb-cpt' ),
+				$label,
+				date_i18n( __( 'M j, Y @ G:i', 'mb-cpt' ), strtotime( $post->post_date ) ),
+				esc_url( $permalink ),
+				$label_lower
 			),
-			10 => sprintf( __( '%s draft updated.', 'mb-cpt' ), $post->post_title ),
+			10 => sprintf( __( '%s draft updated. <a target="_blank" href="%s">Preview %s</a>.', 'mb-cpt' ), $label, esc_url( $preview_url ), $label_lower ),
 		);
 
 		// Get all post where where post_type = mb-post-type
@@ -192,10 +204,11 @@ class MB_CPT_Register
 			'posts_per_page' => - 1,
 			'post_status'    => 'any',
 			'post_type'      => 'mb-post-type',
+			'fields'         => 'ids',
 		) );
 		foreach ( $post_types as $post_type )
 		{
-			$slug            = get_post_meta( $post_type->ID, 'args_post_type', true );
+			$slug            = get_post_meta( $post_type, 'args_post_type', true );
 			$messages[$slug] = $message;
 		}
 
@@ -231,8 +244,8 @@ class MB_CPT_Register
 		{
 			$slug          = get_post_meta( $post_type->ID, 'args_post_type', true );
 			$labels[$slug] = array(
-				'singular' => get_post_meta( $post_type->ID, 'label_singular_name', true ),
-				'plural'   => get_post_meta( $post_type->ID, 'label_name', true ),
+				'singular' => strtolower( get_post_meta( $post_type->ID, 'label_singular_name', true ) ),
+				'plural'   => strtolower( get_post_meta( $post_type->ID, 'label_name', true ) ),
 			);
 		}
 
