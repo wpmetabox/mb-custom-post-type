@@ -69,10 +69,10 @@ class MB_CPT_Edit
 	 */
 	public function register_meta_boxes( $meta_boxes )
 	{
-		$label_prefix       = 'label_';
-		$args_prefix        = 'args_';
+		$label_prefix = 'label_';
+		$args_prefix  = 'args_';
 
-		$basic_fields       = array(
+		$basic_fields    = array(
 			array(
 				'name'        => __( 'Plural Name', 'mb-cpt' ),
 				'id'          => $label_prefix . 'name',
@@ -92,7 +92,7 @@ class MB_CPT_Edit
 				'placeholder' => __( 'Slug', 'mb-cpt' ),
 			),
 		);
-		$labels_fields      = array(
+		$labels_fields   = array(
 			array(
 				'name'        => __( 'Menu Name', 'mb-cpt' ),
 				'id'          => $label_prefix . 'menu_name',
@@ -172,7 +172,7 @@ class MB_CPT_Edit
 				'placeholder' => __( 'Not found in Trash', 'mb-cpt' ),
 			),
 		);
-		$advanced_fields    = array(
+		$advanced_fields = array(
 			array(
 				'name'    => __( 'Menu Icon', 'mb-cpt' ),
 				'id'      => $args_prefix . 'menu_icon',
@@ -312,10 +312,10 @@ class MB_CPT_Edit
 
 		// Labels settings
 		$meta_boxes[] = array(
-			'id'         => 'label-settings',
-			'title'      => __( 'Labels Settings', 'mb-cpt' ),
-			'pages'      => array( 'mb-post-type' ),
-			'fields'     => $labels_fields,
+			'id'     => 'label-settings',
+			'title'  => __( 'Labels Settings', 'mb-cpt' ),
+			'pages'  => array( 'mb-post-type' ),
+			'fields' => $labels_fields,
 		);
 
 		// Advanced settings

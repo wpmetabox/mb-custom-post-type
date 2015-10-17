@@ -166,8 +166,8 @@ class MB_CPT_Register
 	 */
 	public function updated_message( $messages )
 	{
-		$post       = get_post();
-		$message    = array(
+		$post    = get_post();
+		$message = array(
 			0  => '', // Unused. Messages start at index 1.
 			1  => sprintf( __( '%s updated.', 'mb-cpt' ), $post->post_title ),
 			2  => __( 'Custom field updated.', 'mb-cpt' ),
@@ -188,16 +188,15 @@ class MB_CPT_Register
 		);
 
 		// Get all post where where post_type = mb-post-type
-		$mb_post_types = get_posts( array(
+		$post_types = get_posts( array(
 			'posts_per_page' => - 1,
 			'post_status'    => 'any',
 			'post_type'      => 'mb-post-type',
 		) );
-
-		foreach ( $mb_post_types as $post_type )
+		foreach ( $post_types as $post_type )
 		{
-			$slug               =  get_post_meta( $post_type->ID, 'args_post_type', true );
-			$messages[$slug]    = $message;
+			$slug            = get_post_meta( $post_type->ID, 'args_post_type', true );
+			$messages[$slug] = $message;
 		}
 
 		$messages['mb-post-type'] = $message;
@@ -215,40 +214,39 @@ class MB_CPT_Register
 	 */
 	public function bulk_updated_messages( $bulk_messages, $bulk_counts )
 	{
+		$labels = array(
+			'mb-post-type' => array(
+				'singular' => __( 'post type', 'mb-cpt' ),
+				'plural'   => __( 'post types', 'mb-cpt' )
+			),
+		);
+
 		// Get all post where where post_type = mb-post-type
-		$mb_post_types = get_posts( array(
+		$post_types = get_posts( array(
 			'posts_per_page' => - 1,
 			'post_status'    => 'any',
 			'post_type'      => 'mb-post-type',
 		) );
-
-		$cpt = array(
-			'mb-post-type' => array(
-				'singular'  => __( 'post type', 'mb-cpt' ),
-				'plural'    => __( 'post types', 'mb-cpt' )
-			),
-		);
-
-		foreach ( $mb_post_types as $post_type )
+		foreach ( $post_types as $post_type )
 		{
-			$slug       = get_post_meta( $post_type->ID, 'args_post_type', true );
-			$cpt[$slug] = array(
-				'singular'  => get_post_meta( $post_type->ID, 'label_singular_name', true ),
-				'plural'    => get_post_meta( $post_type->ID, 'label_name', true ),
+			$slug          = get_post_meta( $post_type->ID, 'args_post_type', true );
+			$labels[$slug] = array(
+				'singular' => get_post_meta( $post_type->ID, 'label_singular_name', true ),
+				'plural'   => get_post_meta( $post_type->ID, 'label_name', true ),
 			);
 		}
 
-		foreach ( $cpt as $key => $value )
+		foreach ( $labels as $post_type => $label )
 		{
-			$singular   = $value['singular'];
-			$plural     = $value['plural'];
+			$singular = $label['singular'];
+			$plural   = $label['plural'];
 
-			$bulk_messages[$key] = array(
-				'updated'   => sprintf( _n( "%s $singular updated.", "%s $plural updated.", $bulk_counts['updated'], 'mb-cpt' ), $bulk_counts['updated'] ),
-				'locked'    => sprintf( _n( "%s $singular not updated, somebody is editing.", "%s $plural not updated, somebody is editing.", $bulk_counts['locked'], 'mb-cpt' ), $bulk_counts['locked'] ),
-				'deleted'   => sprintf( _n( "%s $singular permanently deleted.", "%s $plural permanently deleted.", $bulk_counts['deleted'], 'mb-cpt' ), $bulk_counts['deleted'] ),
-				'trashed'   => sprintf( _n( "%s $singular moved to the Trash.", "%s $plural moved to the Trash.", $bulk_counts['trashed'], 'mb-cpt' ), $bulk_counts['trashed'] ),
-				'untrashed' => sprintf( _n( "%s $singular restored from the Trash.", "%s $plural restored from the Trash.", $bulk_counts['untrashed'], 'mb-cpt' ), $bulk_counts['untrashed'] ),
+			$bulk_messages[$post_type] = array(
+				'updated'   => sprintf( __( '%s %s updated.', 'mb-cpt' ), $bulk_counts['updated'], $bulk_counts['updated'] > 1 ? $plural : $singular ),
+				'locked'    => sprintf( __( '%s %s not updated, somebody is editing.', 'mb-cpt' ), $bulk_counts['locked'], $bulk_counts['locked'] > 1 ? $plural : $singular ),
+				'deleted'   => sprintf( __( '%s %s permanently deleted.', 'mb-cpt' ), $bulk_counts['deleted'], $bulk_counts['deleted'] > 1 ? $plural : $singular ),
+				'trashed'   => sprintf( __( '%s %s moved to the Trash.', 'mb-cpt' ), $bulk_counts['trashed'], $bulk_counts['trashed'] > 1 ? $plural : $singular ),
+				'untrashed' => sprintf( __( '%s %s restored from the Trash.', 'mb-cpt' ), $bulk_counts['untrashed'], $bulk_counts['untrashed'] > 1 ? $plural : $singular ),
 			);
 		}
 
