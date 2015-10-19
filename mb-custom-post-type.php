@@ -1,13 +1,15 @@
 <?php
-/*
-Plugin Name: Meta Box Custom Post Type
-Plugin URI: https://www.metabox.io/plugins/mb-custom-post-type
-Description: Create Custom Post Type Extension for Meta Box Plugin
-Version: 1.0.0
-Author: Rilwis & Duc Doan
-Author URI: https://metabox.io
-License: GPL2+
-*/
+/**
+ * Plugin Name: MB Custom Post Type
+ * Plugin URI: https://www.metabox.io/plugins/mb-custom-post-type
+ * Description: Create custom post types with easy-to-use UI
+ * Version: 1.0.0
+ * Author: Rilwis & Duc Doan
+ * Author URI: https://metabox.io
+ * License: GPL-2.0+
+ * Text Domain: mb-custom-post-type
+ * Domain Path: /lang/
+ */
 
 // Prevent loading this file directly
 if ( ! defined( 'ABSPATH' ) )

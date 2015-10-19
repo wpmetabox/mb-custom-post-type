@@ -1,29 +1,27 @@
 #misc-publishing-actions,
 #minor-publishing-actions,
 #save-post,
-#screen-options-link-wrap,
-.hidden
-{
-	display: none !important;
+.icon-single .hidden {
+	display: none;
 }
-
-.rwmb-radio-wrapper .rwmb-input .icon-single
-{
+.rwmb-radio-wrapper .rwmb-input {
+	height: 160px;
+	overflow: auto;
+}
+.rwmb-radio-wrapper .rwmb-input .icon-single {
 	display: inline-block;
 	margin: 0 5px 5px 0;
 	border: 1px solid #dadada;
-	background: #FFF;
 	border-radius: 3px;
-	padding: 6px;
-	font-size: 18px;
-	width: 18px;
 	text-align: center;
-	line-height: 18px;
+	width: 36px;
+	padding: 8px 0;
+	-webkit-box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	box-sizing: border-box;
 }
-
 .rwmb-radio-wrapper .rwmb-input .icon-single:hover,
-.rwmb-radio-wrapper .rwmb-input .icon-single.active
-{
+.rwmb-radio-wrapper .rwmb-input .icon-single.active {
 	border-color: rgba(0, 0, 0, .1);
 	color: white;
 	background: #3c0;

@@ -1,7 +1,7 @@
 // Prepend jquery
 // Prepend angularJS
 
-/* global jQuery, angular, SlLabels */
+/* global jQuery, angular, MBPostTypeLabels */
 
 (function ( $, angular )
 {
@@ -25,14 +25,13 @@
 				return;
 			}
 
-			$scope.label_menu_name          = $scope.label_name;
-			$scope.label_add_new            = SlLabels.add_new;
-			$scope.label_parent_item_colon  = SlLabels.parent_item_colon + $scope.label_name;
-			$scope.label_all_items          = SlLabels.all_items + $scope.label_name;
-			$scope.label_search_items       = SlLabels.search_items + $scope.label_name;
-			$scope.label_not_found          = SlLabels.no + $scope.label_name + SlLabels.not_found;
-			$scope.label_not_found_in_trash = SlLabels.no + $scope.label_name + SlLabels.not_found_in_trash;
-
+			$scope.label_menu_name = $scope.label_name;
+			$scope.label_add_new = MBPostTypeLabels.add_new;
+			$scope.label_parent_item_colon = MBPostTypeLabels.parent_item_colon + $scope.label_name;
+			$scope.label_all_items = MBPostTypeLabels.all_items + $scope.label_name;
+			$scope.label_search_items = MBPostTypeLabels.search_items + $scope.label_name;
+			$scope.label_not_found = MBPostTypeLabels.no + $scope.label_name + MBPostTypeLabels.not_found;
+			$scope.label_not_found_in_trash = MBPostTypeLabels.no + $scope.label_name + MBPostTypeLabels.not_found_in_trash;
 		} );
 
 		// Watch the change of label_singular_name and auto fill in inputs
@@ -45,18 +44,17 @@
 			}
 
 			$scope.label_name_admin_bar = $scope.label_singular_name;
-			$scope.label_add_new_item   = SlLabels.add_new_item + $scope.label_singular_name;
-			$scope.label_new_item       = SlLabels.new_item + $scope.label_singular_name;
-			$scope.label_edit_item      = SlLabels.edit_item + $scope.label_singular_name;
-			$scope.label_update_item    = SlLabels.update_item + $scope.label_singular_name;
-			$scope.label_view_item      = SlLabels.view_item + $scope.label_singular_name;
-			$scope.args_post_type       = stringToSlug( $scope.label_singular_name );
+			$scope.label_add_new_item = MBPostTypeLabels.add_new_item + $scope.label_singular_name;
+			$scope.label_new_item = MBPostTypeLabels.new_item + $scope.label_singular_name;
+			$scope.label_edit_item = MBPostTypeLabels.edit_item + $scope.label_singular_name;
+			$scope.label_update_item = MBPostTypeLabels.update_item + $scope.label_singular_name;
+			$scope.label_view_item = MBPostTypeLabels.view_item + $scope.label_singular_name;
+			$scope.args_post_type = stringToSlug( $scope.label_singular_name );
 		} );
 	}] );
 
 	/**
 	 * Make some checkboxes in Supports Meta Box are checked by default
-	 *
 	 * @return void
 	 */
 	function defaultCheckedCheckbox()
@@ -78,9 +76,7 @@
 
 	/**
 	 * Convert string to slug
-	 *
-	 * @param string str
-	 *
+	 * @param str
 	 * @return string
 	 */
 	function stringToSlug( str )
@@ -90,7 +86,7 @@
 		str = str.toLowerCase();
 
 		// Remove accents
-		var from = "àáäâèéëêìíïîòóöôùúüûñç·/_,:;",
+		var from = "Ã Ã¡Ã¤Ã¢Ã¨Ã©Ã«ÃªÃ¬Ã­Ã¯Ã®Ã²Ã³Ã¶Ã´Ã¹ÃºÃ¼Ã»Ã±Ã§Â·/_,:;",
 			to = "aaaaeeeeiiiioooouuuunc------",
 			i, l;
 
@@ -108,8 +104,7 @@
 
 	/**
 	 * Transform string to slug after filled in slug's input
-	 *
-	 * return void
+	 * @return void
 	 */
 	function slugEntering()
 	{
@@ -122,9 +117,7 @@
 
 	/**
 	 * Get parameter from query string
-	 *
-	 * @param string name
-	 *
+	 * @param name
 	 * @return string
 	 */
 	function getParameterByName( name )
@@ -136,8 +129,7 @@
 	}
 
 	/**
-	 * Toggle Advance Settings
-	 *
+	 * Toggle Label and Advanced Settings
 	 * @return void
 	 */
 	function toggleAdvanceSettings()
@@ -153,7 +145,6 @@
 
 	/**
 	 * Add/Remove active class for selected/unselected menu icon
-	 *
 	 * @return void
 	 */
 	function activeMenu()
@@ -169,24 +160,13 @@
 		} );
 	}
 
-	/**
-	 * Initializing
-	 *
-	 * return void
-	 */
-	function init()
-	{
-		// Hide Advance Settings
-		$( '#btn-advance' ).trigger( 'click' );
-	}
-
+	// Run when document is ready
 	$( function ()
 	{
 		slugEntering();
 		defaultCheckedCheckbox();
 		toggleAdvanceSettings();
 		activeMenu();
-		init();
 	} );
 
 })( jQuery, angular );

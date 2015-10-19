@@ -23,7 +23,7 @@ class MB_CPT_Edit
 		// Add meta box
 		add_filter( 'rwmb_meta_boxes', array( $this, 'register_meta_boxes' ) );
 		// Modify post information after save post
-		add_action( 'save_post', array( $this, 'save_post' ) );
+		add_action( 'save_post_mb-post-type', array( $this, 'save_post' ) );
 		// Add ng-controller to form
 		add_action( 'post_edit_form_tag', array( $this, 'add_ng_controller' ) );
 	}
@@ -44,19 +44,19 @@ class MB_CPT_Edit
 		wp_enqueue_style( 'mb-cpt-css', MB_CPT_CSS_URL . 'styles.css', array(), '1.0.0', false );
 		wp_enqueue_script( 'mb-cpt-js', MB_CPT_JS_URL . 'scripts.js', array( 'jquery', 'angular' ), '1.0.0', false );
 
-		wp_localize_script( 'mb-cpt-js', 'SlLabels', array(
-			'add_new'            => __( 'Add New', 'mb-cpt' ),
-			'add_new_item'       => __( 'Add New ', 'mb-cpt' ),
-			'new_item'           => __( 'New ', 'mb-cpt' ),
-			'edit_item'          => __( 'Edit ', 'mb-cpt' ),
-			'view_item'          => __( 'View ', 'mb-cpt' ),
-			'update_item'        => __( 'Update ', 'mb-cpt' ),
-			'all_items'          => __( 'All ', 'mb-cpt' ),
-			'search_items'       => __( 'Search ', 'mb-cpt' ),
-			'parent_item_colon'  => __( 'Parent ', 'mb-cpt' ),
-			'no'                 => __( 'No ', 'mb-cpt' ),
-			'not_found'          => __( ' found.', 'mb-cpt' ),
-			'not_found_in_trash' => __( ' found in Trash.', 'mb-cpt' ),
+		wp_localize_script( 'mb-cpt-js', 'MBPostTypeLabels', array(
+			'add_new'            => __( 'Add New', 'mb-custom-post-type' ),
+			'add_new_item'       => __( 'Add New ', 'mb-custom-post-type' ),
+			'new_item'           => __( 'New ', 'mb-custom-post-type' ),
+			'edit_item'          => __( 'Edit ', 'mb-custom-post-type' ),
+			'view_item'          => __( 'View ', 'mb-custom-post-type' ),
+			'update_item'        => __( 'Update ', 'mb-custom-post-type' ),
+			'all_items'          => __( 'All ', 'mb-custom-post-type' ),
+			'search_items'       => __( 'Search ', 'mb-custom-post-type' ),
+			'parent_item_colon'  => __( 'Parent ', 'mb-custom-post-type' ),
+			'no'                 => __( 'No ', 'mb-custom-post-type' ),
+			'not_found'          => __( ' found.', 'mb-custom-post-type' ),
+			'not_found_in_trash' => __( ' found in Trash.', 'mb-custom-post-type' ),
 		) );
 	}
 
@@ -74,196 +74,196 @@ class MB_CPT_Edit
 
 		$basic_fields    = array(
 			array(
-				'name'        => __( 'Plural Name', 'mb-cpt' ),
+				'name'        => __( 'Plural Name', 'mb-custom-post-type' ),
 				'id'          => $label_prefix . 'name',
 				'type'        => 'text',
-				'placeholder' => __( 'Plural Name', 'mb-cpt' ),
+				'placeholder' => __( 'Plural Name', 'mb-custom-post-type' ),
 			),
 			array(
-				'name'        => __( 'Singular Name', 'mb-cpt' ),
+				'name'        => __( 'Singular Name', 'mb-custom-post-type' ),
 				'id'          => $label_prefix . 'singular_name',
 				'type'        => 'text',
-				'placeholder' => __( 'Singular Name', 'mb-cpt' ),
+				'placeholder' => __( 'Singular Name', 'mb-custom-post-type' ),
 			),
 			array(
-				'name'        => __( 'Slug', 'mb-cpt' ),
+				'name'        => __( 'Slug', 'mb-custom-post-type' ),
 				'id'          => $args_prefix . 'post_type',
 				'type'        => 'text',
-				'placeholder' => __( 'Slug', 'mb-cpt' ),
+				'placeholder' => __( 'Slug', 'mb-custom-post-type' ),
 			),
 		);
 		$labels_fields   = array(
 			array(
-				'name'        => __( 'Menu Name', 'mb-cpt' ),
+				'name'        => __( 'Menu Name', 'mb-custom-post-type' ),
 				'id'          => $label_prefix . 'menu_name',
 				'type'        => 'text',
-				'placeholder' => __( 'Menu Name', 'mb-cpt' ),
+				'placeholder' => __( 'Menu Name', 'mb-custom-post-type' ),
 			),
 			array(
-				'name'        => __( 'Name Admin Bar', 'mb-cpt' ),
+				'name'        => __( 'Name Admin Bar', 'mb-custom-post-type' ),
 				'id'          => $label_prefix . 'name_admin_bar',
 				'type'        => 'text',
-				'placeholder' => __( 'Name Admin Bar', 'mb-cpt' ),
+				'placeholder' => __( 'Name Admin Bar', 'mb-custom-post-type' ),
 			),
 			array(
-				'name'        => __( 'Parent Items:', 'mb-cpt' ),
+				'name'        => __( 'Parent Items:', 'mb-custom-post-type' ),
 				'id'          => $label_prefix . 'parent_item_colon',
 				'type'        => 'text',
-				'placeholder' => __( 'Parent Items:', 'mb-cpt' ),
+				'placeholder' => __( 'Parent Items:', 'mb-custom-post-type' ),
 			),
 			array(
-				'name'        => __( 'All Items', 'mb-cpt' ),
+				'name'        => __( 'All Items', 'mb-custom-post-type' ),
 				'id'          => $label_prefix . 'all_items',
 				'type'        => 'text',
-				'placeholder' => __( 'All Items', 'mb-cpt' ),
+				'placeholder' => __( 'All Items', 'mb-custom-post-type' ),
 			),
 			array(
-				'name'        => __( 'Add New Item', 'mb-cpt' ),
+				'name'        => __( 'Add New Item', 'mb-custom-post-type' ),
 				'id'          => $label_prefix . 'add_new_item',
 				'type'        => 'text',
-				'placeholder' => __( 'Add New Item', 'mb-cpt' ),
+				'placeholder' => __( 'Add New Item', 'mb-custom-post-type' ),
 			),
 			array(
-				'name'        => __( 'Add New', 'mb-cpt' ),
+				'name'        => __( 'Add New', 'mb-custom-post-type' ),
 				'id'          => $label_prefix . 'add_new',
 				'type'        => 'text',
-				'placeholder' => __( 'Add New', 'mb-cpt' ),
+				'placeholder' => __( 'Add New', 'mb-custom-post-type' ),
 			),
 			array(
-				'name'        => __( 'New Item', 'mb-cpt' ),
+				'name'        => __( 'New Item', 'mb-custom-post-type' ),
 				'id'          => $label_prefix . 'new_item',
 				'type'        => 'text',
-				'placeholder' => __( 'New Item', 'mb-cpt' ),
+				'placeholder' => __( 'New Item', 'mb-custom-post-type' ),
 			),
 			array(
-				'name'        => __( 'Edit Item', 'mb-cpt' ),
+				'name'        => __( 'Edit Item', 'mb-custom-post-type' ),
 				'id'          => $label_prefix . 'edit_item',
 				'type'        => 'text',
-				'placeholder' => __( 'Edit Item', 'mb-cpt' ),
+				'placeholder' => __( 'Edit Item', 'mb-custom-post-type' ),
 			),
 			array(
-				'name'        => __( 'Update Item', 'mb-cpt' ),
+				'name'        => __( 'Update Item', 'mb-custom-post-type' ),
 				'id'          => $label_prefix . 'update_item',
 				'type'        => 'text',
-				'placeholder' => __( 'Update Item', 'mb-cpt' ),
+				'placeholder' => __( 'Update Item', 'mb-custom-post-type' ),
 			),
 			array(
-				'name'        => __( 'View Item', 'mb-cpt' ),
+				'name'        => __( 'View Item', 'mb-custom-post-type' ),
 				'id'          => $label_prefix . 'view_item',
 				'type'        => 'text',
-				'placeholder' => __( 'View Item', 'mb-cpt' ),
+				'placeholder' => __( 'View Item', 'mb-custom-post-type' ),
 			),
 			array(
-				'name'        => __( 'Search Items', 'mb-cpt' ),
+				'name'        => __( 'Search Items', 'mb-custom-post-type' ),
 				'id'          => $label_prefix . 'search_items',
 				'type'        => 'text',
-				'placeholder' => __( 'Search Items', 'mb-cpt' ),
+				'placeholder' => __( 'Search Items', 'mb-custom-post-type' ),
 			),
 			array(
-				'name'        => __( 'Not found', 'mb-cpt' ),
+				'name'        => __( 'Not found', 'mb-custom-post-type' ),
 				'id'          => $label_prefix . 'not_found',
 				'type'        => 'text',
-				'placeholder' => __( 'Not found', 'mb-cpt' ),
+				'placeholder' => __( 'Not found', 'mb-custom-post-type' ),
 			),
 			array(
-				'name'        => __( 'Not found in Trash', 'mb-cpt' ),
+				'name'        => __( 'Not found in Trash', 'mb-custom-post-type' ),
 				'id'          => $label_prefix . 'not_found_in_trash',
 				'type'        => 'text',
-				'placeholder' => __( 'Not found in Trash', 'mb-cpt' ),
+				'placeholder' => __( 'Not found in Trash', 'mb-custom-post-type' ),
 			),
 		);
 		$advanced_fields = array(
 			array(
-				'name'    => __( 'Menu Icon', 'mb-cpt' ),
+				'name'    => __( 'Menu Icon', 'mb-custom-post-type' ),
 				'id'      => $args_prefix . 'menu_icon',
 				'type'    => 'radio',
 				'options' => mb_cpt_get_dashicons(),
 			),
 			array(
-				'name'        => __( 'Description', 'mb-cpt' ),
+				'name'        => __( 'Description', 'mb-custom-post-type' ),
 				'id'          => $args_prefix . 'description',
 				'type'        => 'textarea',
-				'placeholder' => __( 'Description', 'mb-cpt' ),
+				'placeholder' => __( 'Description', 'mb-custom-post-type' ),
 			),
 			array(
-				'name' => __( 'Public', 'mb-cpt' ),
+				'name' => __( 'Public', 'mb-custom-post-type' ),
 				'id'   => $args_prefix . 'public',
 				'type' => 'checkbox',
 				'std'  => 1,
-				'desc' => __( 'Allow the post type appear in the Frontend', 'mb-cpt' ),
+				'desc' => __( 'Allow the post type appear in the Frontend', 'mb-custom-post-type' ),
 			),
 			array(
-				'name' => __( 'Publicly Queryable', 'mb-cpt' ),
+				'name' => __( 'Publicly Queryable', 'mb-custom-post-type' ),
 				'id'   => $args_prefix . 'publicly_queryable',
 				'type' => 'checkbox',
 				'std'  => 1,
-				'desc' => __( 'Whether post type queries can be performed from the front end.', 'mb-cpt' ),
+				'desc' => __( 'Whether post type queries can be performed from the front end.', 'mb-custom-post-type' ),
 			),
 			array(
-				'name' => __( 'Show UI', 'mb-cpt' ),
+				'name' => __( 'Show UI', 'mb-custom-post-type' ),
 				'id'   => $args_prefix . 'show_ui',
 				'type' => 'checkbox',
 				'std'  => 1,
-				'desc' => __( 'Whether to show the post type in the admin menu and where to show that menu. Note that show_ui must be true.', 'mb-cpt' ),
+				'desc' => __( 'Whether to show the post type in the admin menu and where to show that menu. Note that show_ui must be true.', 'mb-custom-post-type' ),
 			),
 			array(
-				'name' => __( 'Show In Menu', 'mb-cpt' ),
+				'name' => __( 'Show In Menu', 'mb-custom-post-type' ),
 				'id'   => $args_prefix . 'show_in_menu',
 				'type' => 'checkbox',
 				'std'  => 1,
-				'desc' => __( 'Whether post type is available for selection in menus.', 'mb-cpt' ),
+				'desc' => __( 'Whether post type is available for selection in menus.', 'mb-custom-post-type' ),
 			),
 			array(
-				'name' => __( 'Query Var', 'mb-cpt' ),
+				'name' => __( 'Query Var', 'mb-custom-post-type' ),
 				'id'   => $args_prefix . 'query_var',
 				'type' => 'checkbox',
 				'std'  => 1,
-				'desc' => __( 'False to prevent queries, or string value of the query var to use for this post type.', 'mb-cpt' ),
+				'desc' => __( 'False to prevent queries, or string value of the query var to use for this post type.', 'mb-custom-post-type' ),
 			),
 			array(
-				'name'    => __( 'Capability Type', 'mb-cpt' ),
+				'name'    => __( 'Capability Type', 'mb-custom-post-type' ),
 				'id'      => $args_prefix . 'capability_type',
 				'type'    => 'select',
 				'options' => array(
-					'post' => __( 'Post', 'mb-cpt' ),
-					'page' => __( 'Page', 'mb-cpt' ),
+					'post' => __( 'Post', 'mb-custom-post-type' ),
+					'page' => __( 'Page', 'mb-custom-post-type' ),
 				)
 			),
 			array(
-				'name' => __( 'Has Archive', 'mb-cpt' ),
+				'name' => __( 'Has Archive', 'mb-custom-post-type' ),
 				'id'   => $args_prefix . 'has_archive',
 				'type' => 'checkbox',
 				'std'  => 1,
-				'desc' => __( 'Allow to have custom archive slug for CPT.', 'mb-cpt' ),
+				'desc' => __( 'Allow to have custom archive slug for CPT.', 'mb-custom-post-type' ),
 			),
 			array(
-				'name' => __( 'Hierarchical', 'mb-cpt' ),
+				'name' => __( 'Hierarchical', 'mb-custom-post-type' ),
 				'id'   => $args_prefix . 'hierarchical',
 				'type' => 'checkbox',
-				'desc' => __( 'Whether the post type is hierarchical. Allows Parent to be specified.', 'mb-cpt' ),
+				'desc' => __( 'Whether the post type is hierarchical. Allows Parent to be specified.', 'mb-custom-post-type' ),
 			),
 			array(
-				'name' => __( 'Can Export', 'mb-cpt' ),
+				'name' => __( 'Can Export', 'mb-custom-post-type' ),
 				'id'   => $args_prefix . 'can_export',
 				'type' => 'checkbox',
 				'std'  => 1,
-				'desc' => __( 'Can this post type be exported.', 'mb-cpt' ),
+				'desc' => __( 'Can this post type be exported.', 'mb-custom-post-type' ),
 			),
 			array(
-				'name' => __( 'Show In Nav Menus', 'mb-cpt' ),
+				'name' => __( 'Show In Nav Menus', 'mb-custom-post-type' ),
 				'id'   => $args_prefix . 'show_in_nav_menus',
 				'type' => 'checkbox',
 				'std'  => 1,
-				'desc' => __( 'Whether post type is available for selection in navigation menus.', 'mb-cpt' ),
+				'desc' => __( 'Whether post type is available for selection in navigation menus.', 'mb-custom-post-type' ),
 			),
 			array(
-				'name' => __( 'Exclude From Search', 'mb-cpt' ),
+				'name' => __( 'Exclude From Search', 'mb-custom-post-type' ),
 				'id'   => $args_prefix . 'exclude_from_search',
 				'type' => 'checkbox',
-				'desc' => __( 'Whether to exclude posts with this post type from search results.', 'mb-cpt' ),
+				'desc' => __( 'Whether to exclude posts with this post type from search results.', 'mb-custom-post-type' ),
 			),
 			array(
-				'name' => __( 'Menu Position', 'mb-cpt' ),
+				'name' => __( 'Menu Position', 'mb-custom-post-type' ),
 				'id'   => $args_prefix . 'menu_position',
 				'type' => 'number',
 			),
@@ -272,7 +272,7 @@ class MB_CPT_Edit
 		// Basic settings
 		$meta_boxes[] = array(
 			'id'         => 'basic-settings',
-			'title'      => __( 'Basic Settings', 'mb-cpt' ),
+			'title'      => __( 'Basic Settings', 'mb-custom-post-type' ),
 			'pages'      => array( 'mb-post-type' ),
 			'fields'     => array_merge(
 				$basic_fields,
@@ -280,7 +280,7 @@ class MB_CPT_Edit
 					array(
 						'id'   => 'btn-toggle-advanced',
 						'type' => 'button',
-						'std'  => __( 'Advanced', 'mb-cpt' ),
+						'std'  => __( 'Advanced', 'mb-custom-post-type' ),
 					),
 				)
 			),
@@ -298,13 +298,13 @@ class MB_CPT_Edit
 				),
 				'messages' => array(
 					$label_prefix . 'name'          => array(
-						'required' => __( 'Plural name is required', 'mb-cpt' ),
+						'required' => __( 'Plural name is required', 'mb-custom-post-type' ),
 					),
 					$label_prefix . 'singular_name' => array(
-						'required' => __( 'Singular name is required', 'mb-cpt' ),
+						'required' => __( 'Singular name is required', 'mb-custom-post-type' ),
 					),
 					$args_prefix . 'post_type'      => array(
-						'required' => __( 'Slug is required', 'mb-cpt' ),
+						'required' => __( 'Slug is required', 'mb-custom-post-type' ),
 					),
 				)
 			),
@@ -313,7 +313,7 @@ class MB_CPT_Edit
 		// Labels settings
 		$meta_boxes[] = array(
 			'id'     => 'label-settings',
-			'title'  => __( 'Labels Settings', 'mb-cpt' ),
+			'title'  => __( 'Labels Settings', 'mb-custom-post-type' ),
 			'pages'  => array( 'mb-post-type' ),
 			'fields' => $labels_fields,
 		);
@@ -321,7 +321,7 @@ class MB_CPT_Edit
 		// Advanced settings
 		$meta_boxes[] = array(
 			'id'     => 'advanced-settings',
-			'title'  => __( 'Advanced Settings', 'mb-cpt' ),
+			'title'  => __( 'Advanced Settings', 'mb-custom-post-type' ),
 			'pages'  => array( 'mb-post-type' ),
 			'fields' => $advanced_fields,
 		);
@@ -329,7 +329,7 @@ class MB_CPT_Edit
 		// Supports
 		$meta_boxes[] = array(
 			'id'       => 'supports',
-			'title'    => __( 'Supports', 'mb-cpt' ),
+			'title'    => __( 'Supports', 'mb-custom-post-type' ),
 			'pages'    => array( 'mb-post-type' ),
 			'priority' => 'low',
 			'context'  => 'side',
@@ -338,15 +338,15 @@ class MB_CPT_Edit
 					'id'      => $args_prefix . 'supports',
 					'type'    => 'checkbox_list',
 					'options' => array(
-						'title'           => __( 'Title', 'mb-cpt' ),
-						'editor'          => __( 'Editor', 'mb-cpt' ),
-						'author'          => __( 'Author', 'mb-cpt' ),
-						'thumbnail'       => __( 'Thumbnail', 'mb-cpt' ),
-						'excerpt'         => __( 'Excerpt', 'mb-cpt' ),
-						'trackbacks'      => __( 'Trackbacks', 'mb-cpt' ),
-						'comments'        => __( 'Comments', 'mb-cpt' ),
-						'revisions'       => __( 'Revisions', 'mb-cpt' ),
-						'page-attributes' => __( 'Page Attributes', 'mb-cpt' ),
+						'title'           => __( 'Title', 'mb-custom-post-type' ),
+						'editor'          => __( 'Editor', 'mb-custom-post-type' ),
+						'author'          => __( 'Author', 'mb-custom-post-type' ),
+						'thumbnail'       => __( 'Thumbnail', 'mb-custom-post-type' ),
+						'excerpt'         => __( 'Excerpt', 'mb-custom-post-type' ),
+						'trackbacks'      => __( 'Trackbacks', 'mb-custom-post-type' ),
+						'comments'        => __( 'Comments', 'mb-custom-post-type' ),
+						'revisions'       => __( 'Revisions', 'mb-custom-post-type' ),
+						'page-attributes' => __( 'Page Attributes', 'mb-custom-post-type' ),
 					),
 				),
 			),
@@ -409,9 +409,8 @@ class MB_CPT_Edit
 	 */
 	public function save_post( $post_id )
 	{
-		// If post type of saved post is not mb-post-type or label_singular_name is empty
-		// or if this function is called to prevent duplicated calls like revisions, manual hook to wp_insert_post, etc.
-		if ( 'mb-post-type' !== get_post_type( $post_id ) || empty( $_POST['label_singular_name'] ) || true === $this->saved )
+		// If label_singular_name is empty or if this function is called to prevent duplicated calls like revisions, manual hook to wp_insert_post, etc.
+		if ( empty( $_POST['label_singular_name'] ) || true === $this->saved )
 		{
 			return;
 		}
@@ -425,6 +424,9 @@ class MB_CPT_Edit
 		);
 
 		wp_update_post( $post );
+
+		// Flush rewrite rules after create new or edit post types
+		flush_rewrite_rules();
 	}
 
 	/**
@@ -440,7 +442,7 @@ class MB_CPT_Edit
 		}
 
 		echo '<div class="error">';
-		_e( 'Meta Box Custom Post Type requires Meta Box plugin to work. Please install it.', 'mb-cpt' );
+		_e( 'Meta Box Custom Post Type requires Meta Box plugin to work. Please install it.', 'mb-custom-post-type' );
 		echo '</div>';
 	}
 

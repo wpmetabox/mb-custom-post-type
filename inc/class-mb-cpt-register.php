@@ -33,9 +33,6 @@ class MB_CPT_Register
 		{
 			register_post_type( $post_type['post_type'], $post_type );
 		}
-
-		// Refresh permalink
-		flush_rewrite_rules();
 	}
 
 	/**
@@ -51,8 +48,8 @@ class MB_CPT_Register
 		// Create mb-post-type post type to management/add/edit custom post types
 		$post_types[] = $this->set_up_post_type(
 			array(
-				'name'          => __( 'Post Types', 'mb-cpt' ),
-				'singular_name' => __( 'Post Type', 'mb-cpt' ),
+				'name'          => __( 'Post Types', 'mb-custom-post-type' ),
+				'singular_name' => __( 'Post Type', 'mb-custom-post-type' ),
 			),
 			array(
 				'public'    => false,
@@ -117,17 +114,17 @@ class MB_CPT_Register
 		$default_labels = array(
 			'menu_name'          => $labels['name'],
 			'name_admin_bar'     => $labels['singular_name'],
-			'add_new'            => __( 'Add New', 'mb-cpt' ),
-			'add_new_item'       => sprintf( __( 'Add New %s', 'mb-cpt' ), $labels['singular_name'] ),
-			'new_item'           => sprintf( __( 'New %s', 'mb-cpt' ), $labels['singular_name'] ),
-			'edit_item'          => sprintf( __( 'Edit %s', 'mb-cpt' ), $labels['singular_name'] ),
-			'view_item'          => sprintf( __( 'View %s', 'mb-cpt' ), $labels['singular_name'] ),
-			'update_item'        => sprintf( __( 'Update %s', 'mb-cpt' ), $labels['singular_name'] ),
-			'all_items'          => sprintf( __( 'All %s', 'mb-cpt' ), $labels['name'] ),
-			'search_items'       => sprintf( __( 'Search %s', 'mb-cpt' ), $labels['name'] ),
-			'parent_item_colon'  => sprintf( __( 'Parent %s:', 'mb-cpt' ), $labels['name'] ),
-			'not_found'          => sprintf( __( 'No %s found.', 'mb-cpt' ), $labels['name'] ),
-			'not_found_in_trash' => sprintf( __( 'No %s found in Trash.', 'mb-cpt' ), $labels['name'] ),
+			'add_new'            => __( 'Add New', 'mb-custom-post-type' ),
+			'add_new_item'       => sprintf( __( 'Add New %s', 'mb-custom-post-type' ), $labels['singular_name'] ),
+			'new_item'           => sprintf( __( 'New %s', 'mb-custom-post-type' ), $labels['singular_name'] ),
+			'edit_item'          => sprintf( __( 'Edit %s', 'mb-custom-post-type' ), $labels['singular_name'] ),
+			'view_item'          => sprintf( __( 'View %s', 'mb-custom-post-type' ), $labels['singular_name'] ),
+			'update_item'        => sprintf( __( 'Update %s', 'mb-custom-post-type' ), $labels['singular_name'] ),
+			'all_items'          => sprintf( __( 'All %s', 'mb-custom-post-type' ), $labels['name'] ),
+			'search_items'       => sprintf( __( 'Search %s', 'mb-custom-post-type' ), $labels['name'] ),
+			'parent_item_colon'  => sprintf( __( 'Parent %s:', 'mb-custom-post-type' ), $labels['name'] ),
+			'not_found'          => sprintf( __( 'No %s found.', 'mb-custom-post-type' ), $labels['name'] ),
+			'not_found_in_trash' => sprintf( __( 'No %s found in Trash.', 'mb-custom-post-type' ), $labels['name'] ),
 		);
 
 		$labels = wp_parse_args( $labels, $default_labels );
@@ -135,7 +132,7 @@ class MB_CPT_Register
 		// Default arguments
 		$default_args = array(
 			'labels'              => $labels,
-			'description'         => sprintf( __( '%s GUI', 'mb-cpt' ), $labels['name'] ),
+			'description'         => sprintf( __( '%s GUI', 'mb-custom-post-type' ), $labels['name'] ),
 			'public'              => true,
 			'publicly_queryable'  => true,
 			'show_ui'             => true,
@@ -180,23 +177,23 @@ class MB_CPT_Register
 
 		$message = array(
 			0  => '', // Unused. Messages start at index 1.
-			1  => sprintf( __( '%s updated. <a href="%s">View %s.</a>', 'mb-cpt' ), $label, esc_url( $permalink ), $label_lower ),
-			2  => __( 'Custom field updated.', 'mb-cpt' ),
-			3  => __( 'Custom field deleted.', 'mb-cpt' ),
-			4  => sprintf( __( '%s updated.', 'mb-cpt' ), $label ),
+			1  => sprintf( __( '%s updated. <a href="%s">View %s.</a>', 'mb-custom-post-type' ), $label, esc_url( $permalink ), $label_lower ),
+			2  => __( 'Custom field updated.', 'mb-custom-post-type' ),
+			3  => __( 'Custom field deleted.', 'mb-custom-post-type' ),
+			4  => sprintf( __( '%s updated.', 'mb-custom-post-type' ), $label ),
 			/* translators: %s: date and time of the revision */
-			5  => isset( $_GET['revision'] ) ? sprintf( __( '%s restored to revision from %s.', 'mb-cpt' ), $label, wp_post_revision_title( (int) $_GET['revision'], false ) ) : false,
-			6  => sprintf( __( '%s published. <a href="%s">View %s</a>.', 'mb-cpt' ), $label, esc_url( $permalink ), $label_lower ),
-			7  => sprintf( __( '%s saved.', 'mb-cpt' ), $label ),
-			8  => sprintf( __( '%s submitted. <a target="_blank" href="%s">Preview %s</a>.', 'mb-cpt' ), $label, esc_url( $preview_url ), $label_lower ),
+			5  => isset( $_GET['revision'] ) ? sprintf( __( '%s restored to revision from %s.', 'mb-custom-post-type' ), $label, wp_post_revision_title( (int) $_GET['revision'], false ) ) : false,
+			6  => sprintf( __( '%s published. <a href="%s">View %s</a>.', 'mb-custom-post-type' ), $label, esc_url( $permalink ), $label_lower ),
+			7  => sprintf( __( '%s saved.', 'mb-custom-post-type' ), $label ),
+			8  => sprintf( __( '%s submitted. <a target="_blank" href="%s">Preview %s</a>.', 'mb-custom-post-type' ), $label, esc_url( $preview_url ), $label_lower ),
 			9  => sprintf(
-				__( '%s scheduled for: <strong>%s</strong>. <a target="_blank" href="%s">Preview %s</a>.', 'mb-cpt' ),
+				__( '%s scheduled for: <strong>%s</strong>. <a target="_blank" href="%s">Preview %s</a>.', 'mb-custom-post-type' ),
 				$label,
-				date_i18n( __( 'M j, Y @ G:i', 'mb-cpt' ), strtotime( $post->post_date ) ),
+				date_i18n( __( 'M j, Y @ G:i', 'mb-custom-post-type' ), strtotime( $post->post_date ) ),
 				esc_url( $permalink ),
 				$label_lower
 			),
-			10 => sprintf( __( '%s draft updated. <a target="_blank" href="%s">Preview %s</a>.', 'mb-cpt' ), $label, esc_url( $preview_url ), $label_lower ),
+			10 => sprintf( __( '%s draft updated. <a target="_blank" href="%s">Preview %s</a>.', 'mb-custom-post-type' ), $label, esc_url( $preview_url ), $label_lower ),
 		);
 
 		// Get all post where where post_type = mb-post-type
@@ -229,8 +226,8 @@ class MB_CPT_Register
 	{
 		$labels = array(
 			'mb-post-type' => array(
-				'singular' => __( 'post type', 'mb-cpt' ),
-				'plural'   => __( 'post types', 'mb-cpt' )
+				'singular' => __( 'post type', 'mb-custom-post-type' ),
+				'plural'   => __( 'post types', 'mb-custom-post-type' )
 			),
 		);
 
@@ -255,11 +252,11 @@ class MB_CPT_Register
 			$plural   = $label['plural'];
 
 			$bulk_messages[$post_type] = array(
-				'updated'   => sprintf( __( '%s %s updated.', 'mb-cpt' ), $bulk_counts['updated'], $bulk_counts['updated'] > 1 ? $plural : $singular ),
-				'locked'    => sprintf( __( '%s %s not updated, somebody is editing.', 'mb-cpt' ), $bulk_counts['locked'], $bulk_counts['locked'] > 1 ? $plural : $singular ),
-				'deleted'   => sprintf( __( '%s %s permanently deleted.', 'mb-cpt' ), $bulk_counts['deleted'], $bulk_counts['deleted'] > 1 ? $plural : $singular ),
-				'trashed'   => sprintf( __( '%s %s moved to the Trash.', 'mb-cpt' ), $bulk_counts['trashed'], $bulk_counts['trashed'] > 1 ? $plural : $singular ),
-				'untrashed' => sprintf( __( '%s %s restored from the Trash.', 'mb-cpt' ), $bulk_counts['untrashed'], $bulk_counts['untrashed'] > 1 ? $plural : $singular ),
+				'updated'   => sprintf( __( '%s %s updated.', 'mb-custom-post-type' ), $bulk_counts['updated'], $bulk_counts['updated'] > 1 ? $plural : $singular ),
+				'locked'    => sprintf( __( '%s %s not updated, somebody is editing.', 'mb-custom-post-type' ), $bulk_counts['locked'], $bulk_counts['locked'] > 1 ? $plural : $singular ),
+				'deleted'   => sprintf( __( '%s %s permanently deleted.', 'mb-custom-post-type' ), $bulk_counts['deleted'], $bulk_counts['deleted'] > 1 ? $plural : $singular ),
+				'trashed'   => sprintf( __( '%s %s moved to the Trash.', 'mb-custom-post-type' ), $bulk_counts['trashed'], $bulk_counts['trashed'] > 1 ? $plural : $singular ),
+				'untrashed' => sprintf( __( '%s %s restored from the Trash.', 'mb-custom-post-type' ), $bulk_counts['untrashed'], $bulk_counts['untrashed'] > 1 ? $plural : $singular ),
 			);
 		}
 
