@@ -18,8 +18,6 @@ class MB_CPT_Edit
 	{
 		// Enqueue scripts
 		add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_scripts' ) );
-		// Add notice if Meta Box Plugin wasn't activated
-		add_action( 'admin_notices', array( $this, 'admin_notice' ) );
 		// Add meta box
 		add_filter( 'rwmb_meta_boxes', array( $this, 'register_meta_boxes' ) );
 		// Modify post information after save post
@@ -427,23 +425,6 @@ class MB_CPT_Edit
 
 		// Flush rewrite rules after create new or edit post types
 		flush_rewrite_rules();
-	}
-
-	/**
-	 * Notice when Meta Box plugin is not installed
-	 *
-	 * @return string
-	 */
-	public function admin_notice()
-	{
-		if ( class_exists( 'RW_Meta_Box' ) )
-		{
-			return;
-		}
-
-		echo '<div class="error">';
-		_e( 'Meta Box Custom Post Type requires Meta Box plugin to work. Please install it.', 'mb-custom-post-type' );
-		echo '</div>';
 	}
 
 	/**
