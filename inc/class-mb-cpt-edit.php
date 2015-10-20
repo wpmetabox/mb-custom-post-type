@@ -46,23 +46,24 @@ class MB_CPT_Edit
 		}
 
 		wp_register_script( 'angular', 'https://ajax.googleapis.com/ajax/libs/angularjs/1.4.2/angular.min.js', array(), '1.4.2', true );
-		wp_enqueue_style( 'mb-cpt-css', MB_CPT_CSS_URL . 'styles.css', array(), '1.0.0', false );
-		wp_enqueue_script( 'mb-cpt-js', MB_CPT_JS_URL . 'scripts.js', array( 'jquery', 'angular' ), '1.0.0', false );
+		wp_enqueue_style( 'mb-cpt', MB_CPT_CSS_URL . 'styles.css', array(), '1.0.0', false );
+		wp_enqueue_script( 'mb-cpt', MB_CPT_JS_URL . 'scripts.js', array( 'jquery', 'angular' ), '1.0.0', false );
 
-		wp_localize_script( 'mb-cpt-js', 'MBPostTypeLabels', array(
-			'add_new'            => __( 'Add New', 'mb-custom-post-type' ),
-			'add_new_item'       => __( 'Add New ', 'mb-custom-post-type' ),
-			'new_item'           => __( 'New ', 'mb-custom-post-type' ),
-			'edit_item'          => __( 'Edit ', 'mb-custom-post-type' ),
-			'view_item'          => __( 'View ', 'mb-custom-post-type' ),
-			'update_item'        => __( 'Update ', 'mb-custom-post-type' ),
-			'all_items'          => __( 'All ', 'mb-custom-post-type' ),
-			'search_items'       => __( 'Search ', 'mb-custom-post-type' ),
-			'parent_item_colon'  => __( 'Parent ', 'mb-custom-post-type' ),
-			'no'                 => __( 'No ', 'mb-custom-post-type' ),
-			'not_found'          => __( ' found.', 'mb-custom-post-type' ),
-			'not_found_in_trash' => __( ' found in Trash.', 'mb-custom-post-type' ),
-		) );
+		$labels = array(
+			'menu_name'          => '%name%',
+			'name_admin_bar'     => '%singular_name%',
+			'all_items'          => __( 'All %name%', 'mb-custom-post-type' ),
+			'add_new'            => __( 'Add new', 'mb-custom-post-type' ),
+			'add_new_item'       => __( 'Add new %singular_name%', 'mb-custom-post-type' ),
+			'edit_item'          => __( 'Edit %singular_name%', 'mb-custom-post-type' ),
+			'new_item'           => __( 'New %singular_name%', 'mb-custom-post-type' ),
+			'view_item'          => __( 'View %singular_name%', 'mb-custom-post-type' ),
+			'search_items'       => __( 'Search %name%', 'mb-custom-post-type' ),
+			'not_found'          => __( 'No %name% found', 'mb-custom-post-type' ),
+			'not_found_in_trash' => __( 'No %name% found in Trash', 'mb-custom-post-type' ),
+			'parent_item_colon'  => __( 'Parent %singular_name%', 'mb-custom-post-type' ),
+		);
+		wp_localize_script( 'mb-cpt', 'MBPostTypeLabels', $labels );
 	}
 
 	/**
@@ -372,21 +373,44 @@ class MB_CPT_Edit
 	/**
 	 * Modify html output of field
 	 *
-	 * @param string $field_html
+	 * @param string $html
 	 * @param array  $field
 	 * @param string $meta
 	 *
 	 * @return string
 	 */
-	public function modify_field_html( $field_html, $field, $meta )
+	public function modify_field_html( $html, $field, $meta )
 	{
-		if ( 'args_menu_icon' == $field['id'] )
+		// Labels
+		if ( 0 === strpos( $field['id'], 'label_' ) )
 		{
-			$field_html = '';
-			$icons      = mb_cpt_get_dashicons();
+			$model = substr( $field['id'], 6 );
+			$html  = str_replace( '>', sprintf(
+				' ng-model="labels.%s" ng-init="labels.%s=\'%s\'"%s>',
+				$model,
+				$model,
+				$meta,
+				in_array( $model, array( 'name', 'singular_name' ) ) ? ' ng-change="updateLabels()"' : ''
+			), $html );
+			$html  = preg_replace( '/value="(.*?)"/', 'value="{{labels.' . $model . '}}"', $html );
+		}
+		// Slug
+		elseif ( 'args_post_type' == $field['id'] )
+		{
+			$html = str_replace( '>', sprintf(
+				' ng-model="post_type" ng-init="post_type=\'%s\'">',
+				$meta
+			), $html );
+			$html = preg_replace( '/value="(.*?)"/', 'value="{{post_type}}"', $html );
+		}
+		// Menu icons
+		elseif ( 'args_menu_icon' == $field['id'] )
+		{
+			$html  = '';
+			$icons = mb_cpt_get_dashicons();
 			foreach ( $icons as $icon )
 			{
-				$field_html .= sprintf( '
+				$html .= sprintf( '
 					<label class="icon-single%s">
 						<i class="wp-menu-image dashicons-before %s"></i>
 						<input type="radio" name="args_menu_icon" value="%s" class="hidden"%s>
@@ -398,17 +422,7 @@ class MB_CPT_Edit
 				);
 			}
 		}
-		elseif ( false === strpos( $field['id'], 'args' ) || 'args_post_type' == $field['id'] )
-		{
-			$field_html = str_replace( '>', sprintf(
-				' ng-model="%s" ng-init="%s=\'%s\'">',
-				$field['id'],
-				$field['id'],
-				$meta
-			), $field_html );
-			$field_html = str_replace( '>', ' ng-model="' . $field['id'] . '" ng-init="' . $field['id'] . ' = ' . $meta . '" >', $field_html );
-		}
-		return $field_html;
+		return $html;
 	}
 
 	/**

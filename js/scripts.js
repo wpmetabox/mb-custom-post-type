@@ -1,111 +1,75 @@
-// Prepend jquery
-// Prepend angularJS
-
 /* global jQuery, angular, MBPostTypeLabels */
 
 (function ( $, angular )
 {
 	'use strict';
 
-	var app = angular.module( 'mbPostType', [] );
-	app.controller( 'PostTypeController', ['$scope', function ( $scope )
+	angular.module( 'mbPostType', [] ).controller( 'PostTypeController', ['$scope', function ( $scope )
 	{
-		// Watch the change of label_name and auto fill in inputs
-		$scope.$watch( 'label_name', function ()
+		// Initialize labels
+		$scope.labels = {};
+
+		/**
+		 * Helper function to convert string to slug
+		 * @param str
+		 * @return string
+		 */
+		function stringToSlug( str )
 		{
-			// If it is not add new page
-			if ( 'mb-post-type' !== getParameterByName( 'post_type' ) )
+			// Trim the string
+			str = str.replace( /^\s+|\s+$/g, '' );
+			str = str.toLowerCase();
+
+			// Remove accents
+			var from = "àáäâèéëêìíïîòóöôùúüûñç·/_,:;",
+				to = "aaaaeeeeiiiioooouuuunc------",
+				i, l;
+
+			for ( i = 0, l = from.length; i < l; i++ )
 			{
-				return;
+				str = str.replace( new RegExp( from.charAt( i ), 'g' ), to.charAt( i ) );
 			}
 
-			$scope.label_menu_name = $scope.label_name;
-			$scope.label_add_new = MBPostTypeLabels.add_new;
-			$scope.label_parent_item_colon = MBPostTypeLabels.parent_item_colon + $scope.label_name;
-			$scope.label_all_items = MBPostTypeLabels.all_items + $scope.label_name;
-			$scope.label_search_items = MBPostTypeLabels.search_items + $scope.label_name;
-			$scope.label_not_found = MBPostTypeLabels.no + $scope.label_name + MBPostTypeLabels.not_found;
-			$scope.label_not_found_in_trash = MBPostTypeLabels.no + $scope.label_name + MBPostTypeLabels.not_found_in_trash;
-		} );
+			str = str.replace( /[^a-z0-9 -]/g, '' ) // remove invalid chars
+				.replace( /\s+/g, '-' ) // collapse whitespace and replace by -
+				.replace( /-+/g, '-' ); // collapse dashes
 
-		// Watch the change of label_singular_name and auto fill in inputs
-		$scope.$watch( 'label_singular_name', function ()
+			return str;
+		}
+
+		// Update labels and slug when plural and singular name are updated
+		$scope.updateLabels = function ()
 		{
-			// If it is not add new page
-			if ( 'mb-post-type' !== getParameterByName( 'post_type' ) )
+			var params = [
+					'menu_name',
+					'name_admin_bar',
+					'all_items',
+					'add_new',
+					'add_new_item',
+					'edit_item',
+					'new_item',
+					'view_item',
+					'search_items',
+					'not_found',
+					'not_found_in_trash',
+					'parent_item_colon'
+				],
+				i = params.length;
+			for ( ; i--; )
 			{
-				return;
+				$scope.labels[params[i]] = MBPostTypeLabels[params[i]].replace( '%name%', $scope.labels.name ).replace( '%singular_name%', $scope.labels.singular_name );
 			}
 
-			$scope.label_name_admin_bar = $scope.label_singular_name;
-			$scope.label_add_new_item = MBPostTypeLabels.add_new_item + $scope.label_singular_name;
-			$scope.label_new_item = MBPostTypeLabels.new_item + $scope.label_singular_name;
-			$scope.label_edit_item = MBPostTypeLabels.edit_item + $scope.label_singular_name;
-			$scope.label_update_item = MBPostTypeLabels.update_item + $scope.label_singular_name;
-			$scope.label_view_item = MBPostTypeLabels.view_item + $scope.label_singular_name;
-			$scope.args_post_type = stringToSlug( $scope.label_singular_name );
-		} );
+			// Update slug
+			$scope.post_type = stringToSlug( $scope.labels.singular_name );
+		};
 	}] );
 
 	// Bootstrap AngularJS app
 	angular.element( document ).ready( function ()
 	{
-		angular.bootstrap( $( '#post' ), ['mbPostType'] );
+		angular.bootstrap( document.getElementById( 'wpbody-content' ), ['mbPostType'] );
 	} );
-
-	/**
-	 * Convert string to slug
-	 * @param str
-	 * @return string
-	 */
-	function stringToSlug( str )
-	{
-		// Trim the string
-		str = str.replace( /^\s+|\s+$/g, '' );
-		str = str.toLowerCase();
-
-		// Remove accents
-		var from = "àáäâèéëêìíïîòóöôùúüûñç·/_,:;",
-			to = "aaaaeeeeiiiioooouuuunc------",
-			i, l;
-
-		for ( i = 0, l = from.length; i < l; i++ )
-		{
-			str = str.replace( new RegExp( from.charAt( i ), 'g' ), to.charAt( i ) );
-		}
-
-		str = str.replace( /[^a-z0-9 -]/g, '' ) // remove invalid chars
-			.replace( /\s+/g, '-' ) // collapse whitespace and replace by -
-			.replace( /-+/g, '-' ); // collapse dashes
-
-		return str;
-	}
-
-	/**
-	 * Transform string to slug after filled in slug's input
-	 * @return void
-	 */
-	function slugEntering()
-	{
-		$( '#args_post_type' ).on( 'blur', function ()
-		{
-			var $this = $( this ), val = $this.val();
-			$this.val( stringToSlug( val ) );
-		} );
-	}
-
-	/**
-	 * Get parameter from query string
-	 * @param name
-	 * @return string
-	 */
-	function getParameterByName( name )
-	{
-		name = name.replace( /[\[]/, "\\[" ).replace( /[\]]/, "\\]" );
-		var regex = new RegExp( "[\\?&]" + name + "=([^&#]*)" ),
-			results = regex.exec( location.search );
-		return results === null ? "" : decodeURIComponent( results[1].replace( /\+/g, " " ) );
-	}
 
 	/**
 	 * Toggle Label and Advanced Settings
@@ -135,14 +99,13 @@
 			var $this = $( this );
 			$menuIcons.closest( '.icon-single' ).removeClass( 'active' );
 			$this.closest( '.icon-single' ).addClass( 'active' );
-			$this.attr( 'checked', 'checked' );
+			$this.prop( 'checked', true );
 		} );
 	}
 
 	// Run when document is ready
 	$( function ()
 	{
-		slugEntering();
 		toggleAdvancedSettings();
 		activeMenu();
 	} );
