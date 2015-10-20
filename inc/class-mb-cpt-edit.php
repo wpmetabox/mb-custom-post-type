@@ -5,7 +5,7 @@
  * @package    Meta Box
  * @subpackage MB Custom Post Type
  * @author     Doan Manh Duc
- * @author     Tran Ngoc Tuan Anh
+ * @author     Tran Ngoc Tuan Anh <rilwis@gmail.com>
  */
 
 /**
@@ -79,198 +79,198 @@ class MB_CPT_Edit
 
 		$basic_fields    = array(
 			array(
-				'name'        => __( 'Plural Name', 'mb-custom-post-type' ),
+				'name'        => __( 'Plural name', 'mb-custom-post-type' ),
 				'id'          => $label_prefix . 'name',
 				'type'        => 'text',
-				'placeholder' => __( 'Plural Name', 'mb-custom-post-type' ),
+				'placeholder' => __( 'General name for the post type', 'mb-custom-post-type' ),
 			),
 			array(
-				'name'        => __( 'Singular Name', 'mb-custom-post-type' ),
+				'name'        => __( 'Singular name', 'mb-custom-post-type' ),
 				'id'          => $label_prefix . 'singular_name',
 				'type'        => 'text',
-				'placeholder' => __( 'Singular Name', 'mb-custom-post-type' ),
+				'placeholder' => __( 'Name for one object of this post type', 'mb-custom-post-type' ),
 			),
 			array(
-				'name'        => __( 'Slug', 'mb-custom-post-type' ),
-				'id'          => $args_prefix . 'post_type',
-				'type'        => 'text',
-				'placeholder' => __( 'Slug', 'mb-custom-post-type' ),
+				'name' => __( 'Slug', 'mb-custom-post-type' ),
+				'id'   => $args_prefix . 'post_type',
+				'type' => 'text',
 			),
 		);
 		$labels_fields   = array(
 			array(
-				'name'        => __( 'Menu Name', 'mb-custom-post-type' ),
+				'name'        => __( 'Menu name', 'mb-custom-post-type' ),
 				'id'          => $label_prefix . 'menu_name',
 				'type'        => 'text',
-				'placeholder' => __( 'Menu Name', 'mb-custom-post-type' ),
+				'placeholder' => __( 'The menu name text', 'mb-custom-post-type' ),
 			),
 			array(
-				'name'        => __( 'Name Admin Bar', 'mb-custom-post-type' ),
+				'name'        => __( 'Name in admin bar', 'mb-custom-post-type' ),
 				'id'          => $label_prefix . 'name_admin_bar',
 				'type'        => 'text',
-				'placeholder' => __( 'Name Admin Bar', 'mb-custom-post-type' ),
+				'placeholder' => __( 'Name given for the Add New dropdown on admin bar', 'mb-custom-post-type' ),
 			),
 			array(
-				'name'        => __( 'Parent Items:', 'mb-custom-post-type' ),
-				'id'          => $label_prefix . 'parent_item_colon',
-				'type'        => 'text',
-				'placeholder' => __( 'Parent Items:', 'mb-custom-post-type' ),
-			),
-			array(
-				'name'        => __( 'All Items', 'mb-custom-post-type' ),
+				'name'        => __( 'All items', 'mb-custom-post-type' ),
 				'id'          => $label_prefix . 'all_items',
 				'type'        => 'text',
-				'placeholder' => __( 'All Items', 'mb-custom-post-type' ),
+				'placeholder' => __( 'The all items text used in the menu', 'mb-custom-post-type' ),
 			),
 			array(
-				'name'        => __( 'Add New Item', 'mb-custom-post-type' ),
-				'id'          => $label_prefix . 'add_new_item',
-				'type'        => 'text',
-				'placeholder' => __( 'Add New Item', 'mb-custom-post-type' ),
-			),
-			array(
-				'name'        => __( 'Add New', 'mb-custom-post-type' ),
+				'name'        => __( 'Add new', 'mb-custom-post-type' ),
 				'id'          => $label_prefix . 'add_new',
 				'type'        => 'text',
-				'placeholder' => __( 'Add New', 'mb-custom-post-type' ),
+				'placeholder' => __( 'The add new text', 'mb-custom-post-type' ),
 			),
 			array(
-				'name'        => __( 'New Item', 'mb-custom-post-type' ),
-				'id'          => $label_prefix . 'new_item',
+				'name'        => __( 'Add new item', 'mb-custom-post-type' ),
+				'id'          => $label_prefix . 'add_new_item',
 				'type'        => 'text',
-				'placeholder' => __( 'New Item', 'mb-custom-post-type' ),
+				'placeholder' => __( 'The add new item text', 'mb-custom-post-type' ),
 			),
 			array(
-				'name'        => __( 'Edit Item', 'mb-custom-post-type' ),
+				'name'        => __( 'Edit item', 'mb-custom-post-type' ),
 				'id'          => $label_prefix . 'edit_item',
 				'type'        => 'text',
-				'placeholder' => __( 'Edit Item', 'mb-custom-post-type' ),
+				'placeholder' => __( 'The edit item text', 'mb-custom-post-type' ),
 			),
 			array(
-				'name'        => __( 'Update Item', 'mb-custom-post-type' ),
-				'id'          => $label_prefix . 'update_item',
+				'name'        => __( 'New item', 'mb-custom-post-type' ),
+				'id'          => $label_prefix . 'new_item',
 				'type'        => 'text',
-				'placeholder' => __( 'Update Item', 'mb-custom-post-type' ),
+				'placeholder' => __( 'The new item text', 'mb-custom-post-type' ),
 			),
 			array(
-				'name'        => __( 'View Item', 'mb-custom-post-type' ),
+				'name'        => __( 'View item', 'mb-custom-post-type' ),
 				'id'          => $label_prefix . 'view_item',
 				'type'        => 'text',
-				'placeholder' => __( 'View Item', 'mb-custom-post-type' ),
+				'placeholder' => __( 'The view item text', 'mb-custom-post-type' ),
 			),
 			array(
-				'name'        => __( 'Search Items', 'mb-custom-post-type' ),
+				'name'        => __( 'Search items', 'mb-custom-post-type' ),
 				'id'          => $label_prefix . 'search_items',
 				'type'        => 'text',
-				'placeholder' => __( 'Search Items', 'mb-custom-post-type' ),
+				'placeholder' => __( 'The search items text', 'mb-custom-post-type' ),
 			),
 			array(
 				'name'        => __( 'Not found', 'mb-custom-post-type' ),
 				'id'          => $label_prefix . 'not_found',
 				'type'        => 'text',
-				'placeholder' => __( 'Not found', 'mb-custom-post-type' ),
+				'placeholder' => __( 'The not found text', 'mb-custom-post-type' ),
 			),
 			array(
 				'name'        => __( 'Not found in Trash', 'mb-custom-post-type' ),
 				'id'          => $label_prefix . 'not_found_in_trash',
 				'type'        => 'text',
-				'placeholder' => __( 'Not found in Trash', 'mb-custom-post-type' ),
+				'placeholder' => __( 'The not found in trash text', 'mb-custom-post-type' ),
+			),
+			array(
+				'name'        => __( 'Parent Items:', 'mb-custom-post-type' ),
+				'id'          => $label_prefix . 'parent_item_colon',
+				'type'        => 'text',
+				'placeholder' => __( 'The parent text', 'mb-custom-post-type' ),
 			),
 		);
 		$advanced_fields = array(
 			array(
-				'name'    => __( 'Menu Icon', 'mb-custom-post-type' ),
-				'id'      => $args_prefix . 'menu_icon',
-				'type'    => 'radio',
-				'options' => mb_cpt_get_dashicons(),
-			),
-			array(
 				'name'        => __( 'Description', 'mb-custom-post-type' ),
 				'id'          => $args_prefix . 'description',
 				'type'        => 'textarea',
-				'placeholder' => __( 'Description', 'mb-custom-post-type' ),
+				'placeholder' => __( 'A short descriptive summary of what the post type is.', 'mb-custom-post-type' ),
 			),
 			array(
-				'name' => __( 'Public', 'mb-custom-post-type' ),
+				'name' => __( 'Public?', 'mb-custom-post-type' ),
 				'id'   => $args_prefix . 'public',
 				'type' => 'checkbox',
 				'std'  => 1,
-				'desc' => __( 'Allow the post type appear in the Frontend', 'mb-custom-post-type' ),
+				'desc' => __( 'Controls how the type is visible to authors and readers.', 'mb-custom-post-type' ),
 			),
 			array(
-				'name' => __( 'Publicly Queryable', 'mb-custom-post-type' ),
+				'name' => __( 'Exclude from search?', 'mb-custom-post-type' ),
+				'id'   => $args_prefix . 'exclude_from_search',
+				'type' => 'checkbox',
+				'desc' => __( 'Whether to exclude posts with this post type from frontend search results.', 'mb-custom-post-type' ),
+			),
+			array(
+				'name' => __( 'Publicly queryable?', 'mb-custom-post-type' ),
 				'id'   => $args_prefix . 'publicly_queryable',
 				'type' => 'checkbox',
 				'std'  => 1,
-				'desc' => __( 'Whether post type queries can be performed from the front end.', 'mb-custom-post-type' ),
+				'desc' => __( 'Whether queries can be performed on the frontend.', 'mb-custom-post-type' ),
 			),
 			array(
-				'name' => __( 'Show UI', 'mb-custom-post-type' ),
+				'name' => __( 'Show UI?', 'mb-custom-post-type' ),
 				'id'   => $args_prefix . 'show_ui',
 				'type' => 'checkbox',
 				'std'  => 1,
-				'desc' => __( 'Whether to show the post type in the admin menu and where to show that menu. Note that show_ui must be true.', 'mb-custom-post-type' ),
+				'desc' => __( 'Whether to generate a default UI for managing this post type in the admin.', 'mb-custom-post-type' ),
 			),
 			array(
-				'name' => __( 'Show In Menu', 'mb-custom-post-type' ),
-				'id'   => $args_prefix . 'show_in_menu',
-				'type' => 'checkbox',
-				'std'  => 1,
-				'desc' => __( 'Whether post type is available for selection in menus.', 'mb-custom-post-type' ),
-			),
-			array(
-				'name' => __( 'Query Var', 'mb-custom-post-type' ),
-				'id'   => $args_prefix . 'query_var',
-				'type' => 'checkbox',
-				'std'  => 1,
-				'desc' => __( 'False to prevent queries, or string value of the query var to use for this post type.', 'mb-custom-post-type' ),
-			),
-			array(
-				'name'    => __( 'Capability Type', 'mb-custom-post-type' ),
-				'id'      => $args_prefix . 'capability_type',
-				'type'    => 'select',
-				'options' => array(
-					'post' => __( 'Post', 'mb-custom-post-type' ),
-					'page' => __( 'Page', 'mb-custom-post-type' ),
-				)
-			),
-			array(
-				'name' => __( 'Has Archive', 'mb-custom-post-type' ),
-				'id'   => $args_prefix . 'has_archive',
-				'type' => 'checkbox',
-				'std'  => 1,
-				'desc' => __( 'Allow to have custom archive slug for CPT.', 'mb-custom-post-type' ),
-			),
-			array(
-				'name' => __( 'Hierarchical', 'mb-custom-post-type' ),
-				'id'   => $args_prefix . 'hierarchical',
-				'type' => 'checkbox',
-				'desc' => __( 'Whether the post type is hierarchical. Allows Parent to be specified.', 'mb-custom-post-type' ),
-			),
-			array(
-				'name' => __( 'Can Export', 'mb-custom-post-type' ),
-				'id'   => $args_prefix . 'can_export',
-				'type' => 'checkbox',
-				'std'  => 1,
-				'desc' => __( 'Can this post type be exported.', 'mb-custom-post-type' ),
-			),
-			array(
-				'name' => __( 'Show In Nav Menus', 'mb-custom-post-type' ),
+				'name' => __( 'Show in nav menus?', 'mb-custom-post-type' ),
 				'id'   => $args_prefix . 'show_in_nav_menus',
 				'type' => 'checkbox',
 				'std'  => 1,
 				'desc' => __( 'Whether post type is available for selection in navigation menus.', 'mb-custom-post-type' ),
 			),
 			array(
-				'name' => __( 'Exclude From Search', 'mb-custom-post-type' ),
-				'id'   => $args_prefix . 'exclude_from_search',
+				'name' => __( 'Show in menu?', 'mb-custom-post-type' ),
+				'id'   => $args_prefix . 'show_in_menu',
 				'type' => 'checkbox',
-				'desc' => __( 'Whether to exclude posts with this post type from search results.', 'mb-custom-post-type' ),
+				'std'  => 1,
+				'desc' => __( 'Where to show the post type in the admin menu. <code>show_ui</code> must be <code>true</code>.', 'mb-custom-post-type' ),
 			),
 			array(
-				'name' => __( 'Menu Position', 'mb-custom-post-type' ),
+				'name' => __( 'Show in admin bar?', 'mb-custom-post-type' ),
+				'id'   => $args_prefix . 'show_in_admin_bar',
+				'type' => 'checkbox',
+				'desc' => __( 'Whether to make this post type available in the WordPress admin bar.', 'mb-custom-post-type' ),
+			),
+			array(
+				'name' => __( 'Menu position', 'mb-custom-post-type' ),
 				'id'   => $args_prefix . 'menu_position',
 				'type' => 'number',
+			),
+			array(
+				'name'    => __( 'Menu icon', 'mb-custom-post-type' ),
+				'id'      => $args_prefix . 'menu_icon',
+				'type'    => 'radio',
+				'options' => mb_cpt_get_dashicons(),
+			),
+			array(
+				'name'    => __( 'Capability type', 'mb-custom-post-type' ),
+				'id'      => $args_prefix . 'capability_type',
+				'type'    => 'select',
+				'options' => array(
+					'post' => __( 'Post', 'mb-custom-post-type' ),
+					'page' => __( 'Page', 'mb-custom-post-type' ),
+				),
+				'std'     => 'post',
+			),
+			array(
+				'name' => __( 'Hierarchical?', 'mb-custom-post-type' ),
+				'id'   => $args_prefix . 'hierarchical',
+				'type' => 'checkbox',
+				'desc' => __( 'Whether the post type is hierarchical. Allows Parent to be specified.', 'mb-custom-post-type' ),
+			),
+			array(
+				'name' => __( 'Has archive?', 'mb-custom-post-type' ),
+				'id'   => $args_prefix . 'has_archive',
+				'type' => 'checkbox',
+				'std'  => 1,
+				'desc' => __( 'Enables post type archives. Will use <code>$post_type</code> as archive slug by default.', 'mb-custom-post-type' ),
+			),
+			array(
+				'name' => __( 'Query var', 'mb-custom-post-type' ),
+				'id'   => $args_prefix . 'query_var',
+				'type' => 'checkbox',
+				'std'  => 1,
+				'desc' => __( 'False to prevent queries, or string value of the query var to use for this post type.', 'mb-custom-post-type' ),
+			),
+			array(
+				'name' => __( 'Can export?', 'mb-custom-post-type' ),
+				'id'   => $args_prefix . 'can_export',
+				'type' => 'checkbox',
+				'std'  => 1,
+				'desc' => __( 'Can this post type be exported.', 'mb-custom-post-type' ),
 			),
 		);
 
@@ -353,6 +353,7 @@ class MB_CPT_Edit
 						'revisions'       => __( 'Revisions', 'mb-custom-post-type' ),
 						'page-attributes' => __( 'Page Attributes', 'mb-custom-post-type' ),
 					),
+					'std'     => array( 'title', 'editor', 'thumbnail' ),
 				),
 			),
 		);
@@ -399,7 +400,12 @@ class MB_CPT_Edit
 		}
 		elseif ( false === strpos( $field['id'], 'args' ) || 'args_post_type' == $field['id'] )
 		{
-			$meta       = "'$meta'";
+			$field_html = str_replace( '>', sprintf(
+				' ng-model="%s" ng-init="%s=\'%s\'">',
+				$field['id'],
+				$field['id'],
+				$meta
+			), $field_html );
 			$field_html = str_replace( '>', ' ng-model="' . $field['id'] . '" ng-init="' . $field['id'] . ' = ' . $meta . '" >', $field_html );
 		}
 		return $field_html;

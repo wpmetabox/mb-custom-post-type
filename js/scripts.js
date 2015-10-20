@@ -8,12 +8,6 @@
 	'use strict';
 
 	var app = angular.module( 'mbPostType', [] );
-
-	angular.element( document ).ready( function ()
-	{
-		angular.bootstrap( $( '#post' ), ['mbPostType'] );
-	} );
-
 	app.controller( 'PostTypeController', ['$scope', function ( $scope )
 	{
 		// Watch the change of label_name and auto fill in inputs
@@ -53,26 +47,11 @@
 		} );
 	}] );
 
-	/**
-	 * Make some checkboxes in Supports Meta Box are checked by default
-	 * @return void
-	 */
-	function defaultCheckedCheckbox()
+	// Bootstrap AngularJS app
+	angular.element( document ).ready( function ()
 	{
-		// If it is not add new page
-		if ( 'mb-post-type' !== getParameterByName( 'post_type' ) )
-		{
-			return;
-		}
-
-		// Name of checkboxes that will be checked
-		var checkboxes = ['title', 'editor', 'thumbnail'];
-
-		$.each( checkboxes, function ( k, v )
-		{
-			$( 'input:checkbox[name="args_supports[]"][value=' + v + ']' ).attr( 'checked', 'checked' );
-		} );
-	}
+		angular.bootstrap( $( '#post' ), ['mbPostType'] );
+	} );
 
 	/**
 	 * Convert string to slug
@@ -132,7 +111,7 @@
 	 * Toggle Label and Advanced Settings
 	 * @return void
 	 */
-	function toggleAdvanceSettings()
+	function toggleAdvancedSettings()
 	{
 		$( '#label-settings' ).hide();
 		$( '#advanced-settings' ).hide();
@@ -164,8 +143,7 @@
 	$( function ()
 	{
 		slugEntering();
-		defaultCheckedCheckbox();
-		toggleAdvanceSettings();
+		toggleAdvancedSettings();
 		activeMenu();
 	} );
 
