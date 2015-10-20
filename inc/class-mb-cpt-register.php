@@ -1,8 +1,15 @@
 <?php
+/**
+ * Controls all operations of MB Custom Post Type extension for registering custom post type.
+ *
+ * @package    Meta Box
+ * @subpackage MB Custom Post Type
+ * @author     Doan Manh Duc
+ * @author     Tran Ngoc Tuan Anh
+ */
 
 /**
- * This class controls all operations of Meta Box Custom Post Type extension
- * for creating / modifying custom post type.
+ * Controls all operations for registering custom post type.
  */
 class MB_CPT_Register
 {
@@ -26,9 +33,40 @@ class MB_CPT_Register
 	 */
 	public function register_post_types()
 	{
+		// Register main post type 'mb-post-type'
+		$labels = array(
+			'name'               => _x( 'Post Types', 'Post Type General Name', 'mb-custom-post-type' ),
+			'singular_name'      => _x( 'Post Type', 'Post Type Singular Name', 'mb-custom-post-type' ),
+			'menu_name'          => __( 'Post Types', 'mb-custom-post-type' ),
+			'name_admin_bar'     => __( 'Post Type', 'mb-custom-post-type' ),
+			'parent_item_colon'  => __( 'Parent Post Type:', 'mb-custom-post-type' ),
+			'all_items'          => __( 'All Post Types', 'mb-custom-post-type' ),
+			'add_new_item'       => __( 'Add New Post Type', 'mb-custom-post-type' ),
+			'add_new'            => __( 'Add New', 'mb-custom-post-type' ),
+			'new_item'           => __( 'New Post Type', 'mb-custom-post-type' ),
+			'edit_item'          => __( 'Edit Post Type', 'mb-custom-post-type' ),
+			'update_item'        => __( 'Update Post Type', 'mb-custom-post-type' ),
+			'view_item'          => __( 'View Post Type', 'mb-custom-post-type' ),
+			'search_items'       => __( 'Search Post Type', 'mb-custom-post-type' ),
+			'not_found'          => __( 'Not found', 'mb-custom-post-type' ),
+			'not_found_in_trash' => __( 'Not found in Trash', 'mb-custom-post-type' ),
+		);
+		$args   = array(
+			'label'        => __( 'Post Types', 'mb-custom-post-type' ),
+			'labels'       => $labels,
+			'supports'     => false,
+			'public'       => false,
+			'show_ui'      => true,
+			'show_in_menu' => true,
+			'menu_icon'    => 'dashicons-editor-justify',
+			'can_export'   => true,
+			'rewrite'      => false,
+			'query_var'    => false,
+		);
+		register_post_type( 'mb-post-type', $args );
+
 		// Get all registered custom post types
 		$post_types = $this->get_all_registered_post_types();
-
 		foreach ( $post_types as $post_type )
 		{
 			register_post_type( $post_type['post_type'], $post_type );
@@ -44,20 +82,6 @@ class MB_CPT_Register
 	{
 		// This array stores all registered custom post types
 		$post_types = array();
-
-		// Create mb-post-type post type to management/add/edit custom post types
-		$post_types[] = $this->set_up_post_type(
-			array(
-				'name'          => __( 'Post Types', 'mb-custom-post-type' ),
-				'singular_name' => __( 'Post Type', 'mb-custom-post-type' ),
-			),
-			array(
-				'public'    => false,
-				'supports'  => false,
-				'menu_icon' => 'dashicons-editor-justify',
-				'post_type' => 'mb-post-type',
-			)
-		);
 
 		// Get all post where where post_type = mb-post-type
 		$mb_post_types = get_posts( array(

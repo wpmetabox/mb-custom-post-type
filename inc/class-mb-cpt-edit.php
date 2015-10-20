@@ -1,8 +1,15 @@
 <?php
+/**
+ * Controls all operations of MB Custom Post Type extension for creating / modifying custom post type.
+ *
+ * @package    Meta Box
+ * @subpackage MB Custom Post Type
+ * @author     Doan Manh Duc
+ * @author     Tran Ngoc Tuan Anh
+ */
 
 /**
- * This class controls all operations of Meta Box Custom Post Type extension
- * for creating / modifying custom post type.
+ * Controls all operations for creating / modifying custom post type.
  */
 class MB_CPT_Edit
 {

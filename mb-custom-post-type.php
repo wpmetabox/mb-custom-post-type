@@ -39,3 +39,14 @@ if ( is_admin() )
 
 	require_once MB_CPT_DIR . 'inc/required-plugin.php';
 }
+
+add_action( 'plugins_loaded', 'mb_cpt_load_textdomain' );
+
+/**
+ * Load plugin textdomain
+ * @return void
+ */
+function mb_cpt_load_textdomain()
+{
+	load_plugin_textdomain( 'mb-custom-post-type', false, plugin_basename( dirname( __FILE__ ) ) . '/lang' );
+}
