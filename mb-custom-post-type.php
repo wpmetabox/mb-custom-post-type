@@ -1,7 +1,7 @@
 <?php
 /**
  * Plugin Name: MB Custom Post Type
- * Plugin URI: https://www.metabox.io/plugins/mb-custom-post-type
+ * Plugin URI: https://www.metabox.io/plugins/custom-post-type/
  * Description: Create custom post types with easy-to-use UI
  * Version: 1.0.0
  * Author: Rilwis & Duc Doan

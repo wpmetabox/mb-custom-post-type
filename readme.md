@@ -4,10 +4,12 @@ The plugin allows you to handle all post type's arguments such as menu labels, a
 
 Using MB Custom Post Type, you will be able to craft the WordPress admin and turn it into a professional Content Management Systems.
 
+[![demo](http://icecream.me/uploads/d33f0a5a2ef0fe54aafc95566145d8f5.png)](https://www.youtube.com/watch?v=KG_8MF9xw6E&rel=0)
+
 ## Features
 
 * Supports all arguments for creating custom post types (like `register_post_type()`)
-* Supports live editing mode, which auto fill in all necessary labels for you!
+* Supports **live editing mode**, which auto fill in all necessary labels for you!
 * Clean code
 * Registered custom post types can be exported/imported using default WordPress functionality (no more plugins!)
 
