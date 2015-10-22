@@ -1,5 +1,5 @@
 === MB Custom Post Type ===
-Contributors: rilwis, Doan Manh Duc
+Contributors: rilwis, duc88b, fitwp
 Donate link: http://www.deluxeblogtips.com/donate
 Tags: cms, custom, custom post types, custom post type, cpt, post, post types, post type, types
 Requires at least: 4.3
