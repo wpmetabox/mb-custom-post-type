@@ -114,7 +114,7 @@ class MB_CPT_Register
 				}
 			}
 
-			$post_types[$args['post_type']] = $this->set_up_post_type( $labels, array() );
+			$post_types[$args['post_type']] = $this->set_up_post_type( $labels, $args );
 		}
 
 		return $post_types;
