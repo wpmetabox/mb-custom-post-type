@@ -46,8 +46,8 @@ class MB_CPT_Edit
 		}
 
 		wp_register_script( 'angular', 'https://ajax.googleapis.com/ajax/libs/angularjs/1.4.2/angular.min.js', array(), '1.4.2', true );
-		wp_enqueue_style( 'mb-cpt', MB_CPT_CSS_URL . 'styles.css', array(), '1.0.0', false );
-		wp_enqueue_script( 'mb-cpt', MB_CPT_JS_URL . 'scripts.js', array( 'jquery', 'angular' ), '1.0.0', false );
+		wp_enqueue_style( 'mb-cpt', MB_CPT_URL . 'css/style.css', array(), '1.0.0', false );
+		wp_enqueue_script( 'mb-cpt', MB_CPT_URL . 'js/script.js', array( 'jquery', 'angular' ), '1.0.0', false );
 
 		$labels = array(
 			'menu_name'          => '%name%',

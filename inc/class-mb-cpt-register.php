@@ -19,7 +19,7 @@ class MB_CPT_Register
 	public function __construct()
 	{
 		// Register post types
-		add_action( 'init', array( $this, 'register_post_types' ), 0 );
+		add_action( 'init', array( $this, 'register_post_types' ) );
 
 		// Change the output of post/bulk post updated messages
 		add_filter( 'post_updated_messages', array( $this, 'updated_message' ), 10, 1 );
@@ -66,10 +66,10 @@ class MB_CPT_Register
 		register_post_type( 'mb-post-type', $args );
 
 		// Get all registered custom post types
-		$post_types = $this->get_all_registered_post_types();
-		foreach ( $post_types as $post_type )
+		$post_types = $this->get_post_types();
+		foreach ( $post_types as $post_type => $args )
 		{
-			register_post_type( $post_type['post_type'], $post_type );
+			register_post_type( $post_type, $args );
 		}
 	}
 
@@ -78,7 +78,7 @@ class MB_CPT_Register
 	 *
 	 * @return array
 	 */
-	public function get_all_registered_post_types()
+	public function get_post_types()
 	{
 		// This array stores all registered custom post types
 		$post_types = array();
@@ -94,31 +94,27 @@ class MB_CPT_Register
 		{
 			// Get all post meta from current post
 			$post_meta = get_post_meta( $post_type->ID );
-			// Create array that contains Labels of this current custom post type
-			$labels = array();
-			// Create array that contains arguments of this current custom post type
-			$args = array();
 
+			$labels = array();
+			$args   = array();
 			foreach ( $post_meta as $key => $value )
 			{
+				$data = 1 == count( $value ) ? $value[0] : $value;
+				$data = is_numeric( $data ) ? ( 1 == intval( $data ) ? true : false ) : $data;
+
 				// If post meta has prefix 'label' then add it to $labels
 				if ( false !== strpos( $key, 'label' ) )
 				{
-					$data = 1 == count( $value ) ? $value[0] : $value;
-
 					$labels[str_replace( 'label_', '', $key )] = $data;
 				}
 				// If post meta has prefix 'args' then add it to $args
 				elseif ( false !== strpos( $key, 'args' ) )
 				{
-					$data = 1 == count( $value ) ? $value[0] : $value;
-					$data = is_numeric( $data ) ? ( 1 == intval( $data ) ? true : false ) : $data;
-
 					$args[str_replace( 'args_', '', $key )] = $data;
 				}
 			}
 
-			$post_types[] = $this->set_up_post_type( $labels, $args );
+			$post_types[$args['post_type']] = $this->set_up_post_type( $labels, array() );
 		}
 
 		return $post_types;
@@ -134,8 +130,7 @@ class MB_CPT_Register
 	 */
 	public function set_up_post_type( $labels = array(), $args = array() )
 	{
-		// Default labels
-		$default_labels = array(
+		$labels = wp_parse_args( $labels, array(
 			'menu_name'          => $labels['name'],
 			'name_admin_bar'     => $labels['singular_name'],
 			'add_new'            => __( 'Add New', 'mb-custom-post-type' ),
@@ -149,31 +144,13 @@ class MB_CPT_Register
 			'parent_item_colon'  => sprintf( __( 'Parent %s:', 'mb-custom-post-type' ), $labels['name'] ),
 			'not_found'          => sprintf( __( 'No %s found.', 'mb-custom-post-type' ), $labels['name'] ),
 			'not_found_in_trash' => sprintf( __( 'No %s found in Trash.', 'mb-custom-post-type' ), $labels['name'] ),
-		);
-
-		$labels = wp_parse_args( $labels, $default_labels );
-
-		// Default arguments
-		$default_args = array(
-			'labels'              => $labels,
-			'description'         => sprintf( __( '%s GUI', 'mb-custom-post-type' ), $labels['name'] ),
-			'public'              => true,
-			'publicly_queryable'  => true,
-			'show_ui'             => true,
-			'show_in_menu'        => true,
-			'query_var'           => true,
-			'rewrite'             => array( 'slug' => $args['post_type'] ),
-			'capability_type'     => 'post',
-			'hierarchical'        => false,
-			'menu_position'       => null,
-			'menu_icon'           => 'dashicons-admin-appearance',
-			'has_archive'         => true,
-			'can_export'          => true,
-			'show_in_nav_menus'   => true,
-			'exclude_from_search' => false,
-		);
-
-		$args = wp_parse_args( $args, $default_args );
+		) );
+		$args   = wp_parse_args( $args, array(
+			'label'  => $labels['name'],
+			'labels' => $labels,
+			'public' => true,
+		) );
+		unset( $args['post_type'] );
 
 		return $args;
 	}
@@ -191,33 +168,20 @@ class MB_CPT_Register
 		$post_type_object = get_post_type_object( $post->post_type );
 		$label            = ucfirst( $post_type_object->labels->singular_name );
 		$label_lower      = strtolower( $label );
-
-		$permalink = get_permalink( $post );
-		if ( ! $permalink )
-		{
-			$permalink = '';
-		}
-		$preview_url = add_query_arg( 'preview', 'true', $permalink );
+		$label            = ucfirst( $label_lower );
 
 		$message = array(
 			0  => '', // Unused. Messages start at index 1.
-			1  => sprintf( __( '%s updated. <a href="%s">View %s.</a>', 'mb-custom-post-type' ), $label, esc_url( $permalink ), $label_lower ),
+			1  => sprintf( __( '%s updated.', 'mb-custom-post-type' ), $label ),
 			2  => __( 'Custom field updated.', 'mb-custom-post-type' ),
 			3  => __( 'Custom field deleted.', 'mb-custom-post-type' ),
 			4  => sprintf( __( '%s updated.', 'mb-custom-post-type' ), $label ),
-			/* translators: %s: date and time of the revision */
 			5  => isset( $_GET['revision'] ) ? sprintf( __( '%s restored to revision from %s.', 'mb-custom-post-type' ), $label, wp_post_revision_title( (int) $_GET['revision'], false ) ) : false,
-			6  => sprintf( __( '%s published. <a href="%s">View %s</a>.', 'mb-custom-post-type' ), $label, esc_url( $permalink ), $label_lower ),
+			6  => sprintf( __( '%s published.', 'mb-custom-post-type' ), $label ),
 			7  => sprintf( __( '%s saved.', 'mb-custom-post-type' ), $label ),
-			8  => sprintf( __( '%s submitted. <a target="_blank" href="%s">Preview %s</a>.', 'mb-custom-post-type' ), $label, esc_url( $preview_url ), $label_lower ),
-			9  => sprintf(
-				__( '%s scheduled for: <strong>%s</strong>. <a target="_blank" href="%s">Preview %s</a>.', 'mb-custom-post-type' ),
-				$label,
-				date_i18n( __( 'M j, Y @ G:i', 'mb-custom-post-type' ), strtotime( $post->post_date ) ),
-				esc_url( $permalink ),
-				$label_lower
-			),
-			10 => sprintf( __( '%s draft updated. <a target="_blank" href="%s">Preview %s</a>.', 'mb-custom-post-type' ), $label, esc_url( $preview_url ), $label_lower ),
+			8  => sprintf( __( '%s submitted.', 'mb-custom-post-type' ), $label ),
+			9  => sprintf( __( '%s scheduled for: <strong>%s</strong>.', 'mb-custom-post-type' ), $label, date_i18n( __( 'M j, Y @ G:i', 'mb-custom-post-type' ), strtotime( $post->post_date ) ) ),
+			10 => sprintf( __( '%s draft updated.', 'mb-custom-post-type' ), $label ),
 		);
 
 		// Get all post where where post_type = mb-post-type
@@ -231,6 +195,21 @@ class MB_CPT_Register
 		{
 			$slug            = get_post_meta( $post_type, 'args_post_type', true );
 			$messages[$slug] = $message;
+
+			if ( get_post_meta( $post_type, 'args_publicly_queryable', true ) )
+			{
+				$permalink = get_permalink( $post->ID );
+
+				$view_link = sprintf( ' <a href="%s">%s</a>.', esc_url( $permalink ), sprintf( __( 'View %s', 'mb-custom-post-type' ), $label_lower ) );
+				$messages[$slug][1] .= $view_link;
+				$messages[$slug][6] .= $view_link;
+				$messages[$slug][9] .= $view_link;
+
+				$preview_permalink = add_query_arg( 'preview', 'true', $permalink );
+				$preview_link      = sprintf( ' <a target="_blank" href="%s">%s</a>.', esc_url( $preview_permalink ), sprintf( __( 'Preview %s', 'mb-custom-post-type' ), $label_lower ) );
+				$messages[$slug][8] .= $preview_link;
+				$messages[$slug][10] .= $preview_link;
+			}
 		}
 
 		$messages['mb-post-type'] = $message;
