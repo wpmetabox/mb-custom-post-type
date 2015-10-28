@@ -4,6 +4,8 @@ The plugin allows you to handle all post type's arguments such as menu labels, a
 
 Using MB Custom Post Type, you will be able to craft the WordPress admin and turn it into a professional Content Management Systems.
 
+Consider using [MB Custom Taxonomy](https://wordpress.org/plugins/mb-custom-taxonomy/) to create and manage custom taxonomies with similar interface.
+
 [![demo](http://icecream.me/uploads/d33f0a5a2ef0fe54aafc95566145d8f5.png)](https://www.youtube.com/watch?v=KG_8MF9xw6E&rel=0)
 
 ## Features
@@ -24,10 +26,12 @@ This plugin is a free extension of [Meta Box](https://metabox.io) plugin, which 
 
 You need to install [Meta Box](https://metabox.io) plugin first
 
-- Go to Plugins | Add New and search for Meta Box
-- Click Install to install the plugin
+- Go to **Plugins | Add New** and search for **Meta Box**
+- Click **Install Now** button to install the plugin
+- After installing, click **Activate Plugin** to activate the plugin
 
 Install **MB Custom Post Type** extension
 
 - Go to **Plugins | Add New** and search for **MB Custom Post Type**
-- Click **Install** to install the plugin
+- Click **Install Now** button to install the plugin
+- After installing, click **Activate Plugin** to activate the plugin
