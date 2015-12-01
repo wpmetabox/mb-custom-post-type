@@ -1,10 +1,10 @@
 === MB Custom Post Type ===
-Contributors: rilwis, duc88b, fitwp
+Contributors: metabox, rilwis, duc88b, fitwp
 Donate link: http://www.deluxeblogtips.com/donate
 Tags: cms, custom, custom post types, custom post type, cpt, post, post types, post type, types
 Requires at least: 4.3
 Tested up to: 4.3.1
-Stable tag: 1.0.1
+Stable tag: 1.0.2
 License: GPLv2 or later
 
 Create and manage custom post types with an easy-to-use interface in WordPress.
@@ -58,6 +58,10 @@ Install **MB Custom Post Type** extension
 2. Edit custom post type
 
 == Changelog ==
+
+= 1.0.2 =
+
+- Improvement: user custom code to load plugin dependency for smaller footprint
 
 = 1.0.0 =
 
