@@ -1,0 +1,140 @@
+<?php
+/**
+ * Base class to add new or edit object.
+ *
+ * @package    Meta Box
+ * @subpackage MB Custom Post Type
+ * @author     Tran Ngoc Tuan Anh <rilwis@gmail.com>
+ */
+
+/**
+ * The base class which controls all operations for creating / modifying custom post type.
+ */
+abstract class MB_CPT_Base_Edit
+{
+	/**
+	 * Post type name.
+	 * @var string
+	 */
+	public $post_type;
+
+	/**
+	 * Used to prevent duplicated calls like revisions, manual hook to wp_insert_post, etc.
+	 * @var bool
+	 */
+	public $saved = false;
+
+	/**
+	 * Initiating
+	 * @param string $post_type Post type
+	 */
+	public function __construct( $post_type )
+	{
+		$this->post_type = $post_type;
+
+		// Enqueue scripts
+		add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_scripts' ) );
+		// Add meta box
+		add_filter( 'rwmb_meta_boxes', array( $this, 'register_meta_boxes' ) );
+		// Modify post information after save post
+		add_action( "save_post_$post_type", array( $this, 'save_post' ) );
+		// Add ng-controller to form
+		add_action( 'post_edit_form_tag', array( $this, 'add_ng_controller' ) );
+	}
+
+	/**
+	 * Enqueue scripts and styles
+	 *
+	 * @return void
+	 */
+	public function enqueue_scripts()
+	{
+		if ( ! $this->is_edit_screen() )
+		{
+			return;
+		}
+
+		$object = str_replace( 'mb-', '', $this->post_type );
+
+		wp_register_script( 'angular', 'https://ajax.googleapis.com/ajax/libs/angularjs/1.4.2/angular.min.js', array(), '1.4.2', true );
+		wp_enqueue_style( 'mb-cpt', MB_CPT_URL . 'css/style.css', array(), '1.0.0', false );
+		wp_enqueue_script( 'mb-cpt', MB_CPT_URL . "js/$object.js", array( 'jquery', 'angular' ), '1.0.0', false );
+		wp_localize_script( 'mb-cpt', 'MbCptLabels', $this->js_vars() );
+	}
+
+	/**
+	 * List of Javascript variables.
+	 * @return array
+	 */
+	public function js_vars()
+	{
+		return array();
+	}
+
+	/**
+	 * Register meta boxes for add/edit mb-post-type page
+	 *
+	 * @param array $meta_boxes
+	 *
+	 * @return array
+	 */
+	public function register_meta_boxes( $meta_boxes )
+	{
+		return $meta_boxes;
+	}
+
+	/**
+	 * Modify post information and post meta after save post
+	 *
+	 * @param int $post_id
+	 *
+	 * @return void
+	 */
+	public function save_post( $post_id )
+	{
+		// If label_singular_name is empty or if this function is called to prevent duplicated calls like revisions, manual hook to wp_insert_post, etc.
+		if ( empty( $_POST['label_singular_name'] ) || true === $this->saved )
+		{
+			return;
+		}
+
+		$this->saved = true;
+
+		// Update post title
+		$post = array(
+			'ID'         => $post_id,
+			'post_title' => $_POST['label_singular_name'],
+		);
+
+		wp_update_post( $post );
+
+		// Flush rewrite rules after create new or edit post types
+		flush_rewrite_rules();
+	}
+
+	/**
+	 * Check if current link is mb-post-type post type or not
+	 *
+	 * @return boolean
+	 */
+	public function is_edit_screen()
+	{
+		$screen = get_current_screen();
+		return 'post' === $screen->base && $this->post_type === $screen->post_type;
+	}
+
+	/**
+	 * Add angular controller to form tag
+	 *
+	 * @return void
+	 */
+	public function add_ng_controller()
+	{
+		if ( $this->is_edit_screen() )
+		{
+			$object = str_replace( array( 'mb-', '-' ), array( '', ' ' ), $this->post_type );
+			$object = str_replace( ' ', '', ucwords( $object ) );
+			echo 'ng-controller="' . $object . 'Controller"';
+		}
+	}
+}

@@ -1,4 +1,4 @@
-/* global jQuery, angular, MBPostTypeLabels */
+/* global jQuery, angular, MbCptLabels */
 
 (function ( $, angular )
 {
@@ -57,7 +57,7 @@
 				i = params.length;
 			for ( ; i--; )
 			{
-				$scope.labels[params[i]] = MBPostTypeLabels[params[i]].replace( '%name%', $scope.labels.name ).replace( '%singular_name%', $scope.labels.singular_name );
+				$scope.labels[params[i]] = MbCptLabels[params[i]].replace( '%name%', $scope.labels.name ).replace( '%singular_name%', $scope.labels.singular_name );
 			}
 
 			// Update slug

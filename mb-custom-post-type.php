@@ -2,8 +2,8 @@
 /**
  * Plugin Name: MB Custom Post Type
  * Plugin URI: https://metabox.io/plugins/custom-post-type/
- * Description: Create custom post types with easy-to-use UI
- * Version: 1.0.2
+ * Description: Create custom post types and custom taxonomies with easy-to-use UI
+ * Version: 1.1.0
  * Author: Rilwis & Duc Doan
  * Author URI: https://metabox.io
  * License: GPL-2.0+
@@ -35,14 +35,20 @@ function mb_cpt_load()
 
 		mb_cpt_load_textdomain();
 
-		require_once plugin_dir_path( __FILE__ ) . 'inc/class-mb-cpt-register.php';
-		new MB_CPT_Register;
+		require plugin_dir_path( __FILE__ ) . 'inc/base/register.php';
+		require plugin_dir_path( __FILE__ ) . 'inc/post-type/register.php';
+		require plugin_dir_path( __FILE__ ) . 'inc/taxonomy/register.php';
+		new MB_CPT_Post_Type_Register;
+		new MB_CPT_Taxonomy_Register;
 
 		if ( is_admin() )
 		{
-			require_once plugin_dir_path( __FILE__ ) . 'inc/class-mb-cpt-edit.php';
-			require_once plugin_dir_path( __FILE__ ) . 'inc/helper.php';
-			new MB_CPT_Edit;
+			require plugin_dir_path( __FILE__ ) . 'inc/helper.php';
+			require plugin_dir_path( __FILE__ ) . 'inc/base/edit.php';
+			require plugin_dir_path( __FILE__ ) . 'inc/post-type/edit.php';
+			require plugin_dir_path( __FILE__ ) . 'inc/taxonomy/edit.php';
+			new MB_CPT_Post_Type_Edit( 'mb-post-type' );
+			new MB_CPT_Taxonomy_Edit( 'mb-taxonomy' );
 		}
 	}
 }

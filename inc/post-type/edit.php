@@ -11,45 +11,15 @@
 /**
  * Controls all operations for creating / modifying custom post type.
  */
-class MB_CPT_Edit
+class MB_CPT_Post_Type_Edit extends MB_CPT_Base_Edit
 {
 	/**
-	 * @var bool Used to prevent duplicated calls like revisions, manual hook to wp_insert_post, etc.
+	 * List of Javascript variables.
+	 * @return array
 	 */
-	public $saved = false;
-
-	/**
-	 * Initiating
-	 */
-	public function __construct()
+	public function js_vars()
 	{
-		// Enqueue scripts
-		add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_scripts' ) );
-		// Add meta box
-		add_filter( 'rwmb_meta_boxes', array( $this, 'register_meta_boxes' ) );
-		// Modify post information after save post
-		add_action( 'save_post_mb-post-type', array( $this, 'save_post' ) );
-		// Add ng-controller to form
-		add_action( 'post_edit_form_tag', array( $this, 'add_ng_controller' ) );
-	}
-
-	/**
-	 * Enqueue scripts and styles
-	 *
-	 * @return void
-	 */
-	public function enqueue_scripts()
-	{
-		if ( ! $this->is_mb_post_type() )
-		{
-			return;
-		}
-
-		wp_register_script( 'angular', 'https://ajax.googleapis.com/ajax/libs/angularjs/1.4.2/angular.min.js', array(), '1.4.2', true );
-		wp_enqueue_style( 'mb-cpt', MB_CPT_URL . 'css/style.css', array(), '1.0.0', false );
-		wp_enqueue_script( 'mb-cpt', MB_CPT_URL . 'js/script.js', array( 'jquery', 'angular' ), '1.0.0', false );
-
-		$labels = array(
+		return array(
 			'menu_name'          => '%name%',
 			'name_admin_bar'     => '%singular_name%',
 			'all_items'          => __( 'All %name%', 'mb-custom-post-type' ),
@@ -63,7 +33,6 @@ class MB_CPT_Edit
 			'not_found_in_trash' => __( 'No %name% found in Trash', 'mb-custom-post-type' ),
 			'parent_item_colon'  => __( 'Parent %singular_name%', 'mb-custom-post-type' ),
 		);
-		wp_localize_script( 'mb-cpt', 'MBPostTypeLabels', $labels );
 	}
 
 	/**
@@ -312,7 +281,7 @@ class MB_CPT_Edit
 					$args_prefix . 'post_type'      => array(
 						'required' => __( 'Slug is required', 'mb-custom-post-type' ),
 					),
-				)
+				),
 			),
 		);
 
@@ -423,58 +392,5 @@ class MB_CPT_Edit
 			}
 		}
 		return $html;
-	}
-
-	/**
-	 * Modify post information and post meta after save post
-	 *
-	 * @param int $post_id
-	 *
-	 * @return void
-	 */
-	public function save_post( $post_id )
-	{
-		// If label_singular_name is empty or if this function is called to prevent duplicated calls like revisions, manual hook to wp_insert_post, etc.
-		if ( empty( $_POST['label_singular_name'] ) || true === $this->saved )
-		{
-			return;
-		}
-
-		$this->saved = true;
-
-		// Update post title
-		$post = array(
-			'ID'         => $post_id,
-			'post_title' => $_POST['label_singular_name'],
-		);
-
-		wp_update_post( $post );
-
-		// Flush rewrite rules after create new or edit post types
-		flush_rewrite_rules();
-	}
-
-	/**
-	 * Check if current link is mb-post-type post type or not
-	 *
-	 * @return boolean
-	 */
-	public function is_mb_post_type()
-	{
-		$screen = get_current_screen();
-		return 'post' === $screen->base && 'mb-post-type' === $screen->post_type;
-	}
-
-	/**
-	 * Add angular controller to form tag
-	 *
-	 * @return void
-	 */
-	public function add_ng_controller()
-	{
-		if ( $this->is_mb_post_type() )
-		{
-			echo 'ng-controller="PostTypeController"';
-		}
 	}
 }

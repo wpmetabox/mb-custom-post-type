@@ -11,45 +11,30 @@
 /**
  * Controls all operations for registering custom post type.
  */
-class MB_CPT_Register
+class MB_CPT_Post_Type_Register extends MB_CPT_Base_Register
 {
 	/**
-	 * Initiating
-	 */
-	public function __construct()
-	{
-		// Register post types
-		add_action( 'init', array( $this, 'register_post_types' ) );
-
-		// Change the output of post/bulk post updated messages
-		add_filter( 'post_updated_messages', array( $this, 'updated_message' ), 10, 1 );
-		add_filter( 'bulk_post_updated_messages', array( $this, 'bulk_updated_messages' ), 10, 2 );
-	}
-
-	/**
 	 * Register custom post types
-	 *
-	 * @return void
 	 */
 	public function register_post_types()
 	{
 		// Register main post type 'mb-post-type'
 		$labels = array(
-			'name'               => _x( 'Post Types', 'Post Type General Name', 'mb-custom-post-type' ),
-			'singular_name'      => _x( 'Post Type', 'Post Type Singular Name', 'mb-custom-post-type' ),
-			'menu_name'          => __( 'Post Types', 'mb-custom-post-type' ),
-			'name_admin_bar'     => __( 'Post Type', 'mb-custom-post-type' ),
-			'parent_item_colon'  => __( 'Parent Post Type:', 'mb-custom-post-type' ),
-			'all_items'          => __( 'All Post Types', 'mb-custom-post-type' ),
-			'add_new_item'       => __( 'Add New Post Type', 'mb-custom-post-type' ),
-			'add_new'            => __( 'Add New', 'mb-custom-post-type' ),
-			'new_item'           => __( 'New Post Type', 'mb-custom-post-type' ),
-			'edit_item'          => __( 'Edit Post Type', 'mb-custom-post-type' ),
-			'update_item'        => __( 'Update Post Type', 'mb-custom-post-type' ),
-			'view_item'          => __( 'View Post Type', 'mb-custom-post-type' ),
-			'search_items'       => __( 'Search Post Type', 'mb-custom-post-type' ),
-			'not_found'          => __( 'Not found', 'mb-custom-post-type' ),
-			'not_found_in_trash' => __( 'Not found in Trash', 'mb-custom-post-type' ),
+				'name'               => _x( 'Post Types', 'Post Type General Name', 'mb-custom-post-type' ),
+				'singular_name'      => _x( 'Post Type', 'Post Type Singular Name', 'mb-custom-post-type' ),
+				'menu_name'          => __( 'Post Types', 'mb-custom-post-type' ),
+				'name_admin_bar'     => __( 'Post Type', 'mb-custom-post-type' ),
+				'parent_item_colon'  => __( 'Parent Post Type:', 'mb-custom-post-type' ),
+				'all_items'          => __( 'Post Types', 'mb-custom-post-type' ),
+				'add_new_item'       => __( 'Add New Post Type', 'mb-custom-post-type' ),
+				'add_new'            => __( 'New Post Type', 'mb-custom-post-type' ),
+				'new_item'           => __( 'New Post Type', 'mb-custom-post-type' ),
+				'edit_item'          => __( 'Edit Post Type', 'mb-custom-post-type' ),
+				'update_item'        => __( 'Update Post Type', 'mb-custom-post-type' ),
+				'view_item'          => __( 'View Post Type', 'mb-custom-post-type' ),
+				'search_items'       => __( 'Search Post Type', 'mb-custom-post-type' ),
+				'not_found'          => __( 'Not found', 'mb-custom-post-type' ),
+				'not_found_in_trash' => __( 'Not found in Trash', 'mb-custom-post-type' ),
 		);
 		$args   = array(
 			'label'        => __( 'Post Types', 'mb-custom-post-type' ),
@@ -229,8 +214,8 @@ class MB_CPT_Register
 	{
 		$labels = array(
 			'mb-post-type' => array(
-				'singular' => __( 'post type', 'mb-custom-post-type' ),
-				'plural'   => __( 'post types', 'mb-custom-post-type' )
+					'singular' => __( 'post type', 'mb-custom-post-type' ),
+					'plural'   => __( 'post types', 'mb-custom-post-type' ),
 			),
 		);
 
