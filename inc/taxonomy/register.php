@@ -68,16 +68,18 @@ class MB_CPT_Taxonomy_Register extends MB_CPT_Base_Register
 		$taxonomies = array();
 
 		// Get all post where where post_type = mb-taxonomy
-		$mb_taxonomies = get_posts( array(
+		$taxonomy_ids = get_posts( array(
 			'posts_per_page' => - 1,
 			'post_status'    => 'publish',
 			'post_type'      => 'mb-taxonomy',
+			'no_found_rows'  => true,
+			'fields'         => 'ids',
 		) );
 
-		foreach ( $mb_taxonomies as $taxonomy )
+		foreach ( $taxonomy_ids as $taxonomy_id )
 		{
 			// Get all post meta from current post
-			$post_meta = get_post_meta( $taxonomy->ID );
+			$post_meta = get_post_meta( $taxonomy_id );
 			// Create array that contains Labels of this current custom taxonomy
 			$labels = array();
 			// Create array that contains arguments of this current custom taxonomy

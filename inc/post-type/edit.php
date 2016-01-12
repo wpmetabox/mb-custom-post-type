@@ -328,6 +328,26 @@ class MB_CPT_Post_Type_Edit extends MB_CPT_Base_Edit
 			),
 		);
 
+		// Default taxonomies
+		$meta_boxes[] = array(
+			'id'       => 'taxonomies',
+			'title'    => __( 'Default Taxonomies', 'mb-custom-post-type' ),
+			'pages'    => array( 'mb-post-type' ),
+			'priority' => 'low',
+			'context'  => 'side',
+			'fields'   => array(
+				array(
+					'id'      => $args_prefix . 'taxonomies',
+					'type'    => 'checkbox_list',
+					'options' => array(
+						'category' => __( 'Category', 'mb-custom-post-type' ),
+						'post_tag' => __( 'Tag', 'mb-custom-post-type' ),
+					),
+					'desc'    => sprintf( __( 'Add default taxonomies to post type. For custom taxonomies, please <a href="%s">click here</a>.', 'mb-custom-post-type' ), admin_url( 'edit.php?post_type=mb-taxonomy' ) ),
+				),
+			),
+		);
+
 		$fields = array_merge( $basic_fields, $labels_fields, $advanced_fields );
 
 		// Add ng-model attribute to all fields

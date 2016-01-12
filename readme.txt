@@ -3,8 +3,8 @@ Contributors: metabox, rilwis, duc88b, fitwp
 Donate link: http://www.deluxeblogtips.com/donate
 Tags: cms, custom, custom post types, custom post type, cpt, post, post types, post type, types
 Requires at least: 4.3
-Tested up to: 4.4
-Stable tag: 1.1.0
+Tested up to: 4.4.1
+Stable tag: 1.2.0
 License: GPLv2 or later
 
 Create and manage custom post types and custom taxonomies with an easy-to-use interface in WordPress.
@@ -59,6 +59,10 @@ Install **MB Custom Post Type** extension
 2. Edit custom post type
 
 == Changelog ==
+
+= 1.2.0 =
+
+- Improvement: allow custom post types to have default taxonomies: category and tags.
 
 = 1.1.0 =
 

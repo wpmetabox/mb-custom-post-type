@@ -20,21 +20,21 @@ class MB_CPT_Post_Type_Register extends MB_CPT_Base_Register
 	{
 		// Register main post type 'mb-post-type'
 		$labels = array(
-				'name'               => _x( 'Post Types', 'Post Type General Name', 'mb-custom-post-type' ),
-				'singular_name'      => _x( 'Post Type', 'Post Type Singular Name', 'mb-custom-post-type' ),
-				'menu_name'          => __( 'Post Types', 'mb-custom-post-type' ),
-				'name_admin_bar'     => __( 'Post Type', 'mb-custom-post-type' ),
-				'parent_item_colon'  => __( 'Parent Post Type:', 'mb-custom-post-type' ),
-				'all_items'          => __( 'Post Types', 'mb-custom-post-type' ),
-				'add_new_item'       => __( 'Add New Post Type', 'mb-custom-post-type' ),
-				'add_new'            => __( 'New Post Type', 'mb-custom-post-type' ),
-				'new_item'           => __( 'New Post Type', 'mb-custom-post-type' ),
-				'edit_item'          => __( 'Edit Post Type', 'mb-custom-post-type' ),
-				'update_item'        => __( 'Update Post Type', 'mb-custom-post-type' ),
-				'view_item'          => __( 'View Post Type', 'mb-custom-post-type' ),
-				'search_items'       => __( 'Search Post Type', 'mb-custom-post-type' ),
-				'not_found'          => __( 'Not found', 'mb-custom-post-type' ),
-				'not_found_in_trash' => __( 'Not found in Trash', 'mb-custom-post-type' ),
+			'name'               => _x( 'Post Types', 'Post Type General Name', 'mb-custom-post-type' ),
+			'singular_name'      => _x( 'Post Type', 'Post Type Singular Name', 'mb-custom-post-type' ),
+			'menu_name'          => __( 'Post Types', 'mb-custom-post-type' ),
+			'name_admin_bar'     => __( 'Post Type', 'mb-custom-post-type' ),
+			'parent_item_colon'  => __( 'Parent Post Type:', 'mb-custom-post-type' ),
+			'all_items'          => __( 'Post Types', 'mb-custom-post-type' ),
+			'add_new_item'       => __( 'Add New Post Type', 'mb-custom-post-type' ),
+			'add_new'            => __( 'New Post Type', 'mb-custom-post-type' ),
+			'new_item'           => __( 'New Post Type', 'mb-custom-post-type' ),
+			'edit_item'          => __( 'Edit Post Type', 'mb-custom-post-type' ),
+			'update_item'        => __( 'Update Post Type', 'mb-custom-post-type' ),
+			'view_item'          => __( 'View Post Type', 'mb-custom-post-type' ),
+			'search_items'       => __( 'Search Post Type', 'mb-custom-post-type' ),
+			'not_found'          => __( 'Not found', 'mb-custom-post-type' ),
+			'not_found_in_trash' => __( 'Not found in Trash', 'mb-custom-post-type' ),
 		);
 		$args   = array(
 			'label'        => __( 'Post Types', 'mb-custom-post-type' ),
@@ -69,16 +69,18 @@ class MB_CPT_Post_Type_Register extends MB_CPT_Base_Register
 		$post_types = array();
 
 		// Get all post where where post_type = mb-post-type
-		$mb_post_types = get_posts( array(
+		$post_type_ids = get_posts( array(
 			'posts_per_page' => - 1,
 			'post_status'    => 'publish',
 			'post_type'      => 'mb-post-type',
+			'no_found_rows'  => true,
+			'fields'         => 'ids',
 		) );
 
-		foreach ( $mb_post_types as $post_type )
+		foreach ( $post_type_ids as $post_type )
 		{
 			// Get all post meta from current post
-			$post_meta = get_post_meta( $post_type->ID );
+			$post_meta = get_post_meta( $post_type );
 
 			$labels = array();
 			$args   = array();
@@ -175,6 +177,7 @@ class MB_CPT_Post_Type_Register extends MB_CPT_Base_Register
 			'post_status'    => 'any',
 			'post_type'      => 'mb-post-type',
 			'fields'         => 'ids',
+			'no_found_rows'  => true,
 		) );
 		foreach ( $post_types as $post_type )
 		{
@@ -214,8 +217,8 @@ class MB_CPT_Post_Type_Register extends MB_CPT_Base_Register
 	{
 		$labels = array(
 			'mb-post-type' => array(
-					'singular' => __( 'post type', 'mb-custom-post-type' ),
-					'plural'   => __( 'post types', 'mb-custom-post-type' ),
+				'singular' => __( 'post type', 'mb-custom-post-type' ),
+				'plural'   => __( 'post types', 'mb-custom-post-type' ),
 			),
 		);
 
@@ -224,13 +227,15 @@ class MB_CPT_Post_Type_Register extends MB_CPT_Base_Register
 			'posts_per_page' => - 1,
 			'post_status'    => 'any',
 			'post_type'      => 'mb-post-type',
+			'no_found_rows'  => true,
+			'fields'         => 'ids',
 		) );
 		foreach ( $post_types as $post_type )
 		{
-			$slug          = get_post_meta( $post_type->ID, 'args_post_type', true );
+			$slug          = get_post_meta( $post_type, 'args_post_type', true );
 			$labels[$slug] = array(
-				'singular' => strtolower( get_post_meta( $post_type->ID, 'label_singular_name', true ) ),
-				'plural'   => strtolower( get_post_meta( $post_type->ID, 'label_name', true ) ),
+				'singular' => strtolower( get_post_meta( $post_type, 'label_singular_name', true ) ),
+				'plural'   => strtolower( get_post_meta( $post_type, 'label_name', true ) ),
 			);
 		}
 
