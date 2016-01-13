@@ -86,7 +86,7 @@ class MB_CPT_Post_Type_Register extends MB_CPT_Base_Register
 			$args   = array();
 			foreach ( $post_meta as $key => $value )
 			{
-				$data = 1 == count( $value ) ? $value[0] : $value;
+				$data = 1 == count( $value ) && $key != 'args_taxonomies' ? $value[0] : $value;
 				$data = is_numeric( $data ) ? ( 1 == intval( $data ) ? true : false ) : $data;
 
 				// If post meta has prefix 'label' then add it to $labels

@@ -60,6 +60,10 @@ Install **MB Custom Post Type** extension
 
 == Changelog ==
 
+= 1.2.1 =
+
+- Fix: unable to assign only category or tags to custom post type.
+
 = 1.2.0 =
 
 - Improvement: allow custom post types to have default taxonomies: category and tags.
