@@ -242,6 +242,22 @@ class MB_CPT_Post_Type_Edit extends MB_CPT_Base_Edit
 				'std'  => 1,
 				'desc' => __( 'Can this post type be exported.', 'mb-custom-post-type' ),
 			),
+			array(
+				'name' => __( 'Rewrite', 'mb-custom-post-type' ),
+				'type' => 'heading',
+			),
+			array(
+				'name' => __( 'Rewrite slug', 'mb-custom-post-type' ),
+				'id'   => $args_prefix . 'rewrite_slug',
+				'type' => 'text',
+				'desc' => __( 'Leave empty to use post type as rewrite slug.', 'mb-custom-post-type' ),
+			),
+			array(
+				'name' => __( 'No prepended permalink structure?', 'mb-custom-post-type' ),
+				'id'   => $args_prefix . 'rewrite_no_front',
+				'type' => 'checkbox',
+				'desc' => __( 'Do not prepend the permalink structure with the front base.', 'mb-custom-post-type' ),
+			),
 		);
 
 		// Basic settings

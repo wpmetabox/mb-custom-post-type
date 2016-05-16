@@ -137,6 +137,24 @@ class MB_CPT_Post_Type_Register extends MB_CPT_Base_Register
 			'labels' => $labels,
 			'public' => true,
 		) );
+
+		if ( empty( $args['rewrite_slug'] ) && empty( $args['rewrite_no_front'] ) )
+		{
+			$args['rewrite'] = true;
+		}
+		else
+		{
+			$rewrite = array();
+			if ( ! empty( $args['rewrite_slug'] ) )
+			{
+				$rewrite['slug'] = $args['rewrite_slug'];
+			}
+			if ( ! empty( $args['rewrite_no_front'] ) )
+			{
+				$rewrite['with_front'] = false;
+			}
+			$args['rewrite'] = $rewrite;
+		}
 		unset( $args['post_type'] );
 
 		return $args;
