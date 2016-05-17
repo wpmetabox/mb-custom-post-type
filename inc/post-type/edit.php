@@ -369,7 +369,10 @@ class MB_CPT_Post_Type_Edit extends MB_CPT_Base_Edit
 		// Add ng-model attribute to all fields
 		foreach ( $fields as $field )
 		{
-			add_filter( 'rwmb_' . $field['id'] . '_html', array( $this, 'modify_field_html' ), 10, 3 );
+			if ( ! empty( $field['id'] ) )
+			{
+				add_filter( 'rwmb_' . $field['id'] . '_html', array( $this, 'modify_field_html' ), 10, 3 );
+			}
 		}
 
 		return $meta_boxes;
