@@ -17,18 +17,15 @@ add_action( 'init', 'mb_cpt_load', 0 );
 
 /**
  * Dependent plugin activation/deactivation
+ *
  * @link https://gist.github.com/mathetos/7161f6a88108aaede32a
  */
-function mb_cpt_load()
-{
+function mb_cpt_load() {
 	// If Meta Box is NOT active
-	if ( current_user_can( 'activate_plugins' ) && ! class_exists( 'RW_Meta_Box' ) )
-	{
+	if ( current_user_can( 'activate_plugins' ) && ! class_exists( 'RW_Meta_Box' ) ) {
 		add_action( 'admin_init', 'mb_cpt_deactivate' );
 		add_action( 'admin_notices', 'mb_cpt_admin_notice' );
-	}
-	else
-	{
+	} else {
 		// Plugin constants
 		define( 'MB_CPT_URL', plugin_dir_url( __FILE__ ) );
 
@@ -40,8 +37,7 @@ function mb_cpt_load()
 		new MB_CPT_Post_Type_Register;
 		new MB_CPT_Taxonomy_Register;
 
-		if ( is_admin() )
-		{
+		if ( is_admin() ) {
 			require plugin_dir_path( __FILE__ ) . 'inc/helper.php';
 			require plugin_dir_path( __FILE__ ) . 'inc/base/edit.php';
 			require plugin_dir_path( __FILE__ ) . 'inc/post-type/edit.php';
@@ -55,16 +51,14 @@ function mb_cpt_load()
 /**
  * Deactivate plugin
  */
-function mb_cpt_deactivate()
-{
+function mb_cpt_deactivate() {
 	deactivate_plugins( plugin_basename( __FILE__ ) );
 }
 
 /**
  * Show admin notice when Meta Box is not activated
  */
-function mb_cpt_admin_notice()
-{
+function mb_cpt_admin_notice() {
 	$child  = __( 'MB Custom Post Type', 'mb-custom-post-type' );
 	$parent = __( 'Meta Box', 'mb-custom-post-type' );
 	printf(
@@ -73,8 +67,7 @@ function mb_cpt_admin_notice()
 		'<strong>' . $parent . '</strong>'
 	);
 
-	if ( isset( $_GET['activate'] ) )
-	{
+	if ( isset( $_GET['activate'] ) ) {
 		unset( $_GET['activate'] );
 	}
 }
@@ -82,7 +75,6 @@ function mb_cpt_admin_notice()
 /**
  * Load plugin textdomain
  */
-function mb_cpt_load_textdomain()
-{
+function mb_cpt_load_textdomain() {
 	load_plugin_textdomain( 'mb-custom-post-type' );
 }

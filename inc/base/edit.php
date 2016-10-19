@@ -10,26 +10,28 @@
 /**
  * The base class which controls all operations for creating / modifying custom post type.
  */
-abstract class MB_CPT_Base_Edit
-{
+abstract class MB_CPT_Base_Edit {
+
 	/**
 	 * Post type name.
+	 *
 	 * @var string
 	 */
 	public $post_type;
 
 	/**
 	 * Used to prevent duplicated calls like revisions, manual hook to wp_insert_post, etc.
+	 *
 	 * @var bool
 	 */
 	public $saved = false;
 
 	/**
 	 * Initiating
+	 *
 	 * @param string $post_type Post type
 	 */
-	public function __construct( $post_type )
-	{
+	public function __construct( $post_type ) {
 		$this->post_type = $post_type;
 
 		// Enqueue scripts
@@ -47,10 +49,8 @@ abstract class MB_CPT_Base_Edit
 	 *
 	 * @return void
 	 */
-	public function enqueue_scripts()
-	{
-		if ( ! $this->is_edit_screen() )
-		{
+	public function enqueue_scripts() {
+		if ( ! $this->is_edit_screen() ) {
 			return;
 		}
 
@@ -64,10 +64,10 @@ abstract class MB_CPT_Base_Edit
 
 	/**
 	 * List of Javascript variables.
+	 *
 	 * @return array
 	 */
-	public function js_vars()
-	{
+	public function js_vars() {
 		return array();
 	}
 
@@ -78,8 +78,7 @@ abstract class MB_CPT_Base_Edit
 	 *
 	 * @return array
 	 */
-	public function register_meta_boxes( $meta_boxes )
-	{
+	public function register_meta_boxes( $meta_boxes ) {
 		return $meta_boxes;
 	}
 
@@ -90,11 +89,9 @@ abstract class MB_CPT_Base_Edit
 	 *
 	 * @return void
 	 */
-	public function save_post( $post_id )
-	{
+	public function save_post( $post_id ) {
 		// If label_singular_name is empty or if this function is called to prevent duplicated calls like revisions, manual hook to wp_insert_post, etc.
-		if ( empty( $_POST['label_singular_name'] ) || true === $this->saved )
-		{
+		if ( empty( $_POST['label_singular_name'] ) || true === $this->saved ) {
 			return;
 		}
 
@@ -117,8 +114,7 @@ abstract class MB_CPT_Base_Edit
 	 *
 	 * @return boolean
 	 */
-	public function is_edit_screen()
-	{
+	public function is_edit_screen() {
 		$screen = get_current_screen();
 		return 'post' === $screen->base && $this->post_type === $screen->post_type;
 	}
@@ -128,10 +124,8 @@ abstract class MB_CPT_Base_Edit
 	 *
 	 * @return void
 	 */
-	public function add_ng_controller()
-	{
-		if ( $this->is_edit_screen() )
-		{
+	public function add_ng_controller() {
+		if ( $this->is_edit_screen() ) {
 			$object = str_replace( array( 'mb-', '-' ), array( '', ' ' ), $this->post_type );
 			$object = str_replace( ' ', '', ucwords( $object ) );
 			echo 'ng-controller="' . $object . 'Controller"';

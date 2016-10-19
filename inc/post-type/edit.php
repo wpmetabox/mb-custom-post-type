@@ -11,14 +11,14 @@
 /**
  * Controls all operations for creating / modifying custom post type.
  */
-class MB_CPT_Post_Type_Edit extends MB_CPT_Base_Edit
-{
+class MB_CPT_Post_Type_Edit extends MB_CPT_Base_Edit {
+
 	/**
 	 * List of Javascript variables.
+	 *
 	 * @return array
 	 */
-	public function js_vars()
-	{
+	public function js_vars() {
 		return array(
 			'menu_name'          => '%name%',
 			'name_admin_bar'     => '%singular_name%',
@@ -42,8 +42,7 @@ class MB_CPT_Post_Type_Edit extends MB_CPT_Base_Edit
 	 *
 	 * @return array
 	 */
-	public function register_meta_boxes( $meta_boxes )
-	{
+	public function register_meta_boxes( $meta_boxes ) {
 		$label_prefix = 'label_';
 		$args_prefix  = 'args_';
 
@@ -367,10 +366,8 @@ class MB_CPT_Post_Type_Edit extends MB_CPT_Base_Edit
 		$fields = array_merge( $basic_fields, $labels_fields, $advanced_fields );
 
 		// Add ng-model attribute to all fields
-		foreach ( $fields as $field )
-		{
-			if ( ! empty( $field['id'] ) )
-			{
+		foreach ( $fields as $field ) {
+			if ( ! empty( $field['id'] ) ) {
 				add_filter( 'rwmb_' . $field['id'] . '_html', array( $this, 'modify_field_html' ), 10, 3 );
 			}
 		}
@@ -387,11 +384,9 @@ class MB_CPT_Post_Type_Edit extends MB_CPT_Base_Edit
 	 *
 	 * @return string
 	 */
-	public function modify_field_html( $html, $field, $meta )
-	{
+	public function modify_field_html( $html, $field, $meta ) {
 		// Labels
-		if ( 0 === strpos( $field['id'], 'label_' ) )
-		{
+		if ( 0 === strpos( $field['id'], 'label_' ) ) {
 			$model = substr( $field['id'], 6 );
 			$html  = str_replace( '>', sprintf(
 				' ng-model="labels.%s" ng-init="labels.%s=\'%s\'"%s>',
@@ -401,23 +396,18 @@ class MB_CPT_Post_Type_Edit extends MB_CPT_Base_Edit
 				in_array( $model, array( 'name', 'singular_name' ) ) ? ' ng-change="updateLabels()"' : ''
 			), $html );
 			$html  = preg_replace( '/value="(.*?)"/', 'value="{{labels.' . $model . '}}"', $html );
-		}
-		// Slug
-		elseif ( 'args_post_type' == $field['id'] )
-		{
+		} // End if().
+		elseif ( 'args_post_type' == $field['id'] ) {
 			$html = str_replace( '>', sprintf(
 				' ng-model="post_type" ng-init="post_type=\'%s\'">',
 				$meta
 			), $html );
 			$html = preg_replace( '/value="(.*?)"/', 'value="{{post_type}}"', $html );
-		}
-		// Menu icons
-		elseif ( 'args_menu_icon' == $field['id'] )
-		{
+		} // Menu icons
+		elseif ( 'args_menu_icon' == $field['id'] ) {
 			$html  = '';
 			$icons = mb_cpt_get_dashicons();
-			foreach ( $icons as $icon )
-			{
+			foreach ( $icons as $icon ) {
 				$html .= sprintf( '
 					<label class="icon-single%s">
 						<i class="wp-menu-image dashicons-before %s"></i>

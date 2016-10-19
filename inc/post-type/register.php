@@ -11,13 +11,12 @@
 /**
  * Controls all operations for registering custom post type.
  */
-class MB_CPT_Post_Type_Register extends MB_CPT_Base_Register
-{
+class MB_CPT_Post_Type_Register extends MB_CPT_Base_Register {
+
 	/**
 	 * Register custom post types
 	 */
-	public function register_post_types()
-	{
+	public function register_post_types() {
 		// Register main post type 'mb-post-type'
 		$labels = array(
 			'name'               => _x( 'Post Types', 'Post Type General Name', 'mb-custom-post-type' ),
@@ -52,8 +51,7 @@ class MB_CPT_Post_Type_Register extends MB_CPT_Base_Register
 
 		// Get all registered custom post types
 		$post_types = $this->get_post_types();
-		foreach ( $post_types as $post_type => $args )
-		{
+		foreach ( $post_types as $post_type => $args ) {
 			register_post_type( $post_type, $args );
 		}
 	}
@@ -63,8 +61,7 @@ class MB_CPT_Post_Type_Register extends MB_CPT_Base_Register
 	 *
 	 * @return array
 	 */
-	public function get_post_types()
-	{
+	public function get_post_types() {
 		// This array stores all registered custom post types
 		$post_types = array();
 
@@ -77,31 +74,26 @@ class MB_CPT_Post_Type_Register extends MB_CPT_Base_Register
 			'fields'         => 'ids',
 		) );
 
-		foreach ( $post_type_ids as $post_type )
-		{
+		foreach ( $post_type_ids as $post_type ) {
 			// Get all post meta from current post
 			$post_meta = get_post_meta( $post_type );
 
 			$labels = array();
 			$args   = array();
-			foreach ( $post_meta as $key => $value )
-			{
+			foreach ( $post_meta as $key => $value ) {
 				$data = 1 == count( $value ) && $key != 'args_taxonomies' ? $value[0] : $value;
 				$data = is_numeric( $data ) ? ( 1 == intval( $data ) ? true : false ) : $data;
 
 				// If post meta has prefix 'label' then add it to $labels
-				if ( false !== strpos( $key, 'label' ) )
-				{
-					$labels[str_replace( 'label_', '', $key )] = $data;
-				}
-				// If post meta has prefix 'args' then add it to $args
-				elseif ( false !== strpos( $key, 'args' ) )
-				{
-					$args[str_replace( 'args_', '', $key )] = $data;
+				if ( false !== strpos( $key, 'label' ) ) {
+					$labels[ str_replace( 'label_', '', $key ) ] = $data;
+				} // End if().
+				elseif ( false !== strpos( $key, 'args' ) ) {
+					$args[ str_replace( 'args_', '', $key ) ] = $data;
 				}
 			}
 
-			$post_types[$args['post_type']] = $this->set_up_post_type( $labels, $args );
+			$post_types[ $args['post_type'] ] = $this->set_up_post_type( $labels, $args );
 		}
 
 		return $post_types;
@@ -115,8 +107,7 @@ class MB_CPT_Post_Type_Register extends MB_CPT_Base_Register
 	 *
 	 * @return array
 	 */
-	public function set_up_post_type( $labels = array(), $args = array() )
-	{
+	public function set_up_post_type( $labels = array(), $args = array() ) {
 		$labels = wp_parse_args( $labels, array(
 			'menu_name'          => $labels['name'],
 			'name_admin_bar'     => $labels['singular_name'],
@@ -138,19 +129,14 @@ class MB_CPT_Post_Type_Register extends MB_CPT_Base_Register
 			'public' => true,
 		) );
 
-		if ( empty( $args['rewrite_slug'] ) && empty( $args['rewrite_no_front'] ) )
-		{
+		if ( empty( $args['rewrite_slug'] ) && empty( $args['rewrite_no_front'] ) ) {
 			$args['rewrite'] = true;
-		}
-		else
-		{
+		} else {
 			$rewrite = array();
-			if ( ! empty( $args['rewrite_slug'] ) )
-			{
+			if ( ! empty( $args['rewrite_slug'] ) ) {
 				$rewrite['slug'] = $args['rewrite_slug'];
 			}
-			if ( ! empty( $args['rewrite_no_front'] ) )
-			{
+			if ( ! empty( $args['rewrite_no_front'] ) ) {
 				$rewrite['with_front'] = false;
 			}
 			$args['rewrite'] = $rewrite;
@@ -167,8 +153,7 @@ class MB_CPT_Post_Type_Register extends MB_CPT_Base_Register
 	 *
 	 * @return array
 	 */
-	public function updated_message( $messages )
-	{
+	public function updated_message( $messages ) {
 		$post             = get_post();
 		$post_type_object = get_post_type_object( $post->post_type );
 		$label            = ucfirst( $post_type_object->labels->singular_name );
@@ -181,11 +166,11 @@ class MB_CPT_Post_Type_Register extends MB_CPT_Base_Register
 			2  => __( 'Custom field updated.', 'mb-custom-post-type' ),
 			3  => __( 'Custom field deleted.', 'mb-custom-post-type' ),
 			4  => sprintf( __( '%s updated.', 'mb-custom-post-type' ), $label ),
-			5  => isset( $_GET['revision'] ) ? sprintf( __( '%s restored to revision from %s.', 'mb-custom-post-type' ), $label, wp_post_revision_title( (int) $_GET['revision'], false ) ) : false,
+			5  => isset( $_GET['revision'] ) ? sprintf( __( '%1$s restored to revision from %1$s.', 'mb-custom-post-type' ), $label, wp_post_revision_title( (int) $_GET['revision'], false ) ) : false,
 			6  => sprintf( __( '%s published.', 'mb-custom-post-type' ), $label ),
 			7  => sprintf( __( '%s saved.', 'mb-custom-post-type' ), $label ),
 			8  => sprintf( __( '%s submitted.', 'mb-custom-post-type' ), $label ),
-			9  => sprintf( __( '%s scheduled for: <strong>%s</strong>.', 'mb-custom-post-type' ), $label, date_i18n( __( 'M j, Y @ G:i', 'mb-custom-post-type' ), strtotime( $post->post_date ) ) ),
+			9  => sprintf( __( '%1$s scheduled for: <strong>%1$s</strong>.', 'mb-custom-post-type' ), $label, date_i18n( __( 'M j, Y @ G:i', 'mb-custom-post-type' ), strtotime( $post->post_date ) ) ),
 			10 => sprintf( __( '%s draft updated.', 'mb-custom-post-type' ), $label ),
 		);
 
@@ -197,24 +182,22 @@ class MB_CPT_Post_Type_Register extends MB_CPT_Base_Register
 			'fields'         => 'ids',
 			'no_found_rows'  => true,
 		) );
-		foreach ( $post_types as $post_type )
-		{
+		foreach ( $post_types as $post_type ) {
 			$slug            = get_post_meta( $post_type, 'args_post_type', true );
-			$messages[$slug] = $message;
+			$messages[ $slug ] = $message;
 
-			if ( get_post_meta( $post_type, 'args_publicly_queryable', true ) )
-			{
+			if ( get_post_meta( $post_type, 'args_publicly_queryable', true ) ) {
 				$permalink = get_permalink( $post->ID );
 
 				$view_link = sprintf( ' <a href="%s">%s</a>.', esc_url( $permalink ), sprintf( __( 'View %s', 'mb-custom-post-type' ), $label_lower ) );
-				$messages[$slug][1] .= $view_link;
-				$messages[$slug][6] .= $view_link;
-				$messages[$slug][9] .= $view_link;
+				$messages[ $slug ][1] .= $view_link;
+				$messages[ $slug ][6] .= $view_link;
+				$messages[ $slug ][9] .= $view_link;
 
 				$preview_permalink = add_query_arg( 'preview', 'true', $permalink );
 				$preview_link      = sprintf( ' <a target="_blank" href="%s">%s</a>.', esc_url( $preview_permalink ), sprintf( __( 'Preview %s', 'mb-custom-post-type' ), $label_lower ) );
-				$messages[$slug][8] .= $preview_link;
-				$messages[$slug][10] .= $preview_link;
+				$messages[ $slug ][8] .= $preview_link;
+				$messages[ $slug ][10] .= $preview_link;
 			}
 		}
 
@@ -231,8 +214,7 @@ class MB_CPT_Post_Type_Register extends MB_CPT_Base_Register
 	 *
 	 * @return array
 	 */
-	public function bulk_updated_messages( $bulk_messages, $bulk_counts )
-	{
+	public function bulk_updated_messages( $bulk_messages, $bulk_counts ) {
 		$labels = array(
 			'mb-post-type' => array(
 				'singular' => __( 'post type', 'mb-custom-post-type' ),
@@ -248,26 +230,24 @@ class MB_CPT_Post_Type_Register extends MB_CPT_Base_Register
 			'no_found_rows'  => true,
 			'fields'         => 'ids',
 		) );
-		foreach ( $post_types as $post_type )
-		{
+		foreach ( $post_types as $post_type ) {
 			$slug          = get_post_meta( $post_type, 'args_post_type', true );
-			$labels[$slug] = array(
+			$labels[ $slug ] = array(
 				'singular' => strtolower( get_post_meta( $post_type, 'label_singular_name', true ) ),
 				'plural'   => strtolower( get_post_meta( $post_type, 'label_name', true ) ),
 			);
 		}
 
-		foreach ( $labels as $post_type => $label )
-		{
+		foreach ( $labels as $post_type => $label ) {
 			$singular = $label['singular'];
 			$plural   = $label['plural'];
 
-			$bulk_messages[$post_type] = array(
-				'updated'   => sprintf( __( '%s %s updated.', 'mb-custom-post-type' ), $bulk_counts['updated'], $bulk_counts['updated'] > 1 ? $plural : $singular ),
-				'locked'    => sprintf( __( '%s %s not updated, somebody is editing.', 'mb-custom-post-type' ), $bulk_counts['locked'], $bulk_counts['locked'] > 1 ? $plural : $singular ),
-				'deleted'   => sprintf( __( '%s %s permanently deleted.', 'mb-custom-post-type' ), $bulk_counts['deleted'], $bulk_counts['deleted'] > 1 ? $plural : $singular ),
-				'trashed'   => sprintf( __( '%s %s moved to the Trash.', 'mb-custom-post-type' ), $bulk_counts['trashed'], $bulk_counts['trashed'] > 1 ? $plural : $singular ),
-				'untrashed' => sprintf( __( '%s %s restored from the Trash.', 'mb-custom-post-type' ), $bulk_counts['untrashed'], $bulk_counts['untrashed'] > 1 ? $plural : $singular ),
+			$bulk_messages[ $post_type ] = array(
+				'updated'   => sprintf( __( '%1$s %1$s updated.', 'mb-custom-post-type' ), $bulk_counts['updated'], $bulk_counts['updated'] > 1 ? $plural : $singular ),
+				'locked'    => sprintf( __( '%1$s %1$s not updated, somebody is editing.', 'mb-custom-post-type' ), $bulk_counts['locked'], $bulk_counts['locked'] > 1 ? $plural : $singular ),
+				'deleted'   => sprintf( __( '%1$s %1$s permanently deleted.', 'mb-custom-post-type' ), $bulk_counts['deleted'], $bulk_counts['deleted'] > 1 ? $plural : $singular ),
+				'trashed'   => sprintf( __( '%1$s %1$s moved to the Trash.', 'mb-custom-post-type' ), $bulk_counts['trashed'], $bulk_counts['trashed'] > 1 ? $plural : $singular ),
+				'untrashed' => sprintf( __( '%1$s %1$s restored from the Trash.', 'mb-custom-post-type' ), $bulk_counts['untrashed'], $bulk_counts['untrashed'] > 1 ? $plural : $singular ),
 			);
 		}
 

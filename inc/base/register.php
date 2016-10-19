@@ -10,13 +10,12 @@
 /**
  * Base class to register custom post types and custom taxonomies.
  */
-abstract class MB_CPT_Base_Register
-{
+abstract class MB_CPT_Base_Register {
+
 	/**
 	 * Initiating
 	 */
-	public function __construct()
-	{
+	public function __construct() {
 		// Register post types
 		add_action( 'init', array( $this, 'register_post_types' ) );
 

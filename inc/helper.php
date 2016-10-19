@@ -5,8 +5,7 @@
  *
  * @return array
  */
-function mb_cpt_get_dashicons()
-{
+function mb_cpt_get_dashicons() {
 	return array(
 		'dashicons-admin-appearance',
 		'dashicons-admin-collapse',

@@ -10,14 +10,14 @@
 /**
  * Controls all operations for creating / modifying custom taxonomy.
  */
-class MB_CPT_Taxonomy_Edit extends MB_CPT_Base_Edit
-{
+class MB_CPT_Taxonomy_Edit extends MB_CPT_Base_Edit {
+
 	/**
 	 * List of Javascript variables.
+	 *
 	 * @return array
 	 */
-	public function js_vars()
-	{
+	public function js_vars() {
 		return array(
 			'menu_name'                  => '%name%',
 			'all_items'                  => __( 'All %name%', 'mb-custom-post-type' ),
@@ -43,8 +43,7 @@ class MB_CPT_Taxonomy_Edit extends MB_CPT_Base_Edit
 	 * @param array $meta_boxes
 	 * @return array
 	 */
-	public function register_meta_boxes( $meta_boxes )
-	{
+	public function register_meta_boxes( $meta_boxes ) {
 		$label_prefix = 'label_';
 		$args_prefix  = 'args_';
 
@@ -290,9 +289,8 @@ class MB_CPT_Taxonomy_Edit extends MB_CPT_Base_Edit
 		$options    = array();
 		$post_types = get_post_types( '', 'objects' );
 		unset( $post_types['mb-taxonomy'], $post_types['revision'], $post_types['nav_menu_item'] );
-		foreach ( $post_types as $post_type => $post_type_object )
-		{
-			$options[$post_type] = $post_type_object->labels->singular_name;
+		foreach ( $post_types as $post_type => $post_type_object ) {
+			$options[ $post_type ] = $post_type_object->labels->singular_name;
 		}
 		$meta_boxes[] = array(
 			'title'      => __( 'Assign To Post Types', 'mb-custom-post-type' ),
@@ -311,10 +309,8 @@ class MB_CPT_Taxonomy_Edit extends MB_CPT_Base_Edit
 		$fields = array_merge( $basic_fields, $labels_fields, $advanced_fields );
 
 		// Add ng-model attribute to all fields
-		foreach ( $fields as $field )
-		{
-			if ( ! empty( $field['id'] ) )
-			{
+		foreach ( $fields as $field ) {
+			if ( ! empty( $field['id'] ) ) {
 				add_filter( 'rwmb_' . $field['id'] . '_html', array( $this, 'modify_field_html' ), 10, 3 );
 			}
 		}
@@ -331,11 +327,9 @@ class MB_CPT_Taxonomy_Edit extends MB_CPT_Base_Edit
 	 *
 	 * @return string
 	 */
-	public function modify_field_html( $html, $field, $meta )
-	{
+	public function modify_field_html( $html, $field, $meta ) {
 		// Labels
-		if ( 0 === strpos( $field['id'], 'label_' ) )
-		{
+		if ( 0 === strpos( $field['id'], 'label_' ) ) {
 			$model = substr( $field['id'], 6 );
 			$html  = str_replace( '>', sprintf(
 				' ng-model="labels.%s" ng-init="labels.%s=\'%s\'"%s>',
@@ -345,10 +339,8 @@ class MB_CPT_Taxonomy_Edit extends MB_CPT_Base_Edit
 				in_array( $model, array( 'name', 'singular_name' ) ) ? ' ng-change="updateLabels()"' : ''
 			), $html );
 			$html  = preg_replace( '/value="(.*?)"/', 'value="{{labels.' . $model . '}}"', $html );
-		}
-		// Slug
-		elseif ( 'args_taxonomy' == $field['id'] )
-		{
+		} // End if().
+		elseif ( 'args_taxonomy' == $field['id'] ) {
 			$html = str_replace( '>', sprintf(
 				' ng-model="taxonomy" ng-init="taxonomy=\'%s\'">',
 				$meta

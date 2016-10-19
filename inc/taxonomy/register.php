@@ -11,13 +11,12 @@
 /**
  * Controls all operations for registering custom taxonomy.
  */
-class MB_CPT_Taxonomy_Register extends MB_CPT_Base_Register
-{
+class MB_CPT_Taxonomy_Register extends MB_CPT_Base_Register {
+
 	/**
 	 * Register custom post type for taxonomies
 	 */
-	public function register_post_types()
-	{
+	public function register_post_types() {
 		// Register post type of the plugin 'mb-taxonomy'
 		$labels = array(
 			'name'               => _x( 'Taxonomies', 'Taxonomy General Name', 'mb-custom-post-type' ),
@@ -52,18 +51,17 @@ class MB_CPT_Taxonomy_Register extends MB_CPT_Base_Register
 
 		// Get all registered custom taxonomies
 		$taxonomies = $this->get_taxonomies();
-		foreach ( $taxonomies as $taxonomy => $args )
-		{
+		foreach ( $taxonomies as $taxonomy => $args ) {
 			register_taxonomy( $taxonomy, $args['post_types'], $args );
 		}
 	}
 
 	/**
 	 * Get all registered taxonomies
+	 *
 	 * @return array
 	 */
-	public function get_taxonomies()
-	{
+	public function get_taxonomies() {
 		// This array stores all registered custom taxonomies
 		$taxonomies = array();
 
@@ -76,8 +74,7 @@ class MB_CPT_Taxonomy_Register extends MB_CPT_Base_Register
 			'fields'         => 'ids',
 		) );
 
-		foreach ( $taxonomy_ids as $taxonomy_id )
-		{
+		foreach ( $taxonomy_ids as $taxonomy_id ) {
 			// Get all post meta from current post
 			$post_meta = get_post_meta( $taxonomy_id );
 			// Create array that contains Labels of this current custom taxonomy
@@ -85,26 +82,22 @@ class MB_CPT_Taxonomy_Register extends MB_CPT_Base_Register
 			// Create array that contains arguments of this current custom taxonomy
 			$args = array();
 
-			foreach ( $post_meta as $key => $value )
-			{
+			foreach ( $post_meta as $key => $value ) {
 				// If post meta has prefix 'label' then add it to $labels
-				if ( false !== strpos( $key, 'label' ) )
-				{
+				if ( false !== strpos( $key, 'label' ) ) {
 					$data = 1 == count( $value ) ? $value[0] : $value;
 
-					$labels[str_replace( 'label_', '', $key )] = $data;
-				}
-				// If post meta has prefix 'args' then add it to $args
-				elseif ( false !== strpos( $key, 'args' ) )
-				{
+					$labels[ str_replace( 'label_', '', $key ) ] = $data;
+				} // End if().
+				elseif ( false !== strpos( $key, 'args' ) ) {
 					$data = 1 == count( $value ) ? $value[0] : $value;
 					$data = is_numeric( $data ) ? ( 1 == intval( $data ) ? true : false ) : $data;
 
-					$args[str_replace( 'args_', '', $key )] = $data;
+					$args[ str_replace( 'args_', '', $key ) ] = $data;
 				}
 			}
 
-			$taxonomies[$args['taxonomy']] = $this->set_up_taxonomy( $labels, $args );
+			$taxonomies[ $args['taxonomy'] ] = $this->set_up_taxonomy( $labels, $args );
 		}
 
 		return $taxonomies;
@@ -117,8 +110,7 @@ class MB_CPT_Taxonomy_Register extends MB_CPT_Base_Register
 	 * @param array $args
 	 * @return array
 	 */
-	public function set_up_taxonomy( $labels = array(), $args = array() )
-	{
+	public function set_up_taxonomy( $labels = array(), $args = array() ) {
 		$labels = wp_parse_args( $labels, array(
 			'menu_name'                  => $labels['name'],
 			'all_items'                  => sprintf( __( 'All %s', 'mb-custom-post-type' ), $labels['name'] ),
@@ -151,8 +143,7 @@ class MB_CPT_Taxonomy_Register extends MB_CPT_Base_Register
 	 * @param array $messages
 	 * @return array
 	 */
-	public function updated_message( $messages )
-	{
+	public function updated_message( $messages ) {
 		$post = get_post();
 
 		$messages['mb-taxonomy'] = array(
@@ -179,8 +170,7 @@ class MB_CPT_Taxonomy_Register extends MB_CPT_Base_Register
 	 * @param array $bulk_counts
 	 * @return array
 	 */
-	public function bulk_updated_messages( $bulk_messages, $bulk_counts )
-	{
+	public function bulk_updated_messages( $bulk_messages, $bulk_counts ) {
 		$bulk_messages['mb-taxonomy'] = array(
 			'updated'   => sprintf( _n( '%s taxonomy updated.', '%s taxonomies updated.', $bulk_counts['updated'], 'mb-custom-post-type' ), $bulk_counts['updated'] ),
 			'locked'    => sprintf( _n( '%s taxonomy not updated, somebody is editing.', '%s taxonomies not updated, somebody is editing.', $bulk_counts['locked'], 'mb-custom-post-type' ), $bulk_counts['locked'] ),
