@@ -208,6 +208,18 @@ class MB_CPT_Taxonomy_Edit extends MB_CPT_Base_Edit {
 				'desc' => __( 'Whether to allow automatic creation of taxonomy columns on associated post-types table.', 'mb-custom-post-type' ),
 			),
 			array(
+				'name' => __( 'Show in REST?', 'mb-custom-post-type' ),
+				'id'   => $args_prefix . 'show_in_rest',
+				'type' => 'checkbox',
+				'desc' => __( 'Whether to include the taxonomy in the REST API.', 'mb-custom-post-type' ),
+			),
+			array(
+				'name' => __( 'REST base', 'mb-custom-post-type' ),
+				'id'   => $args_prefix . 'rest_base',
+				'type' => 'checkbox',
+				'desc' => __( 'To change the base url of REST API route. Default is taxonomy slug.', 'mb-custom-post-type' ),
+			),
+			array(
 				'name' => __( 'Hierarchical?', 'mb-custom-post-type' ),
 				'id'   => $args_prefix . 'hierarchical',
 				'type' => 'checkbox',

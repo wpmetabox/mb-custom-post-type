@@ -3,7 +3,7 @@
  * Plugin Name: MB Custom Post Type
  * Plugin URI: https://metabox.io/plugins/custom-post-type/
  * Description: Create custom post types and custom taxonomies with easy-to-use UI
- * Version: 1.2.5
+ * Version: 1.3
  * Author: Rilwis & Duc Doan
  * Author URI: http://www.deluxeblogtips.com
  * License: GPL-2.0+
@@ -25,26 +25,28 @@ function mb_cpt_load() {
 	if ( current_user_can( 'activate_plugins' ) && ! class_exists( 'RW_Meta_Box' ) ) {
 		add_action( 'admin_init', 'mb_cpt_deactivate' );
 		add_action( 'admin_notices', 'mb_cpt_admin_notice' );
-	} else {
-		// Plugin constants
-		define( 'MB_CPT_URL', plugin_dir_url( __FILE__ ) );
 
-		mb_cpt_load_textdomain();
+		return;
+	}
 
-		require plugin_dir_path( __FILE__ ) . 'inc/base/register.php';
-		require plugin_dir_path( __FILE__ ) . 'inc/post-type/register.php';
-		require plugin_dir_path( __FILE__ ) . 'inc/taxonomy/register.php';
-		new MB_CPT_Post_Type_Register;
-		new MB_CPT_Taxonomy_Register;
+	// Plugin constants
+	define( 'MB_CPT_URL', plugin_dir_url( __FILE__ ) );
 
-		if ( is_admin() ) {
-			require plugin_dir_path( __FILE__ ) . 'inc/helper.php';
-			require plugin_dir_path( __FILE__ ) . 'inc/base/edit.php';
-			require plugin_dir_path( __FILE__ ) . 'inc/post-type/edit.php';
-			require plugin_dir_path( __FILE__ ) . 'inc/taxonomy/edit.php';
-			new MB_CPT_Post_Type_Edit( 'mb-post-type' );
-			new MB_CPT_Taxonomy_Edit( 'mb-taxonomy' );
-		}
+	load_plugin_textdomain( 'mb-custom-post-type' );
+
+	require plugin_dir_path( __FILE__ ) . 'inc/base/register.php';
+	require plugin_dir_path( __FILE__ ) . 'inc/post-type/register.php';
+	require plugin_dir_path( __FILE__ ) . 'inc/taxonomy/register.php';
+	new MB_CPT_Post_Type_Register;
+	new MB_CPT_Taxonomy_Register;
+
+	if ( is_admin() ) {
+		require plugin_dir_path( __FILE__ ) . 'inc/helper.php';
+		require plugin_dir_path( __FILE__ ) . 'inc/base/edit.php';
+		require plugin_dir_path( __FILE__ ) . 'inc/post-type/edit.php';
+		require plugin_dir_path( __FILE__ ) . 'inc/taxonomy/edit.php';
+		new MB_CPT_Post_Type_Edit( 'mb-post-type' );
+		new MB_CPT_Taxonomy_Edit( 'mb-taxonomy' );
 	}
 }
 
@@ -70,11 +72,4 @@ function mb_cpt_admin_notice() {
 	if ( isset( $_GET['activate'] ) ) {
 		unset( $_GET['activate'] );
 	}
-}
-
-/**
- * Load plugin textdomain
- */
-function mb_cpt_load_textdomain() {
-	load_plugin_textdomain( 'mb-custom-post-type' );
 }

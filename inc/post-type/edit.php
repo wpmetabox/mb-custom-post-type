@@ -194,6 +194,18 @@ class MB_CPT_Post_Type_Edit extends MB_CPT_Base_Edit {
 				'desc' => __( 'Whether to make this post type available in the WordPress admin bar.', 'mb-custom-post-type' ),
 			),
 			array(
+				'name' => __( 'Show in REST API?', 'mb-custom-post-type' ),
+				'id'   => $args_prefix . 'show_in_rest',
+				'type' => 'checkbox',
+				'desc' => __( 'Whether to add the post type route in the REST API "wp/v2" namespace.', 'mb-custom-post-type' ),
+			),
+			array(
+				'name' => __( 'REST base', 'mb-custom-post-type' ),
+				'id'   => $args_prefix . 'rest_base',
+				'type' => 'text',
+				'desc' => __( 'To change the base url of REST API route. Default is post type.', 'mb-custom-post-type' ),
+			),
+			array(
 				'name' => __( 'Menu position', 'mb-custom-post-type' ),
 				'id'   => $args_prefix . 'menu_position',
 				'type' => 'number',
@@ -379,7 +391,7 @@ class MB_CPT_Post_Type_Edit extends MB_CPT_Base_Edit {
 	 * Modify html output of field
 	 *
 	 * @param string $html
-	 * @param array  $field
+	 * @param array $field
 	 * @param string $meta
 	 *
 	 * @return string
@@ -420,6 +432,7 @@ class MB_CPT_Post_Type_Edit extends MB_CPT_Base_Edit {
 				);
 			}
 		}
+
 		return $html;
 	}
 }
