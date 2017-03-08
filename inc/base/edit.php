@@ -27,27 +27,25 @@ abstract class MB_CPT_Base_Edit {
 	public $saved = false;
 
 	/**
-	 * Initiating
+	 * Initializing.
 	 *
-	 * @param string $post_type Post type
+	 * @param string $post_type Post type.
 	 */
 	public function __construct( $post_type ) {
 		$this->post_type = $post_type;
 
-		// Enqueue scripts
+		// Enqueue scripts.
 		add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_scripts' ) );
-		// Add meta box
+		// Add meta box.
 		add_filter( 'rwmb_meta_boxes', array( $this, 'register_meta_boxes' ) );
-		// Modify post information after save post
+		// Modify post information after save post.
 		add_action( "save_post_$post_type", array( $this, 'save_post' ) );
-		// Add ng-controller to form
+		// Add ng-controller to form.
 		add_action( 'post_edit_form_tag', array( $this, 'add_ng_controller' ) );
 	}
 
 	/**
-	 * Enqueue scripts and styles
-	 *
-	 * @return void
+	 * Enqueue scripts and styles.
 	 */
 	public function enqueue_scripts() {
 		if ( ! $this->is_edit_screen() ) {
@@ -74,7 +72,7 @@ abstract class MB_CPT_Base_Edit {
 	/**
 	 * Register meta boxes for add/edit mb-post-type page
 	 *
-	 * @param array $meta_boxes
+	 * @param array $meta_boxes Meat boxes.
 	 *
 	 * @return array
 	 */
@@ -85,32 +83,32 @@ abstract class MB_CPT_Base_Edit {
 	/**
 	 * Modify post information and post meta after save post
 	 *
-	 * @param int $post_id
-	 *
-	 * @return void
+	 * @param int $post_id Post ID.
 	 */
 	public function save_post( $post_id ) {
+		$singular = filter_input( INPUT_POST, 'label_singular_name', FILTER_SANITIZE_STRING );
+
 		// If label_singular_name is empty or if this function is called to prevent duplicated calls like revisions, manual hook to wp_insert_post, etc.
-		if ( empty( $_POST['label_singular_name'] ) || true === $this->saved ) {
+		if ( ! $singular || true === $this->saved ) {
 			return;
 		}
 
 		$this->saved = true;
 
-		// Update post title
+		// Update post title.
 		$post = array(
 			'ID'         => $post_id,
-			'post_title' => $_POST['label_singular_name'],
+			'post_title' => $singular,
 		);
 
 		wp_update_post( $post );
 
-		// Flush rewrite rules after create new or edit post types
+		// Flush rewrite rules after create new or edit taxonomies.
 		flush_rewrite_rules();
 	}
 
 	/**
-	 * Check if current link is mb-post-type post type or not
+	 * Check if current link is mb-post-type post type or not.
 	 *
 	 * @return boolean
 	 */
@@ -120,15 +118,13 @@ abstract class MB_CPT_Base_Edit {
 	}
 
 	/**
-	 * Add angular controller to form tag
-	 *
-	 * @return void
+	 * Add angular controller to form tag.
 	 */
 	public function add_ng_controller() {
 		if ( $this->is_edit_screen() ) {
 			$object = str_replace( array( 'mb-', '-' ), array( '', ' ' ), $this->post_type );
 			$object = str_replace( ' ', '', ucwords( $object ) );
-			echo 'ng-controller="' . $object . 'Controller"';
+			echo 'ng-controller="' . esc_attr( $object ) . 'Controller"';
 		}
 	}
 }

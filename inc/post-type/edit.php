@@ -4,8 +4,6 @@
  *
  * @package    Meta Box
  * @subpackage MB Custom Post Type
- * @author     Doan Manh Duc
- * @author     Tran Ngoc Tuan Anh <rilwis@gmail.com>
  */
 
 /**
@@ -19,6 +17,7 @@ class MB_CPT_Post_Type_Edit extends MB_CPT_Base_Edit {
 	 * @return array
 	 */
 	public function js_vars() {
+		// @codingStandardsIgnoreStart
 		return array(
 			'menu_name'          => '%name%',
 			'name_admin_bar'     => '%singular_name%',
@@ -33,12 +32,13 @@ class MB_CPT_Post_Type_Edit extends MB_CPT_Base_Edit {
 			'not_found_in_trash' => __( 'No %name% found in Trash', 'mb-custom-post-type' ),
 			'parent_item_colon'  => __( 'Parent %singular_name%', 'mb-custom-post-type' ),
 		);
+		// @codingStandardsIgnoreEnd
 	}
 
 	/**
-	 * Register meta boxes for add/edit mb-post-type page
+	 * Register meta boxes for add/edit mb-post-type page.
 	 *
-	 * @param array $meta_boxes
+	 * @param array $meta_boxes Meta boxes.
 	 *
 	 * @return array
 	 */
@@ -271,7 +271,7 @@ class MB_CPT_Post_Type_Edit extends MB_CPT_Base_Edit {
 			),
 		);
 
-		// Basic settings
+		// Basic settings.
 		$meta_boxes[] = array(
 			'id'         => 'basic-settings',
 			'title'      => __( 'Basic Settings', 'mb-custom-post-type' ),
@@ -312,7 +312,7 @@ class MB_CPT_Post_Type_Edit extends MB_CPT_Base_Edit {
 			),
 		);
 
-		// Labels settings
+		// Labels settings.
 		$meta_boxes[] = array(
 			'id'     => 'label-settings',
 			'title'  => __( 'Labels Settings', 'mb-custom-post-type' ),
@@ -320,7 +320,7 @@ class MB_CPT_Post_Type_Edit extends MB_CPT_Base_Edit {
 			'fields' => $labels_fields,
 		);
 
-		// Advanced settings
+		// Advanced settings.
 		$meta_boxes[] = array(
 			'id'     => 'advanced-settings',
 			'title'  => __( 'Advanced Settings', 'mb-custom-post-type' ),
@@ -328,7 +328,7 @@ class MB_CPT_Post_Type_Edit extends MB_CPT_Base_Edit {
 			'fields' => $advanced_fields,
 		);
 
-		// Supports
+		// Supports.
 		$meta_boxes[] = array(
 			'id'       => 'supports',
 			'title'    => __( 'Supports', 'mb-custom-post-type' ),
@@ -355,7 +355,7 @@ class MB_CPT_Post_Type_Edit extends MB_CPT_Base_Edit {
 			),
 		);
 
-		// Default taxonomies
+		// Default taxonomies.
 		$meta_boxes[] = array(
 			'id'       => 'taxonomies',
 			'title'    => __( 'Default Taxonomies', 'mb-custom-post-type' ),
@@ -377,7 +377,7 @@ class MB_CPT_Post_Type_Edit extends MB_CPT_Base_Edit {
 
 		$fields = array_merge( $basic_fields, $labels_fields, $advanced_fields );
 
-		// Add ng-model attribute to all fields
+		// Add ng-model attribute to all fields.
 		foreach ( $fields as $field ) {
 			if ( ! empty( $field['id'] ) ) {
 				add_filter( 'rwmb_' . $field['id'] . '_html', array( $this, 'modify_field_html' ), 10, 3 );
@@ -390,14 +390,14 @@ class MB_CPT_Post_Type_Edit extends MB_CPT_Base_Edit {
 	/**
 	 * Modify html output of field
 	 *
-	 * @param string $html
-	 * @param array $field
-	 * @param string $meta
+	 * @param string $html  HTML out put of the field.
+	 * @param array  $field Field parameters.
+	 * @param string $meta  Meta value.
 	 *
 	 * @return string
 	 */
 	public function modify_field_html( $html, $field, $meta ) {
-		// Labels
+		// Labels.
 		if ( 0 === strpos( $field['id'], 'label_' ) ) {
 			$model = substr( $field['id'], 6 );
 			$html  = str_replace( '>', sprintf(
@@ -405,18 +405,16 @@ class MB_CPT_Post_Type_Edit extends MB_CPT_Base_Edit {
 				$model,
 				$model,
 				$meta,
-				in_array( $model, array( 'name', 'singular_name' ) ) ? ' ng-change="updateLabels()"' : ''
+				in_array( $model, array( 'name', 'singular_name' ), true ) ? ' ng-change="updateLabels()"' : ''
 			), $html );
 			$html  = preg_replace( '/value="(.*?)"/', 'value="{{labels.' . $model . '}}"', $html );
-		} // End if().
-		elseif ( 'args_post_type' == $field['id'] ) {
+		} elseif ( 'args_post_type' === $field['id'] ) {
 			$html = str_replace( '>', sprintf(
 				' ng-model="post_type" ng-init="post_type=\'%s\'">',
 				$meta
 			), $html );
 			$html = preg_replace( '/value="(.*?)"/', 'value="{{post_type}}"', $html );
-		} // Menu icons
-		elseif ( 'args_menu_icon' == $field['id'] ) {
+		} elseif ( 'args_menu_icon' === $field['id'] ) {
 			$html  = '';
 			$icons = mb_cpt_get_dashicons();
 			foreach ( $icons as $icon ) {
@@ -425,7 +423,7 @@ class MB_CPT_Post_Type_Edit extends MB_CPT_Base_Edit {
 						<i class="wp-menu-image dashicons-before %s"></i>
 						<input type="radio" name="args_menu_icon" value="%s" class="hidden"%s>
 					</label>',
-					$icon == $meta ? ' active' : '',
+					$icon === $meta ? ' active' : '',
 					$icon,
 					$icon,
 					checked( $icon, $meta, false )

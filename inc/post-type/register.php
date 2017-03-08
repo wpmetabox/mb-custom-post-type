@@ -4,8 +4,6 @@
  *
  * @package    Meta Box
  * @subpackage MB Custom Post Type
- * @author     Doan Manh Duc
- * @author     Tran Ngoc Tuan Anh
  */
 
 /**
@@ -17,7 +15,7 @@ class MB_CPT_Post_Type_Register extends MB_CPT_Base_Register {
 	 * Register custom post types
 	 */
 	public function register_post_types() {
-		// Register main post type 'mb-post-type'
+		// Register main post type 'mb-post-type'.
 		$labels = array(
 			'name'               => _x( 'Post Types', 'Post Type General Name', 'mb-custom-post-type' ),
 			'singular_name'      => _x( 'Post Type', 'Post Type Singular Name', 'mb-custom-post-type' ),
@@ -49,7 +47,7 @@ class MB_CPT_Post_Type_Register extends MB_CPT_Base_Register {
 		);
 		register_post_type( 'mb-post-type', $args );
 
-		// Get all registered custom post types
+		// Get all registered custom post types.
 		$post_types = $this->get_post_types();
 		foreach ( $post_types as $post_type => $args ) {
 			register_post_type( $post_type, $args );
@@ -62,10 +60,10 @@ class MB_CPT_Post_Type_Register extends MB_CPT_Base_Register {
 	 * @return array
 	 */
 	public function get_post_types() {
-		// This array stores all registered custom post types
+		// This array stores all registered custom post types.
 		$post_types = array();
 
-		// Get all post where where post_type = mb-post-type
+		// Get all post where where post_type = mb-post-type.
 		$post_type_ids = get_posts( array(
 			'posts_per_page' => - 1,
 			'post_status'    => 'publish',
@@ -75,20 +73,20 @@ class MB_CPT_Post_Type_Register extends MB_CPT_Base_Register {
 		) );
 
 		foreach ( $post_type_ids as $post_type ) {
-			// Get all post meta from current post
+			// Get all post meta from current post.
 			$post_meta = get_post_meta( $post_type );
 
 			$labels = array();
 			$args   = array();
 			foreach ( $post_meta as $key => $value ) {
-				$data = 1 == count( $value ) && $key != 'args_taxonomies' ? $value[0] : $value;
-				$data = is_numeric( $data ) ? ( 1 == intval( $data ) ? true : false ) : $data;
+				// @codingStandardsIgnoreLine
+				$data = 1 === count( $value ) && $key !== 'args_taxonomies' ? $value[0] : $value;
+				$data = is_numeric( $data ) ? ( 1 === intval( $data ) ? true : false ) : $data;
 
-				// If post meta has prefix 'label' then add it to $labels
+				// If post meta has prefix 'label' then add it to $labels.
 				if ( false !== strpos( $key, 'label' ) ) {
 					$labels[ str_replace( 'label_', '', $key ) ] = $data;
-				} // End if().
-				elseif ( false !== strpos( $key, 'args' ) ) {
+				} elseif ( false !== strpos( $key, 'args' ) ) {
 					$args[ str_replace( 'args_', '', $key ) ] = $data;
 				}
 			}
@@ -102,8 +100,8 @@ class MB_CPT_Post_Type_Register extends MB_CPT_Base_Register {
 	/**
 	 * Setup labels, arguments for a custom post type
 	 *
-	 * @param array $labels
-	 * @param array $args
+	 * @param array $labels Custom post type labels.
+	 * @param array $args   Custom post type parameters.
 	 *
 	 * @return array
 	 */
@@ -112,15 +110,25 @@ class MB_CPT_Post_Type_Register extends MB_CPT_Base_Register {
 			'menu_name'          => $labels['name'],
 			'name_admin_bar'     => $labels['singular_name'],
 			'add_new'            => __( 'Add New', 'mb-custom-post-type' ),
+			// translators: %s: Name of the custom post type in singular form.
 			'add_new_item'       => sprintf( __( 'Add New %s', 'mb-custom-post-type' ), $labels['singular_name'] ),
+			// translators: %s: Name of the custom post type in singular form.
 			'new_item'           => sprintf( __( 'New %s', 'mb-custom-post-type' ), $labels['singular_name'] ),
+			// translators: %s: Name of the custom post type in singular form.
 			'edit_item'          => sprintf( __( 'Edit %s', 'mb-custom-post-type' ), $labels['singular_name'] ),
+			// translators: %s: Name of the custom post type in singular form.
 			'view_item'          => sprintf( __( 'View %s', 'mb-custom-post-type' ), $labels['singular_name'] ),
+			// translators: %s: Name of the custom post type in singular form.
 			'update_item'        => sprintf( __( 'Update %s', 'mb-custom-post-type' ), $labels['singular_name'] ),
+			// translators: %s: Name of the custom post type in plural form.
 			'all_items'          => sprintf( __( 'All %s', 'mb-custom-post-type' ), $labels['name'] ),
+			// translators: %s: Name of the custom post type in plural form.
 			'search_items'       => sprintf( __( 'Search %s', 'mb-custom-post-type' ), $labels['name'] ),
+			// translators: %s: Name of the custom post type in singular form.
 			'parent_item_colon'  => sprintf( __( 'Parent %s:', 'mb-custom-post-type' ), $labels['name'] ),
+			// translators: %s: Name of the custom post type in plural form.
 			'not_found'          => sprintf( __( 'No %s found.', 'mb-custom-post-type' ), $labels['name'] ),
+			// translators: %s: Name of the custom post type in plural form.
 			'not_found_in_trash' => sprintf( __( 'No %s found in Trash.', 'mb-custom-post-type' ), $labels['name'] ),
 		) );
 		$args   = wp_parse_args( $args, array(
@@ -147,9 +155,9 @@ class MB_CPT_Post_Type_Register extends MB_CPT_Base_Register {
 	}
 
 	/**
-	 * Custom post updated messages
+	 * Custom post updated messages.
 	 *
-	 * @param array $messages
+	 * @param array $messages Post messages.
 	 *
 	 * @return array
 	 */
@@ -159,22 +167,31 @@ class MB_CPT_Post_Type_Register extends MB_CPT_Base_Register {
 		$label            = ucfirst( $post_type_object->labels->singular_name );
 		$label_lower      = strtolower( $label );
 		$label            = ucfirst( $label_lower );
+		$revision = filter_input( INPUT_GET, 'revision', FILTER_SANITIZE_NUMBER_INT );
 
 		$message = array(
 			0  => '', // Unused. Messages start at index 1.
+			// translators: %s: Name of the custom post type in singular form.
 			1  => sprintf( __( '%s updated.', 'mb-custom-post-type' ), $label ),
 			2  => __( 'Custom field updated.', 'mb-custom-post-type' ),
 			3  => __( 'Custom field deleted.', 'mb-custom-post-type' ),
+			// translators: %s: Name of the custom post type in singular form.
 			4  => sprintf( __( '%s updated.', 'mb-custom-post-type' ), $label ),
-			5  => isset( $_GET['revision'] ) ? sprintf( __( '%1$s restored to revision from %1$s.', 'mb-custom-post-type' ), $label, wp_post_revision_title( (int) $_GET['revision'], false ) ) : false,
+			// translators: %1$s: Name of the custom post type in singular form, %2$s: Revision title.
+			5  => $revision ? sprintf( __( '%1$s restored to revision from %2$s.', 'mb-custom-post-type' ), $label, wp_post_revision_title( $revision, false ) ) : false,
+			// translators: %s: Name of the custom post type in singular form.
 			6  => sprintf( __( '%s published.', 'mb-custom-post-type' ), $label ),
+			// translators: %s: Name of the custom post type in singular form.
 			7  => sprintf( __( '%s saved.', 'mb-custom-post-type' ), $label ),
+			// translators: %s: Name of the custom post type in singular form.
 			8  => sprintf( __( '%s submitted.', 'mb-custom-post-type' ), $label ),
-			9  => sprintf( __( '%1$s scheduled for: <strong>%1$s</strong>.', 'mb-custom-post-type' ), $label, date_i18n( __( 'M j, Y @ G:i', 'mb-custom-post-type' ), strtotime( $post->post_date ) ) ),
+			// translators: %1$s: Name of the custom post type in singular form, %2$s: Revision title.
+			9  => sprintf( __( '%1$s scheduled for: <strong>%2$s</strong>.', 'mb-custom-post-type' ), $label, date_i18n( __( 'M j, Y @ G:i', 'mb-custom-post-type' ), strtotime( $post->post_date ) ) ),
+			// translators: %s: Name of the custom post type in singular form.
 			10 => sprintf( __( '%s draft updated.', 'mb-custom-post-type' ), $label ),
 		);
 
-		// Get all post where where post_type = mb-post-type
+		// Get all post where where post_type = mb-post-type.
 		$post_types = get_posts( array(
 			'posts_per_page' => - 1,
 			'post_status'    => 'any',
@@ -207,10 +224,10 @@ class MB_CPT_Post_Type_Register extends MB_CPT_Base_Register {
 	}
 
 	/**
-	 * Custom post management wordpress messages
+	 * Custom post management WordPress messages.
 	 *
-	 * @param array $bulk_messages
-	 * @param array $bulk_counts
+	 * @param array $bulk_messages Post bulk messages.
+	 * @param array $bulk_counts   Number of posts.
 	 *
 	 * @return array
 	 */
@@ -222,7 +239,7 @@ class MB_CPT_Post_Type_Register extends MB_CPT_Base_Register {
 			),
 		);
 
-		// Get all post where where post_type = mb-post-type
+		// Get all post where where post_type = mb-post-type.
 		$post_types = get_posts( array(
 			'posts_per_page' => - 1,
 			'post_status'    => 'any',
@@ -243,11 +260,16 @@ class MB_CPT_Post_Type_Register extends MB_CPT_Base_Register {
 			$plural   = $label['plural'];
 
 			$bulk_messages[ $post_type ] = array(
-				'updated'   => sprintf( __( '%1$s %1$s updated.', 'mb-custom-post-type' ), $bulk_counts['updated'], $bulk_counts['updated'] > 1 ? $plural : $singular ),
-				'locked'    => sprintf( __( '%1$s %1$s not updated, somebody is editing.', 'mb-custom-post-type' ), $bulk_counts['locked'], $bulk_counts['locked'] > 1 ? $plural : $singular ),
-				'deleted'   => sprintf( __( '%1$s %1$s permanently deleted.', 'mb-custom-post-type' ), $bulk_counts['deleted'], $bulk_counts['deleted'] > 1 ? $plural : $singular ),
-				'trashed'   => sprintf( __( '%1$s %1$s moved to the Trash.', 'mb-custom-post-type' ), $bulk_counts['trashed'], $bulk_counts['trashed'] > 1 ? $plural : $singular ),
-				'untrashed' => sprintf( __( '%1$s %1$s restored from the Trash.', 'mb-custom-post-type' ), $bulk_counts['untrashed'], $bulk_counts['untrashed'] > 1 ? $plural : $singular ),
+				// translators: %1$s: Number of items, %2$s: Name of the post type in singular or plural form.
+				'updated'   => sprintf( __( '%1$s %2$s updated.', 'mb-custom-post-type' ), $bulk_counts['updated'], $bulk_counts['updated'] > 1 ? $plural : $singular ),
+				// translators: %1$s: Number of items, %2$s: Name of the post type in singular or plural form.
+				'locked'    => sprintf( __( '%1$s %2$s not updated, somebody is editing.', 'mb-custom-post-type' ), $bulk_counts['locked'], $bulk_counts['locked'] > 1 ? $plural : $singular ),
+				// translators: %1$s: Number of items, %2$s: Name of the post type in singular or plural form.
+				'deleted'   => sprintf( __( '%1$s %2$s permanently deleted.', 'mb-custom-post-type' ), $bulk_counts['deleted'], $bulk_counts['deleted'] > 1 ? $plural : $singular ),
+				// translators: %1$s: Number of items, %2$s: Name of the post type in singular or plural form.
+				'trashed'   => sprintf( __( '%1$s %2$s moved to the Trash.', 'mb-custom-post-type' ), $bulk_counts['trashed'], $bulk_counts['trashed'] > 1 ? $plural : $singular ),
+				// translators: %1$s: Number of items, %2$s: Name of the post type in singular or plural form.
+				'untrashed' => sprintf( __( '%1$s %2$s restored from the Trash.', 'mb-custom-post-type' ), $bulk_counts['untrashed'], $bulk_counts['untrashed'] > 1 ? $plural : $singular ),
 			);
 		}
 

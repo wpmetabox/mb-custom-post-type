@@ -18,6 +18,7 @@ class MB_CPT_Taxonomy_Edit extends MB_CPT_Base_Edit {
 	 * @return array
 	 */
 	public function js_vars() {
+		// @codingStandardsIgnoreStart
 		return array(
 			'menu_name'                  => '%name%',
 			'all_items'                  => __( 'All %name%', 'mb-custom-post-type' ),
@@ -35,12 +36,13 @@ class MB_CPT_Taxonomy_Edit extends MB_CPT_Base_Edit {
 			'choose_from_most_used'      => __( 'Choose most used %name%', 'mb-custom-post-type' ),
 			'not_found'                  => __( 'No %name% found', 'mb-custom-post-type' ),
 		);
+		// @codingStandardsIgnoreEnd
 	}
 
 	/**
 	 * Register meta boxes for add/edit mb-taxonomy page
 	 *
-	 * @param array $meta_boxes
+	 * @param array $meta_boxes Custom meta boxes.
 	 * @return array
 	 */
 	public function register_meta_boxes( $meta_boxes ) {
@@ -188,6 +190,13 @@ class MB_CPT_Taxonomy_Edit extends MB_CPT_Base_Edit {
 				'desc' => __( 'Whether taxonomy is available for selection in navigation menus.', 'mb-custom-post-type' ),
 			),
 			array(
+				'name' => __( 'Show in editor page?', 'mb-custom-taxonomy' ),
+				'id'   => $args_prefix . 'meta_box_cb',
+				'type' => 'checkbox',
+				'std'  => 1,
+				'desc' => __( 'Whether to show the on the editor page.', 'mb-custom-taxonomy' ),
+			),
+			array(
 				'name' => __( 'Show tag cloud?', 'mb-custom-post-type' ),
 				'id'   => $args_prefix . 'show_tagcloud',
 				'type' => 'checkbox',
@@ -240,7 +249,7 @@ class MB_CPT_Taxonomy_Edit extends MB_CPT_Base_Edit {
 			),
 		);
 
-		// Basic settings
+		// Basic settings.
 		$meta_boxes[] = array(
 			'id'         => 'basic-settings',
 			'title'      => __( 'Basic Settings', 'mb-custom-post-type' ),
@@ -281,7 +290,7 @@ class MB_CPT_Taxonomy_Edit extends MB_CPT_Base_Edit {
 			),
 		);
 
-		// Labels settings
+		// Labels settings.
 		$meta_boxes[] = array(
 			'id'         => 'label-settings',
 			'title'      => __( 'Labels Settings', 'mb-custom-post-type' ),
@@ -289,7 +298,7 @@ class MB_CPT_Taxonomy_Edit extends MB_CPT_Base_Edit {
 			'fields'     => $labels_fields,
 		);
 
-		// Advanced settings
+		// Advanced settings.
 		$meta_boxes[] = array(
 			'id'         => 'advanced-settings',
 			'title'      => __( 'Advanced Settings', 'mb-custom-post-type' ),
@@ -297,7 +306,7 @@ class MB_CPT_Taxonomy_Edit extends MB_CPT_Base_Edit {
 			'fields'     => $advanced_fields,
 		);
 
-		// Post types
+		// Post types.
 		$options    = array();
 		$post_types = get_post_types( '', 'objects' );
 		unset( $post_types['mb-taxonomy'], $post_types['revision'], $post_types['nav_menu_item'] );
@@ -320,7 +329,7 @@ class MB_CPT_Taxonomy_Edit extends MB_CPT_Base_Edit {
 
 		$fields = array_merge( $basic_fields, $labels_fields, $advanced_fields );
 
-		// Add ng-model attribute to all fields
+		// Add ng-model attribute to all fields.
 		foreach ( $fields as $field ) {
 			if ( ! empty( $field['id'] ) ) {
 				add_filter( 'rwmb_' . $field['id'] . '_html', array( $this, 'modify_field_html' ), 10, 3 );
@@ -333,14 +342,14 @@ class MB_CPT_Taxonomy_Edit extends MB_CPT_Base_Edit {
 	/**
 	 * Modify html output of field
 	 *
-	 * @param string $html
-	 * @param array  $field
-	 * @param string $meta
+	 * @param string $html  HTML out put of the field.
+	 * @param array  $field Field parameters.
+	 * @param string $meta  Meta value.
 	 *
 	 * @return string
 	 */
 	public function modify_field_html( $html, $field, $meta ) {
-		// Labels
+		// Labels.
 		if ( 0 === strpos( $field['id'], 'label_' ) ) {
 			$model = substr( $field['id'], 6 );
 			$html  = str_replace( '>', sprintf(
@@ -348,11 +357,10 @@ class MB_CPT_Taxonomy_Edit extends MB_CPT_Base_Edit {
 				$model,
 				$model,
 				$meta,
-				in_array( $model, array( 'name', 'singular_name' ) ) ? ' ng-change="updateLabels()"' : ''
+				in_array( $model, array( 'name', 'singular_name' ), true ) ? ' ng-change="updateLabels()"' : ''
 			), $html );
 			$html  = preg_replace( '/value="(.*?)"/', 'value="{{labels.' . $model . '}}"', $html );
-		} // End if().
-		elseif ( 'args_taxonomy' == $field['id'] ) {
+		} elseif ( 'args_taxonomy' === $field['id'] ) {
 			$html = str_replace( '>', sprintf(
 				' ng-model="taxonomy" ng-init="taxonomy=\'%s\'">',
 				$meta
