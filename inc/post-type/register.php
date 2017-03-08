@@ -206,12 +206,14 @@ class MB_CPT_Post_Type_Register extends MB_CPT_Base_Register {
 			if ( get_post_meta( $post_type, 'args_publicly_queryable', true ) ) {
 				$permalink = get_permalink( $post->ID );
 
+				// translators: %s: Post link, %s: View post text, %s: Post type label.
 				$view_link = sprintf( ' <a href="%s">%s</a>.', esc_url( $permalink ), sprintf( __( 'View %s', 'mb-custom-post-type' ), $label_lower ) );
 				$messages[ $slug ][1] .= $view_link;
 				$messages[ $slug ][6] .= $view_link;
 				$messages[ $slug ][9] .= $view_link;
 
 				$preview_permalink = add_query_arg( 'preview', 'true', $permalink );
+				// translators: %s: Post link, %s: Preview post text, %s: Post type label.
 				$preview_link      = sprintf( ' <a target="_blank" href="%s">%s</a>.', esc_url( $preview_permalink ), sprintf( __( 'Preview %s', 'mb-custom-post-type' ), $label_lower ) );
 				$messages[ $slug ][8] .= $preview_link;
 				$messages[ $slug ][10] .= $preview_link;

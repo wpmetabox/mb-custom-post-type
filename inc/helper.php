@@ -1,4 +1,10 @@
 <?php
+/**
+ * The helper functions.
+ *
+ * @package Meta Box
+ * @subpackage MB Custom Post Type
+ */
 
 /**
  * List of menu icons
