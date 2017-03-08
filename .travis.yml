@@ -21,6 +21,7 @@ script:
 
 # Automatic deploy to wordpress.org when a new tag is created
 deploy:
+  skip_cleanup: true
   on:
     branch: master
     tags: true
