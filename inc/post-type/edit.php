@@ -371,7 +371,7 @@ class MB_CPT_Post_Type_Edit extends MB_CPT_Base_Edit {
 						'post_tag' => __( 'Tag', 'mb-custom-post-type' ),
 					),
 					// translators: %s: Link to edit taxonomies page.
-					'desc'    => sprintf( __( 'Add default taxonomies to post type. For custom taxonomies, please <a href="%s">click here</a>.', 'mb-custom-post-type' ), admin_url( 'edit.php?post_type=mb-taxonomy' ) ),
+					'desc'    => sprintf( __( 'Add default taxonomies to post type. For custom taxonomies, please <a href="%s" target="_blank">click here</a>.', 'mb-custom-post-type' ), admin_url( 'edit.php?post_type=mb-taxonomy' ) ),
 				),
 			),
 		);
