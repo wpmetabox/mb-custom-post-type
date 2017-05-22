@@ -346,6 +346,7 @@ class MB_CPT_Post_Type_Edit extends MB_CPT_Base_Edit {
 						'thumbnail'       => __( 'Thumbnail', 'mb-custom-post-type' ),
 						'excerpt'         => __( 'Excerpt', 'mb-custom-post-type' ),
 						'trackbacks'      => __( 'Trackbacks', 'mb-custom-post-type' ),
+						'custom-fields'   => __( 'Custom fields', 'mb-custom-post-type' ),
 						'comments'        => __( 'Comments', 'mb-custom-post-type' ),
 						'revisions'       => __( 'Revisions', 'mb-custom-post-type' ),
 						'page-attributes' => __( 'Page Attributes', 'mb-custom-post-type' ),
