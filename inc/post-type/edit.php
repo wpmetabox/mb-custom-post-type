@@ -11,6 +11,17 @@
  */
 class MB_CPT_Post_Type_Edit extends MB_CPT_Base_Edit {
 
+	protected $register;
+
+	protected $encoder;
+
+	public function __construct( $post_type, MB_CPT_Post_Type_Register $register, MB_CPT_Encoder_Interface $encoder ) {
+		parent::__construct( $post_type );
+
+		$this->register = $register;
+		$this->encoder = $encoder;
+	}
+
 	/**
 	 * List of Javascript variables.
 	 *
@@ -65,6 +76,28 @@ class MB_CPT_Post_Type_Edit extends MB_CPT_Base_Edit {
 				'type' => 'text',
 			),
 		);
+
+		$code_fields = array(
+			array(
+				'name' => __( 'Function name', 'mb-custom-post-type' ),
+				'id'   => 'function_name',
+				'type' => 'text',
+				'std'  => 'your_prefix_register_post_type',
+			),
+			array(
+				'name' => __( 'Text domain', 'mb-custom-post-type' ),
+				'id'   => 'text_domain',
+				'type' => 'text',
+				'std'  => 'text-domain',
+			),
+			array(
+				'name' => __( 'Code', 'mb-custom-post-type' ),
+				'id'   => 'code',
+				'type' => 'custom-html',
+				'callback' => array( $this, 'generated_code_html' ),
+			),
+		);
+
 		$labels_fields   = array(
 			array(
 				'name'        => __( 'Menu name', 'mb-custom-post-type' ),
@@ -312,6 +345,13 @@ class MB_CPT_Post_Type_Edit extends MB_CPT_Base_Edit {
 			),
 		);
 
+		$meta_boxes[] = array(
+			'id'     => 'generated-code',
+			'title'  => __( 'Generated code', 'mb-custom-post-type' ),
+			'pages'  => array( 'mb-post-type' ),
+			'fields' => $code_fields,
+		);
+
 		// Labels settings.
 		$meta_boxes[] = array(
 			'id'     => 'label-settings',
@@ -434,5 +474,26 @@ class MB_CPT_Post_Type_Edit extends MB_CPT_Base_Edit {
 		}
 
 		return $html;
+	}
+
+	/**
+	 * Print generated code textarea.
+	 *
+	 * @return string
+	 */
+	public function generated_code_html() {
+		$post_id = get_the_ID();
+		list( $labels, $args ) = $this->register->get_post_type_data( $post_id );
+		$post_type_data = $this->register->set_up_post_type( $labels, $args );
+
+		$encode_data = array(
+			'function_name'  => get_post_meta( $post_id, 'function_name', true ),
+			'text_domain'    => get_post_meta( $post_id, 'text_domain', true ),
+			'post_type'      => $args['post_type'],
+			'post_type_data' => $post_type_data,
+		);
+		$encoded_string = $this->encoder->encode( $encode_data );
+
+		return '<div id="generated-code"><pre>' . esc_textarea( $encoded_string ) . '</pre></div>';
 	}
 }

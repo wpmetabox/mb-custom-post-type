@@ -40,7 +40,7 @@ function mb_cpt_load() {
 	require plugin_dir_path( __FILE__ ) . 'inc/base/register.php';
 	require plugin_dir_path( __FILE__ ) . 'inc/post-type/register.php';
 	require plugin_dir_path( __FILE__ ) . 'inc/taxonomy/register.php';
-	new MB_CPT_Post_Type_Register;
+	$cpt_register = new MB_CPT_Post_Type_Register;
 	new MB_CPT_Taxonomy_Register;
 
 	if ( is_admin() ) {
@@ -48,7 +48,12 @@ function mb_cpt_load() {
 		require plugin_dir_path( __FILE__ ) . 'inc/base/edit.php';
 		require plugin_dir_path( __FILE__ ) . 'inc/post-type/edit.php';
 		require plugin_dir_path( __FILE__ ) . 'inc/taxonomy/edit.php';
-		new MB_CPT_Post_Type_Edit( 'mb-post-type' );
+		require_once plugin_dir_path( __FILE__ ) . 'inc/interfaces/encoder.php';
+		require_once plugin_dir_path( __FILE__ ) . 'inc/encoders/php-encoder.php';
+
+		$encoder = new MB_CPT_PHP_Encoder();
+
+		new MB_CPT_Post_Type_Edit( 'mb-post-type', $cpt_register, $encoder );
 		new MB_CPT_Taxonomy_Edit( 'mb-taxonomy' );
 	}
 }
