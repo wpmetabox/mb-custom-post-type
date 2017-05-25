@@ -3,8 +3,8 @@ Contributors: metabox, rilwis, duc88b, fitwp
 Donate link: http://www.deluxeblogtips.com/donate
 Tags: cms, custom, custom post types, custom post type, cpt, post, post types, post type, types
 Requires at least: 4.3
-Tested up to: 4.7.3
-Stable tag: 1.3.1
+Tested up to: 4.7.5
+Stable tag: 1.4
 License: GPLv2 or later
 
 Create and manage custom post types and custom taxonomies with an easy-to-use interface in WordPress.
@@ -28,6 +28,7 @@ https://www.youtube.com/watch?v=KG_8MF9xw6E&rel=0
 * Supports all arguments for creating custom post types (like `register_post_type()`)
 * Supports all arguments for creating custom taxonomies (like `register_taxonomy()`)
 * Supports **live editing mode**, which auto fill in all necessary labels for you!
+* **Export to PHP Code** (since 1.4)
 * Clean code
 * Registered custom post types can be exported/imported using default WordPress functionality (no more plugins!)
 
@@ -59,6 +60,11 @@ Install **MB Custom Post Type** extension
 2. Edit custom post type
 
 == Changelog ==
+
+= 1.4 =
+- Add export to PHP code, so you can just copy and paste into your theme or plugin.
+- Add option to enable/disable "Custom Fields" meta box.
+- Fix "menu_position" doesn't work.
 
 = 1.3.1 =
 - Improvement: Add option to hide taxonomy meta box in the edit page.
