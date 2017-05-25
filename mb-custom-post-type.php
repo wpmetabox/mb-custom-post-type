@@ -40,8 +40,9 @@ function mb_cpt_load() {
 	require plugin_dir_path( __FILE__ ) . 'inc/base/register.php';
 	require plugin_dir_path( __FILE__ ) . 'inc/post-type/register.php';
 	require plugin_dir_path( __FILE__ ) . 'inc/taxonomy/register.php';
+
 	$cpt_register = new MB_CPT_Post_Type_Register;
-	new MB_CPT_Taxonomy_Register;
+	$tax_register = new MB_CPT_Taxonomy_Register;
 
 	if ( is_admin() ) {
 		require plugin_dir_path( __FILE__ ) . 'inc/helper.php';
@@ -49,12 +50,14 @@ function mb_cpt_load() {
 		require plugin_dir_path( __FILE__ ) . 'inc/post-type/edit.php';
 		require plugin_dir_path( __FILE__ ) . 'inc/taxonomy/edit.php';
 		require_once plugin_dir_path( __FILE__ ) . 'inc/interfaces/encoder.php';
-		require_once plugin_dir_path( __FILE__ ) . 'inc/encoders/php-encoder.php';
+		require_once plugin_dir_path( __FILE__ ) . 'inc/encoders/post-type-encoder.php';
+		require_once plugin_dir_path( __FILE__ ) . 'inc/encoders/taxonomy-encoder.php';
 
-		$encoder = new MB_CPT_PHP_Encoder();
+		$post_type_encoder = new MB_CPT_Post_Type_Encoder();
+		new MB_CPT_Post_Type_Edit( 'mb-post-type', $cpt_register, $post_type_encoder );
 
-		new MB_CPT_Post_Type_Edit( 'mb-post-type', $cpt_register, $encoder );
-		new MB_CPT_Taxonomy_Edit( 'mb-taxonomy' );
+		$tax_encoder = new MB_CPT_Taxonomy_Encoder();
+		new MB_CPT_Taxonomy_Edit( 'mb-taxonomy', $tax_register, $tax_encoder );
 	}
 }
 

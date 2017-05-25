@@ -76,34 +76,46 @@ class MB_CPT_Taxonomy_Register extends MB_CPT_Base_Register {
 		) );
 
 		foreach ( $taxonomy_ids as $taxonomy_id ) {
-			// Get all post meta from current post.
-			$post_meta = get_post_meta( $taxonomy_id );
-			// Create array that contains Labels of this current custom taxonomy.
-			$labels = array();
-			// Create array that contains arguments of this current custom taxonomy.
-			$args = array();
-
-			foreach ( $post_meta as $key => $value ) {
-				if ( false !== strpos( $key, 'label' ) ) {
-					// If post meta has prefix 'label' then add it to $labels.
-					// @codingStandardsIgnoreLine
-					$data = 1 == count( $value ) ? $value[0] : $value;
-
-					$labels[ str_replace( 'label_', '', $key ) ] = $data;
-				} elseif ( false !== strpos( $key, 'args' ) ) {
-					// If post meta has prefix 'args' then add it to $args.
-					// @codingStandardsIgnoreLine
-					$data = 1 == count( $value ) ? $value[0] : $value;
-					$data = is_numeric( $data ) ? ( 1 === intval( $data ) ? true : false ) : $data;
-
-					$args[ str_replace( 'args_', '', $key ) ] = $data;
-				}
-			}
+			list( $labels, $args ) = $this->get_taxonomy_data( $taxonomy_id );
 
 			$taxonomies[ $args['taxonomy'] ] = $this->set_up_taxonomy( $labels, $args );
 		}
 
 		return $taxonomies;
+	}
+
+	/**
+	 * Get new taxonomy data from mb custom taxonomy id.
+	 *
+	 * @param  int $mb_cpt_id MB custom taxonomy id.
+	 * @return array          Array contains label and args of new taxonomy.
+	 */
+	public function get_taxonomy_data( $mb_cpt_id ) {
+		// Get all post meta from current post.
+		$post_meta = get_post_meta( $mb_cpt_id );
+		// Create array that contains Labels of this current custom taxonomy.
+		$labels = array();
+		// Create array that contains arguments of this current custom taxonomy.
+		$args = array();
+
+		foreach ( $post_meta as $key => $value ) {
+			if ( false !== strpos( $key, 'label' ) ) {
+				// If post meta has prefix 'label' then add it to $labels.
+				// @codingStandardsIgnoreLine
+				$data = 1 == count( $value ) ? $value[0] : $value;
+
+				$labels[ str_replace( 'label_', '', $key ) ] = $data;
+			} elseif ( false !== strpos( $key, 'args' ) ) {
+				// If post meta has prefix 'args' then add it to $args.
+				// @codingStandardsIgnoreLine
+				$data = 1 == count( $value ) ? $value[0] : $value;
+				$data = is_numeric( $data ) ? ( 1 === intval( $data ) ? true : false ) : $data;
+
+				$args[ str_replace( 'args_', '', $key ) ] = $data;
+			}
+		}
+
+		return array( $labels, $args );
 	}
 
 	/**

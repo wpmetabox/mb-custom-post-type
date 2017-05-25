@@ -1,22 +1,22 @@
 <?php
 /**
- * PHP encoder class
+ * Taxonomy encoder class
  *
  * @package    Meta Box
  * @subpackage MB Custom Post Type
  */
 
 /**
- * Class MB_CPT_PHP_Encoder
+ * Class MB_CPT_Taxonomy_Encoder
  */
-class MB_CPT_PHP_Encoder implements MB_CPT_Encoder_Interface {
+class MB_CPT_Taxonomy_Encoder implements MB_CPT_Encoder_Interface {
 
 	/**
 	 * Function name.
 	 *
 	 * @var string
 	 */
-	protected $function_name = 'your_prefix_register_post_type';
+	protected $function_name = 'your_prefix_register_taxonomy';
 
 	/**
 	 * Text domain.
@@ -26,11 +26,18 @@ class MB_CPT_PHP_Encoder implements MB_CPT_Encoder_Interface {
 	protected $text_domain = 'text-domain';
 
 	/**
-	 * Post type name.
+	 * Taxonomy name.
 	 *
 	 * @var string
 	 */
-	protected $post_type;
+	protected $taxonomy;
+
+	/**
+	 * Object types.
+	 *
+	 * @var array
+	 */
+	protected $object_types;
 
 	/**
 	 * Encode.
@@ -39,7 +46,7 @@ class MB_CPT_PHP_Encoder implements MB_CPT_Encoder_Interface {
 	 * @return string      Encoded string.
 	 */
 	public function encode( $data ) {
-		if ( empty( $data['post_type_data'] ) || empty( $data['post_type'] ) ) {
+		if ( empty( $data['taxonomy_data'] ) || empty( $data['taxonomy'] ) ) {
 			return false;
 		}
 
@@ -51,13 +58,18 @@ class MB_CPT_PHP_Encoder implements MB_CPT_Encoder_Interface {
 			$this->text_domain = $data['text_domain'];
 		}
 
-		$this->post_type = $data['post_type'];
+		$this->taxonomy = $data['taxonomy'];
 
-		$post_type_data = $data['post_type_data'];
+		$taxonomy_data = $data['taxonomy_data'];
 
-		$post_type_data = $this->make_translatable( $post_type_data );
+		if ( isset( $taxonomy_data['post_types'] ) ) {
+			$this->object_types = $taxonomy_data['post_types'];
+			unset( $taxonomy_data['post_types'] );
+		}
 
-		$string_data = var_export( $post_type_data, true );
+		$taxonomy_data = $this->make_translatable( $taxonomy_data );
+
+		$string_data = var_export( $taxonomy_data, true );
 		$string_data = $this->replace_get_text_function( $string_data );
 		$string_data = $this->fix_code_standard( $string_data );
 		$string_data = $this->wrap_function_call( $string_data );
@@ -107,8 +119,6 @@ class MB_CPT_PHP_Encoder implements MB_CPT_Encoder_Interface {
 			"/\n\)/",
 			"/=> \n\t\tarray \(/",
 			"/\n\t\t\t\\d => /",
-			// "/array\(\n\t\t\t\\d => /",
-			// "/,\t\t\)/",
 		);
 
 		$replace = array(
@@ -117,8 +127,6 @@ class MB_CPT_PHP_Encoder implements MB_CPT_Encoder_Interface {
 			"\n\t)",
 			'=> array(',
 			"\n\t\t\t",
-			// 'array( ',
-			// ' )',
 		);
 
 		$string_data = preg_replace( $search, $replace, $string_data );
@@ -133,11 +141,13 @@ class MB_CPT_PHP_Encoder implements MB_CPT_Encoder_Interface {
 	 * @return string
 	 */
 	protected function wrap_function_call( $string_data ) {
+		$object_types = $this->object_types ? sprintf( "array( '%s' )", implode( "', '", (array) $this->object_types ) ) : 'null';
 		$string_data = sprintf(
-			"function %1\$s( \$meta_boxes ) {\n\n\t\$args = %2\$s;\n\n\tregister_post_type( '%3\$s', \$args );\n}\nadd_action( 'init', '%1\$s' );",
+			"function %1\$s() {\n\n\t\$args = %2\$s;\n\n\tregister_taxonomy( '%3\$s', %4\$s, \$args );\n}\nadd_action( 'init', '%1\$s', 0 );",
 			$this->function_name,
 			$string_data,
-			$this->post_type
+			$this->taxonomy,
+			$object_types
 		);
 
 		return $string_data;

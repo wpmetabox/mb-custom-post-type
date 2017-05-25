@@ -13,6 +13,34 @@
 class MB_CPT_Taxonomy_Edit extends MB_CPT_Base_Edit {
 
 	/**
+	 * Taxonomy register object.
+	 *
+	 * @var MB_CPT_Taxonomy_Register
+	 */
+	protected $register;
+
+	/**
+	 * Encoder object.
+	 *
+	 * @var MB_CPT_Encoder_Interface
+	 */
+	protected $encoder;
+
+	/**
+	 * Class MB_CPT_Taxonomy_Edit constructor.
+	 *
+	 * @param string                   $taxonomy Post type name.
+	 * @param MB_CPT_Taxonomy_Register $register Post type register object.
+	 * @param MB_CPT_Encoder_Interface $encoder  Encoder object.
+	 */
+	public function __construct( $taxonomy, MB_CPT_Taxonomy_Register $register, MB_CPT_Encoder_Interface $encoder ) {
+		parent::__construct( $taxonomy );
+
+		$this->register = $register;
+		$this->encoder = $encoder;
+	}
+
+	/**
 	 * List of Javascript variables.
 	 *
 	 * @return array
@@ -249,6 +277,27 @@ class MB_CPT_Taxonomy_Edit extends MB_CPT_Base_Edit {
 			),
 		);
 
+		$code_fields = array(
+			array(
+				'name' => __( 'Function name', 'mb-custom-post-type' ),
+				'id'   => 'function_name',
+				'type' => 'text',
+				'std'  => 'your_prefix_register_taxonomy',
+			),
+			array(
+				'name' => __( 'Text domain', 'mb-custom-post-type' ),
+				'id'   => 'text_domain',
+				'type' => 'text',
+				'std'  => 'text-domain',
+			),
+			array(
+				'name' => __( 'Code', 'mb-custom-post-type' ),
+				'id'   => 'code',
+				'type' => 'custom-html',
+				'callback' => array( $this, 'generated_code_html' ),
+			),
+		);
+
 		// Basic settings.
 		$meta_boxes[] = array(
 			'id'         => 'basic-settings',
@@ -304,6 +353,13 @@ class MB_CPT_Taxonomy_Edit extends MB_CPT_Base_Edit {
 			'title'      => __( 'Advanced Settings', 'mb-custom-post-type' ),
 			'post_types' => 'mb-taxonomy',
 			'fields'     => $advanced_fields,
+		);
+
+		$meta_boxes[] = array(
+			'id'         => 'generated-code',
+			'title'      => __( 'Generated code', 'mb-custom-post-type' ),
+			'post_types' => array( 'mb-taxonomy' ),
+			'fields'     => $code_fields,
 		);
 
 		// Post types.
@@ -368,5 +424,26 @@ class MB_CPT_Taxonomy_Edit extends MB_CPT_Base_Edit {
 			$html = preg_replace( '/value="(.*?)"/', 'value="{{taxonomy}}"', $html );
 		}
 		return $html;
+	}
+
+	/**
+	 * Print generated code textarea.
+	 *
+	 * @return string
+	 */
+	public function generated_code_html() {
+		$post_id = get_the_ID();
+		list( $labels, $args ) = $this->register->get_taxonomy_data( $post_id );
+		$taxonomy_data = $this->register->set_up_taxonomy( $labels, $args );
+
+		$encode_data = array(
+			'function_name' => get_post_meta( $post_id, 'function_name', true ),
+			'text_domain'   => get_post_meta( $post_id, 'text_domain', true ),
+			'taxonomy'      => $args['taxonomy'],
+			'taxonomy_data' => $taxonomy_data,
+		);
+		$encoded_string = $this->encoder->encode( $encode_data );
+
+		return '<div id="generated-code"><pre><code class="php">' . esc_textarea( $encoded_string ) . '</code></pre></div>';
 	}
 }

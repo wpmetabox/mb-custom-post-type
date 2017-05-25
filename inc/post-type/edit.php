@@ -429,10 +429,10 @@ class MB_CPT_Post_Type_Edit extends MB_CPT_Base_Edit {
 		);
 
 		$meta_boxes[] = array(
-			'id'     => 'generated-code',
-			'title'  => __( 'Generated code', 'mb-custom-post-type' ),
-			'pages'  => array( 'mb-post-type' ),
-			'fields' => $code_fields,
+			'id'         => 'generated-code',
+			'title'      => __( 'Generated code', 'mb-custom-post-type' ),
+			'post_types' => array( 'mb-post-type' ),
+			'fields'     => $code_fields,
 		);
 
 		$fields = array_merge( $basic_fields, $labels_fields, $advanced_fields );
