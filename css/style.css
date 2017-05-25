@@ -27,3 +27,12 @@
 	background: #3c0;
 	text-shadow: 0 1px 0 rgba(0, 0, 0, .15);
 }
+
+/* Hide generated code label */
+#generated-code .rwmb-custom-html-wrapper .rwmb-label {
+	display: none;
+}
+
+#generated-code .rwmb-custom-html-wrapper .rwmb-input {
+	width: 100%;
+}

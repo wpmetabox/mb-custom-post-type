@@ -6,14 +6,38 @@
  * @subpackage MB Custom Post Type
  */
 
+/**
+ * Class MB_CPT_PHP_Encoder
+ */
 class MB_CPT_PHP_Encoder implements MB_CPT_Encoder_Interface {
 
+	/**
+	 * Function name.
+	 *
+	 * @var string
+	 */
 	protected $function_name = 'your_prefix_register_post_type';
 
+	/**
+	 * Text domain.
+	 *
+	 * @var string
+	 */
 	protected $text_domain = 'text-domain';
 
+	/**
+	 * Post type name.
+	 *
+	 * @var string
+	 */
 	protected $post_type;
 
+	/**
+	 * Encode.
+	 *
+	 * @param  array $data Data to encode.
+	 * @return string      Encoded string.
+	 */
 	public function encode( $data ) {
 		if ( empty( $data['post_type_data'] ) || empty( $data['post_type'] ) ) {
 			return false;
@@ -41,6 +65,12 @@ class MB_CPT_PHP_Encoder implements MB_CPT_Encoder_Interface {
 		return $string_data;
 	}
 
+	/**
+	 * Add prefix and suffix to translatable string.
+	 *
+	 * @param  array $data Encode data.
+	 * @return array
+	 */
 	protected function make_translatable( $data ) {
 		$data['label'] = sprintf( '###%s###', $data['label'] );
 
@@ -51,6 +81,12 @@ class MB_CPT_PHP_Encoder implements MB_CPT_Encoder_Interface {
 		return $data;
 	}
 
+	/**
+	 * Replace translatable string with gettext function.
+	 *
+	 * @param  string $string_data Encoded string.
+	 * @return string
+	 */
 	protected function replace_get_text_function( $string_data ) {
 		$find = "/'###(.*)###'/";
 		$replace = "esc_html__( '$1', '" . $this->text_domain . "' )";
@@ -58,24 +94,44 @@ class MB_CPT_PHP_Encoder implements MB_CPT_Encoder_Interface {
 		return preg_replace( $find, $replace, $string_data );
 	}
 
+	/**
+	 * Make encoded string compatible with WordPress coding standard.
+	 *
+	 * @param  string $string_data Encoded string.
+	 * @return string
+	 */
 	protected function fix_code_standard( $string_data ) {
 		$search = array(
-			'  ',
-			"\n\t",
-			"\n)",
+			'/  /',
+			"/\n\t/",
+			"/\n\)/",
+			"/=> \n\t\tarray \(/",
+			"/\n\t\t\t\\d => /",
+			// "/array\(\n\t\t\t\\d => /",
+			// "/,\t\t\)/",
 		);
 
 		$replace = array(
 			"\t",
 			"\n\t\t",
 			"\n\t)",
+			'=> array(',
+			"\n\t\t\t",
+			// 'array( ',
+			// ' )',
 		);
 
-		$string_data = str_replace( $search, $replace, $string_data );
+		$string_data = preg_replace( $search, $replace, $string_data );
 
 		return $string_data;
 	}
 
+	/**
+	 * Wrap encoded string with function name and hook.
+	 *
+	 * @param  string $string_data Encoded string.
+	 * @return string
+	 */
 	protected function wrap_function_call( $string_data ) {
 		$string_data = sprintf(
 			"function %1\$s( \$meta_boxes ) {\n\n\t\$args = %2\$s;\n\n\tregister_post_type( '%3\$s', \$args );\n}\nadd_action( 'init', '%1\$s' );",

@@ -11,10 +11,27 @@
  */
 class MB_CPT_Post_Type_Edit extends MB_CPT_Base_Edit {
 
+	/**
+	 * Post type register object.
+	 *
+	 * @var MB_CPT_Post_Type_Register
+	 */
 	protected $register;
 
+	/**
+	 * Encoder object.
+	 *
+	 * @var MB_CPT_Encoder_Interface
+	 */
 	protected $encoder;
 
+	/**
+	 * Class MB_CPT_Post_Type_Edit constructor.
+	 *
+	 * @param string                    $post_type Post type name.
+	 * @param MB_CPT_Post_Type_Register $register  Post type register object.
+	 * @param MB_CPT_Encoder_Interface  $encoder   Encoder object.
+	 */
 	public function __construct( $post_type, MB_CPT_Post_Type_Register $register, MB_CPT_Encoder_Interface $encoder ) {
 		parent::__construct( $post_type );
 
@@ -74,27 +91,6 @@ class MB_CPT_Post_Type_Edit extends MB_CPT_Base_Edit {
 				'name' => __( 'Slug', 'mb-custom-post-type' ),
 				'id'   => $args_prefix . 'post_type',
 				'type' => 'text',
-			),
-		);
-
-		$code_fields = array(
-			array(
-				'name' => __( 'Function name', 'mb-custom-post-type' ),
-				'id'   => 'function_name',
-				'type' => 'text',
-				'std'  => 'your_prefix_register_post_type',
-			),
-			array(
-				'name' => __( 'Text domain', 'mb-custom-post-type' ),
-				'id'   => 'text_domain',
-				'type' => 'text',
-				'std'  => 'text-domain',
-			),
-			array(
-				'name' => __( 'Code', 'mb-custom-post-type' ),
-				'id'   => 'code',
-				'type' => 'custom-html',
-				'callback' => array( $this, 'generated_code_html' ),
 			),
 		);
 
@@ -172,6 +168,7 @@ class MB_CPT_Post_Type_Edit extends MB_CPT_Base_Edit {
 				'placeholder' => __( 'The parent text', 'mb-custom-post-type' ),
 			),
 		);
+
 		$advanced_fields = array(
 			array(
 				'name'        => __( 'Description', 'mb-custom-post-type' ),
@@ -304,6 +301,27 @@ class MB_CPT_Post_Type_Edit extends MB_CPT_Base_Edit {
 			),
 		);
 
+		$code_fields = array(
+			array(
+				'name' => __( 'Function name', 'mb-custom-post-type' ),
+				'id'   => 'function_name',
+				'type' => 'text',
+				'std'  => 'your_prefix_register_post_type',
+			),
+			array(
+				'name' => __( 'Text domain', 'mb-custom-post-type' ),
+				'id'   => 'text_domain',
+				'type' => 'text',
+				'std'  => 'text-domain',
+			),
+			array(
+				'name' => __( 'Code', 'mb-custom-post-type' ),
+				'id'   => 'code',
+				'type' => 'custom-html',
+				'callback' => array( $this, 'generated_code_html' ),
+			),
+		);
+
 		// Basic settings.
 		$meta_boxes[] = array(
 			'id'         => 'basic-settings',
@@ -343,13 +361,6 @@ class MB_CPT_Post_Type_Edit extends MB_CPT_Base_Edit {
 					),
 				),
 			),
-		);
-
-		$meta_boxes[] = array(
-			'id'     => 'generated-code',
-			'title'  => __( 'Generated code', 'mb-custom-post-type' ),
-			'pages'  => array( 'mb-post-type' ),
-			'fields' => $code_fields,
 		);
 
 		// Labels settings.
@@ -415,6 +426,13 @@ class MB_CPT_Post_Type_Edit extends MB_CPT_Base_Edit {
 					'desc'    => sprintf( __( 'Add default taxonomies to post type. For custom taxonomies, please <a href="%s" target="_blank">click here</a>.', 'mb-custom-post-type' ), admin_url( 'edit.php?post_type=mb-taxonomy' ) ),
 				),
 			),
+		);
+
+		$meta_boxes[] = array(
+			'id'     => 'generated-code',
+			'title'  => __( 'Generated code', 'mb-custom-post-type' ),
+			'pages'  => array( 'mb-post-type' ),
+			'fields' => $code_fields,
 		);
 
 		$fields = array_merge( $basic_fields, $labels_fields, $advanced_fields );
@@ -494,6 +512,6 @@ class MB_CPT_Post_Type_Edit extends MB_CPT_Base_Edit {
 		);
 		$encoded_string = $this->encoder->encode( $encode_data );
 
-		return '<div id="generated-code"><pre>' . esc_textarea( $encoded_string ) . '</pre></div>';
+		return '<div id="generated-code"><pre><code class="php">' . esc_textarea( $encoded_string ) . '</code></pre></div>';
 	}
 }
