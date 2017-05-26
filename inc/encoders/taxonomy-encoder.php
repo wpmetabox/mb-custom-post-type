@@ -6,6 +6,10 @@
  * @subpackage MB Custom Post Type
  */
 
+if ( class_exists( 'MB_CPT_Taxonomy_Encoder' ) ) {
+	return;
+}
+
 /**
  * Class MB_CPT_Taxonomy_Encoder
  */
