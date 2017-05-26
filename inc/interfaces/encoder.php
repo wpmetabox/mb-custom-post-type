@@ -6,11 +6,10 @@
  * @subpackage MB Custom Post Type
  */
 
-if ( interface_exists( 'MB_CPT_Encoder_Interface' ) ) {
-	return;
-}
+if ( ! interface_exists( 'MB_CPT_Encoder_Interface' ) ) {
 
-interface MB_CPT_Encoder_Interface {
+	interface MB_CPT_Encoder_Interface {
 
-	public function encode( $data );
+		public function encode( $data );
+	}
 }
