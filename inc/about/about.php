@@ -49,7 +49,6 @@ class MB_CPT_About_Page {
 	 * Render admin page.
 	 */
 	public function render_page() {
-		var_dump($this->plugin);
 		?>
 		<div class="wrap about-wrap">
 			<h1>
@@ -57,8 +56,8 @@ class MB_CPT_About_Page {
 				// Translators: %1$s - Plugin name, %2$s - Plugin version.
 				printf(
 					esc_html__( 'Welcome to %1$s - Version %2$s', 'mb-custom-post-type' ),
-					$this->plugin['Name'],
-					$this->plugin['Version']
+					esc_html( $this->plugin['Name'] ),
+					esc_html( $this->plugin['Version'] )
 				);
 				?>
 			</h1>

@@ -26,7 +26,6 @@ add_action( 'init', 'mb_cpt_load', 0 );
 function mb_cpt_load() {
 	// If Meta Box is NOT active.
 	if ( current_user_can( 'activate_plugins' ) && ! class_exists( 'RW_Meta_Box' ) ) {
-		add_action( 'admin_init', 'mb_cpt_deactivate' );
 		add_action( 'admin_notices', 'mb_cpt_admin_notice' );
 
 		return;
@@ -63,27 +62,35 @@ function mb_cpt_load() {
 
 		$about_page = new MB_CPT_About_Page();
 		$about_page->init();
-	}
-}
 
-/**
- * Deactivate plugin
- */
-function mb_cpt_deactivate() {
-	deactivate_plugins( plugin_basename( __FILE__ ) );
+		if ( get_option( 'mb_cpt_redirect' ) ) {
+			delete_option( 'mb_cpt_redirect' );
+			wp_safe_redirect( admin_url( 'edit.php?post_type=mb-post-type&page=mb-cpt-about' ) );
+			exit;
+		}
+	}
 }
 
 /**
  * Show admin notice when Meta Box is not activated
  */
 function mb_cpt_admin_notice() {
+	$plugins = get_plugins();
+	$meta_box_installed = isset( $plugins['meta-box/meta-box.php'] );
+	$action = $meta_box_installed ? 'activate' : 'install';
+	$install_url = wp_nonce_url( admin_url( 'update.php?action=install-plugin&plugin=meta-box' ), 'install-plugin_meta-box' );
+	$activate_url = wp_nonce_url( admin_url( 'plugins.php?action=activate&amp;plugin=meta-box/meta-box.php' ), 'activate-plugin_meta-box/meta-box.php' );
+	$action_url = 'activate' === $action ? $activate_url : $install_url;
+
 	$child  = __( 'MB Custom Post Type', 'mb-custom-post-type' );
 	$parent = __( 'Meta Box', 'mb-custom-post-type' );
 	printf(
 		// translators: %1$s is the plugin name, %2$s is the Meta Box plugin name.
-		'<div class="error"><p>' . esc_html__( '%1$s requires %2$s to function correctly. Please activate %2$s before activating %1$s. For now, the plug-in has been deactivated.', 'mb-custom-post-type' ) . '</p></div>',
+		'<div class="error"><p>' . esc_html__( '%1$s requires %2$s to function correctly. %3$s to %4$s %2$s.', 'mb-custom-post-type' ) . '</p></div>',
 		'<strong>' . esc_html( $child ) . '</strong>',
-		'<strong>' . esc_html( $parent ) . '</strong>'
+		'<strong>' . esc_html( $parent ) . '</strong>',
+		'<a href="' . $action_url . '">' . esc_html__( 'Click here', 'mb-custom-post-type' ) . '</a>',
+		esc_html( $action )
 	);
 
 	if ( isset( $_GET['activate'] ) ) {
@@ -92,13 +99,9 @@ function mb_cpt_admin_notice() {
 }
 
 /**
- * Redirect to about page.
+ * Activate plugin.
  */
-function mb_cpt_redirect_after_activated() {
-	if ( ! class_exists( 'RW_Meta_Box' ) ) {
-		return;
-	}
-	wp_safe_redirect( admin_url( 'edit.php?post_type=mb-post-type&page=mb-cpt-about' ) );
-	exit;
+function mb_cpt_activate() {
+	update_option( 'mb_cpt_redirect', 1 );
 }
-add_action( 'activated_plugin', 'mb_cpt_redirect_after_activated' );
+register_activation_hook( __FILE__, 'mb_cpt_activate' );
