@@ -68,12 +68,20 @@
 	color: red;
 }
 
+.products h3 {
+	text-align: center;
+}
+
+.products img {
+	box-shadow: none;
+	margin: 0 auto;
+}
+
 .project {
 	text-align: center;
 }
 
-.project__title {
-	font-size: 26px;
+.products .project__title {
 	margin: 12px 0 0;
 }
 
@@ -81,30 +89,16 @@
 	text-decoration: none;
 }
 
-.project__description {
-	font-size: 16px;
+.meta-box ul {
+	font-size: 14px;
+	margin: 2em 0;
 }
-
-.mb-block {
-	border: 1px solid #ddd;
-}
-
-.mb-block a {
-	display: block;
+.meta-box li a {
 	text-decoration: none;
 }
-
-.mb-block h3 {
-	font-size: 15px;
-	font-weight: 600;
-	height: 18px;
-	margin: 0;
-	padding: 15px;
-	-webkit-box-shadow: inset 0 1px 0 rgba(0,0,0,0.1);
-	box-shadow: inset 0 1px 0 rgba(0,0,0,0.1);
-	overflow: hidden;
-	white-space: nowrap;
-	text-overflow: ellipsis;
-	background: #fff;
-	background: rgba(255,255,255,0.65);
+.meta-box .dashicons {
+	color: #82878c;
+	padding-right: 5px;
+	font-size: 16px;
+	vertical-align: middle;
 }
