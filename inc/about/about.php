@@ -11,6 +11,11 @@
  */
 class MB_CPT_About_Page {
 
+	/**
+	 * Plugin data.
+	 *
+	 * @var array
+	 */
 	protected $plugin;
 
 	/**

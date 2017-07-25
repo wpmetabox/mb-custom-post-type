@@ -95,6 +95,9 @@ function mb_cpt_admin_notice() {
  * Redirect to about page.
  */
 function mb_cpt_redirect_after_activated() {
+	if ( ! class_exists( 'RW_Meta_Box' ) ) {
+		return;
+	}
 	wp_safe_redirect( admin_url( 'edit.php?post_type=mb-post-type&page=mb-cpt-about' ) );
 	exit;
 }
