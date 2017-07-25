@@ -7,7 +7,6 @@
 			$panes = $( '.gt-tab-pane' );
 
 		$container.on( 'click', '.nav-tab', function ( e ) {
-			console.log( 'clicked' );
 			e.preventDefault();
 
 			$tabs.removeClass( 'nav-tab-active' );

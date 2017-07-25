@@ -503,7 +503,7 @@ class MB_CPT_Post_Type_Edit extends MB_CPT_Base_Edit {
 		$post_id = get_the_ID();
 		list( $labels, $args ) = $this->register->get_post_type_data( $post_id );
 		if ( ! $labels ) {
-			return;
+			return '';
 		}
 
 		$post_type_data = $this->register->set_up_post_type( $labels, $args );

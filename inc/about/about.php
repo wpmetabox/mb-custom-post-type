@@ -54,8 +54,6 @@ class MB_CPT_About_Page {
 			<?php include dirname( __FILE__ ) . '/sections/welcome.php'; ?>
 			<?php include dirname( __FILE__ ) . '/sections/tabs.php'; ?>
 			<?php include dirname( __FILE__ ) . '/sections/getting-started.php'; ?>
-			<?php include dirname( __FILE__ ) . '/sections/meta-box.php'; ?>
-			<?php include dirname( __FILE__ ) . '/sections/products.php'; ?>
 		</div>
 		<?php
 	}
