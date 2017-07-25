@@ -44,31 +44,33 @@ function mb_cpt_load() {
 	$cpt_register = new MB_CPT_Post_Type_Register();
 	$tax_register = new MB_CPT_Taxonomy_Register();
 
-	if ( is_admin() ) {
-		require dirname( __FILE__ ) . '/inc/helper.php';
-		require dirname( __FILE__ ) . '/inc/base/edit.php';
-		require dirname( __FILE__ ) . '/inc/post-type/edit.php';
-		require dirname( __FILE__ ) . '/inc/taxonomy/edit.php';
-		require_once dirname( __FILE__ ) . '/inc/interfaces/encoder.php';
-		require_once dirname( __FILE__ ) . '/inc/encoders/post-type-encoder.php';
-		require_once dirname( __FILE__ ) . '/inc/encoders/taxonomy-encoder.php';
-		require_once dirname( __FILE__ ) . '/inc/about/about.php';
+	if ( ! is_admin() ) {
+		return;
+	}
 
-		$post_type_encoder = new MB_CPT_Post_Type_Encoder();
-		new MB_CPT_Post_Type_Edit( 'mb-post-type', $cpt_register, $post_type_encoder );
+	require dirname( __FILE__ ) . '/inc/helper.php';
+	require dirname( __FILE__ ) . '/inc/base/edit.php';
+	require dirname( __FILE__ ) . '/inc/post-type/edit.php';
+	require dirname( __FILE__ ) . '/inc/taxonomy/edit.php';
+	require_once dirname( __FILE__ ) . '/inc/interfaces/encoder.php';
+	require_once dirname( __FILE__ ) . '/inc/encoders/post-type-encoder.php';
+	require_once dirname( __FILE__ ) . '/inc/encoders/taxonomy-encoder.php';
+	require_once dirname( __FILE__ ) . '/inc/about/about.php';
 
-		$tax_encoder = new MB_CPT_Taxonomy_Encoder();
-		new MB_CPT_Taxonomy_Edit( 'mb-taxonomy', $tax_register, $tax_encoder );
+	$post_type_encoder = new MB_CPT_Post_Type_Encoder();
+	new MB_CPT_Post_Type_Edit( 'mb-post-type', $cpt_register, $post_type_encoder );
 
-		$about_page = new MB_CPT_About_Page();
-		$about_page->init();
+	$tax_encoder = new MB_CPT_Taxonomy_Encoder();
+	new MB_CPT_Taxonomy_Edit( 'mb-taxonomy', $tax_register, $tax_encoder );
 
-		// Redirect to about page.
-		if ( get_option( 'mb_cpt_redirect' ) ) {
-			delete_option( 'mb_cpt_redirect' );
-			wp_safe_redirect( admin_url( 'edit.php?post_type=mb-post-type&page=mb-cpt-about' ) );
-			exit;
-		}
+	$about_page = new MB_CPT_About_Page();
+	$about_page->init();
+
+	// Redirect to about page.
+	if ( get_option( 'mb_cpt_redirect' ) ) {
+		delete_option( 'mb_cpt_redirect' );
+		wp_safe_redirect( admin_url( 'edit.php?post_type=mb-post-type&page=mb-cpt-about' ) );
+		exit;
 	}
 }
 
