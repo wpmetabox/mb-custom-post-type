@@ -3,7 +3,7 @@
  * Plugin Name: MB Custom Post Type
  * Plugin URI: https://metabox.io/plugins/custom-post-type/
  * Description: Create custom post types and custom taxonomies with easy-to-use UI
- * Version: 1.4
+ * Version: 1.4.1
  * Author: MetaBox.io
  * Author URI: https://metabox.io
  * License: GPL-2.0+
