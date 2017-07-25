@@ -78,12 +78,12 @@ function mb_cpt_load() {
  * Show admin notice when Meta Box is not activated
  */
 function mb_cpt_admin_notice() {
-	$plugins            = get_plugins();
-	$meta_box_installed = isset( $plugins['meta-box/meta-box.php'] );
-	$action             = $meta_box_installed ? 'activate' : 'install';
-	$install_url        = wp_nonce_url( admin_url( 'update.php?action=install-plugin&plugin=meta-box' ), 'install-plugin_meta-box' );
-	$activate_url       = wp_nonce_url( admin_url( 'plugins.php?action=activate&amp;plugin=meta-box/meta-box.php' ), 'activate-plugin_meta-box/meta-box.php' );
-	$action_url         = 'activate' === $action ? $activate_url : $install_url;
+	$plugins      = get_plugins();
+	$is_installed = isset( $plugins['meta-box/meta-box.php'] );
+	$install_url  = wp_nonce_url( admin_url( 'update.php?action=install-plugin&plugin=meta-box' ), 'install-plugin_meta-box' );
+	$activate_url = wp_nonce_url( admin_url( 'plugins.php?action=activate&amp;plugin=meta-box/meta-box.php' ), 'activate-plugin_meta-box/meta-box.php' );
+	$action_url   = $is_installed ? $activate_url : $install_url;
+	$action       = $is_installed ? __( 'activate', 'mb-taxonomy' ) : __( 'install', 'mb-taxonomy' );
 
 	$child  = __( 'MB Custom Post Type', 'mb-custom-post-type' );
 	$parent = __( 'Meta Box', 'mb-custom-post-type' );
