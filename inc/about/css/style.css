@@ -1,0 +1,110 @@
+.about-wrap .wp-badge {
+	background-image: url(https://elightup.com/images/meta-box.png);
+	background-color: #fff;
+	color: #222;
+	text-transform: uppercase;
+	font-weight: bold;
+	text-decoration: none;
+}
+
+.wp-badge:hover {
+	text-decoration: none;
+}
+
+.feature-section.two-col {
+	align-items: flex-start;
+}
+
+.feature-section.two-col h3:not(:first-child) {
+	margin-top: 3em;
+}
+
+.feature-section img {
+	display: block;
+	box-shadow: 0 0 20px rgba(0, 0, 0, .1);
+}
+
+.nav-tab-active:focus {
+	box-shadow: none;
+}
+
+.gt-tab-pane {
+	display: none;
+}
+
+.gt-is-active {
+	display: block;
+}
+
+.form-table tr {
+	border-bottom: 1px solid #ddd;
+}
+
+.form-table th {
+	padding-left: 10px;
+}
+
+.form-table th:not(:first-child),
+.form-table td:not(:first-child) {
+	width: 15%;
+	text-align: center;
+}
+
+.about-wrap td h3 {
+	margin-top: 0;
+}
+
+.form-table .dashicons {
+	font-size: 35px;
+	width: 35px;
+	height: 35px;
+}
+
+.form-table .dashicons-yes {
+	color: green;
+}
+
+.form-table .dashicons-no {
+	color: red;
+}
+
+.project {
+	text-align: center;
+}
+
+.project__title {
+	font-size: 26px;
+	margin: 12px 0 0;
+}
+
+.project__title a {
+	text-decoration: none;
+}
+
+.project__description {
+	font-size: 16px;
+}
+
+.mb-block {
+	border: 1px solid #ddd;
+}
+
+.mb-block a {
+	display: block;
+	text-decoration: none;
+}
+
+.mb-block h3 {
+	font-size: 15px;
+	font-weight: 600;
+	height: 18px;
+	margin: 0;
+	padding: 15px;
+	-webkit-box-shadow: inset 0 1px 0 rgba(0,0,0,0.1);
+	box-shadow: inset 0 1px 0 rgba(0,0,0,0.1);
+	overflow: hidden;
+	white-space: nowrap;
+	text-overflow: ellipsis;
+	background: #fff;
+	background: rgba(255,255,255,0.65);
+}

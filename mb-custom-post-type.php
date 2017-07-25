@@ -33,6 +33,7 @@ function mb_cpt_load() {
 	}
 
 	// Plugin constants.
+	define( 'MB_CPT_FILE', __FILE__ );
 	define( 'MB_CPT_URL', plugin_dir_url( __FILE__ ) );
 
 	load_plugin_textdomain( 'mb-custom-post-type' );
@@ -52,12 +53,16 @@ function mb_cpt_load() {
 		require_once plugin_dir_path( __FILE__ ) . 'inc/interfaces/encoder.php';
 		require_once plugin_dir_path( __FILE__ ) . 'inc/encoders/post-type-encoder.php';
 		require_once plugin_dir_path( __FILE__ ) . 'inc/encoders/taxonomy-encoder.php';
+		require_once plugin_dir_path( __FILE__ ) . 'inc/about/about.php';
 
 		$post_type_encoder = new MB_CPT_Post_Type_Encoder();
 		new MB_CPT_Post_Type_Edit( 'mb-post-type', $cpt_register, $post_type_encoder );
 
 		$tax_encoder = new MB_CPT_Taxonomy_Encoder();
 		new MB_CPT_Taxonomy_Edit( 'mb-taxonomy', $tax_register, $tax_encoder );
+
+		$about_page = new MB_CPT_About_Page();
+		$about_page->init();
 	}
 }
 
@@ -85,3 +90,12 @@ function mb_cpt_admin_notice() {
 		unset( $_GET['activate'] );
 	}
 }
+
+/**
+ * Redirect to about page.
+ */
+function mb_cpt_redirect_after_activated() {
+	wp_safe_redirect( admin_url( 'edit.php?post_type=mb-post-type&page=mb-cpt-about' ) );
+	exit;
+}
+add_action( 'activated_plugin', 'mb_cpt_redirect_after_activated' );
