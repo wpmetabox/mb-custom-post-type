@@ -53,6 +53,7 @@ function mb_cpt_load() {
 		require_once plugin_dir_path( __FILE__ ) . 'inc/encoders/post-type-encoder.php';
 		require_once plugin_dir_path( __FILE__ ) . 'inc/encoders/taxonomy-encoder.php';
 		require_once plugin_dir_path( __FILE__ ) . 'inc/about/about.php';
+		require_once plugin_dir_path( __FILE__ ) . 'inc/promote-meta-box.php';
 
 		$post_type_encoder = new MB_CPT_Post_Type_Encoder();
 		new MB_CPT_Post_Type_Edit( 'mb-post-type', $cpt_register, $post_type_encoder );
@@ -63,6 +64,10 @@ function mb_cpt_load() {
 		$about_page = new MB_CPT_About_Page();
 		$about_page->init();
 
+		$promote_meta_box = new MB_CPT_Promote_Meta_Box();
+		$promote_meta_box->init();
+
+		// Redirect to about page.
 		if ( get_option( 'mb_cpt_redirect' ) ) {
 			delete_option( 'mb_cpt_redirect' );
 			wp_safe_redirect( admin_url( 'edit.php?post_type=mb-post-type&page=mb-cpt-about' ) );
