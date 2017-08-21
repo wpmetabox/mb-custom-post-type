@@ -436,6 +436,10 @@ class MB_CPT_Taxonomy_Edit extends MB_CPT_Base_Edit {
 		list( $labels, $args ) = $this->register->get_taxonomy_data( $post_id );
 		$taxonomy_data = $this->register->set_up_taxonomy( $labels, $args );
 
+		if ( isset( $taxonomy_data['meta_box_cb'] ) ) {
+			unset( $taxonomy_data['meta_box_cb'] );
+		}
+
 		$encode_data = array(
 			'function_name' => get_post_meta( $post_id, 'function_name', true ),
 			'text_domain'   => get_post_meta( $post_id, 'text_domain', true ),
