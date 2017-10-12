@@ -3,8 +3,8 @@ Contributors: metabox, rilwis, duc88b, fitwp, truongwp
 Donate link: http://www.deluxeblogtips.com/donate
 Tags: cms, custom, custom post types, custom post type, cpt, post, post types, post type, types
 Requires at least: 4.3
-Tested up to: 4.8
-Stable tag: 1.4.1
+Tested up to: 4.8.2
+Stable tag: 1.4.3
 License: GPLv2 or later
 
 Create and manage custom post types and custom taxonomies with an easy-to-use interface in WordPress.
@@ -61,13 +61,6 @@ Install **MB Custom Post Type** extension
 
 == Changelog ==
 
-= 1.4.1 =
-
-- Added "About" page to help new users use the plugin.
-
-[See changelog for all versions](https://github.com/rilwis/mb-custom-post-type/blob/master/CHANGELOG.md).
-
-
-- First version
+[See full changelog here](https://github.com/rilwis/mb-custom-post-type/blob/master/CHANGELOG.md).
 
 == Upgrade Notice ==

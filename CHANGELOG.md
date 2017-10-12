@@ -5,6 +5,15 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/) a
 
 ## Unreleased
 
+### 1.4.3
+### Fixed
+- Fixed undefined index when registering a new taxonomy.
+
+## 1.4.2
+### Fixed
+- Fixed error in generated code for taxonomy.
+- Fixed translation and logo URL.
+
 ## 1.4.1
 ### Added
 - Added "About" page to help new users use the plugin.
