@@ -47,7 +47,7 @@ class MB_CPT_Taxonomy_Edit extends MB_CPT_Base_Edit {
 	 */
 	public function js_vars() {
 		// @codingStandardsIgnoreStart
-		return array(
+		return array_merge( parent::js_vars(), array(
 			'menu_name'                  => '%name%',
 			'all_items'                  => __( 'All %name%', 'mb-custom-post-type' ),
 			'edit_item'                  => __( 'Edit %singular_name%', 'mb-custom-post-type' ),
@@ -63,7 +63,7 @@ class MB_CPT_Taxonomy_Edit extends MB_CPT_Base_Edit {
 			'add_or_remove_items'        => __( 'Add or remove %name%', 'mb-custom-post-type' ),
 			'choose_from_most_used'      => __( 'Choose most used %name%', 'mb-custom-post-type' ),
 			'not_found'                  => __( 'No %name% found', 'mb-custom-post-type' ),
-		);
+		) );
 		// @codingStandardsIgnoreEnd
 	}
 
@@ -485,7 +485,21 @@ class MB_CPT_Taxonomy_Edit extends MB_CPT_Base_Edit {
 		);
 		$encoded_string = $this->encoder->encode( $encode_data );
 
-		return '<div id="generated-code"><pre><code class="php">' . esc_textarea( $encoded_string ) . '</code></pre></div>';
+		$output = '
+			<div id="generated-code">
+				<a href="javascript:void(0);" class="mb-button--copy">
+					<svg class="mb-icon--copy" aria-hidden="true" role="img"><use href="#mb-icon-copy" xlink:href="#icon-copy"></use></svg>
+					' . esc_html__( 'Copy', 'mb-custom-post-type' ) . '
+				</a>
+				<pre><code class="php">' . esc_textarea( $encoded_string ) . '</code></pre>
+			</div>';
+		$output .= '
+			<svg style="display: none;" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+				<symbol id="mb-icon-copy" viewBox="0 0 1024 896">
+					<path d="M128 768h256v64H128v-64z m320-384H128v64h320v-64z m128 192V448L384 640l192 192V704h320V576H576z m-288-64H128v64h160v-64zM128 704h160v-64H128v64z m576 64h64v128c-1 18-7 33-19 45s-27 18-45 19H64c-35 0-64-29-64-64V192c0-35 29-64 64-64h192C256 57 313 0 384 0s128 57 128 128h192c35 0 64 29 64 64v320h-64V320H64v576h640V768zM128 256h512c0-35-29-64-64-64h-64c-35 0-64-29-64-64s-29-64-64-64-64 29-64 64-29 64-64 64h-64c-35 0-64 29-64 64z" />
+				</symbol>
+			</svg>';
+		return $output;
 	}
 
 	/**

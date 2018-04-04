@@ -64,3 +64,50 @@
 	position: absolute;
 	left: 0;
 }
+
+/* Copy to clipboard */
+#generated-code {
+	position: relative;
+	overflow: hidden;
+}
+
+.mb-button--copy {
+	position: absolute;
+	top: 13px;
+	right: 1px;
+	z-index: 9;
+	display: inline-block;
+	background: #2c3e50;
+	color: #fff;
+	text-decoration: none;
+	line-height: 1;
+	padding: 10px 14px;
+	text-transform: uppercase;
+	font-weight: bold;
+	text-align: center;
+	white-space: nowrap;
+	transition: opacity .2s;
+	cursor: pointer;
+	opacity: 0;
+}
+
+.mb-button--copy:focus,
+.mb-button--copy:active {
+	outline: none;
+	box-shadow: none;
+}
+
+#generated-code:hover > .mb-button--copy {
+	opacity: 1;
+	color: #fff;
+}
+
+.mb-icon--copy {
+	color: inherit;
+	fill: currentColor;
+	height: 1em;
+	width: 1em;
+	vertical-align: middle;
+	position: relative;
+	top: -4px;
+}
