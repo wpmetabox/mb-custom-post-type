@@ -4,10 +4,12 @@
 .icon-single .hidden {
 	display: none;
 }
+
 .rwmb-radio-wrapper .rwmb-input {
 	height: 160px;
 	overflow: auto;
 }
+
 .rwmb-radio-wrapper .rwmb-input .icon-single {
 	display: inline-block;
 	margin: 0 5px 5px 0;
@@ -20,6 +22,7 @@
 	-moz-box-sizing: border-box;
 	box-sizing: border-box;
 }
+
 .rwmb-radio-wrapper .rwmb-input .icon-single:hover,
 .rwmb-radio-wrapper .rwmb-input .icon-single.active {
 	border-color: rgba(0, 0, 0, .1);
@@ -35,4 +38,29 @@
 
 #generated-code .rwmb-custom-html-wrapper .rwmb-input {
 	width: 100%;
+}
+
+#upgrade {
+	background: none;
+	border: 2px dashed currentColor;
+}
+
+#upgrade .hndle {
+	cursor: text;
+}
+
+#upgrade .handlediv {
+	display: none;
+}
+
+#upgrade li {
+	padding-left: 16px;
+	position: relative;
+}
+
+#upgrade li:before {
+	display: inline-block;
+	content: "+";
+	position: absolute;
+	left: 0;
 }

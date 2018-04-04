@@ -163,6 +163,25 @@ class MB_CPT_Taxonomy_Register extends MB_CPT_Base_Register {
 			'labels' => $labels,
 			'public' => true,
 		) );
+
+		if ( empty( $args['rewrite_slug'] ) && empty( $args['rewrite_no_front'] ) ) {
+			$args['rewrite'] = true;
+		} else {
+			$rewrite = array();
+			if ( ! empty( $args['rewrite_slug'] ) ) {
+				$rewrite['slug'] = $args['rewrite_slug'];
+			}
+			if ( ! empty( $args['rewrite_no_front'] ) ) {
+				$rewrite['with_front'] = false;
+			}
+			if ( ! empty( $args['rewrite_hierarchical'] ) ) {
+				$rewrite['hierarchical'] = true;
+			}
+			$args['rewrite'] = $rewrite;
+			unset( $args['rewrite_slug'] );
+			unset( $args['rewrite_no_front'] );
+			unset( $args['rewrite_hierarchical'] );
+		}
 		unset( $args['taxonomy'] );
 		return $args;
 	}

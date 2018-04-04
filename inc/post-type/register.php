@@ -165,6 +165,8 @@ class MB_CPT_Post_Type_Register extends MB_CPT_Base_Register {
 				$rewrite['with_front'] = false;
 			}
 			$args['rewrite'] = $rewrite;
+			unset( $args['rewrite_slug'] );
+			unset( $args['rewrite_no_front'] );
 		}
 		unset( $args['post_type'] );
 

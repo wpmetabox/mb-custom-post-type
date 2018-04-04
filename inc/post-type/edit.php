@@ -36,7 +36,7 @@ class MB_CPT_Post_Type_Edit extends MB_CPT_Base_Edit {
 		parent::__construct( $post_type );
 
 		$this->register = $register;
-		$this->encoder = $encoder;
+		$this->encoder  = $encoder;
 	}
 
 	/**
@@ -74,7 +74,7 @@ class MB_CPT_Post_Type_Edit extends MB_CPT_Base_Edit {
 		$label_prefix = 'label_';
 		$args_prefix  = 'args_';
 
-		$basic_fields    = array(
+		$basic_fields = array(
 			array(
 				'name'        => __( 'Plural name', 'mb-custom-post-type' ),
 				'id'          => $label_prefix . 'name',
@@ -94,7 +94,7 @@ class MB_CPT_Post_Type_Edit extends MB_CPT_Base_Edit {
 			),
 		);
 
-		$labels_fields   = array(
+		$labels_fields = array(
 			array(
 				'name'        => __( 'Menu name', 'mb-custom-post-type' ),
 				'id'          => $label_prefix . 'menu_name',
@@ -314,13 +314,15 @@ class MB_CPT_Post_Type_Edit extends MB_CPT_Base_Edit {
 				'type' => 'text',
 				'std'  => 'text-domain',
 			),
-			array(
-				'name' => __( 'Code', 'mb-custom-post-type' ),
-				'id'   => 'code',
-				'type' => 'custom-html',
-				'callback' => array( $this, 'generated_code_html' ),
-			),
 		);
+		if ( isset( $_GET['post'] ) ) {
+			$code_fields[] = array(
+				'name'     => __( 'Code', 'mb-custom-post-type' ),
+				'id'       => 'code',
+				'type'     => 'custom-html',
+				'callback' => array( $this, 'generated_code_html' ),
+			);
+		}
 
 		// Basic settings.
 		$meta_boxes[] = array(
@@ -508,7 +510,7 @@ class MB_CPT_Post_Type_Edit extends MB_CPT_Base_Edit {
 
 		$post_type_data = $this->register->set_up_post_type( $labels, $args );
 
-		$encode_data = array(
+		$encode_data    = array(
 			'function_name'  => get_post_meta( $post_id, 'function_name', true ),
 			'text_domain'    => get_post_meta( $post_id, 'text_domain', true ),
 			'post_type'      => $args['post_type'],
