@@ -37,6 +37,9 @@ class MB_CPT_Post_Type_Edit extends MB_CPT_Base_Edit {
 
 		$this->register = $register;
 		$this->encoder  = $encoder;
+
+		// Change the menu positions option after all menus are registered.
+		add_action( 'admin_menu', array( $this, 'change_menu_positions_option' ), 9999 );
 	}
 
 	/**
@@ -235,10 +238,11 @@ class MB_CPT_Post_Type_Edit extends MB_CPT_Base_Edit {
 				'type' => 'text',
 				'desc' => __( 'To change the base url of REST API route. Default is post type.', 'mb-custom-post-type' ),
 			),
-			array(
-				'name' => __( 'Menu position', 'mb-custom-post-type' ),
-				'id'   => $args_prefix . 'menu_position',
-				'type' => 'number',
+			'menu_position' => array(
+				'name'    => __( 'Menu position after', 'mb-custom-post-type' ),
+				'id'      => $args_prefix . 'menu_position',
+				'type'    => 'select_advanced',
+				'options' => array(),
 			),
 			array(
 				'name'    => __( 'Menu icon', 'mb-custom-post-type' ),
@@ -326,7 +330,7 @@ class MB_CPT_Post_Type_Edit extends MB_CPT_Base_Edit {
 
 		// Basic settings.
 		$meta_boxes[] = array(
-			'id'         => 'basic-settings',
+			'id'         => 'mb-cpt-basic-settings',
 			'title'      => __( 'Basic Settings', 'mb-custom-post-type' ),
 			'pages'      => array( 'mb-post-type' ),
 			'fields'     => array_merge(
@@ -367,7 +371,7 @@ class MB_CPT_Post_Type_Edit extends MB_CPT_Base_Edit {
 
 		// Labels settings.
 		$meta_boxes[] = array(
-			'id'     => 'label-settings',
+			'id'     => 'mb-cpt-label-settings',
 			'title'  => __( 'Labels Settings', 'mb-custom-post-type' ),
 			'pages'  => array( 'mb-post-type' ),
 			'fields' => $labels_fields,
@@ -375,7 +379,7 @@ class MB_CPT_Post_Type_Edit extends MB_CPT_Base_Edit {
 
 		// Advanced settings.
 		$meta_boxes[] = array(
-			'id'     => 'advanced-settings',
+			'id'     => 'mb-cpt-advanced-settings',
 			'title'  => __( 'Advanced Settings', 'mb-custom-post-type' ),
 			'pages'  => array( 'mb-post-type' ),
 			'fields' => $advanced_fields,
@@ -383,7 +387,7 @@ class MB_CPT_Post_Type_Edit extends MB_CPT_Base_Edit {
 
 		// Supports.
 		$meta_boxes[] = array(
-			'id'       => 'supports',
+			'id'       => 'mb-cpt-supports',
 			'title'    => __( 'Supports', 'mb-custom-post-type' ),
 			'pages'    => array( 'mb-post-type' ),
 			'priority' => 'low',
@@ -411,7 +415,7 @@ class MB_CPT_Post_Type_Edit extends MB_CPT_Base_Edit {
 
 		// Default taxonomies.
 		$meta_boxes[] = array(
-			'id'       => 'taxonomies',
+			'id'       => 'mb-cpt-taxonomies',
 			'title'    => __( 'Default Taxonomies', 'mb-custom-post-type' ),
 			'pages'    => array( 'mb-post-type' ),
 			'priority' => 'low',
@@ -431,7 +435,7 @@ class MB_CPT_Post_Type_Edit extends MB_CPT_Base_Edit {
 		);
 
 		$meta_boxes[] = array(
-			'id'         => 'generate-code',
+			'id'         => 'mb-cpt-generate-code',
 			'title'      => __( 'Generate Code', 'mb-custom-post-type' ),
 			'post_types' => array( 'mb-post-type' ),
 			'fields'     => $code_fields,
@@ -533,5 +537,29 @@ class MB_CPT_Post_Type_Edit extends MB_CPT_Base_Edit {
 				</symbol>
 			</svg>';
 		return $output;
+	}
+
+	/**
+	 * Change menu positions options.
+	 */
+	public function change_menu_positions_option() {
+		$meta_box = rwmb_get_registry( 'meta_box' )->get( 'mb-cpt-advanced-settings' );
+		$meta_box->meta_box['fields']['menu_position']['options'] = $this->get_menu_positions();
+	}
+
+	/**
+	 * Get WordPress menu positions
+	 *
+	 * @return array
+	 */
+	public function get_menu_positions() {
+		global $menu;
+		$positions = array();
+		foreach ( $menu as $position => $params ) {
+			if ( ! empty( $params[0] ) ) {
+				$positions[ $position ] = wp_strip_all_tags( $params[0] );
+			}
+		}
+		return $positions;
 	}
 }

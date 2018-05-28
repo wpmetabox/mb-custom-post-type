@@ -323,7 +323,7 @@ class MB_CPT_Taxonomy_Edit extends MB_CPT_Base_Edit {
 
 		// Basic settings.
 		$meta_boxes[] = array(
-			'id'         => 'basic-settings',
+			'id'         => 'ct-basic-settings',
 			'title'      => __( 'Basic Settings', 'mb-custom-post-type' ),
 			'post_types' => 'mb-taxonomy',
 			'fields'     => array_merge(
@@ -364,7 +364,7 @@ class MB_CPT_Taxonomy_Edit extends MB_CPT_Base_Edit {
 
 		// Labels settings.
 		$meta_boxes[] = array(
-			'id'         => 'label-settings',
+			'id'         => 'mb-ct-label-settings',
 			'title'      => __( 'Labels Settings', 'mb-custom-post-type' ),
 			'post_types' => 'mb-taxonomy',
 			'fields'     => $labels_fields,
@@ -372,14 +372,14 @@ class MB_CPT_Taxonomy_Edit extends MB_CPT_Base_Edit {
 
 		// Advanced settings.
 		$meta_boxes[] = array(
-			'id'         => 'advanced-settings',
+			'id'         => 'mb-ct-advanced-settings',
 			'title'      => __( 'Advanced Settings', 'mb-custom-post-type' ),
 			'post_types' => 'mb-taxonomy',
 			'fields'     => $advanced_fields,
 		);
 
 		$meta_boxes[] = array(
-			'id'         => 'generate-code',
+			'id'         => 'mb-ct-generate-code',
 			'title'      => __( 'Generate Code', 'mb-custom-post-type' ),
 			'post_types' => array( 'mb-taxonomy' ),
 			'fields'     => $code_fields,
@@ -393,6 +393,7 @@ class MB_CPT_Taxonomy_Edit extends MB_CPT_Base_Edit {
 			$options[ $post_type ] = $post_type_object->labels->singular_name;
 		}
 		$meta_boxes[] = array(
+			'id'         => 'mb-ct-assign',
 			'title'      => __( 'Assign To Post Types', 'mb-custom-post-type' ),
 			'context'    => 'side',
 			'post_types' => 'mb-taxonomy',
@@ -408,7 +409,7 @@ class MB_CPT_Taxonomy_Edit extends MB_CPT_Base_Edit {
 
 		if ( ! $this->is_premium_user() ) {
 			$meta_boxes[] = array(
-				'id'         => 'upgrade',
+				'id'         => 'mb-ct-upgrade',
 				'title'      => __( 'Upgrade to Meta Box Premium', 'mb-custom-post-type' ),
 				'post_types' => array( 'mb-post-type', 'mb-taxonomy' ),
 				'context'    => 'side',
