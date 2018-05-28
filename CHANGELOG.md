@@ -5,12 +5,17 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/) a
 
 ## Unreleased
 
-### 1.5.0
+## 1.6.0 - 2018-05-28
+### Improved
+- Changed menu position from a text field to a select field, so users just select the position they want without knowing the position number.
+- Hide the ads for premium users. You need to enter correct license key to hide it.
+
+## 1.5.0
 ### Added
 - Added support for rewrite options for taxonomies.
 - Added "Copy to Clipboard" for generated code.
 
-### 1.4.3
+## 1.4.3
 ### Fixed
 - Fixed undefined index when registering a new taxonomy.
 
