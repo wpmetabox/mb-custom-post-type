@@ -141,4 +141,20 @@ abstract class MB_CPT_Base_Edit {
 			echo 'ng-controller="' . esc_attr( $object ) . 'Controller"';
 		}
 	}
+
+	/**
+	 * Check if current user is a premium user.
+	 *
+	 * @return bool
+	 */
+	public function is_premium_user() {
+		$option = is_multisite() ? get_site_option( 'meta_box_updater' ) : get_option( 'meta_box_updater' );
+		if ( empty( $option['api_key'] ) ) {
+			return false;
+		}
+		if ( isset( $option['status'] ) && 'success' !== $option['status'] ) {
+			return false;
+		}
+		return true;
+	}
 }

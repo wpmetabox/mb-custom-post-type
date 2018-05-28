@@ -406,19 +406,21 @@ class MB_CPT_Taxonomy_Edit extends MB_CPT_Base_Edit {
 			),
 		);
 
-		$meta_boxes[] = array(
-			'id'         => 'upgrade',
-			'title'      => __( 'Upgrade to Meta Box Premium', 'mb-custom-post-type' ),
-			'post_types' => array( 'mb-post-type', 'mb-taxonomy' ),
-			'context'    => 'side',
-			'priority'   => 'low',
-			'fields'     => array(
-				array(
-					'type'     => 'custom_html',
-					'callback' => array( $this, 'upgrade_message' ),
+		if ( ! $this->is_premium_user() ) {
+			$meta_boxes[] = array(
+				'id'         => 'upgrade',
+				'title'      => __( 'Upgrade to Meta Box Premium', 'mb-custom-post-type' ),
+				'post_types' => array( 'mb-post-type', 'mb-taxonomy' ),
+				'context'    => 'side',
+				'priority'   => 'low',
+				'fields'     => array(
+					array(
+						'type'     => 'custom_html',
+						'callback' => array( $this, 'upgrade_message' ),
+					),
 				),
-			),
-		);
+			);
+		}
 
 		$fields = array_merge( $basic_fields, $labels_fields, $advanced_fields );
 
