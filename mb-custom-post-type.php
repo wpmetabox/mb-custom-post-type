@@ -16,6 +16,10 @@
 // Prevent loading this file directly.
 defined( 'ABSPATH' ) || exit;
 
+// Plugin constants.
+define( 'MB_CPT_FILE', __FILE__ );
+define( 'MB_CPT_URL', plugin_dir_url( __FILE__ ) );
+
 add_action( 'init', 'mb_cpt_load', 0 );
 
 /**
@@ -25,15 +29,11 @@ add_action( 'init', 'mb_cpt_load', 0 );
  */
 function mb_cpt_load() {
 	// If Meta Box is NOT active.
-	if ( current_user_can( 'activate_plugins' ) && ! class_exists( 'RW_Meta_Box' ) ) {
+	if ( current_user_can( 'activate_plugins' ) && ! defined( 'RWMB_VER' ) ) {
 		add_action( 'admin_notices', 'mb_cpt_admin_notice' );
 
 		return;
 	}
-
-	// Plugin constants.
-	define( 'MB_CPT_FILE', __FILE__ );
-	define( 'MB_CPT_URL', plugin_dir_url( __FILE__ ) );
 
 	load_plugin_textdomain( 'mb-custom-post-type' );
 
@@ -55,31 +55,19 @@ function mb_cpt_load() {
 	require_once dirname( __FILE__ ) . '/inc/interfaces/encoder.php';
 	require_once dirname( __FILE__ ) . '/inc/encoders/post-type-encoder.php';
 	require_once dirname( __FILE__ ) . '/inc/encoders/taxonomy-encoder.php';
-	require_once dirname( __FILE__ ) . '/inc/about/about.php';
 
 	$post_type_encoder = new MB_CPT_Post_Type_Encoder();
 	new MB_CPT_Post_Type_Edit( 'mb-post-type', $cpt_register, $post_type_encoder );
 
 	$tax_encoder = new MB_CPT_Taxonomy_Encoder();
 	new MB_CPT_Taxonomy_Edit( 'mb-taxonomy', $tax_register, $tax_encoder );
-
-	$about_page = new MB_CPT_About_Page();
-	$about_page->init();
-
-	// Redirect to about page.
-	if ( get_option( 'mb_cpt_redirect' ) ) {
-		delete_option( 'mb_cpt_redirect' );
-		wp_safe_redirect( admin_url( 'edit.php?post_type=mb-post-type&page=mb-cpt-about' ) );
-		exit;
-	}
 }
 
 /**
  * Show admin notice when Meta Box is not activated
  */
 function mb_cpt_admin_notice() {
-	$plugins      = get_plugins();
-	$is_installed = isset( $plugins['meta-box/meta-box.php'] );
+	$is_installed = defined( 'RWMB_VER' );
 	$install_url  = wp_nonce_url( admin_url( 'update.php?action=install-plugin&plugin=meta-box' ), 'install-plugin_meta-box' );
 	$activate_url = wp_nonce_url( admin_url( 'plugins.php?action=activate&amp;plugin=meta-box/meta-box.php' ), 'activate-plugin_meta-box/meta-box.php' );
 	$action_url   = $is_installed ? $activate_url : $install_url;
@@ -101,11 +89,6 @@ function mb_cpt_admin_notice() {
 	}
 }
 
-/**
- * Activate plugin.
- */
-function mb_cpt_activate() {
-	update_option( 'mb_cpt_redirect', 1 );
-}
-
-register_activation_hook( __FILE__, 'mb_cpt_activate' );
+require_once dirname( __FILE__ ) . '/inc/about/about.php';
+$about_page = new MB_CPT_About_Page();
+$about_page->init();

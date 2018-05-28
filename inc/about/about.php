@@ -29,6 +29,9 @@ class MB_CPT_About_Page {
 
 		add_action( 'admin_menu', array( $this, 'register_page' ) );
 		add_action( 'admin_enqueue_scripts', array( $this, 'enqueue' ) );
+
+		// Redirect to about page after activation.
+		add_action( 'activated_plugin', array( $this, 'redirect' ), 10, 2 );
 	}
 
 	/**
@@ -68,5 +71,19 @@ class MB_CPT_About_Page {
 		}
 		wp_enqueue_style( 'mb-cpt-about', MB_CPT_URL . 'inc/about/css/style.css' );
 		wp_enqueue_script( 'mb-cpt-about', MB_CPT_URL . 'inc/about/js/script.js', array( 'jquery' ), '1.4', true );
+	}
+
+	/**
+	 * Redirect to about page after Meta Box has been activated.
+	 *
+	 * @param string $plugin       Path to the main plugin file from plugins directory.
+	 * @param bool   $network_wide Whether to enable the plugin for all sites in the network
+	 *                             or just the current site. Multisite only. Default is false.
+	 */
+	public function redirect( $plugin, $network_wide ) {
+		if ( defined( 'RWMB_VER' ) && ! $network_wide && 'mb-custom-post-type/mb-custom-post-type.php' === $plugin ) {
+			wp_safe_redirect( admin_url( 'edit.php?post_type=mb-post-type&page=mb-cpt-about' ) );
+			die;
+		}
 	}
 }
