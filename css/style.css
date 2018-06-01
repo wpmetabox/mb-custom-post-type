@@ -5,11 +5,6 @@
 	display: none;
 }
 
-.rwmb-radio-wrapper .rwmb-input {
-	height: 160px;
-	overflow: auto;
-}
-
 .rwmb-radio-wrapper .rwmb-input .icon-single {
 	display: inline-block;
 	margin: 0 5px 5px 0;
@@ -27,7 +22,7 @@
 .rwmb-radio-wrapper .rwmb-input .icon-single.active {
 	border-color: rgba(0, 0, 0, .1);
 	color: white;
-	background: #3c0;
+	background: #0073aa;
 	text-shadow: 0 1px 0 rgba(0, 0, 0, .15);
 }
 

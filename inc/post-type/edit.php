@@ -39,7 +39,7 @@ class MB_CPT_Post_Type_Edit extends MB_CPT_Base_Edit {
 		$this->encoder  = $encoder;
 
 		// Change the menu positions option after all menus are registered.
-		add_action( 'admin_menu', array( $this, 'change_menu_positions_option' ), 9999 );
+		add_action( 'admin_menu', array( $this, 'change_select_options' ), 9999 );
 	}
 
 	/**
@@ -213,12 +213,15 @@ class MB_CPT_Post_Type_Edit extends MB_CPT_Base_Edit {
 				'std'  => 1,
 				'desc' => __( 'Whether post type is available for selection in navigation menus.', 'mb-custom-post-type' ),
 			),
-			array(
-				'name' => __( 'Show in menu?', 'mb-custom-post-type' ),
-				'id'   => $args_prefix . 'show_in_menu',
-				'type' => 'checkbox',
-				'std'  => 1,
-				'desc' => __( 'Where to show the post type in the admin menu. <code>show_ui</code> must be <code>true</code>.', 'mb-custom-post-type' ),
+			'show_in_menu'  => array(
+				'name'       => __( 'Show in menu?', 'mb-custom-post-type' ),
+				'id'         => $args_prefix . 'show_in_menu',
+				'type'       => 'select_advanced',
+				'options'    => array(),
+				'desc'       => __( 'Where to show the post type in the admin menu. <code>show_ui</code> must be <code>true</code>.', 'mb-custom-post-type' ),
+				'js_options' => array(
+					'width' => '400px',
+				),
 			),
 			array(
 				'name' => __( 'Show in admin bar?', 'mb-custom-post-type' ),
@@ -253,7 +256,8 @@ class MB_CPT_Post_Type_Edit extends MB_CPT_Base_Edit {
 			array(
 				'name'    => __( 'Capability type', 'mb-custom-post-type' ),
 				'id'      => $args_prefix . 'capability_type',
-				'type'    => 'select',
+				'type'    => 'radio',
+				'inline'  => true,
 				'options' => array(
 					'post' => __( 'Post', 'mb-custom-post-type' ),
 					'page' => __( 'Page', 'mb-custom-post-type' ),
@@ -540,11 +544,12 @@ class MB_CPT_Post_Type_Edit extends MB_CPT_Base_Edit {
 	}
 
 	/**
-	 * Change menu positions options.
+	 * Change select options.
 	 */
-	public function change_menu_positions_option() {
-		$meta_box = rwmb_get_registry( 'meta_box' )->get( 'mb-cpt-advanced-settings' );
+	public function change_select_options() {
+		$meta_box                                                 = rwmb_get_registry( 'meta_box' )->get( 'mb-cpt-advanced-settings' );
 		$meta_box->meta_box['fields']['menu_position']['options'] = $this->get_menu_positions();
+		$meta_box->meta_box['fields']['show_in_menu']['options']  = $this->get_menu_options();
 	}
 
 	/**
@@ -552,14 +557,44 @@ class MB_CPT_Post_Type_Edit extends MB_CPT_Base_Edit {
 	 *
 	 * @return array
 	 */
-	public function get_menu_positions() {
+	protected function get_menu_positions() {
 		global $menu;
 		$positions = array();
 		foreach ( $menu as $position => $params ) {
 			if ( ! empty( $params[0] ) ) {
-				$positions[ $position ] = wp_strip_all_tags( $params[0] );
+				$positions[ $position ] = $this->strip_span( $params[0] );
 			}
 		}
 		return $positions;
+	}
+
+	/**
+	 * Get WordPress menu options
+	 *
+	 * @return array
+	 */
+	protected function get_menu_options() {
+		global $menu;
+		$options = array(
+			'1' => esc_html__( 'Show as top-level menu', 'mb-custom-post-type' ),
+			'0' => esc_html__( 'Do not show in the admin menu', 'mb-custom-post-type' ),
+		);
+		foreach ( $menu as $position => $params ) {
+			if ( ! empty( $params[0] ) && ! empty( $params[2] ) ) {
+				$options[ $params[2] ] = sprintf( __( 'Show as sub-menu of %s', 'mb-custom-post-type' ), $this->strip_span( $params[0] ) );
+			}
+		}
+		return $options;
+	}
+
+	/**
+	 * Remove <span> tag (counter) with their content.
+	 *
+	 * @param string $html HTML content.
+	 *
+	 * @return string
+	 */
+	protected function strip_span( $html ) {
+		return preg_replace( '@<span .*>.*</span>@si', '', $html );
 	}
 }
