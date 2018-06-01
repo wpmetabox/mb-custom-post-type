@@ -581,6 +581,7 @@ class MB_CPT_Post_Type_Edit extends MB_CPT_Base_Edit {
 		);
 		foreach ( $menu as $position => $params ) {
 			if ( ! empty( $params[0] ) && ! empty( $params[2] ) ) {
+				// Translators: %s is the main menu label.
 				$options[ $params[2] ] = sprintf( __( 'Show as sub-menu of %s', 'mb-custom-post-type' ), $this->strip_span( $params[0] ) );
 			}
 		}
