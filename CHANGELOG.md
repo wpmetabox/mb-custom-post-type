@@ -5,6 +5,14 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/) a
 
 ## Unreleased
 
+## 1.7.0 - 2018-06-02
+### Improved
+- Added support for move the custom post type menu to a sub-menu of an existing top-level menu.
+- Updated some text strings for better description
+### Fixed
+- Fixed button "Advanced" not working
+- Fixed REST API base not a text input for taxonomy
+
 ## 1.6.0 - 2018-05-28
 ### Improved
 - Changed menu position from a text field to a select field, so users just select the position they want without knowing the position number.

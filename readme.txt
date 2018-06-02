@@ -4,7 +4,7 @@ Donate link: http://www.deluxeblogtips.com/donate
 Tags: cms, custom, custom post types, custom post type, cpt, post, post types, post type, types
 Requires at least: 4.3
 Tested up to: 4.9.6
-Stable tag: 1.6.0
+Stable tag: 1.7.0
 License: GPLv2 or later
 
 Create and manage custom post types and custom taxonomies with an easy-to-use interface in WordPress.
