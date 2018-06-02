@@ -37,7 +37,7 @@ class MB_CPT_Taxonomy_Edit extends MB_CPT_Base_Edit {
 		parent::__construct( $taxonomy );
 
 		$this->register = $register;
-		$this->encoder = $encoder;
+		$this->encoder  = $encoder;
 	}
 
 	/**
@@ -71,6 +71,7 @@ class MB_CPT_Taxonomy_Edit extends MB_CPT_Base_Edit {
 	 * Register meta boxes for add/edit mb-taxonomy page
 	 *
 	 * @param array $meta_boxes Custom meta boxes.
+	 *
 	 * @return array
 	 */
 	public function register_meta_boxes( $meta_boxes ) {
@@ -251,10 +252,11 @@ class MB_CPT_Taxonomy_Edit extends MB_CPT_Base_Edit {
 				'desc' => __( 'Whether to include the taxonomy in the REST API.', 'mb-custom-post-type' ),
 			),
 			array(
-				'name' => __( 'REST base', 'mb-custom-post-type' ),
-				'id'   => $args_prefix . 'rest_base',
-				'type' => 'checkbox',
-				'desc' => __( 'To change the base url of REST API route. Default is taxonomy slug.', 'mb-custom-post-type' ),
+				'name'        => __( 'REST API base slug', 'mb-custom-post-type' ),
+				'id'          => $args_prefix . 'rest_base',
+				'type'        => 'text',
+				'placeholder' => __( 'Slug to use in REST API URLs', 'mb-custom-post-type' ),
+				'desc'        => __( 'Leave empty to use the taxonomy slug.', 'mb-custom-post-type' ),
 			),
 			array(
 				'name' => __( 'Hierarchical?', 'mb-custom-post-type' ),
@@ -480,7 +482,7 @@ class MB_CPT_Taxonomy_Edit extends MB_CPT_Base_Edit {
 			unset( $taxonomy_data['meta_box_cb'] );
 		}
 
-		$encode_data = array(
+		$encode_data    = array(
 			'function_name' => get_post_meta( $post_id, 'function_name', true ),
 			'text_domain'   => get_post_meta( $post_id, 'text_domain', true ),
 			'taxonomy'      => $args['taxonomy'],

@@ -72,11 +72,13 @@
 	 * @return void
 	 */
 	function toggleAdvancedSettings() {
-		$( '#label-settings' ).hide();
-		$( '#advanced-settings' ).hide();
+		var $label = $( '#mb-cpt-label-settings' ),
+			$advanced = $( '#mb-cpt-advanced-settings' );
+		$label.hide();
+		$advanced.hide();
 		$( '#btn-toggle-advanced' ).on( 'click', function () {
-			$( '#label-settings' ).toggle();
-			$( '#advanced-settings' ).toggle();
+			$label.toggle();
+			$advanced.toggle();
 		} );
 	}
 

@@ -74,11 +74,13 @@
 	 * @return void
 	 */
 	function toggleAdvancedSettings() {
-		$( '#label-settings' ).hide();
-		$( '#advanced-settings' ).hide();
+		var $label = $( '#mb-ct-label-settings' ),
+			$advanced = $( '#mb-ct-advanced-settings' );
+		$label.hide();
+		$advanced.hide();
 		$( '#btn-toggle-advanced' ).on( 'click', function () {
-			$( '#label-settings' ).toggle();
-			$( '#advanced-settings' ).toggle();
+			$label.toggle();
+			$advanced.toggle();
 		} );
 	}
 

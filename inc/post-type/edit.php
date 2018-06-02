@@ -233,13 +233,14 @@ class MB_CPT_Post_Type_Edit extends MB_CPT_Base_Edit {
 				'name' => __( 'Show in REST API?', 'mb-custom-post-type' ),
 				'id'   => $args_prefix . 'show_in_rest',
 				'type' => 'checkbox',
-				'desc' => __( 'Whether to add the post type route in the REST API "wp/v2" namespace.', 'mb-custom-post-type' ),
+				'desc' => __( 'Whether to add the post type in the REST API.', 'mb-custom-post-type' ),
 			),
 			array(
-				'name' => __( 'REST base', 'mb-custom-post-type' ),
-				'id'   => $args_prefix . 'rest_base',
-				'type' => 'text',
-				'desc' => __( 'To change the base url of REST API route. Default is post type.', 'mb-custom-post-type' ),
+				'name'        => __( 'REST API base slug', 'mb-custom-post-type' ),
+				'id'          => $args_prefix . 'rest_base',
+				'type'        => 'text',
+				'placeholder' => __( 'Slug to use in REST API URLs', 'mb-custom-post-type' ),
+				'desc'        => __( 'Leave empty to use the post type slug.', 'mb-custom-post-type' ),
 			),
 			'menu_position' => array(
 				'name'    => __( 'Menu position after', 'mb-custom-post-type' ),
@@ -263,43 +264,44 @@ class MB_CPT_Post_Type_Edit extends MB_CPT_Base_Edit {
 					'page' => __( 'Page', 'mb-custom-post-type' ),
 				),
 				'std'     => 'post',
+				'desc'    => __( 'The post type to use for checking read, edit, and delete capabilities.', 'mb-custom-post-type' ),
 			),
 			array(
 				'name' => __( 'Hierarchical?', 'mb-custom-post-type' ),
 				'id'   => $args_prefix . 'hierarchical',
 				'type' => 'checkbox',
-				'desc' => __( 'Whether the post type is hierarchical. Allows Parent to be specified.', 'mb-custom-post-type' ),
+				'desc' => __( 'Whether the post type is hierarchical.', 'mb-custom-post-type' ),
 			),
 			array(
 				'name' => __( 'Has archive?', 'mb-custom-post-type' ),
 				'id'   => $args_prefix . 'has_archive',
 				'type' => 'checkbox',
 				'std'  => 1,
-				'desc' => __( 'Enables post type archives. Will use <code>$post_type</code> as archive slug by default.', 'mb-custom-post-type' ),
+				'desc' => __( 'Enables post type archives. Will use the post type slug as the archive slug by default.', 'mb-custom-post-type' ),
 			),
 			array(
 				'name' => __( 'Query var', 'mb-custom-post-type' ),
 				'id'   => $args_prefix . 'query_var',
 				'type' => 'checkbox',
 				'std'  => 1,
-				'desc' => __( 'False to prevent queries, or string value of the query var to use for this post type.', 'mb-custom-post-type' ),
+				'desc' => __( 'Enables request the post via URL <code>example.com/?post_type=slug</code>', 'mb-custom-post-type' ),
 			),
 			array(
 				'name' => __( 'Can export?', 'mb-custom-post-type' ),
 				'id'   => $args_prefix . 'can_export',
 				'type' => 'checkbox',
 				'std'  => 1,
-				'desc' => __( 'Can this post type be exported.', 'mb-custom-post-type' ),
+				'desc' => __( 'Can this post type be exported?', 'mb-custom-post-type' ),
 			),
 			array(
 				'name' => __( 'Rewrite', 'mb-custom-post-type' ),
 				'type' => 'heading',
 			),
 			array(
-				'name' => __( 'Rewrite slug', 'mb-custom-post-type' ),
+				'name' => __( 'Custom rewrite slug', 'mb-custom-post-type' ),
 				'id'   => $args_prefix . 'rewrite_slug',
 				'type' => 'text',
-				'desc' => __( 'Leave empty to use post type as rewrite slug.', 'mb-custom-post-type' ),
+				'desc' => __( 'Leave empty to use the post type slug.', 'mb-custom-post-type' ),
 			),
 			array(
 				'name' => __( 'No prepended permalink structure?', 'mb-custom-post-type' ),
@@ -577,7 +579,6 @@ class MB_CPT_Post_Type_Edit extends MB_CPT_Base_Edit {
 		global $menu;
 		$options = array(
 			'1' => esc_html__( 'Show as top-level menu', 'mb-custom-post-type' ),
-			'0' => esc_html__( 'Do not show in the admin menu', 'mb-custom-post-type' ),
 		);
 		foreach ( $menu as $position => $params ) {
 			if ( ! empty( $params[0] ) && ! empty( $params[2] ) ) {
@@ -585,6 +586,7 @@ class MB_CPT_Post_Type_Edit extends MB_CPT_Base_Edit {
 				$options[ $params[2] ] = sprintf( __( 'Show as sub-menu of %s', 'mb-custom-post-type' ), $this->strip_span( $params[0] ) );
 			}
 		}
+		$options['0'] = esc_html__( 'Do not show in the admin menu', 'mb-custom-post-type' );
 		return $options;
 	}
 

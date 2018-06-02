@@ -35,6 +35,11 @@
 	width: 100%;
 }
 
+#generated-code pre {
+	tab-size: 4;
+	-moz-tab-size: 4;
+}
+
 #upgrade {
 	background: none;
 	border: 2px dashed currentColor;
