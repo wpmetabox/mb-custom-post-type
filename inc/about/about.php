@@ -10,80 +10,27 @@
  * Class MB_CPT_About_Page
  */
 class MB_CPT_About_Page {
-
-	/**
-	 * Plugin data.
-	 *
-	 * @var array
-	 */
-	protected $plugin;
-
 	/**
 	 * Init hooks.
 	 */
 	public function init() {
-		if ( ! function_exists( 'get_plugin_data' ) ) {
-			include ABSPATH . 'wp-admin/includes/plugin.php';
-		}
-		$this->plugin = get_plugin_data( MB_CPT_FILE );
-
-		add_action( 'admin_menu', array( $this, 'register_page' ) );
-		add_action( 'admin_enqueue_scripts', array( $this, 'enqueue' ) );
-
-		// Redirect to about page after activation.
-		add_action( 'activated_plugin', array( $this, 'redirect' ), 10, 2 );
+		add_action( 'rwmb_about_tabs', array( $this, 'add_tabs' ) );
+		add_action( 'rwmb_about_tabs_content', array( $this, 'add_tabs_content' ) );
 	}
 
 	/**
-	 * Register admin page.
+	 * Add tabs to the About page.
 	 */
-	public function register_page() {
-		add_submenu_page(
-			'edit.php?post_type=mb-post-type',
-			__( 'MB Custom Post Type About', 'mb-custom-post-type' ),
-			__( 'About', 'mb-custom-post-type' ),
-			'manage_options',
-			'mb-cpt-about',
-			array( $this, 'render_page' )
-		);
-	}
-
-	/**
-	 * Render admin page.
-	 */
-	public function render_page() {
+	public function add_tabs() {
 		?>
-		<div class="wrap about-wrap">
-			<?php include dirname( __FILE__ ) . '/sections/welcome.php'; ?>
-			<?php include dirname( __FILE__ ) . '/sections/tabs.php'; ?>
-			<?php include dirname( __FILE__ ) . '/sections/getting-started.php'; ?>
-		</div>
+		<a href="#types-taxonomies" class="nav-tab"><?php esc_html_e( 'Post Types & Taxonomies', 'mb-custom-post-type' ); ?></a>
 		<?php
 	}
 
 	/**
-	 * Enqueue CSS and JS.
+	 * Add tabs content to the About page.
 	 */
-	public function enqueue() {
-		global $plugin_page;
-		if ( 'mb-cpt-about' !== $plugin_page ) {
-			return;
-		}
-		wp_enqueue_style( 'mb-cpt-about', MB_CPT_URL . 'inc/about/css/style.css' );
-		wp_enqueue_script( 'mb-cpt-about', MB_CPT_URL . 'inc/about/js/script.js', array( 'jquery' ), '1.4', true );
-	}
-
-	/**
-	 * Redirect to about page after Meta Box has been activated.
-	 *
-	 * @param string $plugin       Path to the main plugin file from plugins directory.
-	 * @param bool   $network_wide Whether to enable the plugin for all sites in the network
-	 *                             or just the current site. Multisite only. Default is false.
-	 */
-	public function redirect( $plugin, $network_wide ) {
-		if ( defined( 'RWMB_VER' ) && ! $network_wide && 'mb-custom-post-type/mb-custom-post-type.php' === $plugin ) {
-			wp_safe_redirect( admin_url( 'edit.php?post_type=mb-post-type&page=mb-cpt-about' ) );
-			die;
-		}
+	public function add_tabs_content() {
+		include dirname( __FILE__ ) . '/types-taxonomies.php';
 	}
 }

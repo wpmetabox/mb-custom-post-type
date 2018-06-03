@@ -37,6 +37,9 @@ function mb_cpt_load() {
 
 	load_plugin_textdomain( 'mb-custom-post-type' );
 
+	// Show Meta Box admin menu.
+	add_filter( 'rwmb_admin_menu', '__return_true' );
+
 	require dirname( __FILE__ ) . '/inc/base/register.php';
 	require dirname( __FILE__ ) . '/inc/post-type/register.php';
 	require dirname( __FILE__ ) . '/inc/taxonomy/register.php';

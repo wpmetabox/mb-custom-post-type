@@ -39,7 +39,7 @@ class MB_CPT_Post_Type_Register extends MB_CPT_Base_Register {
 			'supports'     => false,
 			'public'       => false,
 			'show_ui'      => true,
-			'show_in_menu' => true,
+			'show_in_menu' => 'meta-box',
 			'menu_icon'    => 'dashicons-editor-justify',
 			'can_export'   => true,
 			'rewrite'      => false,
