@@ -55,22 +55,27 @@ function mb_cpt_load() {
 	require dirname( __FILE__ ) . '/inc/base/edit.php';
 	require dirname( __FILE__ ) . '/inc/post-type/edit.php';
 	require dirname( __FILE__ ) . '/inc/taxonomy/edit.php';
-	require_once dirname( __FILE__ ) . '/inc/interfaces/encoder.php';
-	require_once dirname( __FILE__ ) . '/inc/encoders/post-type-encoder.php';
-	require_once dirname( __FILE__ ) . '/inc/encoders/taxonomy-encoder.php';
+	require dirname( __FILE__ ) . '/inc/interfaces/encoder.php';
+	require dirname( __FILE__ ) . '/inc/encoders/post-type-encoder.php';
+	require dirname( __FILE__ ) . '/inc/encoders/taxonomy-encoder.php';
+	require dirname( __FILE__ ) . '/inc/about/about.php';
 
 	$post_type_encoder = new MB_CPT_Post_Type_Encoder();
 	new MB_CPT_Post_Type_Edit( 'mb-post-type', $cpt_register, $post_type_encoder );
 
 	$tax_encoder = new MB_CPT_Taxonomy_Encoder();
 	new MB_CPT_Taxonomy_Edit( 'mb-taxonomy', $tax_register, $tax_encoder );
+
+	$about_page = new MB_CPT_About_Page();
+	$about_page->init();
 }
 
 /**
  * Show admin notice when Meta Box is not activated
  */
 function mb_cpt_admin_notice() {
-	$is_installed = defined( 'RWMB_VER' );
+	$plugins      = get_plugins();
+	$is_installed = isset( $plugins['meta-box/meta-box.php'] );
 	$install_url  = wp_nonce_url( admin_url( 'update.php?action=install-plugin&plugin=meta-box' ), 'install-plugin_meta-box' );
 	$activate_url = wp_nonce_url( admin_url( 'plugins.php?action=activate&amp;plugin=meta-box/meta-box.php' ), 'activate-plugin_meta-box/meta-box.php' );
 	$action_url   = $is_installed ? $activate_url : $install_url;
@@ -91,7 +96,3 @@ function mb_cpt_admin_notice() {
 		unset( $_GET['activate'] );
 	}
 }
-
-require_once dirname( __FILE__ ) . '/inc/about/about.php';
-$about_page = new MB_CPT_About_Page();
-$about_page->init();
