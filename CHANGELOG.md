@@ -5,6 +5,12 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/) a
 
 ## Unreleased
 
+## 1.8.0 - 2018-06-08
+### Improved
+- Used the shared menu from Meta Box to keep the admin menu clean.
+- Added tabs to the About page
+- Remove redirection after activation.
+
 ## 1.7.0 - 2018-06-02
 ### Improved
 - Added support for move the custom post type menu to a sub-menu of an existing top-level menu.
