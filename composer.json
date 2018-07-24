@@ -1,0 +1,34 @@
+{
+  "name": "wpmetabox/mb-custom-post-type",
+  "type": "library",
+  "keywords": [
+    "wordpress",
+    "ui",
+    "select2",
+    "wp-admin",
+    "meta-box",
+    "wordpress-plugin",
+    "custom-field",
+    "custom-post-type"
+  ],
+  "description": "Create and manage custom post types and custom taxonomies with an easy-to-use interface in WordPress.",
+  "homepage": "https://metabox.io/plugins/custom-post-type/",
+  "license": "GPL-2.0",
+  "minimum-stability": "stable",
+  "authors": [
+    {
+      "name": "Tran Ngoc Tuan Anh",
+      "email": "anhtnt@elightup.com",
+      "homepage": "https://deluxeblogtips.com",
+      "role": "Developer"
+    }
+  ],
+  "autoload": {
+    "files": [
+      "mb-custom-post-type.php"
+    ]
+  },
+  "require": {
+    "wpmetabox/meta-box": "^4.15"
+  }
+}
