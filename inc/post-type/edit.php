@@ -472,25 +472,34 @@ class MB_CPT_Post_Type_Edit extends MB_CPT_Base_Edit {
 		// Labels.
 		if ( 0 === strpos( $field['id'], 'label_' ) ) {
 			$model = substr( $field['id'], 6 );
-			$html  = str_replace( '>', sprintf(
-				' ng-model="labels.%s" ng-init="labels.%s=\'%s\'"%s>',
-				$model,
-				$model,
-				$meta,
-				in_array( $model, array( 'name', 'singular_name' ), true ) ? ' ng-change="updateLabels()"' : ''
-			), $html );
+			$html  = str_replace(
+				'>',
+				sprintf(
+					' ng-model="labels.%s" ng-init="labels.%s=\'%s\'"%s>',
+					$model,
+					$model,
+					$meta,
+					in_array( $model, array( 'name', 'singular_name' ), true ) ? ' ng-change="updateLabels()"' : ''
+				),
+				$html
+			);
 			$html  = preg_replace( '/value="(.*?)"/', 'value="{{labels.' . $model . '}}"', $html );
 		} elseif ( 'args_post_type' === $field['id'] ) {
-			$html = str_replace( '>', sprintf(
-				' ng-model="post_type" ng-init="post_type=\'%s\'">',
-				$meta
-			), $html );
+			$html = str_replace(
+				'>',
+				sprintf(
+					' ng-model="post_type" ng-init="post_type=\'%s\'">',
+					$meta
+				),
+				$html
+			);
 			$html = preg_replace( '/value="(.*?)"/', 'value="{{post_type}}"', $html );
 		} elseif ( 'args_menu_icon' === $field['id'] ) {
 			$html  = '';
 			$icons = mb_cpt_get_dashicons();
 			foreach ( $icons as $icon ) {
-				$html .= sprintf( '
+				$html .= sprintf(
+					'
 					<label class="icon-single%s">
 						<i class="wp-menu-image dashicons-before %s"></i>
 						<input type="radio" name="args_menu_icon" value="%s" class="hidden"%s>
@@ -512,7 +521,7 @@ class MB_CPT_Post_Type_Edit extends MB_CPT_Base_Edit {
 	 * @return string
 	 */
 	public function generated_code_html() {
-		$post_id = get_the_ID();
+		$post_id               = get_the_ID();
 		list( $labels, $args ) = $this->register->get_post_type_data( $post_id );
 		if ( ! $labels ) {
 			return '';
@@ -528,7 +537,7 @@ class MB_CPT_Post_Type_Edit extends MB_CPT_Base_Edit {
 		);
 		$encoded_string = $this->encoder->encode( $encode_data );
 
-		$output = '
+		$output  = '
 			<div id="generated-code">
 				<a href="javascript:void(0);" class="mb-button--copy">
 					<svg class="mb-icon--copy" aria-hidden="true" role="img"><use href="#mb-icon-copy" xlink:href="#icon-copy"></use></svg>
@@ -549,7 +558,7 @@ class MB_CPT_Post_Type_Edit extends MB_CPT_Base_Edit {
 	 * Change select options.
 	 */
 	public function change_select_options() {
-		$meta_box                                                 = rwmb_get_registry( 'meta_box' )->get( 'mb-cpt-advanced-settings' );
+		$meta_box = rwmb_get_registry( 'meta_box' )->get( 'mb-cpt-advanced-settings' );
 		$meta_box->meta_box['fields']['menu_position']['options'] = $this->get_menu_positions();
 		$meta_box->meta_box['fields']['show_in_menu']['options']  = $this->get_menu_options();
 	}

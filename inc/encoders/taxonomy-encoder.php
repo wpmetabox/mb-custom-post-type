@@ -102,7 +102,7 @@ if ( ! class_exists( 'MB_CPT_Taxonomy_Encoder' ) ) {
 		 * @return string
 		 */
 		protected function replace_get_text_function( $string_data ) {
-			$find = "/'###(.*)###'/";
+			$find    = "/'###(.*)###'/";
 			$replace = "esc_html__( '$1', '" . $this->text_domain . "' )";
 
 			return preg_replace( $find, $replace, $string_data );
@@ -144,7 +144,7 @@ if ( ! class_exists( 'MB_CPT_Taxonomy_Encoder' ) ) {
 		 */
 		protected function wrap_function_call( $string_data ) {
 			$object_types = $this->object_types ? sprintf( "array( '%s' )", implode( "', '", (array) $this->object_types ) ) : 'null';
-			$string_data = sprintf(
+			$string_data  = sprintf(
 				"function %1\$s() {\n\n\t\$args = %2\$s;\n\n\tregister_taxonomy( '%3\$s', %4\$s, \$args );\n}\nadd_action( 'init', '%1\$s', 0 );",
 				$this->function_name,
 				$string_data,

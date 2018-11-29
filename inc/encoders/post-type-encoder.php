@@ -90,7 +90,7 @@ if ( ! class_exists( 'MB_CPT_Post_Type_Encoder' ) ) {
 		 * @return string
 		 */
 		protected function replace_get_text_function( $string_data ) {
-			$find = "/'###(.*)###'/";
+			$find    = "/'###(.*)###'/";
 			$replace = "esc_html__( '$1', '" . $this->text_domain . "' )";
 
 			return preg_replace( $find, $replace, $string_data );

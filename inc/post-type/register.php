@@ -64,13 +64,15 @@ class MB_CPT_Post_Type_Register extends MB_CPT_Base_Register {
 		$post_types = array();
 
 		// Get all post where where post_type = mb-post-type.
-		$post_type_ids = get_posts( array(
-			'posts_per_page' => - 1,
-			'post_status'    => 'publish',
-			'post_type'      => 'mb-post-type',
-			'no_found_rows'  => true,
-			'fields'         => 'ids',
-		) );
+		$post_type_ids = get_posts(
+			array(
+				'posts_per_page' => - 1,
+				'post_status'    => 'publish',
+				'post_type'      => 'mb-post-type',
+				'no_found_rows'  => true,
+				'fields'         => 'ids',
+			)
+		);
 
 		foreach ( $post_type_ids as $post_type ) {
 			list( $labels, $args ) = $this->get_post_type_data( $post_type );
@@ -123,36 +125,42 @@ class MB_CPT_Post_Type_Register extends MB_CPT_Base_Register {
 	 * @return array
 	 */
 	public function set_up_post_type( $labels = array(), $args = array() ) {
-		$labels = wp_parse_args( $labels, array(
-			'menu_name'          => $labels['name'],
-			'name_admin_bar'     => $labels['singular_name'],
-			'add_new'            => __( 'Add New', 'mb-custom-post-type' ),
-			// translators: %s: Name of the custom post type in singular form.
-			'add_new_item'       => sprintf( __( 'Add New %s', 'mb-custom-post-type' ), $labels['singular_name'] ),
-			// translators: %s: Name of the custom post type in singular form.
-			'new_item'           => sprintf( __( 'New %s', 'mb-custom-post-type' ), $labels['singular_name'] ),
-			// translators: %s: Name of the custom post type in singular form.
-			'edit_item'          => sprintf( __( 'Edit %s', 'mb-custom-post-type' ), $labels['singular_name'] ),
-			// translators: %s: Name of the custom post type in singular form.
-			'view_item'          => sprintf( __( 'View %s', 'mb-custom-post-type' ), $labels['singular_name'] ),
-			// translators: %s: Name of the custom post type in singular form.
-			'update_item'        => sprintf( __( 'Update %s', 'mb-custom-post-type' ), $labels['singular_name'] ),
-			// translators: %s: Name of the custom post type in plural form.
-			'all_items'          => sprintf( __( 'All %s', 'mb-custom-post-type' ), $labels['name'] ),
-			// translators: %s: Name of the custom post type in plural form.
-			'search_items'       => sprintf( __( 'Search %s', 'mb-custom-post-type' ), $labels['name'] ),
-			// translators: %s: Name of the custom post type in singular form.
-			'parent_item_colon'  => sprintf( __( 'Parent %s:', 'mb-custom-post-type' ), $labels['name'] ),
-			// translators: %s: Name of the custom post type in plural form.
-			'not_found'          => sprintf( __( 'No %s found.', 'mb-custom-post-type' ), $labels['name'] ),
-			// translators: %s: Name of the custom post type in plural form.
-			'not_found_in_trash' => sprintf( __( 'No %s found in Trash.', 'mb-custom-post-type' ), $labels['name'] ),
-		) );
-		$args   = wp_parse_args( $args, array(
-			'label'  => $labels['name'],
-			'labels' => $labels,
-			'public' => true,
-		) );
+		$labels = wp_parse_args(
+			$labels,
+			array(
+				'menu_name'          => $labels['name'],
+				'name_admin_bar'     => $labels['singular_name'],
+				'add_new'            => __( 'Add New', 'mb-custom-post-type' ),
+				// translators: %s: Name of the custom post type in singular form.
+				'add_new_item'       => sprintf( __( 'Add New %s', 'mb-custom-post-type' ), $labels['singular_name'] ),
+				// translators: %s: Name of the custom post type in singular form.
+				'new_item'           => sprintf( __( 'New %s', 'mb-custom-post-type' ), $labels['singular_name'] ),
+				// translators: %s: Name of the custom post type in singular form.
+				'edit_item'          => sprintf( __( 'Edit %s', 'mb-custom-post-type' ), $labels['singular_name'] ),
+				// translators: %s: Name of the custom post type in singular form.
+				'view_item'          => sprintf( __( 'View %s', 'mb-custom-post-type' ), $labels['singular_name'] ),
+				// translators: %s: Name of the custom post type in singular form.
+				'update_item'        => sprintf( __( 'Update %s', 'mb-custom-post-type' ), $labels['singular_name'] ),
+				// translators: %s: Name of the custom post type in plural form.
+				'all_items'          => sprintf( __( 'All %s', 'mb-custom-post-type' ), $labels['name'] ),
+				// translators: %s: Name of the custom post type in plural form.
+				'search_items'       => sprintf( __( 'Search %s', 'mb-custom-post-type' ), $labels['name'] ),
+				// translators: %s: Name of the custom post type in singular form.
+				'parent_item_colon'  => sprintf( __( 'Parent %s:', 'mb-custom-post-type' ), $labels['name'] ),
+				// translators: %s: Name of the custom post type in plural form.
+				'not_found'          => sprintf( __( 'No %s found.', 'mb-custom-post-type' ), $labels['name'] ),
+				// translators: %s: Name of the custom post type in plural form.
+				'not_found_in_trash' => sprintf( __( 'No %s found in Trash.', 'mb-custom-post-type' ), $labels['name'] ),
+			)
+		);
+		$args   = wp_parse_args(
+			$args,
+			array(
+				'label'  => $labels['name'],
+				'labels' => $labels,
+				'public' => true,
+			)
+		);
 
 		if ( empty( $args['rewrite_slug'] ) && empty( $args['rewrite_no_front'] ) ) {
 			$args['rewrite'] = true;
@@ -186,7 +194,7 @@ class MB_CPT_Post_Type_Register extends MB_CPT_Base_Register {
 		$label            = ucfirst( $post_type_object->labels->singular_name );
 		$label_lower      = strtolower( $label );
 		$label            = ucfirst( $label_lower );
-		$revision = filter_input( INPUT_GET, 'revision', FILTER_SANITIZE_NUMBER_INT );
+		$revision         = filter_input( INPUT_GET, 'revision', FILTER_SANITIZE_NUMBER_INT );
 
 		$message = array(
 			0  => '', // Unused. Messages start at index 1.
@@ -211,30 +219,32 @@ class MB_CPT_Post_Type_Register extends MB_CPT_Base_Register {
 		);
 
 		// Get all post where where post_type = mb-post-type.
-		$post_types = get_posts( array(
-			'posts_per_page' => - 1,
-			'post_status'    => 'any',
-			'post_type'      => 'mb-post-type',
-			'fields'         => 'ids',
-			'no_found_rows'  => true,
-		) );
+		$post_types = get_posts(
+			array(
+				'posts_per_page' => - 1,
+				'post_status'    => 'any',
+				'post_type'      => 'mb-post-type',
+				'fields'         => 'ids',
+				'no_found_rows'  => true,
+			)
+		);
 		foreach ( $post_types as $post_type ) {
-			$slug            = get_post_meta( $post_type, 'args_post_type', true );
+			$slug              = get_post_meta( $post_type, 'args_post_type', true );
 			$messages[ $slug ] = $message;
 
 			if ( get_post_meta( $post_type, 'args_publicly_queryable', true ) ) {
 				$permalink = get_permalink( $post->ID );
 
 				// translators: %s: Post link, %s: View post text, %s: Post type label.
-				$view_link = sprintf( ' <a href="%s">%s</a>.', esc_url( $permalink ), sprintf( __( 'View %s', 'mb-custom-post-type' ), $label_lower ) );
+				$view_link             = sprintf( ' <a href="%s">%s</a>.', esc_url( $permalink ), sprintf( __( 'View %s', 'mb-custom-post-type' ), $label_lower ) );
 				$messages[ $slug ][1] .= $view_link;
 				$messages[ $slug ][6] .= $view_link;
 				$messages[ $slug ][9] .= $view_link;
 
 				$preview_permalink = add_query_arg( 'preview', 'true', $permalink );
 				// translators: %s: Post link, %s: Preview post text, %s: Post type label.
-				$preview_link      = sprintf( ' <a target="_blank" href="%s">%s</a>.', esc_url( $preview_permalink ), sprintf( __( 'Preview %s', 'mb-custom-post-type' ), $label_lower ) );
-				$messages[ $slug ][8] .= $preview_link;
+				$preview_link           = sprintf( ' <a target="_blank" href="%s">%s</a>.', esc_url( $preview_permalink ), sprintf( __( 'Preview %s', 'mb-custom-post-type' ), $label_lower ) );
+				$messages[ $slug ][8]  .= $preview_link;
 				$messages[ $slug ][10] .= $preview_link;
 			}
 		}
@@ -261,15 +271,17 @@ class MB_CPT_Post_Type_Register extends MB_CPT_Base_Register {
 		);
 
 		// Get all post where where post_type = mb-post-type.
-		$post_types = get_posts( array(
-			'posts_per_page' => - 1,
-			'post_status'    => 'any',
-			'post_type'      => 'mb-post-type',
-			'no_found_rows'  => true,
-			'fields'         => 'ids',
-		) );
+		$post_types = get_posts(
+			array(
+				'posts_per_page' => - 1,
+				'post_status'    => 'any',
+				'post_type'      => 'mb-post-type',
+				'no_found_rows'  => true,
+				'fields'         => 'ids',
+			)
+		);
 		foreach ( $post_types as $post_type ) {
-			$slug          = get_post_meta( $post_type, 'args_post_type', true );
+			$slug            = get_post_meta( $post_type, 'args_post_type', true );
 			$labels[ $slug ] = array(
 				'singular' => strtolower( get_post_meta( $post_type, 'label_singular_name', true ) ),
 				'plural'   => strtolower( get_post_meta( $post_type, 'label_name', true ) ),

@@ -54,18 +54,24 @@ abstract class MB_CPT_Base_Edit {
 
 		$object = str_replace( 'mb-', '', $this->post_type );
 
-		wp_enqueue_style( 'highlightjs', MB_CPT_URL . 'css/atom-one-dark.css' );
-		wp_enqueue_style( 'mb-cpt', MB_CPT_URL . 'css/style.css' );
+		wp_enqueue_style( 'highlightjs', MB_CPT_URL . 'css/atom-one-dark.css', array(), '1.8.0' );
+		wp_enqueue_style( 'mb-cpt', MB_CPT_URL . 'css/style.css', array(), '1.8.0' );
 
 		wp_enqueue_script( 'angular', MB_CPT_URL . 'js/angular.min.js', array( 'jquery' ), '1.4.2', true );
 		wp_enqueue_script( 'highlightjs', MB_CPT_URL . 'js/highlight.pack.js', array(), '9.11.0', true );
 		wp_enqueue_script( 'clipboard', MB_CPT_URL . 'js/clipboard.min.js', array(), '1.3.2', true );
-		wp_enqueue_script( 'mb-cpt', MB_CPT_URL . "js/$object.js", array(
-			'jquery',
-			'angular',
-			'clipboard',
-			'highlightjs',
-		), '1.0.0', true );
+		wp_enqueue_script(
+			'mb-cpt',
+			MB_CPT_URL . "js/$object.js",
+			array(
+				'jquery',
+				'angular',
+				'clipboard',
+				'highlightjs',
+			),
+			'1.0.0',
+			true
+		);
 		wp_localize_script( 'mb-cpt', 'MbCptLabels', $this->js_vars() );
 	}
 

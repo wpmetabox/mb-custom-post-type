@@ -450,19 +450,27 @@ class MB_CPT_Taxonomy_Edit extends MB_CPT_Base_Edit {
 		// Labels.
 		if ( 0 === strpos( $field['id'], 'label_' ) ) {
 			$model = substr( $field['id'], 6 );
-			$html  = str_replace( '>', sprintf(
-				' ng-model="labels.%s" ng-init="labels.%s=\'%s\'"%s>',
-				$model,
-				$model,
-				$meta,
-				in_array( $model, array( 'name', 'singular_name' ), true ) ? ' ng-change="updateLabels()"' : ''
-			), $html );
+			$html  = str_replace(
+				'>',
+				sprintf(
+					' ng-model="labels.%s" ng-init="labels.%s=\'%s\'"%s>',
+					$model,
+					$model,
+					$meta,
+					in_array( $model, array( 'name', 'singular_name' ), true ) ? ' ng-change="updateLabels()"' : ''
+				),
+				$html
+			);
 			$html  = preg_replace( '/value="(.*?)"/', 'value="{{labels.' . $model . '}}"', $html );
 		} elseif ( 'args_taxonomy' === $field['id'] ) {
-			$html = str_replace( '>', sprintf(
-				' ng-model="taxonomy" ng-init="taxonomy=\'%s\'">',
-				$meta
-			), $html );
+			$html = str_replace(
+				'>',
+				sprintf(
+					' ng-model="taxonomy" ng-init="taxonomy=\'%s\'">',
+					$meta
+				),
+				$html
+			);
 			$html = preg_replace( '/value="(.*?)"/', 'value="{{taxonomy}}"', $html );
 		}
 		return $html;
@@ -474,9 +482,9 @@ class MB_CPT_Taxonomy_Edit extends MB_CPT_Base_Edit {
 	 * @return string
 	 */
 	public function generated_code_html() {
-		$post_id = get_the_ID();
+		$post_id               = get_the_ID();
 		list( $labels, $args ) = $this->register->get_taxonomy_data( $post_id );
-		$taxonomy_data = $this->register->set_up_taxonomy( $labels, $args );
+		$taxonomy_data         = $this->register->set_up_taxonomy( $labels, $args );
 
 		if ( isset( $taxonomy_data['meta_box_cb'] ) ) {
 			unset( $taxonomy_data['meta_box_cb'] );
@@ -490,7 +498,7 @@ class MB_CPT_Taxonomy_Edit extends MB_CPT_Base_Edit {
 		);
 		$encoded_string = $this->encoder->encode( $encode_data );
 
-		$output = '
+		$output  = '
 			<div id="generated-code">
 				<a href="javascript:void(0);" class="mb-button--copy">
 					<svg class="mb-icon--copy" aria-hidden="true" role="img"><use href="#mb-icon-copy" xlink:href="#icon-copy"></use></svg>
@@ -513,7 +521,7 @@ class MB_CPT_Taxonomy_Edit extends MB_CPT_Base_Edit {
 	 * @return string
 	 */
 	public function upgrade_message() {
-		$output = '<ul>';
+		$output  = '<ul>';
 		$output .= '<li>' . __( 'Create custom fields with drag-n-drop interface - no coding knowledge required!', 'mb-custom-post-type' ) . '</li>';
 		$output .= '<li>' . __( 'Add custom fields to taxonomies or user profile.', 'mb-custom-post-type' ) . '</li>';
 		$output .= '<li>' . __( 'Create custom settings pages.', 'mb-custom-post-type' ) . '</li>';
