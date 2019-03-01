@@ -21,7 +21,7 @@ Using **MB Custom Post Type**, you will be able to craft the WordPress admin and
 
 **Video demo**:
 
-https://www.youtube.com/watch?v=9c4w5zdeTJI&rel=0
+https://www.youtube.com/watch?v=9c4w5zdeTJI
 
 ### Features
 

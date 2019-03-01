@@ -8,7 +8,7 @@ Using **MB Custom Post Type**, you will be able to craft the WordPress admin and
 
 **Video demo**:
 
-[![demo](http://icecream.me/uploads/d33f0a5a2ef0fe54aafc95566145d8f5.png)](https://www.youtube.com/watch?v=KG_8MF9xw6E&rel=0)
+[![demo](http://icecream.me/uploads/d33f0a5a2ef0fe54aafc95566145d8f5.png)](https://www.youtube.com/watch?v=9c4w5zdeTJI)
 
 ### Features
 
