@@ -494,6 +494,8 @@ class MB_CPT_Post_Type_Edit extends MB_CPT_Base_Edit {
 				$html
 			);
 			$html = preg_replace( '/value="(.*?)"/', 'value="{{post_type}}"', $html );
+			$html .= '<span class="info-slug" ng-show="labels.singular_name.length > 20"> Limited word  < 20</span>';
+
 		} elseif ( 'args_menu_icon' === $field['id'] ) {
 			$html  = '';
 			$icons = mb_cpt_get_dashicons();

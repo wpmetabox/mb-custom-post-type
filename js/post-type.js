@@ -31,7 +31,6 @@
 				str = str.replace( /[^a-z0-9 -]/g, '' ) // remove invalid chars
 				          .replace( /\s+/g, '-' ) // collapse whitespace and replace by -
 				          .replace( /-+/g, '-' ); // collapse dashes
-
 				return str;
 			}
 
@@ -51,13 +50,26 @@
 						'not_found_in_trash',
 						'parent_item_colon'
 					],
+					slug,
+					check_word_end,
 					i = params.length;
 				for ( ; i --; ) {
 					$scope.labels[params[i]] = MbCptLabels[params[i]].replace( '%name%', $scope.labels.name ).replace( '%singular_name%', $scope.labels.singular_name );
 				}
 
 				// Update slug
-				$scope.post_type = stringToSlug( $scope.labels.singular_name );
+				slug = stringToSlug( $scope.labels.singular_name );
+			 	if ( slug.length <= 20 ) {
+			          $scope.post_type = stringToSlug( $scope.labels.singular_name );
+			  	} else {
+			  		slug = String( slug ).substring( 0, 20 );
+			  		check_word_end = slug.substr(19);
+			  		if ( '-' === check_word_end ) {
+			  			slug = String( slug ).substring( 0, 19 );
+			  		}
+
+			  		$scope.post_type = String( slug ).substring( 0, 20 );
+			  	}
 			};
 		}
 	] );

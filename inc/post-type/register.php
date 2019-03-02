@@ -50,13 +50,6 @@ class MB_CPT_Post_Type_Register extends MB_CPT_Base_Register {
 		// Get all registered custom post types.
 		$post_types = $this->get_post_types();
 		foreach ( $post_types as $post_type => $args ) {
-			if ( strlen( $post_type ) > 20 ) {
-				$post_type     = substr( $post_type,  0, 20 );
-				$post_type_end = substr( $post_type, -1 );
-				if ( '-' === $post_type_end ) {
-					$post_type = substr( $post_type,  0, 19 );
-				}
-			}
 			register_post_type( $post_type, $args );
 		}
 	}
