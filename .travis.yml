@@ -1,13 +1,14 @@
 language: php
 php:
-- 7.0
+- 7.1
 matrix:
   fast_finish: true
 before_script:
 - composer create-project wp-coding-standards/wpcs --no-dev
+- wpcs/vendor/bin/phpcs --config-set installed_paths wpcs
 script:
 - wpcs/vendor/bin/phpcs -n --standard=./codesniffer.ruleset.xml --extensions=php --ignore=demo,tests,wpcs .
 notifications:
   slack:
     rooms:
-      secure: eXtMMOcqB0r9WiSEf/O/T78dLu+zqVYePDkusoxdywp7Ua7Eylh/wfdKkI9IDzOkgpSv+QrkAk1sqolJlG986T+V/nyuxXcAtPvLW1hWOu+IT5T+fbqqmfWQnTuQSFrFl/2lxDZx/hmr51FBgVKs2+8qy+G6PE5/G2aAySZFGVuDcisL9+yeKsb7zx39jmivAZbLfbrYbqI29f40PSYWY8F3NzlrCAIaN11N/U1Ft/bzpDBWQu0pnwSwgHSvBiTuQzSuZoyiTgNGJbpTvPRIGjvuEfLitJ7SBGywlnPTmt5Ddh0h0rq699L5Ol3ENNHOwI4fEnCtzrRsdFJt0DDuIzTxJBxTpfQSp5kqdByZSuqWZRp6nla0AD+WPQNWg1Xz/T5n0azXGIOhmAB3JQzpMVbthUyGZUYkbHdlFSZ/gIirkfPJDqwL2dQWjP2VVQq7oHuJKEisaO4vqxy+YiErDzlU/H3nQd1FNiMtyRSVISzJBj+srhNBWhopfFf5pQ5OPyyp9qPd+3qQ30iysY4l+wV38trnliFrFNpnzyC4XDEkc0uQ2QiVDM31EwYHWkYx9hmQByndCg1lzZsktW3QrZrNaQcV6nYb4Vagbi5qhtdFgmadiMQDG0FAZ4F1IUOoUtKLXbZfFfUaWiGiQOqFYpA7H0GsIcfVdQ+T+3Ap52U=
+      secure: YqEE5Pqb2ijvof0yacTaLCFlv8tVe+/g29+BMxWT4euXxED3V2TdMJnBgIGaVfDdonHaZYbOEVc/qXGfryw7I6uVl0Ws7IdLXHF/4yha3o6OhPqo7W08O/ioonAQouDbTxGD6HY0ftBjoLlHkwOx2VUGJ2lobS6nyUG8TuYIEOI=
