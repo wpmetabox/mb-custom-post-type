@@ -235,6 +235,7 @@ class MB_CPT_Post_Type_Edit extends MB_CPT_Base_Edit {
 				'id'   => $args_prefix . 'show_in_rest',
 				'type' => 'checkbox',
 				'desc' => __( 'Whether to add the post type in the REST API.', 'mb-custom-post-type' ),
+				'std'  => 1,
 			),
 			array(
 				'name'        => __( 'REST API base slug', 'mb-custom-post-type' ),
@@ -261,8 +262,9 @@ class MB_CPT_Post_Type_Edit extends MB_CPT_Base_Edit {
 				'type'    => 'radio',
 				'inline'  => true,
 				'options' => array(
-					'post' => __( 'Post', 'mb-custom-post-type' ),
-					'page' => __( 'Page', 'mb-custom-post-type' ),
+					'post'   => __( 'Post', 'mb-custom-post-type' ),
+					'page'   => __( 'Page', 'mb-custom-post-type' ),
+					'custom' => __( 'Custom', 'mb-custom-post-type' ),
 				),
 				'std'     => 'post',
 				'desc'    => __( 'The post type to use for checking read, edit, and delete capabilities.', 'mb-custom-post-type' ),
