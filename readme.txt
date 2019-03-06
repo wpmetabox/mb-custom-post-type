@@ -67,6 +67,7 @@ Install **MB Custom Post Type** extension
 
 - Enabled REST API by default for post types to make they work with Gutenberg.
 - Added "custom" for capability type, allowing developers to set custom capabilities.
+- Auto truncated post type slug to 20 characters.
 
 [See full changelog here](https://github.com/rilwis/mb-custom-post-type/blob/master/CHANGELOG.md).
 
