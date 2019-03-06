@@ -94,6 +94,7 @@ class MB_CPT_Post_Type_Edit extends MB_CPT_Base_Edit {
 				'name' => __( 'Slug', 'mb-custom-post-type' ),
 				'id'   => $args_prefix . 'post_type',
 				'type' => 'text',
+				'desc' => __( 'Maximum 20 characters', 'mb-custom-post-type' ),
 			),
 		);
 
