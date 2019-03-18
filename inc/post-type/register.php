@@ -115,6 +115,7 @@ class MB_CPT_Post_Type_Register extends MB_CPT_Base_Register {
 
 		if ( 'custom' === $args['capability_type'] ) {
 			$args['capability_type'] = array( strtolower( $labels['singular_name'] ), strtolower( $labels['name'] ) );
+			$args['map_meta_cap'] = true;
 		}
 
 		return array( $labels, $args );

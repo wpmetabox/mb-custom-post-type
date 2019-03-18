@@ -341,7 +341,7 @@ class MB_CPT_Post_Type_Edit extends MB_CPT_Base_Edit {
 		$meta_boxes[] = array(
 			'id'         => 'mb-cpt-basic-settings',
 			'title'      => __( 'Basic Settings', 'mb-custom-post-type' ),
-			'pages'      => array( 'mb-post-type' ),
+			'post_types' => array( 'mb-post-type' ),
 			'fields'     => array_merge(
 				$basic_fields,
 				array(
@@ -380,28 +380,28 @@ class MB_CPT_Post_Type_Edit extends MB_CPT_Base_Edit {
 
 		// Labels settings.
 		$meta_boxes[] = array(
-			'id'     => 'mb-cpt-label-settings',
-			'title'  => __( 'Labels Settings', 'mb-custom-post-type' ),
-			'pages'  => array( 'mb-post-type' ),
-			'fields' => $labels_fields,
+			'id'         => 'mb-cpt-label-settings',
+			'title'      => __( 'Labels Settings', 'mb-custom-post-type' ),
+			'post_types' => array( 'mb-post-type' ),
+			'fields'     => $labels_fields,
 		);
 
 		// Advanced settings.
 		$meta_boxes[] = array(
-			'id'     => 'mb-cpt-advanced-settings',
-			'title'  => __( 'Advanced Settings', 'mb-custom-post-type' ),
-			'pages'  => array( 'mb-post-type' ),
-			'fields' => $advanced_fields,
+			'id'         => 'mb-cpt-advanced-settings',
+			'title'      => __( 'Advanced Settings', 'mb-custom-post-type' ),
+			'post_types' => array( 'mb-post-type' ),
+			'fields'     => $advanced_fields,
 		);
 
 		// Supports.
 		$meta_boxes[] = array(
-			'id'       => 'mb-cpt-supports',
-			'title'    => __( 'Supports', 'mb-custom-post-type' ),
-			'pages'    => array( 'mb-post-type' ),
-			'priority' => 'low',
-			'context'  => 'side',
-			'fields'   => array(
+			'id'         => 'mb-cpt-supports',
+			'title'      => __( 'Supports', 'mb-custom-post-type' ),
+			'post_types' => array( 'mb-post-type' ),
+			'priority'   => 'low',
+			'context'    => 'side',
+			'fields'     => array(
 				array(
 					'id'      => $args_prefix . 'supports',
 					'type'    => 'checkbox_list',
@@ -424,12 +424,12 @@ class MB_CPT_Post_Type_Edit extends MB_CPT_Base_Edit {
 
 		// Default taxonomies.
 		$meta_boxes[] = array(
-			'id'       => 'mb-cpt-taxonomies',
-			'title'    => __( 'Default Taxonomies', 'mb-custom-post-type' ),
-			'pages'    => array( 'mb-post-type' ),
-			'priority' => 'low',
-			'context'  => 'side',
-			'fields'   => array(
+			'id'         => 'mb-cpt-taxonomies',
+			'title'      => __( 'Default Taxonomies', 'mb-custom-post-type' ),
+			'post_types' => array( 'mb-post-type' ),
+			'priority'   => 'low',
+			'context'    => 'side',
+			'fields'     => array(
 				array(
 					'id'      => $args_prefix . 'taxonomies',
 					'type'    => 'checkbox_list',
