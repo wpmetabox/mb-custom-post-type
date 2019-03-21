@@ -1,3 +1,7 @@
+## 1.8.3 - 2019-03-21
+### Added
+- Set `'map_meta_cap' => true` for custom capabilities
+
 ## 1.8.2 - 2019-03-06
 ### Changed
 - Enabled REST API by default for post types to make they work with Gutenberg.

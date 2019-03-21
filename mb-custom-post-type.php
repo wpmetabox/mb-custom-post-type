@@ -1,12 +1,12 @@
 <?php
 /**
  * Plugin Name: MB Custom Post Type
- * Plugin URI: https://metabox.io/plugins/custom-post-type/
+ * Plugin URI:  https://metabox.io/plugins/custom-post-type/
  * Description: Create custom post types and custom taxonomies with easy-to-use UI
- * Version: 1.8.2
- * Author: MetaBox.io
- * Author URI: https://metabox.io
- * License: GPL-2.0+
+ * Version:     1.8.3
+ * Author:      MetaBox.io
+ * Author URI:  https://metabox.io
+ * License:     GPL-2.0+
  * Text Domain: mb-custom-post-type
  *
  * @package    Meta Box
