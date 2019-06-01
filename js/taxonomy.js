@@ -1,6 +1,4 @@
-/* global jQuery, angular, MbCptLabels, hljs */
-
-(function ( $, angular, hljs ) {
+( function ( $, angular, hljs ) {
 	'use strict';
 
 	angular.module( 'mbTaxonomy', [] ).controller( 'TaxonomyController', [
@@ -69,18 +67,11 @@
 		angular.bootstrap( document.getElementById( 'wpbody-content' ), ['mbTaxonomy'] );
 	} );
 
-	/**
-	 * Toggle Label and Advanced Settings
-	 * @return void
-	 */
-	function toggleAdvancedSettings() {
-		var $label = $( '#mb-ct-label-settings' ),
-			$advanced = $( '#mb-ct-advanced-settings' );
-		$label.hide();
-		$advanced.hide();
-		$( '#btn-toggle-advanced' ).on( 'click', function () {
-			$label.toggle();
-			$advanced.toggle();
+	function toggleSettings( btn, target ) {
+		var $target = $( target );
+		$target.hide();
+		$( btn ).on( 'click', function() {
+			$target.toggle();
 		} );
 	}
 
@@ -106,8 +97,9 @@
 
 	// Run when document is ready
 	$( function () {
-		toggleAdvancedSettings();
+		toggleSettings( '#ct-toggle-labels', '#mb-ct-label-settings' );
+		toggleSettings( '#ct-toggle-code', '#mb-ct-generate-code' );
 		copyToClipboard();
 	} );
 	hljs.initHighlightingOnLoad()
-})( jQuery, angular, hljs );
+} )( jQuery, angular, hljs );

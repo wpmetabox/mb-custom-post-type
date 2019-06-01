@@ -1,7 +1,4 @@
-/* global jQuery, angular, MbCptLabels, hljs */
-
-(function ( $, angular, hljs )
-{
+(function ( $, angular, hljs ) {
 	'use strict';
 
 	angular.module( 'mbPostType', [] ).controller( 'PostTypeController', [
@@ -76,18 +73,11 @@
 		angular.bootstrap( document.getElementById( 'wpbody-content' ), ['mbPostType'] );
 	} );
 
-	/**
-	 * Toggle Label and Advanced Settings
-	 * @return void
-	 */
-	function toggleAdvancedSettings() {
-		var $label = $( '#mb-cpt-label-settings' ),
-			$advanced = $( '#mb-cpt-advanced-settings' );
-		$label.hide();
-		$advanced.hide();
-		$( '#btn-toggle-advanced' ).on( 'click', function () {
-			$label.toggle();
-			$advanced.toggle();
+	function toggleSettings( btn, target ) {
+		var $target = $( target );
+		$target.hide();
+		$( btn ).on( 'click', function() {
+			$target.toggle();
 		} );
 	}
 
@@ -128,9 +118,10 @@
 
 	// Run when document is ready
 	$( function () {
-		toggleAdvancedSettings();
+		toggleSettings( '#mb-cpt-toggle-labels', '#mb-cpt-label-settings' );
+		toggleSettings( '#mb-cpt-toggle-code', '#mb-cpt-generate-code' );
 		activeMenu();
 		copyToClipboard();
 	} );
 	hljs.initHighlightingOnLoad();
-})( jQuery, angular, hljs );
+} )( jQuery, angular, hljs );

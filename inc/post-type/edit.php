@@ -228,6 +228,7 @@ class MB_CPT_Post_Type_Edit extends MB_CPT_Base_Edit {
 				'name' => __( 'Show in admin bar?', 'mb-custom-post-type' ),
 				'id'   => $args_prefix . 'show_in_admin_bar',
 				'type' => 'checkbox',
+				'std'  => 1,
 				'desc' => __( 'Whether to make this post type available in the WordPress admin bar.', 'mb-custom-post-type' ),
 			),
 			array(
@@ -337,21 +338,31 @@ class MB_CPT_Post_Type_Edit extends MB_CPT_Base_Edit {
 			);
 		}
 
+		$buttons = '<button type="button" class="button" id="mb-cpt-toggle-labels">' . esc_html__( 'Toggle Labels Settings', 'mb-custom-post-type' ) . '</button> <button type="button" class="button" id="mb-cpt-toggle-code">' . esc_html__( 'Get PHP Code', 'mb-custom-post-type' ) . '</button>';
+
+		if ( function_exists( 'mb_builder_load' ) ) {
+			$buttons .= ' <a class="button button-primary" href="' . esc_url( admin_url( 'edit.php?post_type=meta-box' ) ) . '" target="_blank">' . esc_html__( 'Add Custom Fields', 'mb-custom-post-type' ) . '</a>';
+		}
+
+		$meta_boxes[] = array(
+			'id'         => 'mb-cpt-buttons',
+			'title'      => ' ',
+			'post_types' => array( 'mb-post-type' ),
+			'style'      => 'seamless',
+			'fields'     => array(
+				array(
+					'type' => 'custom_html',
+					'std'  => $buttons,
+				),
+			),
+		);
+
 		// Basic settings.
 		$meta_boxes[] = array(
 			'id'         => 'mb-cpt-basic-settings',
 			'title'      => __( 'Basic Settings', 'mb-custom-post-type' ),
 			'post_types' => array( 'mb-post-type' ),
-			'fields'     => array_merge(
-				$basic_fields,
-				array(
-					array(
-						'id'   => 'btn-toggle-advanced',
-						'type' => 'button',
-						'std'  => __( 'Advanced', 'mb-custom-post-type' ),
-					),
-				)
-			),
+			'fields'     => $basic_fields,
 			'validation' => array(
 				'rules'    => array(
 					$label_prefix . 'name'          => array(
@@ -437,8 +448,10 @@ class MB_CPT_Post_Type_Edit extends MB_CPT_Base_Edit {
 						'category' => __( 'Category', 'mb-custom-post-type' ),
 						'post_tag' => __( 'Tag', 'mb-custom-post-type' ),
 					),
-					// translators: %s: Link to edit taxonomies page.
-					'desc'    => sprintf( __( 'Add default taxonomies to post type. For custom taxonomies, please <a href="%s" target="_blank">click here</a>.', 'mb-custom-post-type' ), admin_url( 'edit.php?post_type=mb-taxonomy' ) ),
+				),
+				array(
+					'type'    => 'custom_html',
+					'std'    => '<a href="' . esc_url( admin_url( 'edit.php?post_type=mb-taxonomy' ) ) . '" class="button" target="_blank">' . esc_html__( 'Add custom taxonomies', 'mb-custom-post-type' ) . '</a>',
 				),
 			),
 		);

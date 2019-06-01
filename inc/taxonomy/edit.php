@@ -324,21 +324,31 @@ class MB_CPT_Taxonomy_Edit extends MB_CPT_Base_Edit {
 			);
 		}
 
+		$buttons = '<button type="button" class="button" id="ct-toggle-labels">' . esc_html__( 'Toggle Labels Settings', 'mb-custom-post-type' ) . '</button> <button type="button" class="button" id="ct-toggle-code">' . esc_html__( 'Get PHP Code', 'mb-custom-post-type' ) . '</button>';
+
+		if ( function_exists( 'mb_builder_load' ) && function_exists( 'mb_user_meta_load' ) ) {
+			$buttons .= ' <a class="button button-primary" href="' . esc_url( admin_url( 'edit.php?post_type=meta-box' ) ) . '" target="_blank">' . esc_html__( 'Add Custom Fields', 'mb-custom-post-type' ) . '</a>';
+		}
+
+		$meta_boxes[] = array(
+			'id'         => 'ct-buttons',
+			'title'      => ' ',
+			'post_types' => array( 'mb-taxonomy' ),
+			'style'      => 'seamless',
+			'fields'     => array(
+				array(
+					'type' => 'custom_html',
+					'std'  => $buttons,
+				),
+			),
+		);
+
 		// Basic settings.
 		$meta_boxes[] = array(
 			'id'         => 'ct-basic-settings',
 			'title'      => __( 'Basic Settings', 'mb-custom-post-type' ),
 			'post_types' => 'mb-taxonomy',
-			'fields'     => array_merge(
-				$basic_fields,
-				array(
-					array(
-						'id'   => 'btn-toggle-advanced',
-						'type' => 'button',
-						'std'  => __( 'Advanced', 'mb-custom-post-type' ),
-					),
-				)
-			),
+			'fields'     => $basic_fields,
 			'validation' => array(
 				'rules'    => array(
 					$label_prefix . 'name'          => array(
@@ -406,6 +416,10 @@ class MB_CPT_Taxonomy_Edit extends MB_CPT_Base_Edit {
 					'id'      => $args_prefix . 'post_types',
 					'type'    => 'checkbox_list',
 					'options' => $options,
+				),
+				array(
+					'type'    => 'custom_html',
+					'std'    => '<a href="' . esc_url( admin_url( 'edit.php?post_type=mb-post-type' ) ) . '" class="button" target="_blank">' . esc_html__( 'Add custom post types', 'mb-custom-post-type' ) . '</a>',
 				),
 			),
 		);
