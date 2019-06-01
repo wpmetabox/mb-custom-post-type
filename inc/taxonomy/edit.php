@@ -249,6 +249,7 @@ class MB_CPT_Taxonomy_Edit extends MB_CPT_Base_Edit {
 				'name' => __( 'Show in REST?', 'mb-custom-post-type' ),
 				'id'   => $args_prefix . 'show_in_rest',
 				'type' => 'checkbox',
+				'std'  => 1,
 				'desc' => __( 'Whether to include the taxonomy in the REST API.', 'mb-custom-post-type' ),
 			),
 			array(
