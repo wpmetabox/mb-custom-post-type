@@ -86,7 +86,7 @@
 
 	function copyToClipboard() {
 		var icon = '<svg class="mb-icon--copy" aria-hidden="true" role="img"><use href="#mb-icon-copy" xlink:href="#icon-copy"></use></svg> ',
-			clipboard = new Clipboard( '.mb-button--copy', {
+			clipboard = new ClipboardJS( '.mb-button--copy', {
 				target: function ( trigger ) {
 					return trigger.nextElementSibling;
 				}

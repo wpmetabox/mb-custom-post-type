@@ -54,12 +54,12 @@ abstract class MB_CPT_Base_Edit {
 
 		$object = str_replace( 'mb-', '', $this->post_type );
 
-		wp_enqueue_style( 'highlightjs', MB_CPT_URL . 'css/atom-one-dark.css', array(), '1.8.0' );
+		wp_enqueue_style( 'highlightjs', MB_CPT_URL . 'css/atom-one-dark.min.css', array(), '9.15.8' );
 		wp_enqueue_style( 'mb-cpt', MB_CPT_URL . 'css/style.css', array(), '1.8.0' );
 
-		wp_enqueue_script( 'angular', MB_CPT_URL . 'js/angular.min.js', array( 'jquery' ), '1.4.2', true );
-		wp_enqueue_script( 'highlightjs', MB_CPT_URL . 'js/highlight.pack.js', array(), '9.11.0', true );
-		wp_enqueue_script( 'clipboard', MB_CPT_URL . 'js/clipboard.min.js', array(), '1.3.2', true );
+		wp_enqueue_script( 'angular', MB_CPT_URL . 'js/angular.min.js', array( 'jquery' ), '1.7.8', true );
+		wp_enqueue_script( 'highlightjs', MB_CPT_URL . 'js/highlight.min.js', array(), '9.15.8', true );
+		wp_enqueue_script( 'clipboard', MB_CPT_URL . 'js/clipboard.min.js', array(), '2.4.0', true );
 		wp_enqueue_script(
 			'mb-cpt',
 			MB_CPT_URL . "js/$object.js",
