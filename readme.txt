@@ -65,6 +65,7 @@ Install **MB Custom Post Type** extension
 
 **Changed**
 
+- Update the page layout to make it more friendly.
 - Enabled REST API by default for taxonomies to make they work with Gutenberg.
 - Make the plugin safe to include in Meta Box AIO.
 
