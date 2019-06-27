@@ -324,25 +324,6 @@ class MB_CPT_Taxonomy_Edit extends MB_CPT_Base_Edit {
 			);
 		}
 
-		$buttons = '<button type="button" class="button" id="ct-toggle-labels">' . esc_html__( 'Toggle Labels Settings', 'mb-custom-post-type' ) . '</button> <button type="button" class="button" id="ct-toggle-code">' . esc_html__( 'Get PHP Code', 'mb-custom-post-type' ) . '</button>';
-
-		if ( function_exists( 'mb_builder_load' ) && function_exists( 'mb_user_meta_load' ) ) {
-			$buttons .= ' <a class="button button-primary" href="' . esc_url( admin_url( 'edit.php?post_type=meta-box' ) ) . '" target="_blank">' . esc_html__( 'Add Custom Fields', 'mb-custom-post-type' ) . '</a>';
-		}
-
-		$meta_boxes[] = array(
-			'id'         => 'ct-buttons',
-			'title'      => ' ',
-			'post_types' => array( 'mb-taxonomy' ),
-			'style'      => 'seamless',
-			'fields'     => array(
-				array(
-					'type' => 'custom_html',
-					'std'  => $buttons,
-				),
-			),
-		);
-
 		// Basic settings.
 		$meta_boxes[] = array(
 			'id'         => 'ct-basic-settings',
@@ -371,6 +352,25 @@ class MB_CPT_Taxonomy_Edit extends MB_CPT_Base_Edit {
 					$args_prefix . 'post_type'      => array(
 						'required' => __( 'Slug is required', 'mb-custom-post-type' ),
 					),
+				),
+			),
+		);
+
+		$buttons = '<button type="button" class="button" id="ct-toggle-labels">' . esc_html__( 'Toggle Labels Settings', 'mb-custom-post-type' ) . '</button> <button type="button" class="button" id="ct-toggle-code">' . esc_html__( 'Get PHP Code', 'mb-custom-post-type' ) . '</button>';
+
+		if ( function_exists( 'mb_builder_load' ) && function_exists( 'mb_user_meta_load' ) ) {
+			$buttons .= ' <a class="button button-primary" href="' . esc_url( admin_url( 'edit.php?post_type=meta-box' ) ) . '" target="_blank">' . esc_html__( 'Add Custom Fields', 'mb-custom-post-type' ) . '</a>';
+		}
+
+		$meta_boxes[] = array(
+			'id'         => 'ct-buttons',
+			'title'      => ' ',
+			'post_types' => array( 'mb-taxonomy' ),
+			'style'      => 'seamless',
+			'fields'     => array(
+				array(
+					'type' => 'custom_html',
+					'std'  => $buttons,
 				),
 			),
 		);
@@ -462,6 +462,10 @@ class MB_CPT_Taxonomy_Edit extends MB_CPT_Base_Edit {
 	 * @return string
 	 */
 	public function modify_field_html( $html, $field, $meta ) {
+		if ( 'mb-taxonomy' !== get_current_screen()->id ) {
+			return $html;
+		}
+
 		// Labels.
 		if ( 0 === strpos( $field['id'], 'label_' ) ) {
 			$model = substr( $field['id'], 6 );
@@ -469,25 +473,30 @@ class MB_CPT_Taxonomy_Edit extends MB_CPT_Base_Edit {
 				'>',
 				sprintf(
 					' ng-model="labels.%s" ng-init="labels.%s=\'%s\'"%s>',
-					$model,
-					$model,
-					$meta,
+					esc_attr( $model ),
+					esc_attr( $model ),
+					esc_attr( $meta ),
 					in_array( $model, array( 'name', 'singular_name' ), true ) ? ' ng-change="updateLabels()"' : ''
 				),
 				$html
 			);
 			$html  = preg_replace( '/value="(.*?)"/', 'value="{{labels.' . $model . '}}"', $html );
-		} elseif ( 'args_taxonomy' === $field['id'] ) {
+			return $html;
+		}
+
+		if ( 'args_taxonomy' === $field['id'] ) {
 			$html = str_replace(
 				'>',
 				sprintf(
 					' ng-model="taxonomy" ng-init="taxonomy=\'%s\'">',
-					$meta
+					esc_attr( $meta )
 				),
 				$html
 			);
 			$html = preg_replace( '/value="(.*?)"/', 'value="{{taxonomy}}"', $html );
+			return $html;
 		}
+
 		return $html;
 	}
 

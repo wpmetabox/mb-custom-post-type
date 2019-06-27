@@ -338,25 +338,6 @@ class MB_CPT_Post_Type_Edit extends MB_CPT_Base_Edit {
 			);
 		}
 
-		$buttons = '<button type="button" class="button" id="mb-cpt-toggle-labels">' . esc_html__( 'Toggle Labels Settings', 'mb-custom-post-type' ) . '</button> <button type="button" class="button" id="mb-cpt-toggle-code">' . esc_html__( 'Get PHP Code', 'mb-custom-post-type' ) . '</button>';
-
-		if ( function_exists( 'mb_builder_load' ) ) {
-			$buttons .= ' <a class="button button-primary" href="' . esc_url( admin_url( 'edit.php?post_type=meta-box' ) ) . '" target="_blank">' . esc_html__( 'Add Custom Fields', 'mb-custom-post-type' ) . '</a>';
-		}
-
-		$meta_boxes[] = array(
-			'id'         => 'mb-cpt-buttons',
-			'title'      => ' ',
-			'post_types' => array( 'mb-post-type' ),
-			'style'      => 'seamless',
-			'fields'     => array(
-				array(
-					'type' => 'custom_html',
-					'std'  => $buttons,
-				),
-			),
-		);
-
 		// Basic settings.
 		$meta_boxes[] = array(
 			'id'         => 'mb-cpt-basic-settings',
@@ -385,6 +366,25 @@ class MB_CPT_Post_Type_Edit extends MB_CPT_Base_Edit {
 					$args_prefix . 'post_type'      => array(
 						'required' => __( 'Slug is required', 'mb-custom-post-type' ),
 					),
+				),
+			),
+		);
+
+		$buttons = '<button type="button" class="button" id="mb-cpt-toggle-labels">' . esc_html__( 'Toggle Labels Settings', 'mb-custom-post-type' ) . '</button> <button type="button" class="button" id="mb-cpt-toggle-code">' . esc_html__( 'Get PHP Code', 'mb-custom-post-type' ) . '</button>';
+
+		if ( function_exists( 'mb_builder_load' ) ) {
+			$buttons .= ' <a class="button button-primary" href="' . esc_url( admin_url( 'edit.php?post_type=meta-box' ) ) . '" target="_blank">' . esc_html__( 'Add Custom Fields', 'mb-custom-post-type' ) . '</a>';
+		}
+
+		$meta_boxes[] = array(
+			'id'         => 'mb-cpt-buttons',
+			'title'      => ' ',
+			'post_types' => array( 'mb-post-type' ),
+			'style'      => 'seamless',
+			'fields'     => array(
+				array(
+					'type' => 'custom_html',
+					'std'  => $buttons,
 				),
 			),
 		);
@@ -465,7 +465,7 @@ class MB_CPT_Post_Type_Edit extends MB_CPT_Base_Edit {
 
 		$fields = array_merge( $basic_fields, $labels_fields, $advanced_fields );
 
-		// Add ng-model attribute to all fields.
+		// Add AngularJS attributes to fields.
 		foreach ( $fields as $field ) {
 			if ( ! empty( $field['id'] ) ) {
 				add_filter( 'rwmb_' . $field['id'] . '_html', array( $this, 'modify_field_html' ), 10, 3 );
@@ -485,6 +485,10 @@ class MB_CPT_Post_Type_Edit extends MB_CPT_Base_Edit {
 	 * @return string
 	 */
 	public function modify_field_html( $html, $field, $meta ) {
+		if ( 'mb-post-type' !== get_current_screen()->id ) {
+			return $html;
+		}
+
 		// Labels.
 		if ( 0 === strpos( $field['id'], 'label_' ) ) {
 			$model = substr( $field['id'], 6 );
@@ -492,25 +496,31 @@ class MB_CPT_Post_Type_Edit extends MB_CPT_Base_Edit {
 				'>',
 				sprintf(
 					' ng-model="labels.%s" ng-init="labels.%s=\'%s\'"%s>',
-					$model,
-					$model,
-					$meta,
+					esc_attr( $model ),
+					esc_attr( $model ),
+					esc_attr( $meta ),
 					in_array( $model, array( 'name', 'singular_name' ), true ) ? ' ng-change="updateLabels()"' : ''
 				),
 				$html
 			);
-			$html  = preg_replace( '/value="(.*?)"/', 'value="{{labels.' . $model . '}}"', $html );
-		} elseif ( 'args_post_type' === $field['id'] ) {
+			$html  = preg_replace( '/value="(.*?)"/', 'value="{{labels.' . esc_attr( $model ) . '}}"', $html );
+			return $html;
+		}
+
+		if ( 'args_post_type' === $field['id'] ) {
 			$html = str_replace(
 				'>',
 				sprintf(
 					' ng-model="post_type" ng-init="post_type=\'%s\'">',
-					$meta
+					esc_attr( $meta )
 				),
 				$html
 			);
 			$html = preg_replace( '/value="(.*?)"/', 'value="{{post_type}}"', $html );
-		} elseif ( 'args_menu_icon' === $field['id'] ) {
+			return $html;
+		}
+
+		if ( 'args_menu_icon' === $field['id'] ) {
 			$html  = '';
 			$icons = mb_cpt_get_dashicons();
 			foreach ( $icons as $icon ) {
@@ -521,11 +531,12 @@ class MB_CPT_Post_Type_Edit extends MB_CPT_Base_Edit {
 						<input type="radio" name="args_menu_icon" value="%s" class="hidden"%s>
 					</label>',
 					$icon === $meta ? ' active' : '',
-					$icon,
-					$icon,
+					esc_attr( $icon ),
+					esc_attr( $icon ),
 					checked( $icon, $meta, false )
 				);
 			}
+			return $html;
 		}
 
 		return $html;

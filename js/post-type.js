@@ -1,4 +1,4 @@
-(function ( $, angular, hljs ) {
+(function ( $, angular, hljs, i18n ) {
 	'use strict';
 
 	angular.module( 'mbPostType', [] ).controller( 'PostTypeController', [
@@ -26,8 +26,8 @@
 				}
 
 				str = str.replace( /[^a-z0-9 -]/g, '' ) // remove invalid chars
-				          .replace( /\s+/g, '-' ) // collapse whitespace and replace by -
-				          .replace( /-+/g, '-' ); // collapse dashes
+						  .replace( /\s+/g, '-' ) // collapse whitespace and replace by -
+						  .replace( /-+/g, '-' ); // collapse dashes
 				return str;
 			}
 
@@ -48,22 +48,22 @@
 						'parent_item_colon'
 					];
 				params.forEach( function( param ) {
-					$scope.labels[param] = MbCptLabels[param].replace( '%name%', $scope.labels.name ).replace( '%singular_name%', $scope.labels.singular_name );
+					$scope.labels[param] = i18n[param].replace( '%name%', $scope.labels.name ).replace( '%singular_name%', $scope.labels.singular_name );
 				} );
 
 				// Update slug, make sure it has <= 20 characters.
 				var slug = stringToSlug( $scope.labels.singular_name );
-			 	if ( slug.length <= 20 ) {
-			          $scope.post_type = stringToSlug( slug );
-			  	} else {
-			  		slug = slug.substring( 0, 20 );
-			  		var lastChar = slug.substr( 19 );
-			  		if ( '-' === lastChar ) {
-			  			slug = slug.substring( 0, 19 );
-			  		}
+				if ( slug.length <= 20 ) {
+					$scope.post_type = stringToSlug( slug );
+				} else {
+					slug = slug.substring( 0, 20 );
+					var lastChar = slug.substr( 19 );
+					if ( '-' === lastChar ) {
+						slug = slug.substring( 0, 19 );
+					}
 
-			  		$scope.post_type = slug;
-			  	}
+					$scope.post_type = slug;
+				}
 			};
 		}
 	] );
@@ -105,13 +105,13 @@
 			} );
 		clipboard.on('success', function(e) {
 			e.clearSelection();
-			e.trigger.innerHTML = icon + MbCptLabels.copied;
+			e.trigger.innerHTML = icon + i18n.copied;
 			setTimeout(function() {
-				e.trigger.innerHTML = icon + MbCptLabels.copy;
+				e.trigger.innerHTML = icon + i18n.copy;
 			}, 3000);
 		} );
 		clipboard.on('error', function() {
-			alert( MbCptLabels.manualCopy );
+			alert( i18n.manualCopy );
 		});
 
 	}
@@ -124,4 +124,4 @@
 		copyToClipboard();
 	} );
 	hljs.initHighlightingOnLoad();
-} )( jQuery, angular, hljs );
+} )( jQuery, angular, hljs, MbCptLabels );

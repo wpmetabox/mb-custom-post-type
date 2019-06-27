@@ -1,4 +1,4 @@
-( function ( $, angular, hljs ) {
+( function ( $, angular, hljs, i18n ) {
 	'use strict';
 
 	angular.module( 'mbTaxonomy', [] ).controller( 'TaxonomyController', [
@@ -26,8 +26,8 @@
 				}
 
 				str = str.replace( /[^a-z0-9 -]/g, '' ) // remove invalid chars
-				          .replace( /\s+/g, '-' ) // collapse whitespace and replace by -
-				          .replace( /-+/g, '-' ); // collapse dashes
+					.replace( /\s+/g, '-' ) // collapse whitespace and replace by -
+					.replace( /-+/g, '-' ); // collapse dashes
 
 				return str;
 			}
@@ -53,7 +53,7 @@
 					],
 					i = params.length;
 				for ( ; i --; ) {
-					$scope.labels[params[i]] = MbCptLabels[params[i]].replace( '%name%', $scope.labels.name ).replace( '%singular_name%', $scope.labels.singular_name );
+					$scope.labels[params[i]] = i18n[params[i]].replace( '%name%', $scope.labels.name ).replace( '%singular_name%', $scope.labels.singular_name );
 				}
 
 				// Update slug
@@ -84,13 +84,13 @@
 			} );
 		clipboard.on('success', function(e) {
 			e.clearSelection();
-			e.trigger.innerHTML = icon + MbCptLabels.copied;
+			e.trigger.innerHTML = icon + i18n.copied;
 			setTimeout(function() {
-				e.trigger.innerHTML = icon + MbCptLabels.copy;
+				e.trigger.innerHTML = icon + i18n.copy;
 			}, 3000);
 		} );
 		clipboard.on('error', function() {
-			alert( MbCptLabels.manualCopy );
+			alert( i18n.manualCopy );
 		});
 
 	}
@@ -102,4 +102,4 @@
 		copyToClipboard();
 	} );
 	hljs.initHighlightingOnLoad()
-} )( jQuery, angular, hljs );
+} )( jQuery, angular, hljs, MbCptLabels );
