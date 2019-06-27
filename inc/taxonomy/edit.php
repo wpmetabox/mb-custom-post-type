@@ -466,6 +466,9 @@ class MB_CPT_Taxonomy_Edit extends MB_CPT_Base_Edit {
 			return $html;
 		}
 
+		// Fix for escaping single quote for AngularJS.
+		$meta = str_replace( '&#039;', "\\'", $meta );
+
 		// Labels.
 		if ( 0 === strpos( $field['id'], 'label_' ) ) {
 			$model = substr( $field['id'], 6 );
@@ -475,7 +478,7 @@ class MB_CPT_Taxonomy_Edit extends MB_CPT_Base_Edit {
 					' ng-model="labels.%s" ng-init="labels.%s=\'%s\'"%s>',
 					esc_attr( $model ),
 					esc_attr( $model ),
-					esc_attr( $meta ),
+					$meta,
 					in_array( $model, array( 'name', 'singular_name' ), true ) ? ' ng-change="updateLabels()"' : ''
 				),
 				$html
@@ -489,7 +492,7 @@ class MB_CPT_Taxonomy_Edit extends MB_CPT_Base_Edit {
 				'>',
 				sprintf(
 					' ng-model="taxonomy" ng-init="taxonomy=\'%s\'">',
-					esc_attr( $meta )
+					$meta
 				),
 				$html
 			);
