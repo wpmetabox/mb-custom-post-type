@@ -10,6 +10,36 @@
  * Controls all operations for registering custom taxonomy.
  */
 class MB_CPT_Taxonomy_Register extends MB_CPT_Base_Register {
+	/**
+	 * Initializing.
+	 */
+	public function __construct() {
+		parent::__construct();
+
+		add_filter( 'rest_prepare_taxonomy', array( $this, 'hide_taxonomy_meta_box' ), 10, 3 );
+	}
+
+	/**
+	 * Hide the meta box for taxonomy if set 'meta_box_cb' = false in Gutenberg.
+	 *
+	 * @param  object $response REST response object.
+	 * @param  object $taxonomy Taxonomy object.
+	 * @param  object $request  REST request object.
+	 *
+	 * @return object
+	 */
+	public function hide_taxonomy_meta_box( $response, $taxonomy, $request ) {
+		$context = ! empty( $request['context'] ) ? $request['context'] : 'view';
+
+		// Context is edit in the editor.
+		if ( 'edit' === $context && false === $taxonomy->meta_box_cb ) {
+			$data_response                          = $response->get_data();
+			$data_response['visibility']['show_ui'] = false;
+			$response->set_data( $data_response );
+		}
+
+		return $response;
+	}
 
 	/**
 	 * Register custom post type for taxonomies
