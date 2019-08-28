@@ -61,8 +61,8 @@ if ( ! function_exists( 'mb_cpt_load' ) ) {
 		require dirname( __FILE__ ) . '/inc/encoders/taxonomy-encoder.php';
 		require dirname( __FILE__ ) . '/inc/about/about.php';
 
-		$post_type_encoder = new MB_CPT_Post_Type_Encoder();
-		new MB_CPT_Post_Type_Edit( 'mb-post-type', $cpt_register, $post_type_encoder );
+		$cpt_encoder = new MB_CPT_Post_Type_Encoder();
+		new MB_CPT_Post_Type_Edit( 'mb-post-type', $cpt_register, $cpt_encoder );
 
 		$tax_encoder = new MB_CPT_Taxonomy_Encoder();
 		new MB_CPT_Taxonomy_Edit( 'mb-taxonomy', $tax_register, $tax_encoder );

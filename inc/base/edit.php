@@ -154,13 +154,8 @@ abstract class MB_CPT_Base_Edit {
 	 * @return bool
 	 */
 	public function is_premium_user() {
-		$option = is_multisite() ? get_site_option( 'meta_box_updater' ) : get_option( 'meta_box_updater' );
-		if ( empty( $option['api_key'] ) ) {
-			return false;
-		}
-		if ( isset( $option['status'] ) && 'success' !== $option['status'] ) {
-			return false;
-		}
-		return true;
+		$update_option = new RWMB_Update_Option();
+		$update_checker = new RWMB_Update_Checker( $update_option );
+		return $update_checker->has_extensions();
 	}
 }
