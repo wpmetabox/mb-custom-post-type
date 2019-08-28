@@ -281,7 +281,13 @@ class MB_CPT_Post_Type_Edit extends MB_CPT_Base_Edit {
 				'id'   => $args_prefix . 'has_archive',
 				'type' => 'checkbox',
 				'std'  => 1,
-				'desc' => __( 'Enables post type archives. Will use the post type slug as the archive slug by default.', 'mb-custom-post-type' ),
+				'desc' => __( 'Enables post type archives.', 'mb-custom-post-type' ),
+			),
+			array(
+				'name' => __( 'Custom archive slug', 'mb-custom-post-type' ),
+				'id'   => $args_prefix . 'archive_slug',
+				'type' => 'text',
+				'desc' => __( 'Default is the post type slug.', 'mb-custom-post-type' ),
 			),
 			array(
 				'name' => __( 'Query var', 'mb-custom-post-type' ),

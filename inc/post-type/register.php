@@ -113,11 +113,6 @@ class MB_CPT_Post_Type_Register extends MB_CPT_Base_Register {
 			}
 		}
 
-		if ( 'custom' === $args['capability_type'] ) {
-			$args['capability_type'] = array( strtolower( $labels['singular_name'] ), strtolower( $labels['name'] ) );
-			$args['map_meta_cap'] = true;
-		}
-
 		return array( $labels, $args );
 	}
 
@@ -166,6 +161,16 @@ class MB_CPT_Post_Type_Register extends MB_CPT_Base_Register {
 				'public' => true,
 			)
 		);
+
+		if ( 'custom' === $args['capability_type'] ) {
+			$args['capability_type'] = array( strtolower( $labels['singular_name'] ), strtolower( $labels['name'] ) );
+			$args['map_meta_cap'] = true;
+		}
+
+		if ( ! empty( $args['has_archive'] ) && ! empty( $args['archive_slug'] ) ) {
+			$args['has_archive'] = $args['archive_slug'];
+			unset( $args['archive_slug'] );
+		}
 
 		if ( empty( $args['rewrite_slug'] ) && empty( $args['rewrite_no_front'] ) ) {
 			$args['rewrite'] = true;
