@@ -4,7 +4,7 @@ Donate link: https://metabox.io/pricing/
 Tags: cms, custom, custom post types, custom post type, cpt, post, post types, post type, types
 Requires at least: 4.3
 Tested up to: 5.2.2
-Stable tag: 1.8.6
+Stable tag: 1.9.0
 License: GPLv2 or later
 
 Create and manage custom post types and custom taxonomies with an easy-to-use interface in WordPress.
@@ -61,7 +61,19 @@ Install **MB Custom Post Type** extension
 
 == Changelog ==
 
+= 1.9.0 - 2019-08-29 =
+
+**Added**
+
+- Add support for custom archive slug
+
+**Fixed**
+
+- Fix style in dashboard
+- Do not show upgrade message for premium users
+
 = 1.8.6 - 2019-07-17 =
+
 - Hide the meta box for taxonomy if set `meta_box_cb` = false in Gutenberg.
 
 = 1.8.5 - 2019-06-27 =
