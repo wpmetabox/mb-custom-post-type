@@ -173,6 +173,12 @@ class MB_CPT_Post_Type_Edit extends MB_CPT_Base_Edit {
 			),
 		);
 
+		$menu_icon_options = array();
+		$icons = mb_cpt_get_dashicons();
+		foreach ( $icons as $icon ) {
+			$menu_icon_options[ $icon ] = $icon;
+		}
+
 		$advanced_fields = array(
 			array(
 				'name'        => __( 'Description', 'mb-custom-post-type' ),
@@ -255,7 +261,7 @@ class MB_CPT_Post_Type_Edit extends MB_CPT_Base_Edit {
 				'name'    => __( 'Menu icon', 'mb-custom-post-type' ),
 				'id'      => $args_prefix . 'menu_icon',
 				'type'    => 'radio',
-				'options' => mb_cpt_get_dashicons(),
+				'options' => $menu_icon_options,
 			),
 			array(
 				'name'    => __( 'Capability type', 'mb-custom-post-type' ),
@@ -534,8 +540,7 @@ class MB_CPT_Post_Type_Edit extends MB_CPT_Base_Edit {
 			$icons = mb_cpt_get_dashicons();
 			foreach ( $icons as $icon ) {
 				$html .= sprintf(
-					'
-					<label class="icon-single%s">
+					'<label class="icon-single%s">
 						<i class="wp-menu-image dashicons-before %s"></i>
 						<input type="radio" name="args_menu_icon" value="%s" class="hidden"%s>
 					</label>',
