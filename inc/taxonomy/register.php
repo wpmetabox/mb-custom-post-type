@@ -80,7 +80,7 @@ class MB_CPT_Taxonomy_Register extends MB_CPT_Base_Register {
 		// Get all registered custom taxonomies.
 		$taxonomies = $this->get_taxonomies();
 		foreach ( $taxonomies as $taxonomy => $args ) {
-			if ( false !== $args['meta_box_cb'] ) {
+			if ( isset( $args['meta_box_cb'] ) && false !== $args['meta_box_cb'] ) {
 				unset( $args['meta_box_cb'] );
 			}
 			register_taxonomy( $taxonomy, isset( $args['post_types'] ) ? $args['post_types'] : null, $args );
