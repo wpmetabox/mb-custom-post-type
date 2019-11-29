@@ -10,7 +10,6 @@
  * Controls all operations for registering custom post type.
  */
 class MB_CPT_Post_Type_Register extends MB_CPT_Base_Register {
-
 	/**
 	 * Register custom post types
 	 */
@@ -96,8 +95,7 @@ class MB_CPT_Post_Type_Register extends MB_CPT_Base_Register {
 		$labels = array();
 		$args   = array();
 		foreach ( $post_meta as $key => $value ) {
-			// @codingStandardsIgnoreLine
-			$data = 1 === count( $value ) && $key !== 'args_taxonomies' ? $value[0] : $value;
+			$data = 1 === count( $value ) && ! in_array( $key, array( 'args_taxonomies', 'args_supports' ), true ) ? $value[0] : $value;
 
 			if ( ! in_array( $key, array( 'args_menu_position' ) ) ) {
 				$data = is_numeric( $data ) ? ( 1 === intval( $data ) ? true : false ) : $data;

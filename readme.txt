@@ -3,8 +3,8 @@ Contributors: metabox, rilwis, duc88b, fitwp, truongwp
 Donate link: https://metabox.io/pricing/
 Tags: cms, custom, custom post types, custom post type, cpt, post, post types, post type, types
 Requires at least: 4.3
-Tested up to: 5.2.3
-Stable tag: 1.9.1
+Tested up to: 5.3
+Stable tag: 1.9.2
 License: GPLv2 or later
 
 Create and manage custom post types and custom taxonomies with an easy-to-use interface in WordPress.
@@ -60,6 +60,12 @@ Install **MB Custom Post Type** extension
 2. Edit custom post type
 
 == Changelog ==
+
+= 1.9.2 - 2019-11-28 =
+
+**Fixed**
+
+- Fix warning for 'supports' parameter in WordPress 5.3.
 
 = 1.9.1 - 2019-09-06 =
 
