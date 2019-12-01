@@ -1,6 +1,6 @@
 {
   "name": "wpmetabox/mb-custom-post-type",
-  "type": "library",
+  "type": "wordpress-plugin",
   "keywords": [
     "wordpress",
     "ui",
@@ -19,16 +19,8 @@
     {
       "name": "Tran Ngoc Tuan Anh",
       "email": "anhtnt@elightup.com",
-      "homepage": "https://deluxeblogtips.com",
+      "homepage": "https://metabox.io",
       "role": "Developer"
     }
-  ],
-  "autoload": {
-    "files": [
-      "mb-custom-post-type.php"
-    ]
-  },
-  "require": {
-    "wpmetabox/meta-box": "^4.15"
-  }
+  ]
 }
