@@ -327,6 +327,8 @@ class MB_CPT_Post_Type_Edit extends MB_CPT_Base_Edit {
 			),
 		);
 
+		$advanced_fields = apply_filters( 'rwmb_advanced_field_settings', $advanced_fields, $label_prefix, $args_prefix );
+
 		$code_fields = array(
 			array(
 				'name' => __( 'Function name', 'mb-custom-post-type' ),
