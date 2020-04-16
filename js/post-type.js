@@ -26,12 +26,26 @@
 		return str;
 	}
 
-	function toggleSettings( btn, target ) {
-		var $target = $( target );
-		$target.hide();
-		$( btn ).on( 'click', function() {
-			$target.toggle();
-		} );
+	function togglePanels() {
+		var $settings = $( '#mb-cpt-advanced-settings' ),
+			$labels = $( '#mb-cpt-label-settings' ),
+			$code = $( '#mb-cpt-generate-code' );
+
+		$labels.hide();
+		$code.hide();
+
+		function toggle( buttonSelector, $element ) {
+			$( buttonSelector ).on( 'click', function() {
+				$settings.hide();
+				$labels.hide();
+				$code.hide();
+				$element.show();
+			} );
+		}
+
+		toggle( '#mb-cpt-toggle-settings', $settings );
+		toggle( '#mb-cpt-toggle-labels', $labels );
+		toggle( '#mb-cpt-toggle-code', $code );
 	}
 
 	/**
@@ -107,8 +121,7 @@
 
 	// Run when document is ready
 	$( function () {
-		toggleSettings( '#mb-cpt-toggle-labels', '#mb-cpt-label-settings' );
-		toggleSettings( '#mb-cpt-toggle-code', '#mb-cpt-generate-code' );
+		togglePanels();
 		activeMenu();
 		copyToClipboard();
 	} );

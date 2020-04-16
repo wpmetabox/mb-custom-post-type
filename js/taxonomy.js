@@ -27,12 +27,26 @@
 		return str;
 	}
 
-	function toggleSettings( btn, target ) {
-		var $target = $( target );
-		$target.hide();
-		$( btn ).on( 'click', function() {
-			$target.toggle();
-		} );
+	function togglePanels() {
+		var $settings = $( '#mb-ct-advanced-settings' ),
+			$labels = $( '#mb-ct-label-settings' ),
+			$code = $( '#mb-ct-generate-code' );
+
+		$labels.hide();
+		$code.hide();
+
+		function toggle( buttonSelector, $element ) {
+			$( buttonSelector ).on( 'click', function() {
+				$settings.hide();
+				$labels.hide();
+				$code.hide();
+				$element.show();
+			} );
+		}
+
+		toggle( '#ct-toggle-settings', $settings );
+		toggle( '#ct-toggle-labels', $labels );
+		toggle( '#ct-toggle-code', $code );
 	}
 
 	function copyToClipboard() {
@@ -96,8 +110,7 @@
 
 	// Run when document is ready
 	$( function () {
-		toggleSettings( '#ct-toggle-labels', '#mb-ct-label-settings' );
-		toggleSettings( '#ct-toggle-code', '#mb-ct-generate-code' );
+		togglePanels();
 		copyToClipboard();
 	} );
 	hljs.initHighlightingOnLoad()
