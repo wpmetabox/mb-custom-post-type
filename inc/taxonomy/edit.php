@@ -301,6 +301,8 @@ class MB_CPT_Taxonomy_Edit extends MB_CPT_Base_Edit {
 			),
 		);
 
+		$advanced_fields = apply_filters( 'mbcpt_advanced_taxonomy_fields', $advanced_fields, $label_prefix, $args_prefix );
+
 		$code_fields = array(
 			array(
 				'name' => __( 'Function name', 'mb-custom-post-type' ),
