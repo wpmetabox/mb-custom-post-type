@@ -38,8 +38,10 @@ if ( ! function_exists( 'mb_cpt_load' ) ) {
 
 		load_plugin_textdomain( 'mb-custom-post-type' );
 
-		// Show Meta Box admin menu.
-		add_filter( 'rwmb_admin_menu', '__return_true' );
+		// Show Meta Box admin menu IF allowed.
+		if ( current_user_can('activate_plugins') ) {
+			add_filter( 'rwmb_admin_menu', '__return_true' );
+		}
 
 		require dirname( __FILE__ ) . '/inc/base/register.php';
 		require dirname( __FILE__ ) . '/inc/post-type/register.php';
