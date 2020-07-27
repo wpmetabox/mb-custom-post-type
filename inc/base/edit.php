@@ -59,7 +59,6 @@ abstract class MB_CPT_Base_Edit {
 
 		wp_enqueue_script( 'angular', MB_CPT_URL . 'js/angular.min.js', array( 'jquery' ), '1.7.8', true );
 		wp_enqueue_script( 'highlightjs', MB_CPT_URL . 'js/highlight.min.js', array(), '9.15.8', true );
-		wp_enqueue_script( 'clipboard', MB_CPT_URL . 'js/clipboard.min.js', array(), '2.4.0', true );
 		wp_enqueue_script(
 			'mb-cpt',
 			MB_CPT_URL . "js/$object.js",
