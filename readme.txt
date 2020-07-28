@@ -3,8 +3,8 @@ Contributors: metabox, rilwis, duc88b, fitwp, truongwp
 Donate link: https://metabox.io/pricing/
 Tags: cms, custom, custom post types, custom post type, cpt, post, post types, post type, types
 Requires at least: 4.3
-Tested up to: 5.4
-Stable tag: 1.9.4
+Tested up to: 5.4.2
+Stable tag: 1.9.5
 License: GPLv2 or later
 
 Create and manage custom post types and custom taxonomies with an easy-to-use interface in WordPress.
@@ -60,6 +60,9 @@ Install **MB Custom Post Type** extension
 2. Edit custom post type
 
 == Changelog ==
+
+= 1.9.5 - 2020-07-28 =
+- Use WordPress's built-in clipboard script
 
 = 1.9.3 - 2020-04-16 =
 - Fix notice: Undefined index `meta_box_cb`
