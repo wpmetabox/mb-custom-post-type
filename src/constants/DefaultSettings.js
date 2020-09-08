@@ -62,7 +62,8 @@ const DefaultSettings = {
 	...LabelSettings,
 	...SupportSettings,
 	...TaxonomySettings,
-	...AdvancedSettings
+	...AdvancedSettings,
+	...MbCpt
 };
 
 export default DefaultSettings;

@@ -48,22 +48,17 @@ class MB_CPT_Post_Type_Edit extends MB_CPT_Base_Edit {
 	 * @return array
 	 */
 	public function js_vars() {
-		// @codingStandardsIgnoreStart
-		return array_merge( parent::js_vars(), array(
-			'menu_name'          => '%name%',
-			'name_admin_bar'     => '%singular_name%',
-			'all_items'          => __( 'All %name%', 'mb-custom-post-type' ),
-			'add_new'            => __( 'Add new', 'mb-custom-post-type' ),
-			'add_new_item'       => __( 'Add new %singular_name%', 'mb-custom-post-type' ),
-			'edit_item'          => __( 'Edit %singular_name%', 'mb-custom-post-type' ),
-			'new_item'           => __( 'New %singular_name%', 'mb-custom-post-type' ),
-			'view_item'          => __( 'View %singular_name%', 'mb-custom-post-type' ),
-			'search_items'       => __( 'Search %name%', 'mb-custom-post-type' ),
-			'not_found'          => __( 'No %name% found', 'mb-custom-post-type' ),
-			'not_found_in_trash' => __( 'No %name% found in Trash', 'mb-custom-post-type' ),
-			'parent_item_colon'  => __( 'Parent %singular_name%', 'mb-custom-post-type' ),
-		) );
-		// @codingStandardsIgnoreEnd
+		$screen = get_current_screen();
+
+		if ( ! is_admin() || $screen->id !== 'mb-post-type' ) {
+			return null;
+		}
+
+		global $post;
+
+		var_dump( (array) json_decode( $post->post_content ) );
+
+		return array_merge( parent::js_vars(), (array) json_decode( $post->post_content ) );
 	}
 
 	/**

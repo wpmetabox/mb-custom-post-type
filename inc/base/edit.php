@@ -64,7 +64,7 @@ abstract class MB_CPT_Base_Edit {
 			'1.0.0',
 			true
 		);
-		wp_localize_script( 'mb-cpt', 'MbCptLabels', $this->js_vars() );
+		wp_localize_script( 'mb-cpt', 'MbCpt', $this->js_vars() );
 	}
 
 	/**
@@ -73,11 +73,7 @@ abstract class MB_CPT_Base_Edit {
 	 * @return array
 	 */
 	public function js_vars() {
-		return array(
-			'copy'       => __( 'Copy', 'mb-custom-post-type' ),
-			'copied'     => __( 'Copied', 'mb-custom-post-type' ),
-			'manualCopy' => __( 'Press Ctrl-C to copy', 'mb-custom-post-type' ),
-		);
+		return [];
 	}
 
 	/**

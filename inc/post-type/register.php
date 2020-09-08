@@ -111,6 +111,12 @@ class MB_CPT_Post_Type_Register extends MB_CPT_Base_Register {
 			}
 		}
 
+		wp_update_post( [
+			'ID'           => $mb_cpt_id,
+			'post_content' => json_encode( array_merge( $labels, $args ) )
+		] );
+
+		// var_dump( json_encode( array_merge( $labels, $args ) ) );
 		return array( $labels, $args );
 	}
 
