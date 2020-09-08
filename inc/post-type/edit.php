@@ -479,6 +479,20 @@ class MB_CPT_Post_Type_Edit extends MB_CPT_Base_Edit {
 			'fields'     => $code_fields,
 		);
 
+		$meta_boxes[] = [
+			'title'      => __( 'CPT Editor', 'auto-listings' ),
+			'id'         => 'root',
+			'class'      => 'cpt',
+			'post_types' => [ 'mb-post-type' ],
+			'style'      => 'seamless',
+			'fields'     => [
+				[
+					'type'     => 'custom_html',
+					// 'callback' => [ $this, 'render_editors' ],
+				],
+			],
+		];
+
 		$fields = array_merge( $basic_fields, $labels_fields, $advanced_fields );
 
 		// Add AngularJS attributes to fields.
@@ -489,6 +503,14 @@ class MB_CPT_Post_Type_Edit extends MB_CPT_Base_Edit {
 		}
 
 		return $meta_boxes;
+	}
+
+	private function render_editor() {
+		ob_start();
+		?>
+		<div id="root" class="cpt"></div>
+		<?php
+		return ob_get_clean();
 	}
 
 	/**

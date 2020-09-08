@@ -1,129 +1,111 @@
-(function ( $, document, angular, hljs, i18n ) {
-	'use strict';
+/******/ (function(modules) { // webpackBootstrap
+/******/ 	// The module cache
+/******/ 	var installedModules = {};
+/******/
+/******/ 	// The require function
+/******/ 	function __webpack_require__(moduleId) {
+/******/
+/******/ 		// Check if module is in cache
+/******/ 		if(installedModules[moduleId]) {
+/******/ 			return installedModules[moduleId].exports;
+/******/ 		}
+/******/ 		// Create a new module (and put it into the cache)
+/******/ 		var module = installedModules[moduleId] = {
+/******/ 			i: moduleId,
+/******/ 			l: false,
+/******/ 			exports: {}
+/******/ 		};
+/******/
+/******/ 		// Execute the module function
+/******/ 		modules[moduleId].call(module.exports, module, module.exports, __webpack_require__);
+/******/
+/******/ 		// Flag the module as loaded
+/******/ 		module.l = true;
+/******/
+/******/ 		// Return the exports of the module
+/******/ 		return module.exports;
+/******/ 	}
+/******/
+/******/
+/******/ 	// expose the modules object (__webpack_modules__)
+/******/ 	__webpack_require__.m = modules;
+/******/
+/******/ 	// expose the module cache
+/******/ 	__webpack_require__.c = installedModules;
+/******/
+/******/ 	// define getter function for harmony exports
+/******/ 	__webpack_require__.d = function(exports, name, getter) {
+/******/ 		if(!__webpack_require__.o(exports, name)) {
+/******/ 			Object.defineProperty(exports, name, { enumerable: true, get: getter });
+/******/ 		}
+/******/ 	};
+/******/
+/******/ 	// define __esModule on exports
+/******/ 	__webpack_require__.r = function(exports) {
+/******/ 		if(typeof Symbol !== 'undefined' && Symbol.toStringTag) {
+/******/ 			Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
+/******/ 		}
+/******/ 		Object.defineProperty(exports, '__esModule', { value: true });
+/******/ 	};
+/******/
+/******/ 	// create a fake namespace object
+/******/ 	// mode & 1: value is a module id, require it
+/******/ 	// mode & 2: merge all properties of value into the ns
+/******/ 	// mode & 4: return value when already ns object
+/******/ 	// mode & 8|1: behave like require
+/******/ 	__webpack_require__.t = function(value, mode) {
+/******/ 		if(mode & 1) value = __webpack_require__(value);
+/******/ 		if(mode & 8) return value;
+/******/ 		if((mode & 4) && typeof value === 'object' && value && value.__esModule) return value;
+/******/ 		var ns = Object.create(null);
+/******/ 		__webpack_require__.r(ns);
+/******/ 		Object.defineProperty(ns, 'default', { enumerable: true, value: value });
+/******/ 		if(mode & 2 && typeof value != 'string') for(var key in value) __webpack_require__.d(ns, key, function(key) { return value[key]; }.bind(null, key));
+/******/ 		return ns;
+/******/ 	};
+/******/
+/******/ 	// getDefaultExport function for compatibility with non-harmony modules
+/******/ 	__webpack_require__.n = function(module) {
+/******/ 		var getter = module && module.__esModule ?
+/******/ 			function getDefault() { return module['default']; } :
+/******/ 			function getModuleExports() { return module; };
+/******/ 		__webpack_require__.d(getter, 'a', getter);
+/******/ 		return getter;
+/******/ 	};
+/******/
+/******/ 	// Object.prototype.hasOwnProperty.call
+/******/ 	__webpack_require__.o = function(object, property) { return Object.prototype.hasOwnProperty.call(object, property); };
+/******/
+/******/ 	// __webpack_public_path__
+/******/ 	__webpack_require__.p = "";
+/******/
+/******/
+/******/ 	// Load entry module and return exports
+/******/ 	return __webpack_require__(__webpack_require__.s = 0);
+/******/ })
+/************************************************************************/
+/******/ ({
 
-	/**
-	 * Helper function to convert string to slug
-	 * @param str
-	 * @return string
-	 */
-	function stringToSlug( str ) {
-		// Trim the string
-		str = str.replace( /^\s+|\s+$/g, '' );
-		str = str.toLowerCase();
+/***/ "./src/index.js":
+/*!**********************!*\
+  !*** ./src/index.js ***!
+  \**********************/
+/*! no static exports found */
+/***/ (function(module, exports) {
 
-		// Remove accents
-		var from = "àáäâèéëêìíïîòóöôùúüûñç·/_,:;",
-			to = "aaaaeeeeiiiioooouuuunc------",
-			i, l;
+eval("throw new Error(\"Module parse failed: Unexpected token (5:17)\\nYou may need an appropriate loader to handle this file type, currently no loaders are configured to process this file. See https://webpack.js.org/concepts#loaders\\n| import App from './App';\\n| \\n> ReactDOM.render( <App />, document.getElementById( 'root' ) );\");\n\n//# sourceURL=webpack:///./src/index.js?");
 
-		for ( i = 0, l = from.length; i < l; i ++ ) {
-			str = str.replace( new RegExp( from.charAt( i ), 'g' ), to.charAt( i ) );
-		}
+/***/ }),
 
-		str = str.replace( /[^a-z0-9 -]/g, '' ) // remove invalid chars
-			.replace( /\s+/g, '-' ) // collapse whitespace and replace by -
-			.replace( /-+/g, '-' ); // collapse dashes
-		return str;
-	}
+/***/ 0:
+/*!****************************!*\
+  !*** multi ./src/index.js ***!
+  \****************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
 
-	function togglePanels() {
-		var $settings = $( '#mb-cpt-advanced-settings' ),
-			$labels = $( '#mb-cpt-label-settings' ),
-			$code = $( '#mb-cpt-generate-code' );
+eval("module.exports = __webpack_require__(/*! ./src/index.js */\"./src/index.js\");\n\n\n//# sourceURL=webpack:///multi_./src/index.js?");
 
-		$labels.hide();
-		$code.hide();
+/***/ })
 
-		function toggle( buttonSelector, $element ) {
-			$( buttonSelector ).on( 'click', function() {
-				$settings.hide();
-				$labels.hide();
-				$code.hide();
-				$element.show();
-			} );
-		}
-
-		toggle( '#mb-cpt-toggle-settings', $settings );
-		toggle( '#mb-cpt-toggle-labels', $labels );
-		toggle( '#mb-cpt-toggle-code', $code );
-	}
-
-	/**
-	 * Add/Remove active class for selected/unselected menu icon
-	 */
-	function activeMenu() {
-		$( 'input[name="args_menu_icon"]' ).on( 'change', function () {
-			$( this ).closest( '.icon-single' ).addClass( 'active' ).siblings().removeClass( 'active' );
-		} );
-	}
-
-	function copyToClipboard() {
-		var icon = '<svg class="mb-icon--copy" aria-hidden="true" role="img"><use href="#mb-icon-copy" xlink:href="#icon-copy"></use></svg> ',
-			clipboard = new ClipboardJS( '.mb-button--copy', {
-				target: function ( trigger ) {
-					return trigger.nextElementSibling;
-				}
-			} );
-		clipboard.on('success', function(e) {
-			e.clearSelection();
-			e.trigger.innerHTML = icon + i18n.copied;
-			setTimeout(function() {
-				e.trigger.innerHTML = icon + i18n.copy;
-			}, 3000);
-		} );
-		clipboard.on('error', function() {
-			alert( i18n.manualCopy );
-		});
-	}
-
-	angular.module( 'mbPostType', [] ).controller( 'PostTypeController', [ '$scope', function ( $scope ) {
-		// Initialize labels
-		$scope.labels = {};
-
-		// Update labels and slug when plural and singular name are updated
-		$scope.updateLabels = function () {
-			var params = [
-				'menu_name',
-				'name_admin_bar',
-				'all_items',
-				'add_new',
-				'add_new_item',
-				'edit_item',
-				'new_item',
-				'view_item',
-				'search_items',
-				'not_found',
-				'not_found_in_trash',
-				'parent_item_colon'
-			];
-			params.forEach( function( param ) {
-				$scope.labels[param] = i18n[param].replace( '%name%', $scope.labels.name ).replace( '%singular_name%', $scope.labels.singular_name );
-			} );
-
-			// Update slug, make sure it has <= 20 characters.
-			var slug = stringToSlug( $scope.labels.singular_name );
-			if ( slug.length > 20 ) {
-				slug = slug.substring( 0, 20 );
-				var lastChar = slug.substr( 19 );
-				if ( '-' === lastChar ) {
-					slug = slug.substring( 0, 19 );
-				}
-			}
-
-			$scope.post_type = slug;
-		};
-	} ] );
-
-	// Bootstrap AngularJS app
-	angular.element( document ).ready( function () {
-		angular.bootstrap( document.getElementById( 'wpbody-content' ), ['mbPostType'] );
-	} );
-
-	// Run when document is ready
-	$( function () {
-		togglePanels();
-		activeMenu();
-		copyToClipboard();
-	} );
-	hljs.initHighlightingOnLoad();
-} )( jQuery, document, angular, hljs, MbCptLabels );
+/******/ });

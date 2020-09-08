@@ -1,2 +1,9 @@
 .svn
 vendor/
+node_modules
+.cache
+dist
+build
+*.lock
+*.log
+*.DS_Store
