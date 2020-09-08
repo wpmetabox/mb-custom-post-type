@@ -31,7 +31,7 @@ const MainTabs = ( { setShowCode } ) => (
 				<Control name="taxonomies" values={TaxonomyDatas} props={TaxonomyDatas} />
 			</TabPanel>
 		</Tabs>
-		<button className="ptg-button" onClick={ setShowCode }>Generate Code</button>
+		<button className="button button-primary button-large" onClick={ setShowCode }>Generate Code</button>
 	</>
 );
 

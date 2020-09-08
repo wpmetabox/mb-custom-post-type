@@ -4,13 +4,16 @@
 	"description": "",
 	"main": "index.js",
 	"scripts": {
-		"css": "node-sass --output-style compressed -x sass/style-react.scss -o css",
+		"css": "node-sass --output-style compressed -x sass/style.scss -o css",
 		"watch": "node-sass --output-style compressed -x -w sass -o css",
 		"start": "react-scripts start",
-		"build": "react-scripts build",
+		"build": "webpack --mode development",
 		"eject": "react-scripts eject"
 	},
 	"dependencies": {
+		"babel-core": "^6.26.3",
+		"babel-preset-env": "^1.7.0",
+		"babel-preset-react": "^6.24.1",
 		"react": "^16.13.1",
 		"react-clipboard.js": "^2.0.16",
 		"react-dom": "^16.13.1",
@@ -28,7 +31,9 @@
 		"customize-cra": "^1.0.0",
 		"node-sass": "^4.14.1",
 		"react-app-rewired": "^2.1.6",
-		"style-loader": "^1.2.1"
+		"style-loader": "^1.2.1",
+		"webpack": "^4.44.1",
+		"webpack-cli": "^3.3.12"
 	},
 	"browserslist": {
 		"production": [

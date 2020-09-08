@@ -5,11 +5,10 @@ body {
 .ptg {
 	--color-accent: #00b1b3;
 	--color-gray: #999;
-	--color-light: #ddd;
+	--color-light: #ccd0d4;
 	--color-red: #e53e3e;
 
 	font-size: 14px;
-	margin: 48px 0;
 
 	label {
 		cursor: pointer;
@@ -25,6 +24,7 @@ body {
 		}
 		&__tab {
 			font-weight: bold;
+			margin-bottom: 0;
 		}
 		&__tab--selected {
 			border-color: var(--color-light);
@@ -61,8 +61,8 @@ body {
 		display: inline-block;
 		margin-top: -.5rem;
 		line-height: 0;
-		height: 1.4rem;
-		width: 1.4rem;
+		height: 1rem;
+		width: 1rem;
 		outline: 0;
 		text-align: center;
 		vertical-align: middle;
@@ -72,7 +72,7 @@ body {
 			content: url(data:image/svg+xml;utf8,%3Csvg%20xmlns%3D%27http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%27%20viewBox%3D%270%200%2020%2020%27%3E%3Cpath%20d%3D%27M14.83%204.89l1.34.94-5.81%208.38H9.02L5.78%209.67l1.34-1.25%202.57%202.4z%27%20fill%3D%27%231e8cbe%27%2F%3E%3C%2Fsvg%3E);
 			display: inline-block;
 			margin: -.25rem 0 0 -.4rem;
-			width: 1.8rem;
+			width: 1.5rem;
 		}
 	}
 	input[type="text"],
