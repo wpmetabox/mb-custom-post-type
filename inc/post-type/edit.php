@@ -56,8 +56,6 @@ class MB_CPT_Post_Type_Edit extends MB_CPT_Base_Edit {
 
 		global $post;
 
-		var_dump( (array) json_decode( $post->post_content ) );
-
 		return array_merge( parent::js_vars(), (array) json_decode( $post->post_content ) );
 	}
 

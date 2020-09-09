@@ -54,8 +54,8 @@ abstract class MB_CPT_Base_Edit {
 
 		$object = str_replace( 'mb-', '', $this->post_type );
 
-		wp_enqueue_style( 'highlightjs', MB_CPT_URL . 'css/atom-one-dark.min.css', array(), '9.15.8' );
-		wp_enqueue_style( 'mb-cpt', MB_CPT_URL . 'css/style.css', array(), '1.8.0' );
+		wp_enqueue_style( 'mb-cpt', MB_CPT_URL . 'css/style.css', [], '1.8.0' );
+		wp_enqueue_style( 'highlightjs', MB_CPT_URL . 'css/atom-one-dark.min.css', [], '9.15.8' );
 
 		wp_enqueue_script(
 			'mb-cpt',

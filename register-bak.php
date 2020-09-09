@@ -74,9 +74,8 @@ class MB_CPT_Post_Type_Register extends MB_CPT_Base_Register {
 		);
 
 		foreach ( $post_type_ids as $post_type ) {
-			list( $labels, $args ) = $this->get_post_type_data( $post_type );
-
-			$post_types[ $args['post_type'] ] = $this->set_up_post_type( $labels, $args );
+			$args = json_decode( $this->get_post_type_data( $post_type ) );
+			$post_types[ $args->post_type ] = $this->set_up_post_type( $args );
 		}
 
 		return $post_types;
@@ -92,8 +91,8 @@ class MB_CPT_Post_Type_Register extends MB_CPT_Base_Register {
 		// Get all post meta from current post.
 		$post_meta = get_post_meta( $mb_cpt_id );
 
-		$labels = array();
-		$args   = array();
+		$labels = [];
+		$args   = [];
 		foreach ( $post_meta as $key => $value ) {
 			$data = 1 === count( $value ) && ! in_array( $key, array( 'args_taxonomies', 'args_supports' ), true ) ? $value[0] : $value;
 
@@ -111,12 +110,14 @@ class MB_CPT_Post_Type_Register extends MB_CPT_Base_Register {
 			}
 		}
 
-		wp_update_post( [
-			'ID'           => $mb_cpt_id,
-			'post_content' => json_encode( array_merge( $labels, $args ) )
-		] );
+		// if ( ! get_post_field( 'post_content', $mb_cpt_id ) ) {
+			// wp_update_post( [
+			// 	'ID'           => $mb_cpt_id,
+			// 	'post_content' => json_encode( array_merge( $labels, $args ) )
+			// ] );
+		// }
 
-		return array( $labels, $args );
+		return get_post_field( 'post_content', $mb_cpt_id );
 	}
 
 	/**
@@ -127,62 +128,46 @@ class MB_CPT_Post_Type_Register extends MB_CPT_Base_Register {
 	 *
 	 * @return array
 	 */
-	public function set_up_post_type( $labels = array(), $args = array() ) {
-		$labels = wp_parse_args(
-			$labels,
-			array(
-				'menu_name'          => $labels['name'],
-				'name_admin_bar'     => $labels['singular_name'],
-				'add_new'            => __( 'Add New', 'mb-custom-post-type' ),
-				// translators: %s: Name of the custom post type in singular form.
-				'add_new_item'       => sprintf( __( 'Add New %s', 'mb-custom-post-type' ), $labels['singular_name'] ),
-				// translators: %s: Name of the custom post type in singular form.
-				'new_item'           => sprintf( __( 'New %s', 'mb-custom-post-type' ), $labels['singular_name'] ),
-				// translators: %s: Name of the custom post type in singular form.
-				'edit_item'          => sprintf( __( 'Edit %s', 'mb-custom-post-type' ), $labels['singular_name'] ),
-				// translators: %s: Name of the custom post type in singular form.
-				'view_item'          => sprintf( __( 'View %s', 'mb-custom-post-type' ), $labels['singular_name'] ),
-				// translators: %s: Name of the custom post type in singular form.
-				'update_item'        => sprintf( __( 'Update %s', 'mb-custom-post-type' ), $labels['singular_name'] ),
-				// translators: %s: Name of the custom post type in plural form.
-				'all_items'          => sprintf( __( 'All %s', 'mb-custom-post-type' ), $labels['name'] ),
-				// translators: %s: Name of the custom post type in plural form.
-				'search_items'       => sprintf( __( 'Search %s', 'mb-custom-post-type' ), $labels['name'] ),
-				// translators: %s: Name of the custom post type in singular form.
-				'parent_item_colon'  => sprintf( __( 'Parent %s:', 'mb-custom-post-type' ), $labels['name'] ),
-				// translators: %s: Name of the custom post type in plural form.
-				'not_found'          => sprintf( __( 'No %s found.', 'mb-custom-post-type' ), $labels['name'] ),
-				// translators: %s: Name of the custom post type in plural form.
-				'not_found_in_trash' => sprintf( __( 'No %s found in Trash.', 'mb-custom-post-type' ), $labels['name'] ),
-			)
-		);
-		$args   = wp_parse_args(
-			$args,
-			array(
-				'label'  => $labels['name'],
-				'labels' => $labels,
-				'public' => true,
-			)
-		);
+	public function set_up_post_type( $obj ) {
+		$labels = [
+			'menu_name'          => $obj->menu_name,
+			'name_admin_bar'     => $obj->singular_name,
+			'add_new'            => $obj->add_new,
+			'add_new_item'       => $obj->add_new_item,
+			'new_item'           => $obj->new_item,
+			'edit_item'          => $obj->edit_item,
+			'view_item'          => $obj->view_item,
+			'update_item'        => $obj->update_item,
+			'all_items'          => $obj->all_items,
+			'search_items'       => $obj->search_items,
+			'parent_item_colon'  => $obj->parent_item_colon,
+			'not_found'          => $obj->not_found,
+			'not_found_in_trash' => $obj->not_found_in_trash,
+		];
+		$args   = [
+			'label'  => $obj->name,
+			'labels' => $labels,
+			'public' => true,
+		];
 
-		if ( 'custom' === $args['capability_type'] ) {
-			$args['capability_type'] = array( strtolower( $labels['singular_name'] ), strtolower( $labels['name'] ) );
+		if ( 'custom' === $args->capability_type ) {
+			$args['capability_type'] = array( strtolower( $obj->singular_name ), strtolower( $obj->name ) );
 			$args['map_meta_cap'] = true;
 		}
 
-		if ( ! empty( $args['has_archive'] ) && ! empty( $args['archive_slug'] ) ) {
-			$args['has_archive'] = $args['archive_slug'];
+		if ( ! empty( $obj->has_archive ) && ! empty( $obj->archive_slug ) ) {
+			$args['has_archive'] = $obj->archive_slug;
 			unset( $args['archive_slug'] );
 		}
 
-		if ( empty( $args['rewrite_slug'] ) && empty( $args['rewrite_no_front'] ) ) {
+		if ( empty( $obj->rewrite_slug ) && empty( $obj->rewrite_no_front ) ) {
 			$args['rewrite'] = true;
 		} else {
-			$rewrite = array();
-			if ( ! empty( $args['rewrite_slug'] ) ) {
-				$rewrite['slug'] = $args['rewrite_slug'];
+			$rewrite = [];
+			if ( ! empty( $obj->rewrite_slug ) ) {
+				$rewrite['slug'] = $obj->rewrite_slug;
 			}
-			if ( ! empty( $args['rewrite_no_front'] ) ) {
+			if ( ! empty( $obj->rewrite_no_front ) ) {
 				$rewrite['with_front'] = false;
 			}
 			$args['rewrite'] = $rewrite;
@@ -320,5 +305,106 @@ class MB_CPT_Post_Type_Register extends MB_CPT_Base_Register {
 		}
 
 		return $bulk_messages;
+	}
+}
+
+
+/**
+ * Edit
+ */
+
+<?php
+/**
+ * Controls all operations of MB Custom Post Type extension for creating / modifying custom post type.
+ *
+ * @package    Meta Box
+ * @subpackage MB Custom Post Type
+ */
+
+/**
+ * Controls all operations for creating / modifying custom post type.
+ */
+class MB_CPT_Post_Type_Edit extends MB_CPT_Base_Edit {
+
+	/**
+	 * Post type register object.
+	 *
+	 * @var MB_CPT_Post_Type_Register
+	 */
+	protected $register;
+
+	/**
+	 * Encoder object.
+	 *
+	 * @var MB_CPT_Encoder_Interface
+	 */
+	protected $encoder;
+
+	/**
+	 * Class MB_CPT_Post_Type_Edit constructor.
+	 *
+	 * @param string                    $post_type Post type name.
+	 * @param MB_CPT_Post_Type_Register $register  Post type register object.
+	 * @param MB_CPT_Encoder_Interface  $encoder   Encoder object.
+	 */
+	public function __construct( $post_type, MB_CPT_Post_Type_Register $register, MB_CPT_Encoder_Interface $encoder ) {
+		parent::__construct( $post_type );
+
+		$this->register = $register;
+		$this->encoder  = $encoder;
+
+		// Change the menu positions option after all menus are registered.
+		add_action( 'admin_menu', array( $this, 'change_select_options' ), 9999 );
+	}
+
+	/**
+	 * List of Javascript variables.
+	 *
+	 * @return array
+	 */
+	public function js_vars() {
+		$screen = get_current_screen();
+
+		if ( ! is_admin() || $screen->id !== 'mb-post-type' ) {
+			return null;
+		}
+
+		global $post;
+
+		return array_merge( parent::js_vars(), (array) json_decode( $post->post_content ) );
+	}
+
+	/**
+	 * Register meta boxes for add/edit mb-post-type page.
+	 *
+	 * @param array $meta_boxes Meta boxes.
+	 *
+	 * @return array
+	 */
+	public function register_meta_boxes( $meta_boxes ) {
+		$meta_boxes[] = [
+			'title'      => __( 'CPT Editor', 'auto-listings' ),
+			'id'         => 'ptg',
+			'post_types' => [ 'mb-post-type' ],
+			'style'      => 'seamless',
+			'fields'     => [
+				[
+					'type' => 'custom_html',
+					'std'  => '<div id="root" class="ptg"></div>',
+				],
+				[
+					'id'   => 'title',
+					'type' => 'text',
+					'std'  => '',
+				],
+				[
+					'id'   => 'content',
+					'type' => 'text',
+					'std'  => '',
+				],
+			],
+		];
+
+		return $meta_boxes;
 	}
 }

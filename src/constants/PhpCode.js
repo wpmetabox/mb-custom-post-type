@@ -10,7 +10,6 @@ const labelSettings = settings => {
 			'new_item'           => esc_html__( '${settings.new_item + '\'' || `${'New ' + settings.singular_name + '\''}`}, '${settings.text_domain}' ),
 			'edit_item'          => esc_html__( '${settings.edit_item + '\'' || `${'Edit ' + settings.singular_name + '\''}`}, '${settings.text_domain}' ),
 			'view_item'          => esc_html__( '${settings.view_item + '\'' || `${'View ' + settings.singular_name + '\''}`}, '${settings.text_domain}' ),
-			'update_item'        => esc_html__( '${settings.update_item + '\'' || `${'Update ' + settings.singular_name + '\''}`}, '${settings.text_domain}' ),
 			'all_items'          => esc_html__( '${settings.all_items + '\'' || `${'All ' + settings.name + '\''}`}, '${settings.text_domain}' ),
 			'search_items'       => esc_html__( '${settings.search_items + '\'' || `${'Search ' + settings.name + '\''}`}, '${settings.text_domain}' ),
 			'parent_item_colon'  => esc_html__( '${settings.parent_item_colon + '\'' || `${'Parent ' + settings.singular_name + '\''}`}, '${settings.text_domain}' ),
@@ -92,7 +91,7 @@ function ${settings.function_name}() {
 		${reWrite( settings )}
 	];
 
-	register_post_type( '${settings.args_post_type}', $args );
+	register_post_type( '${settings.post_type}', $args );
 }`
 	);
 }

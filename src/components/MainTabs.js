@@ -4,7 +4,7 @@ import 'react-tabs/style/react-tabs.css';
 import { BasicDatas, LabelDatas, TaxonomyDatas, SupportDatas, AdvancedDatas } from '../constants/Data';
 import Control from './controls/Control';
 
-const MainTabs = ( { setShowCode } ) => (
+const MainTabs = () => (
 	<>
 		<Tabs forceRenderTabPanel={true}>
 			<TabList>
@@ -31,7 +31,6 @@ const MainTabs = ( { setShowCode } ) => (
 				<Control name="taxonomies" values={TaxonomyDatas} props={TaxonomyDatas} />
 			</TabPanel>
 		</Tabs>
-		<button className="button button-primary button-large" onClick={ setShowCode }>Generate Code</button>
 	</>
 );
 
