@@ -5,7 +5,15 @@ import MainTabs from './components/MainTabs';
 import Result from './components/Result';
 
 const App = () => {
-	const [state, setState] = useState( DefaultSettings );
+	let data = {};
+
+	if ( MbCpt[0] ) {
+		data = JSON.parse( ( MbCpt[0].slice(1) ).slice( 0, -1 ) );
+	} else {
+		data = DefaultSettings;
+	}
+
+	const [state, setState] = useState( data );
 	const [showCode, setShowCode] = useState( false );
 
 	const handleShowCode = e => {

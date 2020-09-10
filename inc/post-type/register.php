@@ -74,9 +74,9 @@ class MB_CPT_Post_Type_Register extends MB_CPT_Base_Register {
 		);
 
 		foreach ( $post_type_ids as $post_type ) {
-			list( $labels, $args ) = $this->get_post_type_data( $post_type );
+			$data = $this->get_post_type_data( $post_type );
 
-			$post_types[ $args['post_type'] ] = $this->set_up_post_type( $labels, $args );
+			$post_types[ $args['post_type'] ] = $this->set_up_post_type( $data );
 		}
 
 		return $post_types;
@@ -89,29 +89,38 @@ class MB_CPT_Post_Type_Register extends MB_CPT_Base_Register {
 	 * @return array          Array contains label and args of new post type.
 	 */
 	public function get_post_type_data( $mb_cpt_id ) {
-		// Get all post meta from current post.
-		$post_meta = get_post_meta( $mb_cpt_id );
+		if ( ! get_post( $mb_cpt_id )->post_content ) {
+			// Get all post meta from current post.
+			$post_meta = get_post_meta( $mb_cpt_id );
 
-		$labels = array();
-		$args   = array();
-		foreach ( $post_meta as $key => $value ) {
-			$data = 1 === count( $value ) && ! in_array( $key, array( 'args_taxonomies', 'args_supports' ), true ) ? $value[0] : $value;
+			$labels = [];
+			$args   = [];
+			foreach ( $post_meta as $key => $value ) {
+				$data = 1 === count( $value ) && ! in_array( $key, [ 'args_taxonomies', 'args_supports' ], true ) ? $value[0] : $value;
 
-			if ( ! in_array( $key, array( 'args_menu_position' ) ) ) {
-				$data = is_numeric( $data ) ? ( 1 === intval( $data ) ? true : false ) : $data;
-			} else {
-				$data = intval( $data );
+				if ( ! in_array( $key, [ 'args_menu_position' ] ) ) {
+					$data = is_numeric( $data ) ? ( 1 === intval( $data ) ? true : false ) : $data;
+				} else {
+					$data = intval( $data );
+				}
+
+				// If post meta has prefix 'label' then add it to $labels.
+				if ( false !== strpos( $key, 'label' ) ) {
+					$labels[ str_replace( 'label_', '', $key ) ] = $data;
+				} elseif ( false !== strpos( $key, 'args' ) ) {
+					$args[ str_replace( 'args_', '', $key ) ] = $data;
+				}
 			}
 
-			// If post meta has prefix 'label' then add it to $labels.
-			if ( false !== strpos( $key, 'label' ) ) {
-				$labels[ str_replace( 'label_', '', $key ) ] = $data;
-			} elseif ( false !== strpos( $key, 'args' ) ) {
-				$args[ str_replace( 'args_', '', $key ) ] = $data;
-			}
+			$post = [
+				'ID'           => $mb_cpt_id,
+				'post_content' => json_encode( [ $labels, $args ] ),
+			];
+	
+			wp_update_post( $post );
 		}
 
-		return array( $labels, $args );
+		return json_decode( get_post( $mb_cpt_id )->post_content );
 	}
 
 	/**
@@ -122,67 +131,49 @@ class MB_CPT_Post_Type_Register extends MB_CPT_Base_Register {
 	 *
 	 * @return array
 	 */
-	public function set_up_post_type( $labels = array(), $args = array() ) {
-		$labels = wp_parse_args(
-			$labels,
-			array(
-				'menu_name'          => $labels['name'],
-				'name_admin_bar'     => $labels['singular_name'],
-				'add_new'            => __( 'Add New', 'mb-custom-post-type' ),
-				// translators: %s: Name of the custom post type in singular form.
-				'add_new_item'       => sprintf( __( 'Add New %s', 'mb-custom-post-type' ), $labels['singular_name'] ),
-				// translators: %s: Name of the custom post type in singular form.
-				'new_item'           => sprintf( __( 'New %s', 'mb-custom-post-type' ), $labels['singular_name'] ),
-				// translators: %s: Name of the custom post type in singular form.
-				'edit_item'          => sprintf( __( 'Edit %s', 'mb-custom-post-type' ), $labels['singular_name'] ),
-				// translators: %s: Name of the custom post type in singular form.
-				'view_item'          => sprintf( __( 'View %s', 'mb-custom-post-type' ), $labels['singular_name'] ),
-				// translators: %s: Name of the custom post type in singular form.
-				'update_item'        => sprintf( __( 'Update %s', 'mb-custom-post-type' ), $labels['singular_name'] ),
-				// translators: %s: Name of the custom post type in plural form.
-				'all_items'          => sprintf( __( 'All %s', 'mb-custom-post-type' ), $labels['name'] ),
-				// translators: %s: Name of the custom post type in plural form.
-				'search_items'       => sprintf( __( 'Search %s', 'mb-custom-post-type' ), $labels['name'] ),
-				// translators: %s: Name of the custom post type in singular form.
-				'parent_item_colon'  => sprintf( __( 'Parent %s:', 'mb-custom-post-type' ), $labels['name'] ),
-				// translators: %s: Name of the custom post type in plural form.
-				'not_found'          => sprintf( __( 'No %s found.', 'mb-custom-post-type' ), $labels['name'] ),
-				// translators: %s: Name of the custom post type in plural form.
-				'not_found_in_trash' => sprintf( __( 'No %s found in Trash.', 'mb-custom-post-type' ), $labels['name'] ),
-			)
-		);
-		$args   = wp_parse_args(
-			$args,
-			array(
-				'label'  => $labels['name'],
-				'labels' => $labels,
-				'public' => true,
-			)
-		);
+	public function set_up_post_type( $data ) {
+		$labels = [
+			'menu_name'          => $data->name,
+			'name_admin_bar'     => $data->singular_name,
+			'add_new'            => $data->add_new,
+			'add_new_item'       => $data->add_new_item,
+			'new_item'           => $data->new_item,
+			'edit_item'          => $data->edit_item,
+			'view_item'          => $data->view_item,
+			'update_item'        => $data->update_item,
+			'all_items'          => $data->all_items,
+			'search_items'       => $data->search_items,
+			'parent_item_colon'  => $data->parent_item_colon,
+			'not_found'          => $data->not_found,
+			'not_found_in_trash' => $data->not_found_in_trash,
+		];
+		$args = [
+			'label'  => $data->name,
+			'labels' => $labels,
+			'public' => true,
+		];
 
-		if ( 'custom' === $args['capability_type'] ) {
-			$args['capability_type'] = array( strtolower( $labels['singular_name'] ), strtolower( $labels['name'] ) );
+		if ( 'custom' === $data->capability_type ) {
+			$args['capability_type'] = [ strtolower( $data->singular_name ), strtolower( $data->name ) ];
 			$args['map_meta_cap'] = true;
 		}
 
-		if ( ! empty( $args['has_archive'] ) && ! empty( $args['archive_slug'] ) ) {
-			$args['has_archive'] = $args['archive_slug'];
-			unset( $args['archive_slug'] );
+		if ( $data->has_archive && $data->archive_slug ) {
+			$args['has_archive'] = $data->archive_slug;
 		}
 
-		if ( empty( $args['rewrite_slug'] ) && empty( $args['rewrite_no_front'] ) ) {
+		if ( ! $data->rewrite_slug && ! $data->rewrite_no_front ) {
 			$args['rewrite'] = true;
 		} else {
-			$rewrite = array();
-			if ( ! empty( $args['rewrite_slug'] ) ) {
-				$rewrite['slug'] = $args['rewrite_slug'];
+			$rewrite = [];
+			if ( $data->rewrite_slug ) {
+				$rewrite['slug'] = $data->rewrite_slug;
 			}
-			if ( ! empty( $args['rewrite_no_front'] ) ) {
+			if ( $data->rewrite_no_front ) {
 				$rewrite['with_front'] = false;
 			}
+
 			$args['rewrite'] = $rewrite;
-			unset( $args['rewrite_slug'] );
-			unset( $args['rewrite_no_front'] );
 		}
 		unset( $args['post_type'] );
 
