@@ -13,13 +13,13 @@ const App = () => {
 		setShowCode( true );
 	}
 
-	// useEffect( () => {
-	// 	const title = document.getElementById( 'title' );
-	// 	title.value = state.name;
+	useEffect( () => {
+		const title = document.getElementById( 'title' );
+		title.value = state.name;
 
-	// 	const content = document.getElementById( 'content' );
-	// 	content.value = JSON.stringify( state );
-	// } );
+		const content = document.getElementById( 'content' );
+		content.value = JSON.stringify( state );
+	} );
 
 	return (
 		<PhpSettings.Provider value={[state, setState]}>

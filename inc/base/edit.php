@@ -40,8 +40,9 @@ abstract class MB_CPT_Base_Edit {
 		add_filter( 'rwmb_meta_boxes', array( $this, 'register_meta_boxes' ) );
 		// Modify post information after save post.
 		add_action( "save_post_$post_type", array( $this, 'save_post' ) );
-		// Add ng-controller to form.
-		add_action( 'post_edit_form_tag', array( $this, 'add_ng_controller' ) );
+		// Prevent saving data in post_meta
+		add_filter( 'rwmb_title_value', '__return_empty_string' );
+		add_filter( 'rwmb_content_value', '__return_empty_string' );
 	}
 
 	/**
@@ -93,20 +94,22 @@ abstract class MB_CPT_Base_Edit {
 	 * @param int $post_id Post ID.
 	 */
 	public function save_post( $post_id ) {
-		$singular = filter_input( INPUT_POST, 'label_singular_name', FILTER_SANITIZE_STRING );
+		$title = filter_input( INPUT_POST, 'title', FILTER_SANITIZE_STRING );
+		$content = filter_input( INPUT_POST, 'content', FILTER_SANITIZE_STRING );
 
 		// If label_singular_name is empty or if this function is called to prevent duplicated calls like revisions, manual hook to wp_insert_post, etc.
-		if ( ! $singular || true === $this->saved ) {
+		if ( ! $title || true === $this->saved ) {
 			return;
 		}
 
 		$this->saved = true;
 
 		// Update post title.
-		$post = array(
-			'ID'         => $post_id,
-			'post_title' => $singular,
-		);
+		$post = [
+			'ID'           => $post_id,
+			'post_title'   => $title,
+			'post_content' => $content,
+		];
 
 		wp_update_post( $post );
 
@@ -123,17 +126,6 @@ abstract class MB_CPT_Base_Edit {
 		$screen = get_current_screen();
 
 		return 'post' === $screen->base && $this->post_type === $screen->post_type;
-	}
-
-	/**
-	 * Add angular controller to form tag.
-	 */
-	public function add_ng_controller() {
-		if ( $this->is_edit_screen() ) {
-			$object = str_replace( array( 'mb-', '-' ), array( '', ' ' ), $this->post_type );
-			$object = str_replace( ' ', '', ucwords( $object ) );
-			echo 'ng-controller="' . esc_attr( $object ) . 'Controller"';
-		}
 	}
 
 	/**
