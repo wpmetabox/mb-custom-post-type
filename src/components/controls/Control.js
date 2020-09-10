@@ -41,7 +41,7 @@ const Control = ( {props, values, autoFills} ) => {
 			}
 
 			let str;
-			if ( 'post_type' === e.name ) {
+			if ( 'args_post_type' === e.name ) {
 				str = stringToSlug( value );
 				setState( state => ( {...state, [e.name]: str} ) );
 			} else {

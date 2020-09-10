@@ -53,18 +53,10 @@ abstract class MB_CPT_Base_Edit {
 			return;
 		}
 
-		$object = str_replace( 'mb-', '', $this->post_type );
-
 		wp_enqueue_style( 'mb-cpt', MB_CPT_URL . 'css/style.css', [], '1.8.0' );
 		wp_enqueue_style( 'highlightjs', MB_CPT_URL . 'css/atom-one-dark.min.css', [], '9.15.8' );
 
-		wp_enqueue_script(
-			'mb-cpt',
-			MB_CPT_URL . "js/$object.js",
-			[],
-			'1.0.0',
-			true
-		);
+		wp_enqueue_script( 'mb-cpt', MB_CPT_URL . 'js/post-type.js', [], '1.0.0', true );
 		wp_localize_script( 'mb-cpt', 'MbCpt', $this->js_vars() );
 	}
 

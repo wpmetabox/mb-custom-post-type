@@ -3,7 +3,7 @@ import { Icons } from './Icons';
 export const BasicDatas = [
 	{ type: 'text', name: 'name', label: 'Plural name', required: true },
 	{ type: 'text', name: 'singular_name', label: 'Singular name', required: true },
-	{ type: 'text', name: 'post_type', label: 'Slug', required: true, updateFrom: 'singular_name' },
+	{ type: 'text', name: 'args_post_type', label: 'Slug', required: true, updateFrom: 'singular_name' },
 	{ type: 'text', name: 'function_name', label: 'Function name' },
 	{ type: 'text', name: 'text_domain', label: 'Text domain' },
 ];
@@ -17,6 +17,7 @@ export const LabelDatas = [
 	{ type: 'text', name: 'edit_item', label: 'Edit item', defaultValue: 'Edit %singular_name%', updateFrom: 'singular_name' },
 	{ type: 'text', name: 'new_item', label: 'New item', defaultValue: 'New %singular_name%', updateFrom: 'singular_name' },
 	{ type: 'text', name: 'view_item', label: 'View item', defaultValue: 'View %singular_name%', updateFrom: 'singular_name' },
+	{ type: 'text', name: 'update_item', label: 'Update item', defaultValue: 'View %singular_name%', updateFrom: 'singular_name' },
 	{ type: 'text', name: 'search_items', label: 'Search items', defaultValue: 'Search %name%', updateFrom: 'name' },
 	{ type: 'text', name: 'not_found', label: 'Not found', defaultValue: 'No %name% found', updateFrom: 'name' },
 	{ type: 'text', name: 'not_found_in_trash', label: 'Not found in trash', defaultValue: 'No %name% found in Trash', updateFrom: 'name' },

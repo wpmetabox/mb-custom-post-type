@@ -1,9 +1,9 @@
 const BasicSettings = {
-	'name'         : '',
-	'singular_name': '',
-	'post_type'    : '',
-	'function_name': 'your_prefix_register_post_type',
-	'text_domain'  : 'your-textdomain',
+	'name'          : '',
+	'singular_name' : '',
+	'args_post_type': '',
+	'function_name' : 'your_prefix_register_post_type',
+	'text_domain'   : 'your-textdomain',
 }
 
 const LabelSettings = {
@@ -14,6 +14,7 @@ const LabelSettings = {
 	'new_item'          : '',
 	'edit_item'         : '',
 	'view_item'         : '',
+	'update_item'       : '',
 	'all_items'         : '',
 	'search_items'      : '',
 	'parent_item_colon' : '',
@@ -61,8 +62,7 @@ const DefaultSettings = {
 	...LabelSettings,
 	...SupportSettings,
 	...TaxonomySettings,
-	...AdvancedSettings,
-	...MbCpt
+	...AdvancedSettings
 };
 
 export default DefaultSettings;
