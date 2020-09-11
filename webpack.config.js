@@ -1,7 +1,7 @@
 const path = require('path')
 
 const config = {
-	entry: './src/index.js',
+	entry: './app/index.js',
 	output: {
 		filename: 'post-type.js',
 		path: path.resolve( __dirname, './js' )

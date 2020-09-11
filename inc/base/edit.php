@@ -42,6 +42,7 @@ abstract class MB_CPT_Base_Edit {
 		add_action( "save_post_$post_type", array( $this, 'save_post' ) );
 		// Prevent saving data in post_meta
 		add_filter( 'rwmb_title_value', '__return_empty_string' );
+		add_filter( 'rwmb_name_value', '__return_empty_string' );
 		add_filter( 'rwmb_content_value', '__return_empty_string' );
 	}
 
@@ -86,8 +87,9 @@ abstract class MB_CPT_Base_Edit {
 	 * @param int $post_id Post ID.
 	 */
 	public function save_post( $post_id ) {
-		$title = filter_input( INPUT_POST, 'title', FILTER_SANITIZE_STRING );
-		$content = filter_input( INPUT_POST, 'content', FILTER_SANITIZE_STRING );
+		$title   = filter_input( INPUT_POST, 'title', FILTER_SANITIZE_STRING );
+		$slug    = filter_input( INPUT_POST, 'name', FILTER_SANITIZE_STRING );
+		$content = filter_input( INPUT_POST, 'content' );
 
 		// If label_singular_name is empty or if this function is called to prevent duplicated calls like revisions, manual hook to wp_insert_post, etc.
 		if ( ! $title || true === $this->saved ) {
@@ -101,6 +103,7 @@ abstract class MB_CPT_Base_Edit {
 			'ID'           => $post_id,
 			'post_title'   => $title,
 			'post_content' => $content,
+			'post_name'    => $slug,
 		];
 
 		wp_update_post( $post );

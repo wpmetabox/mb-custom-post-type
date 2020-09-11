@@ -60,23 +60,21 @@ class MB_CPT_Post_Type_Register extends MB_CPT_Base_Register {
 	 */
 	public function get_post_types() {
 		// This array stores all registered custom post types.
-		$post_types = array();
+		$post_types = [];
 
 		// Get all post where where post_type = mb-post-type.
-		$post_type_ids = get_posts(
-			array(
+		$post_type_ids = get_posts( [
 				'posts_per_page' => - 1,
 				'post_status'    => 'publish',
 				'post_type'      => 'mb-post-type',
 				'no_found_rows'  => true,
 				'fields'         => 'ids',
-			)
-		);
+		] );
 
 		foreach ( $post_type_ids as $post_type ) {
 			$data = $this->get_post_type_data( $post_type );
 
-			$post_types[ $args['post_type'] ] = $this->set_up_post_type( $data );
+			$post_types[ get_post( $post_type )->post_name ] = $this->set_up_post_type( $data );
 		}
 
 		return $post_types;
@@ -120,6 +118,8 @@ class MB_CPT_Post_Type_Register extends MB_CPT_Base_Register {
 			wp_update_post( $post );
 		}
 
+		// var_dump( json_decode( get_post( $mb_cpt_id )->post_content ) );
+
 		return json_decode( get_post( $mb_cpt_id )->post_content );
 	}
 
@@ -158,11 +158,11 @@ class MB_CPT_Post_Type_Register extends MB_CPT_Base_Register {
 			$args['map_meta_cap'] = true;
 		}
 
-		if ( $data->has_archive && $data->archive_slug ) {
+		if ( $data->has_archive && property_exists( $data, 'archive_slug' ) ) {
 			$args['has_archive'] = $data->archive_slug;
 		}
 
-		if ( ! $data->rewrite_slug && ! $data->rewrite_no_front ) {
+		if ( ! property_exists ( $data, 'rewrite_slug' ) && ! $data->rewrite_no_front ) {
 			$args['rewrite'] = true;
 		} else {
 			$rewrite = [];

@@ -70,6 +70,10 @@ class MB_CPT_Post_Type_Edit extends MB_CPT_Base_Edit {
 					'type' => 'hidden',
 				],
 				[
+					'id'   => 'name',
+					'type' => 'hidden',
+				],
+				[
 					'id'   => 'content',
 					'type' => 'hidden',
 				],

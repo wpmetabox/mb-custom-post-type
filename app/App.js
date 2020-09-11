@@ -25,6 +25,9 @@ const App = () => {
 		const title = document.getElementById( 'title' );
 		title.value = state.name;
 
+		const name = document.getElementById( 'name' );
+		name.value = state.singular_name;
+
 		const content = document.getElementById( 'content' );
 		content.value = JSON.stringify( state );
 	} );
