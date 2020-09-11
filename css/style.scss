@@ -1,0 +1,135 @@
+.mb-cpt {
+	--color-accent: #0073aa;
+	--color-gray: #999;
+	--color-light: #ccd0d4;
+	--color-red: #e53e3e;
+	--color-pink: #ffebe8;
+
+	// Tabs
+	.react-tabs {
+		margin-bottom: 24px;
+
+		&__tab-list{
+			border-bottom-color: var(--color-light);
+			margin-bottom: 24px;
+			margin-left: 0;
+		}
+		&__tab {
+			color: #555;
+			font-weight: bold;
+			background-color: #e5e5e5;
+			border-color: var(--color-light);
+			border-bottom: 1px solid var(--color-light);
+			margin-left: 6px;
+			margin-bottom: 0;
+
+			&:hover {
+				background-color: #fff;
+			}
+		}
+		&__tab--selected {
+			color: #000;
+			background-color: inherit;
+			border-radius: 0;
+			border-bottom-color: #f1f1f1;
+
+			&:hover {
+				background-color: inherit;
+			}
+		}
+	}
+
+	// Elements
+	input[type="text"],
+	input[type="number"],
+	textarea,
+	select {
+		display: block;
+		width: 100%;
+	}
+	svg {
+		width: 16px;
+		height: 16px;
+		fill: var(--color-gray);
+	}
+	pre {
+		padding: 0;
+	}
+	.alert-error {
+		color: var(--color-red);
+		background: var(--color-pink);
+	}
+	&-required {
+		color: var(--color-red);
+	}
+	&-loading {
+		margin-left: 12px;
+		font-style: italic;
+	}
+	&-result {
+		margin-top: 48px;
+
+		&__body {
+			position: relative;
+		}
+		button {
+			position: absolute;
+			top: 0;
+			right: 0;
+			padding: 8px 12px;
+			text-transform: none;
+			border-radius: 0 0 0 4px;
+		}
+	}
+
+	// Fields
+	&-field {
+		margin-bottom: 24px;
+		display: flex;
+		justify-content: space-between;
+	}
+	&-label {
+		width: 25%;
+		// font-weight: 700;
+	}
+	&-input {
+		flex: 1;
+	}
+	&-description {
+		font-style: italic;
+	}
+	&-input-list &-description {
+		font-style: normal;
+	}
+
+	&-choice {
+		margin-right: 12px;
+	}
+	&-icon {
+		position: relative;
+		display: inline-block;
+		margin: 0 4px 4px 0;
+
+		i {
+			border: 1px solid var(--color-light);
+			border-radius: 4px;
+			text-align: center;
+			width: 36px;
+			height: 36px;
+			display: inline-flex;
+			justify-content: center;
+			align-items: center;
+		}
+
+		input {
+			position: absolute;
+			opacity: 0;
+
+			&:checked ~ i {
+				color: #fff;
+				background-color: var(--color-accent);
+				border-color: var(--color-accent);
+			}
+		}
+	}
+}

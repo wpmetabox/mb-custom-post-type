@@ -8,11 +8,11 @@ const MainTabs = () => (
 	<>
 		<Tabs forceRenderTabPanel={true}>
 			<TabList>
-				<Tab><i className="dashicons-admin-generic dashicons"></i> General</Tab>
-				<Tab><i className="dashicons-tag dashicons"></i> Labels</Tab>
-				<Tab><i className="dashicons-admin-settings dashicons"></i> Advanced</Tab>
-				<Tab><i className="dashicons-edit-large dashicons"></i> Supports</Tab>
-				<Tab><i className="dashicons-category dashicons"></i> Taxonomies</Tab>
+				<Tab>General</Tab>
+				<Tab>Labels</Tab>
+				<Tab>Advanced</Tab>
+				<Tab>Supports</Tab>
+				<Tab>Taxonomies</Tab>
 			</TabList>
 
 			<TabPanel>

@@ -4,10 +4,10 @@
 	"description": "",
 	"main": "index.js",
 	"scripts": {
-		"css": "node-sass --output-style compressed -x sass/style.scss -o css",
-		"watch": "node-sass --output-style compressed -x -w sass -o css",
+		"css": "node-sass --output-style compressed -x css/style.scss -o css",
+		"watch": "node-sass --output-style compressed -x -w css -o css",
 		"start": "react-scripts start",
-		"build": "webpack --mode development",
+		"build": "webpack --mode production",
 		"eject": "react-scripts eject"
 	},
 	"dependencies": {
