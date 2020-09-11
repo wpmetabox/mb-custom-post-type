@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import PhpSettings from '../PhpSettings';
 import DefaultSettings from './constants/DefaultSettings';
 import MainTabs from './components/MainTabs';

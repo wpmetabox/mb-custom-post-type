@@ -60,7 +60,7 @@ class MB_CPT_Taxonomy_Edit extends MB_CPT_Base_Edit {
 		$meta_boxes[] = [
 			'title'      => __( 'Taxonomy Editor', 'mb-custom-post-type' ),
 			'id'         => 'ctg',
-			'post_types' => [ 'mb-post-type' ],
+			'post_types' => [ 'mb-taxonomy' ],
 			'style'      => 'seamless',
 			'fields'     => [
 				[
@@ -81,6 +81,7 @@ class MB_CPT_Taxonomy_Edit extends MB_CPT_Base_Edit {
 				],
 			],
 		];
+
 		return $meta_boxes;
 	}
 

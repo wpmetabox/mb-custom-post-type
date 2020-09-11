@@ -82,4 +82,22 @@ class MB_CPT_Post_Type_Edit extends MB_CPT_Base_Edit {
 
 		return $meta_boxes;
 	}
+
+	/**
+	 * Display upgrade message.
+	 *
+	 * @return string
+	 */
+	public function upgrade_message() {
+		$output  = '<ul>';
+		$output .= '<li>' . __( 'Create custom fields with drag-n-drop interface - no coding knowledge required!', 'mb-custom-post-type' ) . '</li>';
+		$output .= '<li>' . __( 'Add custom fields to taxonomies or user profile.', 'mb-custom-post-type' ) . '</li>';
+		$output .= '<li>' . __( 'Create custom settings pages.', 'mb-custom-post-type' ) . '</li>';
+		$output .= '<li>' . __( 'Create frontend submission forms.', 'mb-custom-post-type' ) . '</li>';
+		$output .= '<li>' . __( 'And much more!', 'mb-custom-post-type' ) . '</li>';
+		$output .= '</ul>';
+		$output .= '<a href="https://metabox.io/pricing/?utm_source=plugin_cpt&utm_medium=btn_upgrade&utm_campaign=cpt_upgrade" class="button button-primary">' . esc_html__( 'Get Meta Box Premium now', 'mb-custom-post-type' ) . '</a>';
+
+		return $output;
+	}
 }
