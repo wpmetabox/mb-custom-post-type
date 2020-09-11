@@ -2,13 +2,13 @@ import React from 'react';
 
 const Select = ( {label, name, update, description = '', values, defaultValue} ) => {
 	return (
-		<div className="ptg-field">
-			<label className="ptg-label" htmlFor={name}>{label}</label>
-			<div className="ptg-input">
+		<div className="mb-cpt-field">
+			<label className="mb-cpt-label" htmlFor={name}>{label}</label>
+			<div className="mb-cpt-input">
 				<select id={name} name={name} defaultValue={defaultValue} onChange={update}>
 					{values.map( (value, key) => <option key={key} value={value.value}>{value.label}</option> )}
 				</select>
-				{description && <div className="ptg-description">{description}</div>}
+				{description && <div className="mb-cpt-description">{description}</div>}
 			</div>
 		</div>
 	)

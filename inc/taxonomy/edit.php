@@ -65,7 +65,7 @@ class MB_CPT_Taxonomy_Edit extends MB_CPT_Base_Edit {
 			'fields'     => [
 				[
 					'type' => 'custom_html',
-					'std'  => '<div id="root" class="ctg"></div>',
+					'std'  => '<div id="root" class="mb-cpt"></div>',
 				],
 				[
 					'id'   => 'title',

@@ -15,7 +15,7 @@ const Result = () => {
 
 	if ( ! state.name || ! state.singular_name ) {
 		return (
-			<div className="ptg-result">
+			<div className="mb-cpt-result">
 				<p className="alert alert-error">
 					Required fields must not be emptied!
 				</p>
@@ -24,11 +24,11 @@ const Result = () => {
 	}
 
 	return (
-		<div className="ptg-result">
+		<div className="mb-cpt-result">
 			<div className="alert alert-info">
 				Copy the code and paste into your theme's <code>functions.php</code> file. Wanna more features or use inside the WordPress admin?
 				<a href="https://metabox.io/pricing/" target="_blank" rel="noopener noreferrer">Become a premium user</a>.</div>
-			<div className="ptg-result__body">
+			<div className="mb-cpt-result__body">
 				<Highlight className="php">{PhpCode( state )}</Highlight>
 				<Clipboard title="Click to copy the code" data-clipboard-text={PhpCode( state )} onSuccess={copy}>{copied ? 'Copied' : 'Copy'}</Clipboard>
 			</div>
