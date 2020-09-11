@@ -8,7 +8,7 @@ const App = () => {
 	let data = {};
 
 	if ( MbCpt[0] ) {
-		data = JSON.parse( ( MbCpt[0].slice(1) ).slice( 0, -1 ) );
+		data = JSON.parse( MbCpt[0] );
 	} else {
 		data = DefaultSettings;
 	}
