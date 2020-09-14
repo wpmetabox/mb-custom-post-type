@@ -1,37 +1,37 @@
-import React from 'react';
-import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
-import 'react-tabs/style/react-tabs.css';
 import { BasicDatas, LabelDatas, TaxonomyDatas, SupportDatas, AdvancedDatas } from '../constants/Data';
 import Control from '../../controls/Control';
+const { TabPanel } = wp.components;
 
-const MainTabs = () => (
-	<>
-		<Tabs forceRenderTabPanel={true}>
-			<TabList>
-				<Tab>General</Tab>
-				<Tab>Labels</Tab>
-				<Tab>Advanced</Tab>
-				<Tab>Supports</Tab>
-				<Tab>Taxonomies</Tab>
-			</TabList>
+const tabs = [
+	{
+		name: 'general',
+		title: 'General',
+	},
+	{
+		name: 'labels',
+		title: 'Labels',
+	},
+	{
+		name: 'advanced',
+		title: 'Advanced',
+	},
+	{
+		name: 'supports',
+		title: 'Supports',
+	},
+	{
+		name: 'taxonomies',
+		title: 'Taxonomies',
+	},
+];
+const panels = {
+	general: Object.keys( BasicDatas ).map( key => <Control key={key} props={BasicDatas[key]} autoFills={[...LabelDatas, ...BasicDatas]} /> ),
+	labels: Object.keys( LabelDatas ).map( key => <Control key={key} props={LabelDatas[key]} /> ),
+	advanced: Object.keys( AdvancedDatas ).map( key => <Control key={key} props={AdvancedDatas[key]} /> ),
+	supports: <Control name="supports" values={SupportDatas} props={SupportDatas} />,
+	taxonomies: <Control name="taxonomies" values={TaxonomyDatas} props={TaxonomyDatas} />,
+}
 
-			<TabPanel>
-				{ Object.keys( BasicDatas ).map( key => <Control key={key} props={BasicDatas[key]} autoFills={[...LabelDatas, ...BasicDatas]} /> ) }
-			</TabPanel>
-			<TabPanel>
-				{ Object.keys( LabelDatas ).map( key => <Control key={key} props={LabelDatas[key]} /> ) }
-			</TabPanel>
-			<TabPanel>
-				{ Object.keys( AdvancedDatas ).map( key => <Control key={key} props={AdvancedDatas[key]} /> ) }
-			</TabPanel>
-			<TabPanel>
-				<Control name="supports" values={SupportDatas} props={SupportDatas} />
-			</TabPanel>
-			<TabPanel>
-				<Control name="taxonomies" values={TaxonomyDatas} props={TaxonomyDatas} />
-			</TabPanel>
-		</Tabs>
-	</>
-);
+const MainTabs = () => <TabPanel tabs={ tabs }>{ tab => panels[tab.name] }</TabPanel>
 
 export default MainTabs;

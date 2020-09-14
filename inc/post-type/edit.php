@@ -56,10 +56,11 @@ class MB_CPT_Post_Type_Edit extends MB_CPT_Base_Edit {
 	 */
 	public function register_meta_boxes( $meta_boxes ) {
 		$meta_boxes[] = [
-			'title'      => __( 'CPT Editor', 'mb-custom-post-type' ),
-			'id'         => 'ptg',
+			'title'      => ' ',
+			'id'         => 'mb-cpt',
 			'post_types' => [ 'mb-post-type' ],
 			'style'      => 'seamless',
+			'context'    => 'after_title',
 			'fields'     => [
 				[
 					'type' => 'custom_html',

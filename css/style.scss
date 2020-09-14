@@ -1,43 +1,12 @@
+#mb-cpt {
+	margin-top: 0;
+}
 .mb-cpt {
 	--color-accent: #0073aa;
 	--color-gray: #999;
 	--color-light: #ccd0d4;
 	--color-red: #e53e3e;
 	--color-pink: #ffebe8;
-
-	// Tabs
-	.react-tabs {
-		margin-bottom: 24px;
-
-		&__tab-list{
-			border-bottom-color: var(--color-light);
-			margin-bottom: 24px;
-			margin-left: 0;
-		}
-		&__tab {
-			color: #555;
-			font-weight: bold;
-			background-color: #e5e5e5;
-			border-color: var(--color-light);
-			border-bottom: 1px solid var(--color-light);
-			margin-left: 6px;
-			margin-bottom: 0;
-
-			&:hover {
-				background-color: #fff;
-			}
-		}
-		&__tab--selected {
-			color: #000;
-			background-color: inherit;
-			border-radius: 0;
-			border-bottom-color: #f1f1f1;
-
-			&:hover {
-				background-color: inherit;
-			}
-		}
-	}
 
 	// Elements
 	input[type="text"],
@@ -132,4 +101,16 @@
 			}
 		}
 	}
+}
+
+// Tabs
+.components-tab-panel__tabs,
+.components-tab-panel__tab-content {
+	background: #fff;
+	border: 1px solid var(--color-light);
+}
+.components-tab-panel__tab-content {
+	border-top: none;
+	padding: 24px 16px 0;
+	margin-bottom: 24px;
 }

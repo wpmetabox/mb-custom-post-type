@@ -54,16 +54,16 @@ abstract class MB_CPT_Base_Edit {
 			return;
 		}
 
-		wp_enqueue_style( 'mb-cpt', MB_CPT_URL . 'css/style.css', [], '1.8.0' );
+		wp_enqueue_style( 'mb-cpt', MB_CPT_URL . 'css/style.css', ['wp-components'], '1.8.0' );
 		wp_enqueue_style( 'highlightjs', MB_CPT_URL . 'css/atom-one-dark.min.css', [], '9.15.8' );
 
 		if ( 'mb-post-type' === get_current_screen()->id ) {
-			wp_enqueue_script( 'mb-cpt', MB_CPT_URL . 'js/post-type.js', ['wp-element'], '1.0.0', true );
+			wp_enqueue_script( 'mb-cpt', MB_CPT_URL . 'js/post-type.js', ['wp-element', 'wp-components'], '1.0.0', true );
 			wp_localize_script( 'mb-cpt', 'MbCpt', $this->js_vars() );
 		}
 
 		if ( 'mb-taxonomy' === get_current_screen()->id ) {
-			wp_enqueue_script( 'mb-taxonomy', MB_CPT_URL . 'js/taxonomy.js', ['wp-element'], '1.0.0', true );
+			wp_enqueue_script( 'mb-taxonomy', MB_CPT_URL . 'js/taxonomy.js', ['wp-element', 'wp-components'], '1.0.0', true );
 			wp_localize_script( 'mb-taxonomy', 'MbTax', $this->js_vars() );
 		}
 	}

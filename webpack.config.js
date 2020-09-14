@@ -1,4 +1,10 @@
-const path = require('path')
+const path = require('path');
+
+// https://www.cssigniter.com/how-to-use-external-react-components-in-your-gutenberg-blocks/
+const externals = {
+	'react': 'React',
+	'react-dom': 'ReactDOM',
+};
 
 const commonModules = {
 	rules: [
@@ -25,10 +31,7 @@ const CptConfig = {
 		filename: 'post-type.js',
 		path: path.resolve( __dirname, './js' )
 	},
-	externals: {
-		'react': 'React',
-		'react-dom': 'ReactDOM',
-	},
+	externals,
 	module: commonModules
 }
 
@@ -38,10 +41,7 @@ const TaxonomyConfig = {
 		filename: 'taxonomy.js',
 		path: path.resolve( __dirname, './js' )
 	},
-	externals: {
-		'react': 'React',
-		'react-dom': 'ReactDOM',
-	},
+	externals,
 	module: commonModules
 }
 
