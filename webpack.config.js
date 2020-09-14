@@ -25,6 +25,10 @@ const CptConfig = {
 		filename: 'post-type.js',
 		path: path.resolve( __dirname, './js' )
 	},
+	externals: {
+		'react': 'React',
+		'react-dom': 'ReactDOM',
+	},
 	module: commonModules
 }
 
@@ -33,6 +37,10 @@ const TaxonomyConfig = {
 	output: {
 		filename: 'taxonomy.js',
 		path: path.resolve( __dirname, './js' )
+	},
+	externals: {
+		'react': 'React',
+		'react-dom': 'ReactDOM',
 	},
 	module: commonModules
 }
