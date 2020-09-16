@@ -5,8 +5,20 @@ import MainTabs from './components/MainTabs';
 import Result from './components/Result';
 
 const App = () => {
-	const [state, setState] = useState( DefaultSettings );
+	let data = {};
+
+	if ( MbTax[0] ) {
+		data = JSON.parse( MbTax[0] );
+	} else {
+		data = DefaultSettings;
+	}
+
+	const [state, setState] = useState( data );
 	const [showCode, setShowCode] = useState( false );
+
+	if ( state['taxonomy'] ) {
+		state['args_taxonomy'] = state['taxonomy'];
+	}
 
 	const handleShowCode = e => {
 		e.preventDefault();

@@ -24,10 +24,10 @@ const LabelSettings = {
 	'not_found'                 : '',
 }
 
-export const PostTypeSettings = {
-	'post': true,
-	'page': true,
-}
+let temp = {}
+Object.keys( MbPtOptions ).forEach( e => temp[e] = [ 'post', 'page' ].includes( e ) ? true : false );
+
+export const PostTypeSettings = temp;
 
 export const AdvancedSettings = {
 	'public'              : true,

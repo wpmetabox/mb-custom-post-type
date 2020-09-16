@@ -17,6 +17,10 @@ const App = () => {
 	const [state, setState] = useState( data );
 	const [showCode, setShowCode] = useState( false );
 
+	if ( state['post_type'] ) {
+		state['args_post_type'] = state['post_type'];
+	}
+
 	const handleShowCode = e => {
 		e.preventDefault();
 		setShowCode( true );

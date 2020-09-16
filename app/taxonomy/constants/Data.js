@@ -24,10 +24,17 @@ export const LabelDatas = [
 	{ type: 'text', name: 'not_found', label: 'Not found', defaultValue: 'No %name% found', updateFrom: 'name' },
 ];
 
-export const PostTypeDatas = [
-	{ name: 'post', description: 'Post', checked: true },
-	{ name: 'page', description: 'Page', checked: false },
-];
+let temp = [];
+let supportPostTypes = JSON.parse( MbTax[0] ).post_types;
+Object.keys( MbPtOptions ).forEach( e => {
+	if ( supportPostTypes ) {
+		temp.push( { name: e, description: MbPtOptions[e], checked: supportPostTypes.includes( e ) ? true : false } )
+	} else {
+		temp.push( { name: e, description: MbPtOptions[e], checked: 'post' === e ? true : false } )
+	}
+} );
+
+export const PostTypeDatas = temp;
 
 export const AdvancedDatas = [
 	{ type: 'checkbox', name: 'public', label: 'Public?', description: 'If the taxonomy should be publicly queryable.', checked: true },

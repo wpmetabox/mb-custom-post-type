@@ -79,11 +79,11 @@ class MB_CPT_Taxonomy_Register extends MB_CPT_Base_Register {
 
 		// Get all registered custom taxonomies.
 		$taxonomies = $this->get_taxonomies();
-		foreach ( $taxonomies as $taxonomy => $args ) {
-			if ( isset( $args['meta_box_cb'] ) && false !== $args['meta_box_cb'] ) {
-				unset( $args['meta_box_cb'] );
+		foreach ( $taxonomies as $taxonomy => $tax_args ) {
+			if ( isset( $tax_args['meta_box_cb'] ) && false !== $tax_args['meta_box_cb'] ) {
+				unset( $tax_args['meta_box_cb'] );
 			}
-			register_taxonomy( $taxonomy, isset( $args['post_types'] ) ? $args['post_types'] : null, $args );
+			register_taxonomy( $taxonomy, isset( $tax_args['post_types'] ) ? $tax_args['post_types'] : null, $tax_args );
 		}
 	}
 
@@ -106,7 +106,7 @@ class MB_CPT_Taxonomy_Register extends MB_CPT_Base_Register {
 		foreach ( $taxonomy_ids as $taxonomy_id ) {
 			$data = $this->get_taxonomy_data( $taxonomy_id );
 
-			$taxonomies[ $args['taxonomy'] ] = $this->set_up_taxonomy( $data );
+			$taxonomies[ get_post( $taxonomy_id )->post_name ] = $this->set_up_taxonomy( $data );
 		}
 
 		return $taxonomies;
@@ -144,6 +144,7 @@ class MB_CPT_Taxonomy_Register extends MB_CPT_Base_Register {
 
 			$post = [
 				'ID'           => $taxonomy_id,
+				'post_name'    => $args['taxonomy'],
 				'post_content' => json_encode( array_merge( $labels, $args ) ),
 			];
 	
@@ -185,7 +186,7 @@ class MB_CPT_Taxonomy_Register extends MB_CPT_Base_Register {
 			'public' => true,
 		];
 
-		if ( ! $data->rewrite_slug && ! $data->rewrite_no_front ) {
+		if ( ! $data->rewrite_no_front ) {
 			$args['rewrite'] = true;
 		} else {
 			$rewrite = [];

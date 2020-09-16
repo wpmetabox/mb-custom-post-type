@@ -63,8 +63,16 @@ abstract class MB_CPT_Base_Edit {
 		}
 
 		if ( 'mb-taxonomy' === get_current_screen()->id ) {
+			$options    = [];
+			$post_types = get_post_types( '', 'objects' );
+			unset( $post_types['mb-taxonomy'], $post_types['revision'], $post_types['nav_menu_item'] );
+			foreach ( $post_types as $post_type => $post_type_object ) {
+				$options[ $post_type ] = $post_type_object->labels->singular_name;
+			}
+
 			wp_enqueue_script( 'mb-taxonomy', MB_CPT_URL . 'js/taxonomy.js', ['wp-element', 'wp-components'], '1.0.0', true );
 			wp_localize_script( 'mb-taxonomy', 'MbTax', $this->js_vars() );
+			wp_localize_script( 'mb-taxonomy', 'MbPtOptions', $options );
 		}
 	}
 
