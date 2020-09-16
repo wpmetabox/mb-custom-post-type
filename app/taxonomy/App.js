@@ -16,7 +16,7 @@ const App = () => {
 	const [state, setState] = useState( data );
 	const [showCode, setShowCode] = useState( false );
 
-	if ( state['taxonomy'] ) {
+	if ( state['taxonomy'] && ! state['args_taxonomy'] ) {
 		state['args_taxonomy'] = state['taxonomy'];
 	}
 
