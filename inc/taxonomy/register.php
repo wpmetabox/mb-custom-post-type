@@ -123,31 +123,38 @@ class MB_CPT_Taxonomy_Register extends MB_CPT_Base_Register {
 	 * @return array          Array contains label and args of new taxonomy.
 	 */
 	public function get_taxonomy_data( $mb_cpt_id ) {
-		// Get all post meta from current post.
-		$post_meta = get_post_meta( $mb_cpt_id );
-		// Create array that contains Labels of this current custom taxonomy.
-		$labels = array();
-		// Create array that contains arguments of this current custom taxonomy.
-		$args = array();
+		if ( ! get_post( $mb_cpt_id )->post_content ) {
+			$post_meta = get_post_meta( $mb_cpt_id );
 
-		foreach ( $post_meta as $key => $value ) {
-			if ( false !== strpos( $key, 'label' ) ) {
-				// If post meta has prefix 'label' then add it to $labels.
-				// @codingStandardsIgnoreLine
-				$data = 1 == count( $value ) ? $value[0] : $value;
+			$labels = [];
+			$args = [];
 
-				$labels[ str_replace( 'label_', '', $key ) ] = $data;
-			} elseif ( false !== strpos( $key, 'args' ) ) {
-				// If post meta has prefix 'args' then add it to $args.
-				// @codingStandardsIgnoreLine
-				$data = 1 == count( $value ) ? $value[0] : $value;
-				$data = is_numeric( $data ) ? ( 1 === intval( $data ) ? true : false ) : $data;
+			foreach ( $post_meta as $key => $value ) {
+				if ( false !== strpos( $key, 'label' ) ) {
+					// If post meta has prefix 'label' then add it to $labels.
+					// @codingStandardsIgnoreLine
+					$data = 1 == count( $value ) ? $value[0] : $value;
 
-				$args[ str_replace( 'args_', '', $key ) ] = $data;
+					$labels[ str_replace( 'label_', '', $key ) ] = $data;
+				} elseif ( false !== strpos( $key, 'args' ) ) {
+					// If post meta has prefix 'args' then add it to $args.
+					// @codingStandardsIgnoreLine
+					$data = 1 == count( $value ) ? $value[0] : $value;
+					$data = is_numeric( $data ) ? ( 1 === intval( $data ) ? true : false ) : $data;
+
+					$args[ str_replace( 'args_', '', $key ) ] = $data;
+				}
 			}
+
+			$post = [
+				'ID'           => $mb_cpt_id,
+				'post_content' => json_encode( [ $labels, $args ] ),
+			];
+	
+			wp_update_post( $post );
 		}
 
-		return array( $labels, $args );
+		return json_decode( get_post( $mb_cpt_id )->post_content );
 	}
 
 	/**
@@ -158,61 +165,41 @@ class MB_CPT_Taxonomy_Register extends MB_CPT_Base_Register {
 	 *
 	 * @return array
 	 */
-	public function set_up_taxonomy( $labels = array(), $args = array() ) {
-		$labels = wp_parse_args(
-			$labels,
-			array(
-				'menu_name'                  => $labels['name'],
-				// translators: %s: Name of the taxonomy in plural form.
-				'all_items'                  => sprintf( __( 'All %s', 'mb-custom-taxonomy' ), $labels['name'] ),
-				// translators: %s: Name of the taxonomy in singular form.
-				'edit_item'                  => sprintf( __( 'Edit %s', 'mb-custom-taxonomy' ), $labels['singular_name'] ),
-				// translators: %s: Name of the taxonomy in singular form.
-				'view_item'                  => sprintf( __( 'View %s', 'mb-custom-taxonomy' ), $labels['singular_name'] ),
-				// translators: %s: Name of the taxonomy in singular form.
-				'update_item'                => sprintf( __( 'Update %s', 'mb-custom-taxonomy' ), $labels['singular_name'] ),
-				// translators: %s: Name of the taxonomy in singular form.
-				'add_new_item'               => sprintf( __( 'Add new %s', 'mb-custom-taxonomy' ), $labels['singular_name'] ),
-				// translators: %s: Name of the taxonomy in singular form.
-				'new_item_name'              => sprintf( __( 'New %s', 'mb-custom-taxonomy' ), $labels['singular_name'] ),
-				// translators: %s: Name of the taxonomy in singular form.
-				'parent_item'                => sprintf( __( 'Parent %s', 'mb-custom-taxonomy' ), $labels['singular_name'] ),
-				// translators: %s: Name of the taxonomy in singular form.
-				'parent_item_colon'          => sprintf( __( 'Parent %s:', 'mb-custom-taxonomy' ), $labels['singular_name'] ),
-				// translators: %s: Name of the taxonomy in plural form.
-				'search_items'               => sprintf( __( 'Search %s', 'mb-custom-taxonomy' ), $labels['name'] ),
-				// translators: %s: Name of the taxonomy in plural form.
-				'popular_items'              => sprintf( __( 'Popular %s', 'mb-custom-taxonomy' ), $labels['name'] ),
-				// translators: %s: Name of the taxonomy in plural form.
-				'separate_items_with_commas' => sprintf( __( 'Separate %s with commas', 'mb-custom-taxonomy' ), $labels['name'] ),
-				// translators: %s: Name of the taxonomy in plural form.
-				'add_or_remove_items'        => sprintf( __( 'Add or remove %s', 'mb-custom-taxonomy' ), $labels['name'] ),
-				// translators: %s: Name of the taxonomy in plural form.
-				'choose_from_most_used'      => sprintf( __( 'Choose most used %s', 'mb-custom-taxonomy' ), $labels['name'] ),
-				// translators: %s: Name of the taxonomy in plural form.
-				'not_found'                  => sprintf( __( 'No %s found', 'mb-custom-taxonomy' ), $labels['name'] ),
-			)
-		);
-		$args   = wp_parse_args(
-			$args,
-			array(
-				'label'  => $labels['name'],
-				'labels' => $labels,
-				'public' => true,
-			)
-		);
+	public function set_up_taxonomy( $data ) {
+		$labels = [
+			'menu_name'                  => $data->name,
+			'all_items'                  => $data->all_items,
+			'edit_item'                  => $data->edit_item,
+			'view_item'                  => $data->view_item,
+			'update_item'                => $data->update_item,
+			'add_new_item'               => $data->add_new_item,
+			'new_item_name'              => $data->new_item_name,
+			'parent_item'                => $data->parent_item,
+			'parent_item_colon'          => $data->parent_item_colon,
+			'search_items'               => $data->search_items,
+			'popular_items'              => $data->popular_items,
+			'separate_items_with_commas' => $data->separate_items_with_commas,
+			'add_or_remove_items'        => $data->add_or_remove_items,
+			'choose_from_most_used'      => $data->choose_from_most_used,
+			'not_found'                  => $data->not_found,
+		];
+		$args   = [
+			'label'  => $data->name,
+			'labels' => $labels,
+			'public' => true,
+		];
 
-		if ( empty( $args['rewrite_slug'] ) && empty( $args['rewrite_no_front'] ) ) {
+		if ( ! $data->rewrite_slug && ! $data->rewrite_no_front ) {
 			$args['rewrite'] = true;
 		} else {
-			$rewrite = array();
-			if ( ! empty( $args['rewrite_slug'] ) ) {
-				$rewrite['slug'] = $args['rewrite_slug'];
+			$rewrite = [];
+			if ( $data->rewrite_slug ) {
+				$rewrite['slug'] = $data->rewrite_slug;
 			}
-			if ( ! empty( $args['rewrite_no_front'] ) ) {
+			if ( $data->rewrite_no_front ) {
 				$rewrite['with_front'] = false;
 			}
-			if ( ! empty( $args['rewrite_hierarchical'] ) ) {
+			if ( $data->rewrite_hierarchical ) {
 				$rewrite['hierarchical'] = true;
 			}
 			$args['rewrite'] = $rewrite;

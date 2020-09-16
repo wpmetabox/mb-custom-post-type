@@ -88,11 +88,11 @@ class MB_CPT_Post_Type_Register extends MB_CPT_Base_Register {
 	 */
 	public function get_post_type_data( $mb_cpt_id ) {
 		if ( ! get_post( $mb_cpt_id )->post_content ) {
-			// Get all post meta from current post.
 			$post_meta = get_post_meta( $mb_cpt_id );
 
 			$labels = [];
 			$args   = [];
+
 			foreach ( $post_meta as $key => $value ) {
 				$data = 1 === count( $value ) && ! in_array( $key, [ 'args_taxonomies', 'args_supports' ], true ) ? $value[0] : $value;
 
@@ -117,8 +117,6 @@ class MB_CPT_Post_Type_Register extends MB_CPT_Base_Register {
 	
 			wp_update_post( $post );
 		}
-
-		// var_dump( json_decode( get_post( $mb_cpt_id )->post_content ) );
 
 		return json_decode( get_post( $mb_cpt_id )->post_content );
 	}
