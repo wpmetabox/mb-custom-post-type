@@ -112,7 +112,7 @@ class MB_CPT_Post_Type_Register extends MB_CPT_Base_Register {
 
 			$post = [
 				'ID'           => $mb_cpt_id,
-				'post_content' => json_encode( [ $labels, $args ] ),
+				'post_content' => json_encode( array_merge( $labels, $args ) ),
 			];
 	
 			wp_update_post( $post );
@@ -138,7 +138,7 @@ class MB_CPT_Post_Type_Register extends MB_CPT_Base_Register {
 			'new_item'           => $data->new_item,
 			'edit_item'          => $data->edit_item,
 			'view_item'          => $data->view_item,
-			'update_item'        => $data->update_item,
+			// 'update_item'        => $data->update_item,
 			'all_items'          => $data->all_items,
 			'search_items'       => $data->search_items,
 			'parent_item_colon'  => $data->parent_item_colon,

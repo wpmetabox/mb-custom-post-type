@@ -52,20 +52,14 @@ if ( ! function_exists( 'mb_cpt_load' ) ) {
 			return;
 		}
 
-		require dirname( __FILE__ ) . '/inc/helper.php';
 		require dirname( __FILE__ ) . '/inc/base/edit.php';
 		require dirname( __FILE__ ) . '/inc/post-type/edit.php';
 		require dirname( __FILE__ ) . '/inc/taxonomy/edit.php';
-		require dirname( __FILE__ ) . '/inc/interfaces/encoder.php';
-		require dirname( __FILE__ ) . '/inc/encoders/post-type-encoder.php';
-		require dirname( __FILE__ ) . '/inc/encoders/taxonomy-encoder.php';
 		require dirname( __FILE__ ) . '/inc/about/about.php';
 
-		$cpt_encoder = new MB_CPT_Post_Type_Encoder();
-		new MB_CPT_Post_Type_Edit( 'mb-post-type', $cpt_register, $cpt_encoder );
+		new MB_CPT_Post_Type_Edit( 'mb-post-type', $cpt_register );
 
-		$tax_encoder = new MB_CPT_Taxonomy_Encoder();
-		new MB_CPT_Taxonomy_Edit( 'mb-taxonomy', $tax_register, $tax_encoder );
+		new MB_CPT_Taxonomy_Edit( 'mb-taxonomy', $tax_register );
 
 		$about_page = new MB_CPT_About_Page();
 		$about_page->init();

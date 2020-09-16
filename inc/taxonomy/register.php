@@ -46,7 +46,7 @@ class MB_CPT_Taxonomy_Register extends MB_CPT_Base_Register {
 	 */
 	public function register_post_types() {
 		// Register post type of the plugin 'mb-taxonomy'.
-		$labels = array(
+		$labels = [
 			'name'               => _x( 'Taxonomies', 'Taxonomy General Name', 'mb-custom-post-type' ),
 			'singular_name'      => _x( 'Taxonomy', 'Taxonomy Singular Name', 'mb-custom-post-type' ),
 			'menu_name'          => __( 'Taxonomies', 'mb-custom-post-type' ),
@@ -62,8 +62,8 @@ class MB_CPT_Taxonomy_Register extends MB_CPT_Base_Register {
 			'search_items'       => __( 'Search Taxonomy', 'mb-custom-post-type' ),
 			'not_found'          => __( 'Not found', 'mb-custom-post-type' ),
 			'not_found_in_trash' => __( 'Not found in Trash', 'mb-custom-post-type' ),
-		);
-		$args   = array(
+		];
+		$args   = [
 			'label'        => __( 'Taxonomies', 'mb-custom-post-type' ),
 			'labels'       => $labels,
 			'supports'     => false,
@@ -74,7 +74,7 @@ class MB_CPT_Taxonomy_Register extends MB_CPT_Base_Register {
 			'can_export'   => true,
 			'rewrite'      => false,
 			'query_var'    => false,
-		);
+		];
 		register_post_type( 'mb-taxonomy', $args );
 
 		// Get all registered custom taxonomies.
@@ -93,24 +93,20 @@ class MB_CPT_Taxonomy_Register extends MB_CPT_Base_Register {
 	 * @return array
 	 */
 	public function get_taxonomies() {
-		// This array stores all registered custom taxonomies.
-		$taxonomies = array();
+		$taxonomies = [];
 
-		// Get all post where where post_type = mb-taxonomy.
-		$taxonomy_ids = get_posts(
-			array(
-				'posts_per_page' => - 1,
-				'post_status'    => 'publish',
-				'post_type'      => 'mb-taxonomy',
-				'no_found_rows'  => true,
-				'fields'         => 'ids',
-			)
-		);
+		$taxonomy_ids = get_posts( [
+			'posts_per_page' => - 1,
+			'post_status'    => 'publish',
+			'post_type'      => 'mb-taxonomy',
+			'no_found_rows'  => true,
+			'fields'         => 'ids',
+		] );
 
 		foreach ( $taxonomy_ids as $taxonomy_id ) {
-			list( $labels, $args ) = $this->get_taxonomy_data( $taxonomy_id );
+			$data = $this->get_taxonomy_data( $taxonomy_id );
 
-			$taxonomies[ $args['taxonomy'] ] = $this->set_up_taxonomy( $labels, $args );
+			$taxonomies[ $args['taxonomy'] ] = $this->set_up_taxonomy( $data );
 		}
 
 		return $taxonomies;
@@ -122,9 +118,9 @@ class MB_CPT_Taxonomy_Register extends MB_CPT_Base_Register {
 	 * @param  int $mb_cpt_id MB custom taxonomy id.
 	 * @return array          Array contains label and args of new taxonomy.
 	 */
-	public function get_taxonomy_data( $mb_cpt_id ) {
-		if ( ! get_post( $mb_cpt_id )->post_content ) {
-			$post_meta = get_post_meta( $mb_cpt_id );
+	public function get_taxonomy_data( $taxonomy_id ) {
+		if ( ! get_post( $taxonomy_id )->post_content ) {
+			$post_meta = get_post_meta( $taxonomy_id );
 
 			$labels = [];
 			$args = [];
@@ -147,14 +143,14 @@ class MB_CPT_Taxonomy_Register extends MB_CPT_Base_Register {
 			}
 
 			$post = [
-				'ID'           => $mb_cpt_id,
-				'post_content' => json_encode( [ $labels, $args ] ),
+				'ID'           => $taxonomy_id,
+				'post_content' => json_encode( array_merge( $labels, $args ) ),
 			];
 	
 			wp_update_post( $post );
 		}
 
-		return json_decode( get_post( $mb_cpt_id )->post_content );
+		return json_decode( get_post( $taxonomy_id )->post_content );
 	}
 
 	/**
