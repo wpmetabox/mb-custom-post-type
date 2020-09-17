@@ -1,5 +1,3 @@
-import React from 'react';
-
 const Input = ( {label, name, placeholder, defaultValue, update, description = '', required = false} ) => {
 	return (
 		<div className="mb-cpt-field">

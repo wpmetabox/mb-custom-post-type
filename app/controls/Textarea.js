@@ -1,5 +1,3 @@
-import React from 'react';
-
 const Textarea = ( {label, name, placeholder, update, description = '', required = false} ) => (
 	<div className="mb-cpt-field">
 		<label className="mb-cpt-label" htmlFor={name}>

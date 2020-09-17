@@ -1,4 +1,3 @@
-import React, { useContext } from 'react';
 import PhpSettings from '../PhpSettings';
 import Input from './Input';
 import Textarea from './Textarea';
@@ -6,6 +5,7 @@ import Checkbox from './Checkbox';
 import Radio from './Radio';
 import Select from './Select';
 import CheckboxList from './CheckboxList';
+const { useContext } = wp.element;
 
 const stringToSlug = str => {
 	// Trim the string

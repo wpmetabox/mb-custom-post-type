@@ -1,35 +1,32 @@
-import React from 'react';
-import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
-import 'react-tabs/style/react-tabs.css';
 import { BasicDatas, LabelDatas, PostTypeDatas, AdvancedDatas } from '../constants/Data';
 import Control from '../../controls/Control';
+const { TabPanel } = wp.components;
 
-const MainTabs = () => {
-	return (
-		<>
-			<Tabs forceRenderTabPanel={true}>
-				<TabList>
-					<Tab><i className="dashicons-admin-generic dashicons"></i> General</Tab>
-					<Tab><i className="dashicons-tag dashicons"></i> Labels</Tab>
-					<Tab><i className="dashicons-admin-settings dashicons"></i> Advanced</Tab>
-					<Tab><i className="dashicons-edit-large dashicons"></i> Post Types</Tab>
-				</TabList>
-
-				<TabPanel>
-					{ Object.keys( BasicDatas ).map( key => <Control key={key} props={BasicDatas[key]} autoFills={[...LabelDatas, ...BasicDatas]} /> ) }
-				</TabPanel>
-				<TabPanel>
-					{ Object.keys( LabelDatas ).map( key => <Control key={key} props={LabelDatas[key]} /> ) }
-				</TabPanel>
-				<TabPanel>
-					{ Object.keys( AdvancedDatas ).map( key => <Control key={key} props={AdvancedDatas[key]} /> ) }
-				</TabPanel>
-				<TabPanel>
-					<Control name="supports" values={PostTypeDatas} props={PostTypeDatas} />
-				</TabPanel>
-			</Tabs>
-		</>
-	);
+const tabs = [
+	{
+		name: 'general',
+		title: 'General',
+	},
+	{
+		name: 'labels',
+		title: 'Labels',
+	},
+	{
+		name: 'advanced',
+		title: 'Advanced',
+	},
+	{
+		name: 'post_types',
+		title: 'Post Types',
+	},
+];
+const panels = {
+	general: Object.keys( BasicDatas ).map( key => <Control key={key} props={BasicDatas[key]} autoFills={[...LabelDatas, ...BasicDatas]} /> ),
+	labels: Object.keys( LabelDatas ).map( key => <Control key={key} props={LabelDatas[key]} /> ),
+	advanced: Object.keys( AdvancedDatas ).map( key => <Control key={key} props={AdvancedDatas[key]} /> ),
+	post_types: <Control name="supports" values={PostTypeDatas} props={PostTypeDatas} />
 }
+
+const MainTabs = () => <TabPanel tabs={ tabs }>{ tab => panels[tab.name] }</TabPanel>
 
 export default MainTabs;

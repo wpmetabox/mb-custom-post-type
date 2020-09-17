@@ -1,5 +1,3 @@
-import React from 'react';
-
 const Select = ( {label, name, update, description = '', values, defaultValue} ) => {
 	return (
 		<div className="mb-cpt-field">

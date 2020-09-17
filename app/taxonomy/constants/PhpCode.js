@@ -79,7 +79,7 @@ function ${settings.function_name}() {
 		${advanceSettings( settings )}
 		${reWrite( settings )}
 	];
-	register_taxonomy( '${settings.taxonomy}', ${postTypeSettings( settings )}, $args );
+	register_taxonomy( '${settings.args_taxonomy}', ${postTypeSettings( settings )}, $args );
 }`
 	);
 }

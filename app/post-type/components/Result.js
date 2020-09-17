@@ -1,8 +1,8 @@
-import React, { useContext, useState } from 'react';
 import PhpSettings from '../../PhpSettings';
 import PhpCode from '../constants/PhpCode';
 import Highlight from 'react-highlight';
 import Clipboard from 'react-clipboard.js';
+const { useContext, useState } = wp.element;
 
 const Result = () => {
 	const [state, setState] = useContext( PhpSettings );

@@ -1,5 +1,3 @@
-import React from 'react';
-
 const CheckboxList = ( {label, name, update, values} ) => {
 	return (
 		<div className="mb-cpt-field">

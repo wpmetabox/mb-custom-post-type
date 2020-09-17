@@ -24,14 +24,14 @@ export const LabelDatas = [
 	{ type: 'text', name: 'not_found', label: 'Not found', defaultValue: 'No %name% found', updateFrom: 'name' },
 ];
 
+const defaultPostTypes = [
+	{ name: 'post', description: 'Post', checked: true },
+	{ name: 'page', description: 'Page', checked: false },
+];
 let temp = [];
-let supportPostTypes = JSON.parse( MbTax[0] ).post_types;
+let supportPostTypes = MbTax[0] ? JSON.parse( MbTax[0] ).post_types : defaultPostTypes;
 Object.keys( MbPtOptions ).forEach( e => {
-	if ( supportPostTypes ) {
-		temp.push( { name: e, description: MbPtOptions[e], checked: supportPostTypes.includes( e ) ? true : false } )
-	} else {
-		temp.push( { name: e, description: MbPtOptions[e], checked: 'post' === e ? true : false } )
-	}
+	temp.push( { name: e, description: MbPtOptions[e], checked: supportPostTypes.includes( e ) ? true : false } )
 } );
 
 export const PostTypeDatas = temp;
