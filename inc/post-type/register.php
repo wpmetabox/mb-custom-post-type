@@ -110,6 +110,9 @@ class MB_CPT_Post_Type_Register extends MB_CPT_Base_Register {
 				}
 			}
 
+			$args['function_name'] = $args['function_name'] ? : 'your_function_name';
+			$args['text_domain'] = $args['text_domain'] ? : 'text-domain';
+
 			$post = [
 				'ID'           => $mb_cpt_id,
 				'post_name'    => $args['post_type'],
@@ -152,23 +155,23 @@ class MB_CPT_Post_Type_Register extends MB_CPT_Base_Register {
 			'public' => true,
 		];
 
-		if ( 'custom' === $data->capability_type ) {
+		if ( property_exists ( $data, 'capability_type' ) && 'custom' === $data->capability_type ) {
 			$args['capability_type'] = [ strtolower( $data->singular_name ), strtolower( $data->name ) ];
 			$args['map_meta_cap'] = true;
 		}
 
-		if ( $data->has_archive && property_exists( $data, 'archive_slug' ) ) {
+		if ( property_exists( $data, 'has_archive' ) && property_exists( $data, 'archive_slug' ) ) {
 			$args['has_archive'] = $data->archive_slug;
 		}
 
-		if ( ! property_exists ( $data, 'rewrite_slug' ) && ! $data->rewrite_no_front ) {
+		if ( ! property_exists ( $data, 'rewrite_slug' ) && ! property_exists ( $data, 'rewrite_no_front' ) ) {
 			$args['rewrite'] = true;
 		} else {
 			$rewrite = [];
-			if ( $data->rewrite_slug ) {
+			if ( property_exists ( $data, 'rewrite_slug' ) ) {
 				$rewrite['slug'] = $data->rewrite_slug;
 			}
-			if ( $data->rewrite_no_front ) {
+			if ( property_exists ( $data, 'rewrite_no_front' ) ) {
 				$rewrite['with_front'] = false;
 			}
 

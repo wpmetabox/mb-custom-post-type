@@ -142,6 +142,9 @@ class MB_CPT_Taxonomy_Register extends MB_CPT_Base_Register {
 				}
 			}
 
+			$args['function_name'] = $args['function_name'] ? : 'your_function_name';
+			$args['text_domain'] = $args['text_domain'] ? : 'text-domain';
+
 			$post = [
 				'ID'           => $taxonomy_id,
 				'post_name'    => $args['taxonomy'],
@@ -186,17 +189,17 @@ class MB_CPT_Taxonomy_Register extends MB_CPT_Base_Register {
 			'public' => true,
 		];
 
-		if ( ! $data->rewrite_no_front ) {
+		if ( ! property_exists ( $data, 'rewrite_no_front' ) ) {
 			$args['rewrite'] = true;
 		} else {
 			$rewrite = [];
-			if ( $data->rewrite_slug ) {
+			if ( property_exists ( $data, 'rewrite_slug' ) ) {
 				$rewrite['slug'] = $data->rewrite_slug;
 			}
 			if ( $data->rewrite_no_front ) {
 				$rewrite['with_front'] = false;
 			}
-			if ( $data->rewrite_hierarchical ) {
+			if ( property_exists ( $data, 'rewrite_hierarchical' ) ) {
 				$rewrite['hierarchical'] = true;
 			}
 			$args['rewrite'] = $rewrite;
