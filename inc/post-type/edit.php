@@ -67,6 +67,10 @@ class MB_CPT_Post_Type_Edit extends MB_CPT_Base_Edit {
 					'std'  => '<div id="root" class="mb-cpt"></div>',
 				],
 				[
+					'type' => 'custom_html',
+					'std'  => '<div id="code-result" class="mb-cpt"></div>',
+				],
+				[
 					'id'   => 'title',
 					'type' => 'hidden',
 				],

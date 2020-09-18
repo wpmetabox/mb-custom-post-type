@@ -35,6 +35,16 @@ const CptConfig = {
 	module: commonModules
 }
 
+const CptResult = {
+	entry: './app/post-type/index-2.js',
+	output: {
+		filename: 'post-type-result.js',
+		path: path.resolve( __dirname, './js' )
+	},
+	externals,
+	module: commonModules
+}
+
 const TaxonomyConfig = {
 	entry: './app/taxonomy/index.js',
 	output: {
@@ -45,4 +55,4 @@ const TaxonomyConfig = {
 	module: commonModules
 }
 
-module.exports = [ CptConfig, TaxonomyConfig ];
+module.exports = [ CptConfig, CptResult, TaxonomyConfig ];
