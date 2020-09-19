@@ -17,10 +17,6 @@ const App = () => {
 
 	const [state, setState] = useState( data );
 
-	if ( state['post_type'] && ! state['args_post_type'] ) {
-		state['args_post_type'] = state['post_type'];
-	}
-
 	const showCode = () => enqueueScript( i18n.result );
 
 	useEffect( () => {

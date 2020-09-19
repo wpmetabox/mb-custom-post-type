@@ -3,7 +3,7 @@ import { Icons } from './Icons';
 export const BasicDatas = [
 	{ type: 'text', name: 'name', label: 'Plural name', required: true },
 	{ type: 'text', name: 'singular_name', label: 'Singular name', required: true },
-	{ type: 'text', name: 'args_post_type', label: 'Slug', required: true, updateFrom: 'singular_name' },
+	{ type: 'text', name: 'slug', label: 'Slug', required: true, updateFrom: 'singular_name' },
 	{ type: 'text', name: 'function_name', label: 'Function name' },
 	{ type: 'text', name: 'text_domain', label: 'Text domain' },
 ];
