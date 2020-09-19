@@ -1,7 +1,7 @@
 import { SupportSettings, TaxonomySettings } from './DefaultSettings';
 
 const labelSettings = settings => {
-	return`'label'  => esc_html__( '${settings.name}', 'text-domain' ),
+	return`'label'  => esc_html__( '${settings.name}', '${settings.text_domain}' ),
 		'labels' => [
 			'menu_name'          => esc_html__( '${settings.menu_name || settings.name}', '${settings.text_domain}' ),
 			'name_admin_bar'     => esc_html__( '${settings.name_admin_bar || settings.singular_name}', '${settings.text_domain}' ),
