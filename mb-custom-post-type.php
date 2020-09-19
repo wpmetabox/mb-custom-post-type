@@ -53,12 +53,9 @@ if ( ! function_exists( 'mb_cpt_load' ) ) {
 		}
 
 		require dirname( __FILE__ ) . '/inc/base/edit.php';
-		// require dirname( __FILE__ ) . '/inc/post-type/edit.php';
-		// require dirname( __FILE__ ) . '/inc/taxonomy/edit.php';
 		require dirname( __FILE__ ) . '/inc/about/about.php';
 
 		new MB_CPT_Base_Edit( 'mb-post-type' );
-
 		new MB_CPT_Base_Edit( 'mb-taxonomy' );
 
 		$about_page = new MB_CPT_About_Page();

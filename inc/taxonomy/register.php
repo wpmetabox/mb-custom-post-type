@@ -1,14 +1,6 @@
 <?php
-/**
- * Controls all operations of MB Custom Taxonomy extension for registering custom taxonomy.
- *
- * @package    Meta Box
- * @subpackage MB Custom Taxonomy
- */
+use WP_Post as WP_Post;
 
-/**
- * Controls all operations for registering custom taxonomy.
- */
 class MB_CPT_Taxonomy_Register extends MB_CPT_Base_Register {
 	/**
 	 * Initializing.
@@ -95,21 +87,25 @@ class MB_CPT_Taxonomy_Register extends MB_CPT_Base_Register {
 	public function get_taxonomies() {
 		$taxonomies = [];
 
-		$taxonomy_ids = get_posts( [
-			'posts_per_page' => - 1,
+		$posts = get_posts( [
+			'posts_per_page' => -1,
 			'post_status'    => 'publish',
 			'post_type'      => 'mb-taxonomy',
 			'no_found_rows'  => true,
-			'fields'         => 'ids',
 		] );
 
-		foreach ( $taxonomy_ids as $taxonomy_id ) {
-			$data = $this->get_taxonomy_data( $taxonomy_id );
-
-			$taxonomies[ get_post( $taxonomy_id )->post_name ] = $this->set_up_taxonomy( $data );
+		foreach ( $posts as $post ) {
+			$data = $this->get_taxonomy_data( $post );
+			$taxonomies[ $data->slug ] = $this->set_up_taxonomy( $data );
 		}
 
 		return $taxonomies;
+	}
+
+	public function get_taxonomy_data( WP_Post $post ) {
+		$this->migrate_data( $post );
+
+		return json_decode( $post->post_content );
 	}
 
 	/**
@@ -118,53 +114,41 @@ class MB_CPT_Taxonomy_Register extends MB_CPT_Base_Register {
 	 * @param  int $mb_cpt_id MB custom taxonomy id.
 	 * @return array          Array contains label and args of new taxonomy.
 	 */
-	public function get_taxonomy_data( $taxonomy_id ) {
-		if ( ! get_post( $taxonomy_id )->post_content ) {
-			$post_meta = get_post_meta( $taxonomy_id );
-
-			$labels = [];
-			$args = [];
-
-			foreach ( $post_meta as $key => $value ) {
-				if ( false !== strpos( $key, 'label' ) ) {
-					// If post meta has prefix 'label' then add it to $labels.
-					// @codingStandardsIgnoreLine
-					$data = 1 == count( $value ) ? $value[0] : $value;
-
-					$labels[ str_replace( 'label_', '', $key ) ] = $data;
-				} elseif ( false !== strpos( $key, 'args' ) ) {
-					// If post meta has prefix 'args' then add it to $args.
-					// @codingStandardsIgnoreLine
-					$data = 1 == count( $value ) ? $value[0] : $value;
-					$data = is_numeric( $data ) ? ( 1 === intval( $data ) ? true : false ) : $data;
-
-					$args[ str_replace( 'args_', '', $key ) ] = $data;
-				}
-			}
-
-			$args['function_name'] = $args['function_name'] ? : 'your_function_name';
-			$args['text_domain'] = $args['text_domain'] ? : 'text-domain';
-
-			$post = [
-				'ID'           => $taxonomy_id,
-				'post_name'    => $args['taxonomy'],
-				'post_content' => json_encode( array_merge( $labels, $args ) ),
-			];
-	
-			wp_update_post( $post );
+	public function migrate_data( WP_Post $post ) {
+		if ( ! empty( $post->post_content ) ) {
+			return;
 		}
 
-		return json_decode( get_post( $taxonomy_id )->post_content );
+		$args   = [];
+		$post_meta = get_post_meta( $post->ID );
+
+		foreach ( $post_meta as $key => $value ) {
+			$value = 1 === count( $value ) && ! in_array( $key, [ 'args_taxonomies', 'args_supports' ], true ) ? $value[0] : $value;
+
+			if ( ! in_array( $key, [ 'args_menu_position' ] ) ) {
+				$value = is_numeric( $value ) ? ( 1 === intval( $value ) ? true : false ) : $value;
+			} else {
+				$value = intval( $value );
+			}
+
+			$key = str_replace( ['label_', 'args_'], '', $key );
+			$args[ $key ] = $value;
+
+			// delete_post_meta( $post->ID, $key );
+		}
+
+		$args['slug'] = $args['taxonomy'];
+		unset( $args['taxonomy'] );
+
+		$args['function_name'] = empty( $args['function_name'] ) ? 'your_function_name' : $args['function_name'];
+		$args['text_domain'] = empty( $args['text_domain'] ) ? 'text-domain' : $args['text_domain'];
+
+		wp_update_post( [
+			'ID'           => $post->ID,
+			'post_content' => wp_json_encode( $args ),
+		] );
 	}
 
-	/**
-	 * Setup labels, arguments for a custom taxonomy
-	 *
-	 * @param array $labels Taxonomy labels.
-	 * @param array $args   Taxonomy parameters.
-	 *
-	 * @return array
-	 */
 	public function set_up_taxonomy( $data ) {
 		$labels = [
 			'menu_name'                  => $data->name,

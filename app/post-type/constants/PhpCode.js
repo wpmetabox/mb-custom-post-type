@@ -92,7 +92,7 @@ function ${settings.function_name}() {
 		${reWrite( settings )}
 	];
 
-	register_post_type( '${settings.args_post_type}', $args );
+	register_post_type( '${settings.slug}', $args );
 }`
 	);
 }

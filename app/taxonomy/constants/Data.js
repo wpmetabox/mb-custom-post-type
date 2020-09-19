@@ -1,7 +1,7 @@
 export const BasicDatas = [
 	{ type: 'text', name: 'name', label: 'Plural name', required: true },
 	{ type: 'text', name: 'singular_name', label: 'Singular name', required: true },
-	{ type: 'text', name: 'args_taxonomy', label: 'Slug', required: true, updateFrom: 'singular_name' },
+	{ type: 'text', name: 'slug', label: 'Slug', required: true, updateFrom: 'singular_name' },
 	{ type: 'text', name: 'function_name', label: 'Function name' },
 	{ type: 'text', name: 'text_domain', label: 'Text domain' },
 ];
@@ -28,13 +28,15 @@ const defaultPostTypes = [
 	{ name: 'post', description: 'Post', checked: true },
 	{ name: 'page', description: 'Page', checked: false },
 ];
+const i18n = MbTaxonomy;
+let postTypeOptions = i18n.postTypeOptions;
 let temp = [];
-let supportPostTypes = MbTax[0] ? JSON.parse( MbTax[0] ).post_types : defaultPostTypes;
-Object.keys( MbPtOptions ).forEach( e => {
-	temp.push( { name: e, description: MbPtOptions[e], checked: supportPostTypes.includes( e ) ? true : false } )
+let supportPostTypes = postTypeOptions ? postTypeOptions : defaultPostTypes;
+Object.keys( postTypeOptions ).forEach( e => {
+	temp.push( { name: e, description: i18n.postTypeOptions[e], checked: supportPostTypes.hasOwnProperty( e ) ? true : false } )
 } );
 
-export const PostTypeDatas = temp;
+export const PostTypeDatas = defaultPostTypes;
 
 export const AdvancedDatas = [
 	{ type: 'checkbox', name: 'public', label: 'Public?', description: 'If the taxonomy should be publicly queryable.', checked: true },

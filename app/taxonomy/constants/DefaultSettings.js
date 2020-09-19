@@ -1,7 +1,7 @@
 const BasicSettings = {
 	'name'         : '',
 	'singular_name': '',
-	'args_taxonomy': '',
+	'slug'         : '',
 	'function_name': 'your_prefix_register_taxonomy',
 	'text_domain'  : 'your-textdomain',
 }
@@ -24,8 +24,10 @@ const LabelSettings = {
 	'not_found'                 : '',
 }
 
+const i18n = MbTaxonomy;
+let postTypeOptions = i18n.postTypeOptions;
 let temp = {}
-Object.keys( MbPtOptions ).forEach( e => temp[e] = [ 'post', 'page' ].includes( e ) ? true : false );
+Object.keys( postTypeOptions ).forEach( e => temp[e] = [ 'post', 'page' ].includes( e ) ? true : false );
 
 export const PostTypeSettings = temp;
 
