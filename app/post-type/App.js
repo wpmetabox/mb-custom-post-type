@@ -6,13 +6,10 @@ const { useEffect, useState } = wp.element;
 const { Button } = wp.components;
 const i18n = MbPostType;
 
-const Spinner = () => <span>Generating code. Please wait...</span>;
-
-const enqueueScript = ( file ) => {
-	var script = document.createElement( 'script' );
-
-	script.setAttribute( 'src', file );
-	document.getElementsByTagName( "head" )[0].appendChild( script );
+const enqueueScript = url => {
+	let script = document.createElement( 'script' );
+	script.setAttribute( 'src', url );
+	document.body.appendChild( script );
 };
 
 const App = () => {
@@ -24,7 +21,7 @@ const App = () => {
 		state['args_post_type'] = state['post_type'];
 	}
 
-	const handleShowCode = () => enqueueScript( i18n.result );
+	const showCode = () => enqueueScript( i18n.result );
 
 	useEffect( () => {
 		const title = document.getElementById( 'title' );
@@ -40,7 +37,7 @@ const App = () => {
 	return (
 		<PhpSettings.Provider value={[state, setState]}>
 			<MainTabs />
-			<Button isPrimary onClick={ handleShowCode }>Generate Code</Button>
+			<Button isPrimary onClick={ showCode }>Generate Code</Button>
 		</PhpSettings.Provider>
 	);
 }
