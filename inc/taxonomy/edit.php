@@ -1,37 +1,5 @@
 <?php
-/**
- * Controls all operations of MB Custom Taxonomy extension for creating / modifying custom taxonomy.
- *
- * @package    Meta Box
- * @subpackage MB Custom Taxonomy
- * @author     Tran Ngoc Tuan Anh <rilwis@gmail.com>
- */
-
-/**
- * Controls all operations for creating / modifying custom taxonomy.
- */
 class MB_CPT_Taxonomy_Edit extends MB_CPT_Base_Edit {
-
-	/**
-	 * Taxonomy register object.
-	 *
-	 * @var MB_CPT_Taxonomy_Register
-	 */
-	protected $register;
-
-	/**
-	 * Class MB_CPT_Taxonomy_Edit constructor.
-	 *
-	 * @param string                   $taxonomy Post type name.
-	 * @param MB_CPT_Taxonomy_Register $register Post type register object.
-	 * @param MB_CPT_Encoder_Interface $encoder  Encoder object.
-	 */
-	public function __construct( $taxonomy, MB_CPT_Taxonomy_Register $register ) {
-		parent::__construct( $taxonomy );
-
-		$this->register = $register;
-	}
-
 	public function js_vars() {
 		$options    = [];
 		$post_types = get_post_types( '', 'objects' );
@@ -44,13 +12,6 @@ class MB_CPT_Taxonomy_Edit extends MB_CPT_Base_Edit {
 		$vars['postTypeOptions'] = $options;
 	}
 
-	/**
-	 * Register meta boxes for add/edit mb-taxonomy page
-	 *
-	 * @param array $meta_boxes Custom meta boxes.
-	 *
-	 * @return array
-	 */
 	public function register_meta_boxes( $meta_boxes ) {
 		$meta_boxes[] = [
 			'title'      => __( 'Taxonomy Editor', 'mb-custom-post-type' ),
@@ -63,11 +24,7 @@ class MB_CPT_Taxonomy_Edit extends MB_CPT_Base_Edit {
 					'std'  => '<div id="root" class="mb-cpt"></div>',
 				],
 				[
-					'id'   => 'title',
-					'type' => 'hidden',
-				],
-				[
-					'id'   => 'name',
+					'id'   => 'post_title',
 					'type' => 'hidden',
 				],
 				[

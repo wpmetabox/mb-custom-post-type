@@ -1,48 +1,16 @@
 <?php
-/**
- * Base class to add new or edit object.
- *
- * @package    Meta Box
- * @subpackage MB Custom Post Type
- * @author     Tran Ngoc Tuan Anh <rilwis@gmail.com>
- */
-
-/**
- * The base class which controls all operations for creating / modifying custom post type.
- */
 abstract class MB_CPT_Base_Edit {
-
-	/**
-	 * Post type name.
-	 *
-	 * @var string
-	 */
 	public $post_type;
-
-	/**
-	 * Used to prevent duplicated calls like revisions, manual hook to wp_insert_post, etc.
-	 *
-	 * @var bool
-	 */
 	public $saved = false;
 
-	/**
-	 * Initializing.
-	 *
-	 * @param string $post_type Post type.
-	 */
 	public function __construct( $post_type ) {
 		$this->post_type = $post_type;
 
-		// Enqueue scripts.
 		add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_scripts' ) );
-		// Add meta box.
 		add_filter( 'rwmb_meta_boxes', array( $this, 'register_meta_boxes' ) );
-		// Modify post information after save post.
-		add_action( "save_post_$post_type", array( $this, 'save_post' ) );
-		// Prevent saving data in post_meta
-		add_filter( 'rwmb_title_value', '__return_empty_string' );
-		add_filter( 'rwmb_name_value', '__return_empty_string' );
+
+		// Prevent saving data in post meta.
+		add_filter( 'rwmb_post_title_value', '__return_empty_string' );
 		add_filter( 'rwmb_content_value', '__return_empty_string' );
 	}
 
@@ -70,47 +38,7 @@ abstract class MB_CPT_Base_Edit {
 		return $vars;
 	}
 
-	/**
-	 * Register meta boxes for add/edit mb-post-type page
-	 *
-	 * @param array $meta_boxes Meat boxes.
-	 *
-	 * @return array
-	 */
-	public function register_meta_boxes( $meta_boxes ) {
-		return $meta_boxes;
-	}
-
-	/**
-	 * Modify post information and post meta after save post
-	 *
-	 * @param int $post_id Post ID.
-	 */
-	public function save_post( $post_id ) {
-		$title   = filter_input( INPUT_POST, 'title', FILTER_SANITIZE_STRING );
-		$slug    = filter_input( INPUT_POST, 'name', FILTER_SANITIZE_STRING );
-		$content = filter_input( INPUT_POST, 'content' );
-
-		// If label_singular_name is empty or if this function is called to prevent duplicated calls like revisions, manual hook to wp_insert_post, etc.
-		if ( ! $title || true === $this->saved ) {
-			return;
-		}
-
-		$this->saved = true;
-
-		// Update post title.
-		$post = [
-			'ID'           => $post_id,
-			'post_title'   => $title,
-			'post_content' => $content,
-			'post_name'    => $slug,
-		];
-
-		wp_update_post( $post );
-
-		// Flush rewrite rules after create new or edit taxonomies.
-		flush_rewrite_rules();
-	}
+	abstract function register_meta_boxes( $meta_boxes );
 
 	/**
 	 * Check if current link is mb-post-type post type or not.

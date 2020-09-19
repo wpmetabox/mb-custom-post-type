@@ -1,42 +1,5 @@
 <?php
-/**
- * Controls all operations of MB Custom Post Type extension for creating / modifying custom post type.
- *
- * @package    Meta Box
- * @subpackage MB Custom Post Type
- */
-
-/**
- * Controls all operations for creating / modifying custom post type.
- */
 class MB_CPT_Post_Type_Edit extends MB_CPT_Base_Edit {
-
-	/**
-	 * Post type register object.
-	 *
-	 * @var MB_CPT_Post_Type_Register
-	 */
-	protected $register;
-
-	/**
-	 * Class MB_CPT_Post_Type_Edit constructor.
-	 *
-	 * @param string                    $post_type Post type name.
-	 * @param MB_CPT_Post_Type_Register $register  Post type register object.
-	 */
-	public function __construct( $post_type, MB_CPT_Post_Type_Register $register ) {
-		parent::__construct( $post_type );
-
-		$this->register = $register;
-	}
-
-	/**
-	 * Register meta boxes for add/edit mb-post-type page.
-	 *
-	 * @param array $meta_boxes Meta boxes.
-	 *
-	 * @return array
-	 */
 	public function register_meta_boxes( $meta_boxes ) {
 		$meta_boxes[] = [
 			'title'      => ' ',
@@ -54,11 +17,7 @@ class MB_CPT_Post_Type_Edit extends MB_CPT_Base_Edit {
 					'std'  => '<div id="code-result" class="mb-cpt"></div>',
 				],
 				[
-					'id'   => 'title',
-					'type' => 'hidden',
-				],
-				[
-					'id'   => 'name',
+					'id'   => 'post_title',
 					'type' => 'hidden',
 				],
 				[

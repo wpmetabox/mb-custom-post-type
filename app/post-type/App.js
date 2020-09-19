@@ -24,14 +24,8 @@ const App = () => {
 	const showCode = () => enqueueScript( i18n.result );
 
 	useEffect( () => {
-		const title = document.getElementById( 'title' );
-		title.value = state.name;
-
-		const name = document.getElementById( 'name' );
-		name.value = state.singular_name;
-
-		const content = document.getElementById( 'content' );
-		content.value = JSON.stringify( state );
+		document.getElementById( 'post_title' ).value = state.singular_name;
+		content = document.getElementById( 'content' ).value = JSON.stringify( state );
 	} );
 
 	return (

@@ -4,15 +4,10 @@ import MainTabs from './components/MainTabs';
 import Result from './components/Result';
 const { useEffect, useState } = wp.element;
 const { Button } = wp.components;
+const i18n = MbTaxonomy;
 
 const App = () => {
-	let data = {};
-
-	if ( MbTax[0] ) {
-		data = JSON.parse( MbTax[0] );
-	} else {
-		data = DefaultSettings;
-	}
+	let data = i18n.settings ? JSON.parse( i18n.settings ) : DefaultSettings;
 
 	const [state, setState] = useState( data );
 	const [showCode, setShowCode] = useState( false );
@@ -27,14 +22,8 @@ const App = () => {
 	}
 
 	useEffect( () => {
-		const title = document.getElementById( 'title' );
-		title.value = state.name;
-
-		const name = document.getElementById( 'name' );
-		name.value = state.singular_name;
-
-		const content = document.getElementById( 'content' );
-		content.value = JSON.stringify( state );
+		document.getElementById( 'post_title' ).value = state.singular_name;
+		content = document.getElementById( 'content' ).value = JSON.stringify( state );
 	} );
 
 	return (
