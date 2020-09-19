@@ -1,5 +1,5 @@
-import { BasicDatas, LabelDatas, PostTypeDatas, AdvancedDatas } from '../constants/Data';
-import Control from '../../controls/Control';
+import { BasicDatas, LabelDatas, PostTypeDatas, AdvancedDatas } from './constants/Data';
+import Control from '../controls/Control';
 const { TabPanel } = wp.components;
 
 const tabs = [

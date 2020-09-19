@@ -26,7 +26,7 @@ const commonModules = {
 }
 
 const CptConfig = {
-	entry: './app/post-type/index.js',
+	entry: './app/post-type/App.js',
 	output: {
 		filename: 'post-type.js',
 		path: path.resolve( __dirname, './js' )
@@ -36,7 +36,7 @@ const CptConfig = {
 }
 
 const CptResult = {
-	entry: './app/post-type/index-2.js',
+	entry: './app/post-type/Result.js',
 	output: {
 		filename: 'post-type-result.js',
 		path: path.resolve( __dirname, './js' )
@@ -46,7 +46,7 @@ const CptResult = {
 }
 
 const TaxonomyConfig = {
-	entry: './app/taxonomy/index.js',
+	entry: './app/taxonomy/App.js',
 	output: {
 		filename: 'taxonomy.js',
 		path: path.resolve( __dirname, './js' )
@@ -55,4 +55,14 @@ const TaxonomyConfig = {
 	module: commonModules
 }
 
-module.exports = [ CptConfig, CptResult, TaxonomyConfig ];
+const TaxonomyResult = {
+	entry: './app/taxonomy/Result.js',
+	output: {
+		filename: 'taxonomy-result.js',
+		path: path.resolve( __dirname, './js' )
+	},
+	externals,
+	module: commonModules
+}
+
+module.exports = [ CptConfig, CptResult, TaxonomyConfig, TaxonomyResult ];

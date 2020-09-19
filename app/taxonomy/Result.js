@@ -1,28 +1,16 @@
-import PhpSettings from '../../PhpSettings';
-import PhpCode from '../constants/PhpCode';
+import React, { useState } from 'react';
+import { render } from 'react-dom';
+import PhpCode from './constants/PhpCode';
 import Highlight from 'react-highlight';
 import Clipboard from 'react-clipboard.js';
-const { useContext, useState } = wp.element;
 
 const Result = () => {
-	const [state, setState] = useContext( PhpSettings );
-
 	const [copied, setCopied] = useState( false );
 	const copy = () => {
 		setCopied( true );
 		setTimeout( () => setCopied( false ), 1000 );
 	}
 
-	if ( ! state.name || ! state.singular_name ) {
-		return (
-			<div className="mb-cpt-result">
-				<p className="alert alert-error">
-					Required fields must not be emptied!
-				</p>
-			</div>
-		);
-	}
-	
 	return (
 		<div className="mb-cpt-result">
 			<div className="alert alert-info">
@@ -31,11 +19,11 @@ const Result = () => {
 			</div>
 
 			<div className="mb-cpt-result__body">
-				<Highlight className="php">{PhpCode( state )}</Highlight>
-				<Clipboard title="Click to copy the code" data-clipboard-text={PhpCode( state )} onSuccess={copy}>{copied ? 'Copied' : 'Copy'}</Clipboard>
+				<Highlight className="php">{PhpCode( JSON.parse( document.getElementById( 'content' ).value ) )}</Highlight>
+				<Clipboard title="Click to copy the code" data-clipboard-text={PhpCode( JSON.parse( document.getElementById( 'content' ).value ) )} onSuccess={copy}>{copied ? 'Copied' : 'Copy'}</Clipboard>
 			</div>
 		</div>
 	);
 }
 
-export default Result;
+render( <Result />, document.getElementById( 'code-result' ) );

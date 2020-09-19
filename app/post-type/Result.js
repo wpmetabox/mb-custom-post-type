@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import PhpCode from '../constants/PhpCode';
+import { render } from 'react-dom';
+import PhpCode from './constants/PhpCode';
 import Highlight from 'react-highlight';
 import Clipboard from 'react-clipboard.js';
 
@@ -23,4 +24,4 @@ const Result = () => {
 	);
 }
 
-export default Result;
+render( <Result />, document.getElementById( 'code-result' ) );

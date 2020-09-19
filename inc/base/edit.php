@@ -10,7 +10,7 @@
 /**
  * The base class which controls all operations for creating / modifying custom post type.
  */
-abstract class MB_CPT_Base_Edit {
+class MB_CPT_Base_Edit {
 
 	/**
 	 * Post type name.
@@ -80,15 +80,21 @@ abstract class MB_CPT_Base_Edit {
 			wp_enqueue_script( 'mb-taxonomy', MB_CPT_URL . 'js/taxonomy.js', ['wp-element', 'wp-components'], '1.0.0', true );
 			wp_localize_script( 'mb-taxonomy', 'MbTax', $this->js_vars() );
 			wp_localize_script( 'mb-taxonomy', 'MbPtOptions', $options );
+			wp_localize_script( 'mb-taxonomy', 'AjaxVars', [
+				'url'   => admin_url( 'admin-ajax.php' ),
+				'nonce' => wp_create_nonce( 'ajax-nonce' )
+			] );
 		}
 	}
 
 	public function generate_code() {
-		if ( ! $_POST['code_data'] ) {
-			return;
+		if ( $_POST['post_type_data'] ) {
+			echo MB_CPT_URL . 'js/post-type-result.js';
 		}
 
-		echo MB_CPT_URL . 'js/post-type-result.js';
+		if ( $_POST['taxonomy_data'] ) {
+			echo MB_CPT_URL . 'js/taxonomy-result.js';
+		}
 
 		wp_die();
 	}
@@ -99,7 +105,14 @@ abstract class MB_CPT_Base_Edit {
 	 * @return array
 	 */
 	public function js_vars() {
-		return [];
+		$screen = get_current_screen();
+
+		if ( ! is_admin() || ! in_array( $screen->id, ['mb-post-type', 'mb-taxonomy'] ) ) {
+			return null;
+		}
+
+		global $post;
+		return (array) $post->post_content;
 	}
 
 	/**
@@ -110,6 +123,36 @@ abstract class MB_CPT_Base_Edit {
 	 * @return array
 	 */
 	public function register_meta_boxes( $meta_boxes ) {
+		$meta_boxes[] = [
+			'title'      => ' ',
+			'id'         => 'mb-cpt',
+			'post_types' => [ 'mb-post-type', 'mb-taxonomy' ],
+			'style'      => 'seamless',
+			'context'    => 'after_title',
+			'fields'     => [
+				[
+					'type' => 'custom_html',
+					'std'  => '<div id="root" class="mb-cpt"></div>',
+				],
+				[
+					'type' => 'custom_html',
+					'std'  => '<div id="code-result" class="mb-cpt"></div>',
+				],
+				[
+					'id'   => 'title',
+					'type' => 'hidden',
+				],
+				[
+					'id'   => 'name',
+					'type' => 'hidden',
+				],
+				[
+					'id'   => 'content',
+					'type' => 'hidden',
+				],
+			],
+		];
+
 		return $meta_boxes;
 	}
 
@@ -164,5 +207,23 @@ abstract class MB_CPT_Base_Edit {
 		$update_option = new RWMB_Update_Option();
 		$update_checker = new RWMB_Update_Checker( $update_option );
 		return $update_checker->has_extensions();
+	}
+
+	/**
+	 * Display upgrade message.
+	 *
+	 * @return string
+	 */
+	public function upgrade_message() {
+		$output  = '<ul>';
+		$output .= '<li>' . __( 'Create custom fields with drag-n-drop interface - no coding knowledge required!', 'mb-custom-post-type' ) . '</li>';
+		$output .= '<li>' . __( 'Add custom fields to taxonomies or user profile.', 'mb-custom-post-type' ) . '</li>';
+		$output .= '<li>' . __( 'Create custom settings pages.', 'mb-custom-post-type' ) . '</li>';
+		$output .= '<li>' . __( 'Create frontend submission forms.', 'mb-custom-post-type' ) . '</li>';
+		$output .= '<li>' . __( 'And much more!', 'mb-custom-post-type' ) . '</li>';
+		$output .= '</ul>';
+		$output .= '<a href="https://metabox.io/pricing/?utm_source=plugin_cpt&utm_medium=btn_upgrade&utm_campaign=cpt_upgrade" class="button button-primary">' . esc_html__( 'Get Meta Box Premium now', 'mb-custom-post-type' ) . '</a>';
+
+		return $output;
 	}
 }
