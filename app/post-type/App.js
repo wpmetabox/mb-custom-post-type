@@ -4,6 +4,7 @@ import MainTabs from './components/MainTabs';
 
 const { useEffect, useState } = wp.element;
 const { Button } = wp.components;
+const i18n = MbPostType;
 
 const Spinner = () => <span>Generating code. Please wait...</span>;
 
@@ -15,13 +16,7 @@ const enqueueScript = ( file ) => {
 };
 
 const App = () => {
-	let data = {};
-
-	if ( MbCpt[0] ) {
-		data = JSON.parse( MbCpt[0] );
-	} else {
-		data = DefaultSettings;
-	}
+	let data = i18n.settings ? JSON.parse( i18n.settings ) : DefaultSettings;
 
 	const [state, setState] = useState( data );
 
@@ -29,23 +24,7 @@ const App = () => {
 		state['args_post_type'] = state['post_type'];
 	}
 
-	const handleShowCode = e => {
-		e.preventDefault();
-		// setShowCode( true );
-
-		const request = new XMLHttpRequest();
-
-		request.open('POST', AjaxVars.url, true);
-		request.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded; charset=UTF-8');
-		request.onload = function() {
-			enqueueScript( this.response );
-			// console.log(this.response);
-		};
-		request.onerror = function() {
-			// Connection error
-		};
-		request.send( `action=show_code&nonce=${AjaxVars.nonce}&code_data=${document.getElementById( 'content' ).value}`);
-	}
+	const handleShowCode = () => enqueueScript( i18n.result );
 
 	useEffect( () => {
 		const title = document.getElementById( 'title' );

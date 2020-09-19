@@ -31,23 +31,6 @@ class MB_CPT_Post_Type_Edit extends MB_CPT_Base_Edit {
 	}
 
 	/**
-	 * List of Javascript variables.
-	 *
-	 * @return array
-	 */
-	public function js_vars() {
-		$screen = get_current_screen();
-
-		if ( ! is_admin() || $screen->id !== 'mb-post-type' ) {
-			return null;
-		}
-
-		global $post;
-
-		return array_merge( parent::js_vars(), (array) $post->post_content );
-	}
-
-	/**
 	 * Register meta boxes for add/edit mb-post-type page.
 	 *
 	 * @param array $meta_boxes Meta boxes.

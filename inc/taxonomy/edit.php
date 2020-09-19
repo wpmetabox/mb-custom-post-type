@@ -32,21 +32,16 @@ class MB_CPT_Taxonomy_Edit extends MB_CPT_Base_Edit {
 		$this->register = $register;
 	}
 
-	/**
-	 * List of Javascript variables.
-	 *
-	 * @return array
-	 */
 	public function js_vars() {
-		$screen = get_current_screen();
-
-		if ( ! is_admin() || $screen->id !== 'mb-taxonomy' ) {
-			return null;
+		$options    = [];
+		$post_types = get_post_types( '', 'objects' );
+		unset( $post_types['mb-taxonomy'], $post_types['revision'], $post_types['nav_menu_item'] );
+		foreach ( $post_types as $post_type => $post_type_object ) {
+			$options[ $post_type ] = $post_type_object->labels->singular_name;
 		}
 
-		global $post;
-
-		return array_merge( parent::js_vars(), (array) $post->post_content );
+		$vars = parent::js_vars();
+		$vars['postTypeOptions'] = $options;
 	}
 
 	/**

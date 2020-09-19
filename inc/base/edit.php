@@ -44,62 +44,30 @@ abstract class MB_CPT_Base_Edit {
 		add_filter( 'rwmb_title_value', '__return_empty_string' );
 		add_filter( 'rwmb_name_value', '__return_empty_string' );
 		add_filter( 'rwmb_content_value', '__return_empty_string' );
-
-		add_action( 'wp_ajax_nopriv_show_code', array( $this, 'generate_code' ) );
-		add_action( 'wp_ajax_show_code', array( $this, 'generate_code' ) );
 	}
 
-	/**
-	 * Enqueue scripts and styles.
-	 */
 	public function enqueue_scripts() {
 		if ( ! $this->is_edit_screen() ) {
 			return;
 		}
 
-		wp_enqueue_style( 'mb-cpt', MB_CPT_URL . 'css/style.css', ['wp-components'], '1.8.0' );
+		wp_enqueue_style( $this->post_type, MB_CPT_URL . 'css/style.css', ['wp-components'], '1.8.0' );
 		wp_enqueue_style( 'highlightjs', MB_CPT_URL . 'css/atom-one-dark.min.css', [], '9.15.8' );
 
-		if ( 'mb-post-type' === get_current_screen()->id ) {
-			wp_enqueue_script( 'mb-cpt', MB_CPT_URL . 'js/post-type.js', ['wp-element', 'wp-components'], '1.0.0', true );
-			wp_localize_script( 'mb-cpt', 'MbCpt', $this->js_vars() );
-			wp_localize_script( 'mb-cpt', 'AjaxVars', [
-				'url'   => admin_url( 'admin-ajax.php' ),
-				'nonce' => wp_create_nonce( 'ajax-nonce' )
-			] );
-		}
-
-		if ( 'mb-taxonomy' === get_current_screen()->id ) {
-			$options    = [];
-			$post_types = get_post_types( '', 'objects' );
-			unset( $post_types['mb-taxonomy'], $post_types['revision'], $post_types['nav_menu_item'] );
-			foreach ( $post_types as $post_type => $post_type_object ) {
-				$options[ $post_type ] = $post_type_object->labels->singular_name;
-			}
-
-			wp_enqueue_script( 'mb-taxonomy', MB_CPT_URL . 'js/taxonomy.js', ['wp-element', 'wp-components'], '1.0.0', true );
-			wp_localize_script( 'mb-taxonomy', 'MbTax', $this->js_vars() );
-			wp_localize_script( 'mb-taxonomy', 'MbPtOptions', $options );
-		}
+		$object = str_replace( 'mb-', '', $this->post_type );
+		$objectName = str_replace( ' ', '', ucwords( str_replace( '-', ' ', $this->post_type ) ) );
+		wp_enqueue_script( $this->post_type, MB_CPT_URL . "js/$object.js", ['wp-element', 'wp-components'], '1.0.0', true );
+		wp_localize_script( $this->post_type, $objectName, $this->js_vars() );
 	}
 
-	public function generate_code() {
-		if ( ! $_POST['code_data'] ) {
-			return;
-		}
-
-		echo MB_CPT_URL . 'js/post-type-result.js';
-
-		wp_die();
-	}
-
-	/**
-	 * List of Javascript variables.
-	 *
-	 * @return array
-	 */
 	public function js_vars() {
-		return [];
+		$vars = [];
+		$vars['settings'] = get_post()->post_content;
+
+		$object = str_replace( 'mb-', '', $this->post_type );
+		$vars['result'] = MB_CPT_URL . "js/$object-result.js";
+
+		return $vars;
 	}
 
 	/**
