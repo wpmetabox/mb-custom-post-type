@@ -18,7 +18,7 @@ const Result = () => {
 			<div className="notice notice-success"><p>Copy the code and paste into your theme's <code>functions.php</code> file.</p></div>
 			<div className="mb-cpt-result__body">
 				<Highlight className="php">{ PhpCode( code ) }</Highlight>
-				<Clipboard title="Click to copy the code" data-clipboard-text={ PhpCode( code ) } onSuccess={ copy }>{ copied ? 'Copied' : 'Copy' }</Clipboard>
+				<Clipboard className="components-button is-primary" title="Click to copy the code" data-clipboard-text={ PhpCode( code ) } onSuccess={ copy }>{ copied ? 'Copied' : 'Copy' }</Clipboard>
 			</div>
 		</div>
 	);
