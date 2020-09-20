@@ -22,10 +22,10 @@ class MB_CPT_Base_Edit {
 		wp_enqueue_style( $this->post_type, MB_CPT_URL . 'css/style.css', ['wp-components'], '1.8.0' );
 		wp_enqueue_style( 'highlightjs', MB_CPT_URL . 'css/atom-one-dark.min.css', [], '9.15.8' );
 
-		$object = str_replace( 'mb-', '', $this->post_type );
-		$objectName = str_replace( ' ', '', ucwords( str_replace( '-', ' ', $this->post_type ) ) );
+		$object      = str_replace( 'mb-', '', $this->post_type );
+		$object_name = str_replace( ' ', '', ucwords( str_replace( '-', ' ', $this->post_type ) ) );
 		wp_enqueue_script( $this->post_type, MB_CPT_URL . "js/$object.js", ['wp-element', 'wp-components'], '1.0.0', true );
-		wp_localize_script( $this->post_type, $objectName, $this->js_vars() );
+		wp_localize_script( $this->post_type, $object_name, $this->js_vars() );
 	}
 
 	public function js_vars() {
