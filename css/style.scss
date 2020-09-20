@@ -40,18 +40,6 @@
 		margin-left: 12px;
 		font-style: italic;
 	}
-	&-result {
-		&__body {
-			position: relative;
-		}
-		.button {
-			position: absolute;
-			top: 0;
-			right: 0;
-			border: none;
-			border-radius: 0 0 0 4px;
-		}
-	}
 
 	// Fields
 	&-field {
@@ -124,5 +112,9 @@
 		margin-left: auto;
 		margin-right: 12px;
 		height: auto;
+
+		&.is-active {
+			box-shadow: none;
+		}
 	}
 }
