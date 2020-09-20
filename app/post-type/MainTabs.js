@@ -1,6 +1,8 @@
-import { BasicDatas, LabelDatas, TaxonomyDatas, SupportDatas, AdvancedDatas } from './constants/Data';
+import { CodeDatas, BasicDatas, LabelDatas, TaxonomyDatas, SupportDatas, AdvancedDatas } from './constants/Data';
 import Control from '../controls/Control';
+import { enqueueScript } from '../helper';
 const { TabPanel } = wp.components;
+const i18n = MbPostType;
 
 const tabs = [
 	{
@@ -23,6 +25,11 @@ const tabs = [
 		name: 'taxonomies',
 		title: 'Taxonomies',
 	},
+	{
+		name: 'code',
+		title: 'Get PHP Code',
+		className: 'mb-cpt-code button button-small'
+	}
 ];
 const panels = {
 	general: Object.keys( BasicDatas ).map( key => <Control key={key} props={BasicDatas[key]} autoFills={[...LabelDatas, ...BasicDatas]} /> ),
@@ -30,8 +37,20 @@ const panels = {
 	advanced: Object.keys( AdvancedDatas ).map( key => <Control key={key} props={AdvancedDatas[key]} /> ),
 	supports: <Control name="supports" values={SupportDatas} props={SupportDatas} />,
 	taxonomies: <Control name="taxonomies" values={TaxonomyDatas} props={TaxonomyDatas} />,
+	code: (
+		<>
+			{ Object.keys( CodeDatas ).map( key => <Control key={key} props={CodeDatas[key]} /> ) }
+			<div id="code-result"></div>
+		</>
+	)
 }
 
-const MainTabs = () => <TabPanel tabs={ tabs }>{ tab => panels[tab.name] }</TabPanel>
+const onSelect = tab => {
+	if ( 'code' === tab ) {
+		enqueueScript( i18n.result );
+	}
+}
+
+const MainTabs = () => <TabPanel className="mb-cpt-tabs" onSelect={ onSelect } tabs={ tabs }>{ tab => panels[tab.name] }</TabPanel>
 
 export default MainTabs;

@@ -4,6 +4,9 @@ export const BasicDatas = [
 	{ type: 'text', name: 'name', label: 'Plural name', required: true },
 	{ type: 'text', name: 'singular_name', label: 'Singular name', required: true },
 	{ type: 'text', name: 'slug', label: 'Slug', required: true, updateFrom: 'singular_name' },
+];
+
+export const CodeDatas = [
 	{ type: 'text', name: 'function_name', label: 'Function name' },
 	{ type: 'text', name: 'text_domain', label: 'Text domain' },
 ];

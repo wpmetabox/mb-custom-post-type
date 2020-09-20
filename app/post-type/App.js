@@ -1,18 +1,13 @@
 import PhpSettings from '../PhpSettings';
 import DefaultSettings from './constants/DefaultSettings';
 import MainTabs from './MainTabs';
-import { enqueueScript } from '../helper';
 
-const { useEffect, useState } = wp.element;
-const { Button } = wp.components;
+const { render, useEffect, useState } = wp.element;
 const i18n = MbPostType;
+const settings = i18n.settings ? JSON.parse( i18n.settings ) : DefaultSettings;
 
 const App = () => {
-	let data = i18n.settings ? JSON.parse( i18n.settings ) : DefaultSettings;
-
-	const [state, setState] = useState( data );
-
-	const showCode = () => enqueueScript( i18n.result );
+	const [state, setState] = useState( settings );
 
 	useEffect( () => {
 		document.getElementById( 'post_title' ).value = state.singular_name;
@@ -22,9 +17,8 @@ const App = () => {
 	return (
 		<PhpSettings.Provider value={[state, setState]}>
 			<MainTabs />
-			<Button isPrimary onClick={ showCode }>Generate Code</Button>
 		</PhpSettings.Provider>
 	);
 }
 
-ReactDOM.render( <App />, document.getElementById( 'root' ) );
+render( <App />, document.getElementById( 'root' ) );
