@@ -76,45 +76,48 @@ class MB_CPT_Base_Edit {
 			],
 		];
 
+		if ( ! $this->is_premium_user() ) {
+			$meta_boxes[] = [
+				'id'         => 'mb-cpt-upgrade',
+				'title'      => __( 'Upgrade', 'mb-custom-post-type' ),
+				'post_types' => [ 'mb-post-type', 'mb-taxonomy' ],
+				'context'    => 'side',
+				'priority'   => 'low',
+				'fields'     => [
+					[
+						'type'     => 'custom_html',
+						'callback' => [ $this, 'upgrade_message' ],
+					],
+				],
+			];
+		}
+
 		return $meta_boxes;
 	}
 
-	/**
-	 * Check if current link is mb-post-type post type or not.
-	 *
-	 * @return boolean
-	 */
 	public function is_edit_screen() {
 		$screen = get_current_screen();
 
 		return 'post' === $screen->base && $this->post_type === $screen->post_type;
 	}
 
-	/**
-	 * Check if current user is a premium user.
-	 *
-	 * @return bool
-	 */
 	public function is_premium_user() {
 		$update_option = new RWMB_Update_Option();
 		$update_checker = new RWMB_Update_Checker( $update_option );
 		return $update_checker->has_extensions();
 	}
 
-	/**
-	 * Display upgrade message.
-	 *
-	 * @return string
-	 */
 	public function upgrade_message() {
-		$output  = '<ul>';
-		$output .= '<li>' . __( 'Create custom fields with drag-n-drop interface - no coding knowledge required!', 'mb-custom-post-type' ) . '</li>';
-		$output .= '<li>' . __( 'Add custom fields to taxonomies or user profile.', 'mb-custom-post-type' ) . '</li>';
-		$output .= '<li>' . __( 'Create custom settings pages.', 'mb-custom-post-type' ) . '</li>';
-		$output .= '<li>' . __( 'Create frontend submission forms.', 'mb-custom-post-type' ) . '</li>';
-		$output .= '<li>' . __( 'And much more!', 'mb-custom-post-type' ) . '</li>';
+		$output = '<p>' . esc_html__( 'Upgrade now to have more features & speedy technical support:', 'mb-custom-post-type' ) . '</p>';
+		$output .= '<ul>';
+		$output .= '<li><span class="dashicons dashicons-yes"></span>' . esc_html__( 'Create custom fields with UI.', 'mb-custom-post-type' ) . '</li>';
+		$output .= '<li><span class="dashicons dashicons-yes"></span>' . esc_html__( 'Add custom fields to terms and users.', 'mb-custom-post-type' ) . '</li>';
+		$output .= '<li><span class="dashicons dashicons-yes"></span>' . esc_html__( 'Create custom settings pages.', 'mb-custom-post-type' ) . '</li>';
+		$output .= '<li><span class="dashicons dashicons-yes"></span>' . esc_html__( 'Create frontend submission forms.', 'mb-custom-post-type' ) . '</li>';
+		$output .= '<li><span class="dashicons dashicons-yes"></span>' . esc_html__( 'Create frontend templates.', 'mb-custom-post-type' ) . '</li>';
+		$output .= '<li><span class="dashicons dashicons-yes"></span>' . esc_html__( 'And much more!', 'mb-custom-post-type' ) . '</li>';
 		$output .= '</ul>';
-		$output .= '<a href="https://metabox.io/pricing/?utm_source=plugin_cpt&utm_medium=btn_upgrade&utm_campaign=cpt_upgrade" class="button button-primary">' . esc_html__( 'Get Meta Box Premium now', 'mb-custom-post-type' ) . '</a>';
+		$output .= '<a href="https://metabox.io/pricing/?utm_source=plugin_cpt&utm_medium=btn_upgrade&utm_campaign=cpt_upgrade" class="button">' . esc_html__( 'Upgrade now', 'mb-custom-post-type' ) . '</a>';
 
 		return $output;
 	}
