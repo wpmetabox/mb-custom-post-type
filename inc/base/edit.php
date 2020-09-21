@@ -32,8 +32,6 @@ class MB_CPT_Base_Edit {
 		$vars = [];
 		$vars['settings'] = get_post()->post_content;
 
-		$object = str_replace( 'mb-', '', $this->post_type );
-
 		if ( 'mb-taxonomy' === get_current_screen()->id ) {
 			$options    = [];
 			$post_types = get_post_types( '', 'objects' );
