@@ -93,6 +93,9 @@
 	}
 
 	&-result {
+		code {
+			font-style: 12px;
+		}
 		.react-codemirror2 {
 			border: 1px solid var(--color-light);
 			margin-bottom: 24px;
