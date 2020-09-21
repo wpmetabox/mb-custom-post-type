@@ -39,7 +39,7 @@ const panels = {
 	code: (
 		<>
 			{ Object.keys( CodeDatas ).map( key => <Control key={key} props={CodeDatas[key]} /> ) }
-			<Result data='customPostType' />
+			<Result />
 		</>
 	)
 }
