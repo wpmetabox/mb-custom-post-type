@@ -191,6 +191,18 @@ class MB_CPT_Taxonomy_Register extends MB_CPT_Base_Register {
 			unset( $args['rewrite_no_front'] );
 			unset( $args['rewrite_hierarchical'] );
 		}
+
+		$options    = [];
+		$post_types = get_post_types( '', 'objects' );
+		unset( $post_types['mb-taxonomy'], $post_types['revision'], $post_types['nav_menu_item'] );
+		foreach ( $post_types as $post_type => $post_type_object ) {
+			if ( $data->$post_type ) {
+				array_push( $options, $post_type );
+			}
+		}
+
+		$args['post_types'] = $options;
+
 		unset( $args['taxonomy'] );
 		return $args;
 	}

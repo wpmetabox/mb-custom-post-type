@@ -30,14 +30,10 @@ export const LabelDatas = [
 	{ type: 'text', name: 'back_to_items', label: __( 'Back to items', 'mb-custom-post-type' ), defaultValue: 'Back to %name%', updateFrom: 'name' },
 ];
 
-const defaultPostTypes = [
-	{ name: 'post', description: 'Post', checked: true },
-	{ name: 'page', description: 'Page', checked: false },
-];
 const i18n = MbTaxonomy;
 let temp = [];
-const supportPostTypes = [...(JSON.parse(i18n.settings).post_types)];
-let postTypes = i18n.postTypeOptions ? i18n.postTypeOptions : defaultPostTypes;
+const supportPostTypes = i18n.settings ? [...JSON.parse(i18n.settings).post_types] : [];
+let postTypes = i18n.postTypeOptions ? i18n.postTypeOptions : [];
 Object.keys( postTypes ).forEach( e => {
 	temp.push( { name: e, description: postTypes[e], checked: supportPostTypes.includes( e ) ? true : false } )
 } );
@@ -57,7 +53,7 @@ export const AdvancedDatas = [
 	{ type: 'checkbox', name: 'hierarchical', label: __( 'Hierarchical?', 'mb-custom-post-type' ), description: __( 'Is this taxonomy hierarchical (have descendants) like categories or not hierarchical like tags.', 'mb-custom-post-type' ), checked: false },
 	{ type: 'checkbox', name: 'query_var', label: __( 'Query var', 'mb-custom-post-type' ), description: __( 'Uncheck to disable the query var, check to use the taxonomy\'s "name" as query var.', 'mb-custom-post-type' ), checked: true },
 	{ type: 'checkbox', name: 'sort', label: __( 'Sort?', 'mb-custom-post-type' ), description: __( 'Whether this taxonomy should remember the order in which terms are added to objects.', 'mb-custom-post-type' ), checked: false },
-	{ type: 'text', name: 'rewrite_slug', label: __( 'Custom rewrite slug', 'mb-custom-post-type' ), description: __( 'Leave empty to use the taxonomy slug.' },
+	{ type: 'text', name: 'rewrite_slug', label: __( 'Custom rewrite slug', 'mb-custom-post-type' ), description: __( 'Leave empty to use the taxonomy slug.', 'mb-custom-post-type' ) },
 	{ type: 'checkbox', name: 'rewrite_no_front', label: __( 'No prepended permalink structure?', 'mb-custom-post-type' ), description: __( 'Do not prepend the permalink structure with the front base.', 'mb-custom-post-type' ), checked: false },
 	{ type: 'checkbox', name: 'rewrite_hierarchical', label: __( 'Hierarchical URL', 'mb-custom-post-type' ), checked: false },
 ];

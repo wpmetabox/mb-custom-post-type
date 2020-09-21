@@ -27,7 +27,7 @@ const LabelSettings = {
 const i18n = MbTaxonomy;
 let postTypeOptions = i18n.postTypeOptions;
 let temp = {}
-Object.keys( postTypeOptions ).forEach( e => temp[e] = [ 'post', 'page' ].includes( e ) ? true : false );
+Object.keys( postTypeOptions ).forEach( e => temp[e] = false );
 
 export const PostTypeSettings = temp;
 
