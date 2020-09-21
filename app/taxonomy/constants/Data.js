@@ -33,14 +33,14 @@ const defaultPostTypes = [
 	{ name: 'page', description: 'Page', checked: false },
 ];
 const i18n = MbTaxonomy;
-let postTypeOptions = i18n.postTypeOptions;
 let temp = [];
-let supportPostTypes = postTypeOptions ? postTypeOptions : defaultPostTypes;
-Object.keys( postTypeOptions ).forEach( e => {
-	temp.push( { name: e, description: i18n.postTypeOptions[e], checked: supportPostTypes.hasOwnProperty( e ) ? true : false } )
+const supportPostTypes = [...(JSON.parse(i18n.settings).post_types)];
+let postTypes = i18n.postTypeOptions ? i18n.postTypeOptions : defaultPostTypes;
+Object.keys( postTypes ).forEach( e => {
+	temp.push( { name: e, description: postTypes[e], checked: supportPostTypes.includes( e ) ? true : false } )
 } );
 
-export const PostTypeDatas = defaultPostTypes;
+export const PostTypeDatas = temp;
 
 export const AdvancedDatas = [
 	{ type: 'checkbox', name: 'public', label: 'Public?', description: 'If the taxonomy should be publicly queryable.', checked: true },
