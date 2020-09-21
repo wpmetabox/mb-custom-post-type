@@ -12,19 +12,18 @@ export const CodeDatas = [
 ];
 
 export const LabelDatas = [
-	{ type: 'text', name: 'menu_name', label: 'Menu name', defaultValue: '%name%', updateFrom: 'name' },
-	{ type: 'text', name: 'name_admin_bar', label: 'Name in admin bar', defaultValue: '%singular_name%', updateFrom: 'singular_name' },
-	{ type: 'text', name: 'all_items', label: 'All items', defaultValue: 'All %name%', updateFrom: 'name' },
 	{ type: 'text', name: 'add_new', label: 'Add new', defaultValue: 'Add %singular_name%', updateFrom: 'singular_name' },
 	{ type: 'text', name: 'add_new_item', label: 'Add new item', defaultValue: 'Add new %singular_name%', updateFrom: 'singular_name' },
 	{ type: 'text', name: 'edit_item', label: 'Edit item', defaultValue: 'Edit %singular_name%', updateFrom: 'singular_name' },
 	{ type: 'text', name: 'new_item', label: 'New item', defaultValue: 'New %singular_name%', updateFrom: 'singular_name' },
 	{ type: 'text', name: 'view_item', label: 'View item', defaultValue: 'View %singular_name%', updateFrom: 'singular_name' },
-	{ type: 'text', name: 'update_item', label: 'Update item', defaultValue: 'Update %singular_name%', updateFrom: 'singular_name' },
+	{ type: 'text', name: 'view_items', label: 'View items', defaultValue: 'View %name%', updateFrom: 'name' },
 	{ type: 'text', name: 'search_items', label: 'Search items', defaultValue: 'Search %name%', updateFrom: 'name' },
 	{ type: 'text', name: 'not_found', label: 'Not found', defaultValue: 'No %name% found', updateFrom: 'name' },
 	{ type: 'text', name: 'not_found_in_trash', label: 'Not found in trash', defaultValue: 'No %name% found in Trash', updateFrom: 'name' },
 	{ type: 'text', name: 'parent_item_colon', label: 'Parent items', defaultValue: 'Parent %singular_name%', updateFrom: 'singular_name' },
+	{ type: 'text', name: 'all_items', label: 'All items', defaultValue: 'All %name%', updateFrom: 'name' },
+	{ type: 'text', name: 'menu_name', label: 'Menu name', defaultValue: '%name%', updateFrom: 'name' },
 ];
 
 export const SupportDatas = [

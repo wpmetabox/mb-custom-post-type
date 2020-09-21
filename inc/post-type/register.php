@@ -111,25 +111,47 @@ class MB_CPT_Post_Type_Register extends MB_CPT_Base_Register {
 
 	public function set_up_post_type( $data ) {
 		$labels = [
-			'menu_name'          => $data->name,
-			'name_admin_bar'     => $data->singular_name,
+			'singular_name'      => $data->singular_name,
 			'add_new'            => $data->add_new,
 			'add_new_item'       => $data->add_new_item,
-			'new_item'           => $data->new_item,
 			'edit_item'          => $data->edit_item,
+			'new_item'           => $data->new_item,
 			'view_item'          => $data->view_item,
-			'update_item'        => $data->update_item,
-			'all_items'          => $data->all_items,
+			'view_items'         => $data->view_items,
 			'search_items'       => $data->search_items,
-			'parent_item_colon'  => $data->parent_item_colon,
 			'not_found'          => $data->not_found,
 			'not_found_in_trash' => $data->not_found_in_trash,
+			'parent_item_colon'  => $data->parent_item_colon,
+			'all_items'          => $data->all_items,
+			'menu_name'          => $data->name,
 		];
 		$args = [
 			'label'  => $data->name,
 			'labels' => $labels,
-			'public' => true,
 		];
+		$params = [
+			'description',
+			'public',
+			'hierarchical',
+			'exclude_from_search',
+			'publicly_queryable',
+			'show_ui',
+			'show_in_menu',
+			'show_in_nav_menus',
+			'show_in_admin_bar',
+			'show_in_rest',
+			'rest_base',
+			'menu_position',
+			'menu_icon',
+			'supports',
+			'taxonomies',
+			'has_archive',
+		];
+		foreach ( $params as $param ) {
+			if ( isset( $data->$param ) ) {
+				$args[ $param ] = $data->$param;
+			}
+		}
 
 		if ( property_exists ( $data, 'capability_type' ) && 'custom' === $data->capability_type ) {
 			$args['capability_type'] = [ strtolower( $data->singular_name ), strtolower( $data->name ) ];
@@ -140,14 +162,14 @@ class MB_CPT_Post_Type_Register extends MB_CPT_Base_Register {
 			$args['has_archive'] = $data->archive_slug;
 		}
 
-		if ( ! property_exists ( $data, 'rewrite_slug' ) && ! property_exists ( $data, 'rewrite_no_front' ) ) {
+		if ( ! property_exists( $data, 'rewrite_slug' ) && ! property_exists( $data, 'rewrite_no_front' ) ) {
 			$args['rewrite'] = true;
 		} else {
 			$rewrite = [];
-			if ( property_exists ( $data, 'rewrite_slug' ) ) {
+			if ( property_exists( $data, 'rewrite_slug' ) ) {
 				$rewrite['slug'] = $data->rewrite_slug;
 			}
-			if ( property_exists ( $data, 'rewrite_no_front' ) ) {
+			if ( property_exists( $data, 'rewrite_no_front' ) ) {
 				$rewrite['with_front'] = false;
 			}
 
