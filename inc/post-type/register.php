@@ -111,22 +111,22 @@ class MB_CPT_Post_Type_Register extends MB_CPT_Base_Register {
 
 	public function set_up_post_type( $data ) {
 		$labels = [
-			'singular_name'      => $data->singular_name,
-			'add_new'            => $data->add_new,
-			'add_new_item'       => $data->add_new_item,
-			'edit_item'          => $data->edit_item,
-			'new_item'           => $data->new_item,
-			'view_item'          => $data->view_item,
-			'view_items'         => $data->view_items,
-			'search_items'       => $data->search_items,
-			'not_found'          => $data->not_found,
-			'not_found_in_trash' => $data->not_found_in_trash,
-			'parent_item_colon'  => $data->parent_item_colon,
-			'all_items'          => $data->all_items,
-			'menu_name'          => $data->name,
+			'singular_name'      => property_exists( $data, 'singular_name' ) ? $data->singular_name : '',
+			'add_new'            => property_exists( $data, 'add_new' ) ? $data->add_new : '',
+			'add_new_item'       => property_exists( $data, 'add_new_item' ) ? $data->add_new_item : '',
+			'edit_item'          => property_exists( $data, 'edit_item' ) ? $data->edit_item : '',
+			'new_item'           => property_exists( $data, 'new_item' ) ? $data->new_item : '',
+			'view_item'          => property_exists( $data, 'view_item' ) ? $data->view_item : '',
+			'view_items'         => property_exists( $data, 'view_items' ) ? $data->view_items : '',
+			'search_items'       => property_exists( $data, 'search_items' ) ? $data->search_items : '',
+			'not_found'          => property_exists( $data, 'not_found' ) ? $data->not_found : '',
+			'not_found_in_trash' => property_exists( $data, 'not_found_in_trash' ) ? $data->not_found_in_trash : '',
+			'parent_item_colon'  => property_exists( $data, 'parent_item_colon' ) ? $data->parent_item_colon : '',
+			'all_items'          => property_exists( $data, 'all_items' ) ? $data->all_items : '',
+			'menu_name'          => property_exists( $data, 'name' ) ? $data->name : '',
 		];
 		$args = [
-			'label'  => $data->name,
+			'label'  => property_exists( $data, 'name' ) ? $data->name : '',
 			'labels' => $labels,
 		];
 		$params = [
@@ -147,8 +147,9 @@ class MB_CPT_Post_Type_Register extends MB_CPT_Base_Register {
 			'taxonomies',
 			'has_archive',
 		];
+
 		foreach ( $params as $param ) {
-			if ( isset( $data->$param ) ) {
+			if ( property_exists( $data, $param ) && $data->$param ) {
 				$args[ $param ] = $data->$param;
 			}
 		}

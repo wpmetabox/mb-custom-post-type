@@ -151,21 +151,21 @@ class MB_CPT_Taxonomy_Register extends MB_CPT_Base_Register {
 
 	public function set_up_taxonomy( $data ) {
 		$labels = [
-			'menu_name'                  => $data->name,
-			'all_items'                  => $data->all_items,
-			'edit_item'                  => $data->edit_item,
-			'view_item'                  => $data->view_item,
-			'update_item'                => $data->update_item,
-			'add_new_item'               => $data->add_new_item,
-			'new_item_name'              => $data->new_item_name,
-			'parent_item'                => $data->parent_item,
-			'parent_item_colon'          => $data->parent_item_colon,
-			'search_items'               => $data->search_items,
-			'popular_items'              => $data->popular_items,
-			'separate_items_with_commas' => $data->separate_items_with_commas,
-			'add_or_remove_items'        => $data->add_or_remove_items,
-			'choose_from_most_used'      => $data->choose_from_most_used,
-			'not_found'                  => $data->not_found,
+			'menu_name'                  => property_exists( $data, 'name' ) ? $data->name : '',
+			'all_items'                  => property_exists( $data, 'all_items' ) ? $data->all_items : '',
+			'edit_item'                  => property_exists( $data, 'edit_item' ) ? $data->edit_item : '',
+			'view_item'                  => property_exists( $data, 'view_item' ) ? $data->view_item : '',
+			'update_item'                => property_exists( $data, 'update_item' ) ? $data->update_item : '',
+			'add_new_item'               => property_exists( $data, 'add_new_item' ) ? $data->add_new_item : '',
+			'new_item_name'              => property_exists( $data, 'new_item_name' ) ? $data->new_item_name : '',
+			'parent_item'                => property_exists( $data, 'parent_item' ) ? $data->parent_item : '',
+			'parent_item_colon'          => property_exists( $data, 'parent_item_colon' ) ? $data->parent_item_colon : '',
+			'search_items'               => property_exists( $data, 'search_items' ) ? $data->search_items : '',
+			'popular_items'              => property_exists( $data, 'popular_items' ) ? $data->popular_items : '',
+			'separate_items_with_commas' => property_exists( $data, 'separate_items_with_commas' ) ? $data->separate_items_with_commas : '',
+			'add_or_remove_items'        => property_exists( $data, 'add_or_remove_items' ) ? $data->add_or_remove_items : '',
+			'choose_from_most_used'      => property_exists( $data, 'choose_from_most_used' ) ? $data->choose_from_most_used : '',
+			'not_found'                  => property_exists( $data, 'not_found' ) ? $data->not_found : '',
 		];
 		$args   = [
 			'label'  => $data->name,
@@ -196,7 +196,7 @@ class MB_CPT_Taxonomy_Register extends MB_CPT_Base_Register {
 		$post_types = get_post_types( '', 'objects' );
 		unset( $post_types['mb-taxonomy'], $post_types['revision'], $post_types['nav_menu_item'] );
 		foreach ( $post_types as $post_type => $post_type_object ) {
-			if ( $data->$post_type ) {
+			if ( property_exists( $data, $post_type ) && $data->$post_type ) {
 				array_push( $options, $post_type );
 			}
 		}
