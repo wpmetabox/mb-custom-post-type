@@ -33,7 +33,6 @@ class MB_CPT_Base_Edit {
 		$vars['settings'] = get_post()->post_content;
 
 		$object = str_replace( 'mb-', '', $this->post_type );
-		$vars['result'] = MB_CPT_URL . "js/$object-result.js";
 
 		if ( 'mb-taxonomy' === get_current_screen()->id ) {
 			$options    = [];

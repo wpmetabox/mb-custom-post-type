@@ -1,8 +1,8 @@
-import React, { useState } from 'react';
-import { render } from 'react-dom';
 import PhpCode from './constants/PhpCode';
 import Highlight from 'react-highlight';
 import Clipboard from 'react-clipboard.js';
+import PhpSettings from '../PhpSettings';
+const { useState, useContext } = wp.element;
 
 const Result = () => {
 	const [copied, setCopied] = useState( false );
@@ -11,17 +11,17 @@ const Result = () => {
 		setTimeout( () => setCopied( false ), 1000 );
 	}
 
-	const code = JSON.parse( document.getElementById( 'content' ).value );
+	const [state, setState] = useContext( PhpSettings );
 
 	return (
 		<div className="mb-cpt-result">
 			<div className="notice notice-success"><p>Copy the code and paste into your theme's <code>functions.php</code> file.</p></div>
 			<div className="mb-cpt-result__body">
-				<Highlight className="php">{PhpCode( code )}</Highlight>
-				<Clipboard className="components-button is-primary" title="Click to copy the code" data-clipboard-text={PhpCode( code )} onSuccess={copy}>{copied ? 'Copied' : 'Copy'}</Clipboard>
+				<Highlight className="php">{PhpCode( state )}</Highlight>
+				<Clipboard className="components-button is-primary" title="Click to copy the code" data-clipboard-text={PhpCode( state )} onSuccess={copy}>{copied ? 'Copied' : 'Copy'}</Clipboard>
 			</div>
 		</div>
 	);
 }
 
-render( <Result />, document.getElementById( 'code-result' ) );
+export default Result;

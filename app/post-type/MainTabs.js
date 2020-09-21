@@ -1,8 +1,7 @@
 import { CodeDatas, BasicDatas, LabelDatas, TaxonomyDatas, SupportDatas, AdvancedDatas } from './constants/Data';
 import Control from '../controls/Control';
-import { enqueueScript } from '../helper';
+import Result from './Result';
 const { TabPanel } = wp.components;
-const i18n = MbPostType;
 
 const tabs = [
 	{
@@ -40,17 +39,11 @@ const panels = {
 	code: (
 		<>
 			{ Object.keys( CodeDatas ).map( key => <Control key={key} props={CodeDatas[key]} /> ) }
-			<div id="code-result"></div>
+			<Result data='customPostType' />
 		</>
 	)
 }
 
-const onSelect = tab => {
-	if ( 'code' === tab ) {
-		enqueueScript( i18n.result );
-	}
-}
-
-const MainTabs = () => <TabPanel className="mb-cpt-tabs" onSelect={ onSelect } tabs={ tabs }>{ tab => panels[tab.name] }</TabPanel>
+const MainTabs = () => <TabPanel className="mb-cpt-tabs" tabs={ tabs }>{ tab => panels[tab.name] }</TabPanel>
 
 export default MainTabs;
