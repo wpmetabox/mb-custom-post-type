@@ -91,6 +91,22 @@
 			}
 		}
 	}
+
+	&-result {
+		code {
+			font-size: 12px;
+		}
+		&__body {
+			position: relative;
+		}
+		.button {
+			position: absolute;
+			top: 0;
+			right: 0;
+			border: none;
+			border-radius: 0 0 0 4px;
+		}
+	}
 }
 
 // Tabs
