@@ -31,14 +31,13 @@ export const LabelDatas = [
 ];
 
 const i18n = MbTaxonomy;
-let temp = [];
+let PostTypeDatas = [];
 const supportPostTypes = i18n.settings ? [...JSON.parse(i18n.settings).post_types] : [];
 let postTypes = i18n.postTypeOptions ? i18n.postTypeOptions : [];
 Object.keys( postTypes ).forEach( e => {
-	temp.push( { name: e, description: postTypes[e], checked: supportPostTypes.includes( e ) ? true : false } )
+	PostTypeDatas.push( { name: e, description: postTypes[e], checked: supportPostTypes.includes( e ) ? true : false } )
 } );
-
-export const PostTypeDatas = temp;
+export { PostTypeDatas };
 
 export const AdvancedDatas = [
 	{ type: 'checkbox', name: 'public', label: __( 'Public?', 'mb-custom-post-type' ), description: __( 'If the taxonomy should be publicly queryable.', 'mb-custom-post-type' ), checked: true },
