@@ -4,6 +4,7 @@ const path = require('path');
 const externals = {
 	'react': 'React',
 	'react-dom': 'ReactDOM',
+	'codemirror': 'wp.CodeMirror',
 };
 
 const commonModules = {
