@@ -2,31 +2,31 @@ import { CodeDatas, BasicDatas, LabelDatas, TaxonomyDatas, SupportDatas, Advance
 import Control from '../controls/Control';
 import Result from './Result';
 const { TabPanel } = wp.components;
-
+const { __ } = wp.i18n;
 const tabs = [
 	{
 		name: 'general',
-		title: 'General',
+		title: __( 'General', 'mb-custom-post-type' ),
 	},
 	{
 		name: 'labels',
-		title: 'Labels',
+		title: __( 'Labels', 'mb-custom-post-type' ),
 	},
 	{
 		name: 'advanced',
-		title: 'Advanced',
+		title: __( 'Advanced', 'mb-custom-post-type' ),
 	},
 	{
 		name: 'supports',
-		title: 'Supports',
+		title: __( 'Supports', 'mb-custom-post-type' ),
 	},
 	{
 		name: 'taxonomies',
-		title: 'Taxonomies',
+		title: __( 'Taxonomies', 'mb-custom-post-type' ),
 	},
 	{
 		name: 'code',
-		title: 'Get PHP Code',
+		title: __( 'Get PHP Code', 'mb-custom-post-type' ),
 		className: 'mb-cpt-code button button-small'
 	}
 ];

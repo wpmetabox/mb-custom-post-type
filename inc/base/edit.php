@@ -25,8 +25,9 @@ class MB_CPT_Base_Edit {
 		$object      = str_replace( 'mb-', '', $this->post_type );
 		$object_name = str_replace( ' ', '', ucwords( str_replace( '-', ' ', $this->post_type ) ) );
 		wp_enqueue_code_editor( ['type' => 'php'] );
-		wp_enqueue_script( $this->post_type, MB_CPT_URL . "js/$object.js", ['wp-element', 'wp-components', 'clipboard'], '1.0.0', true );
+		wp_enqueue_script( $this->post_type, MB_CPT_URL . "js/$object.js", ['wp-element', 'wp-components', 'clipboard', 'wp-i18n'], '1.0.0', true );
 		wp_localize_script( $this->post_type, $object_name, $this->js_vars() );
+		wp_set_script_translations( $this->post_type, 'mb-custom-post-type' );
 	}
 
 	public function js_vars() {
