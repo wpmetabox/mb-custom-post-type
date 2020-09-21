@@ -15,14 +15,10 @@ const commonModules = {
 			use: {
 			loader: 'babel-loader',
 				options: {
-					plugins: ['@babel/plugin-transform-react-jsx', '@babel/plugin-proposal-class-properties']
+					plugins: ['@babel/plugin-transform-react-jsx']
 				}
 			}
 		},
-		{
-			test: /\.css$/,
-			use: ['style-loader', 'css-loader']
-		}
 	]
 }
 
