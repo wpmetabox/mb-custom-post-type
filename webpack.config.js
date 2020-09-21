@@ -5,6 +5,7 @@ const externals = {
 	'react': 'React',
 	'react-dom': 'ReactDOM',
 	'codemirror': 'wp.CodeMirror',
+	'clipboard': 'ClipboardJS',
 };
 
 const commonModules = {
