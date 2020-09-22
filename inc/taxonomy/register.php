@@ -151,27 +151,46 @@ class MB_CPT_Taxonomy_Register extends MB_CPT_Base_Register {
 
 	public function set_up_taxonomy( $data ) {
 		$labels = [
-			'menu_name'                  => mb_cpt_get_prop( $data, 'name' ),
+			'name'                       => mb_cpt_get_prop( $data, 'name' ),
+			'singular_name'              => mb_cpt_get_prop( $data, 'singular_name' ),
+			'search_items'               => mb_cpt_get_prop( $data, 'search_items' ),
+			'popular_items'              => mb_cpt_get_prop( $data, 'popular_items' ),
 			'all_items'                  => mb_cpt_get_prop( $data, 'all_items' ),
+			'parent_item'                => mb_cpt_get_prop( $data, 'parent_item' ),
+			'parent_item_colon'          => mb_cpt_get_prop( $data, 'parent_item_colon' ),
 			'edit_item'                  => mb_cpt_get_prop( $data, 'edit_item' ),
 			'view_item'                  => mb_cpt_get_prop( $data, 'view_item' ),
 			'update_item'                => mb_cpt_get_prop( $data, 'update_item' ),
 			'add_new_item'               => mb_cpt_get_prop( $data, 'add_new_item' ),
 			'new_item_name'              => mb_cpt_get_prop( $data, 'new_item_name' ),
-			'parent_item'                => mb_cpt_get_prop( $data, 'parent_item' ),
-			'parent_item_colon'          => mb_cpt_get_prop( $data, 'parent_item_colon' ),
-			'search_items'               => mb_cpt_get_prop( $data, 'search_items' ),
-			'popular_items'              => mb_cpt_get_prop( $data, 'popular_items' ),
 			'separate_items_with_commas' => mb_cpt_get_prop( $data, 'separate_items_with_commas' ),
 			'add_or_remove_items'        => mb_cpt_get_prop( $data, 'add_or_remove_items' ),
 			'choose_from_most_used'      => mb_cpt_get_prop( $data, 'choose_from_most_used' ),
 			'not_found'                  => mb_cpt_get_prop( $data, 'not_found' ),
 		];
-		$args   = [
-			'label'  => mb_cpt_get_prop( $data, 'name' ),
-			'labels' => $labels,
-			'public' => true,
+		$args   = [ 'labels' => $labels ];
+
+		$params = [
+			'description',
+			'public',
+			'publicly_queryable',
+			'hierarchical',
+			'show_ui',
+			'show_in_menu',
+			'show_in_nav_menus',
+			'show_in_rest',
+			'rest_base',
+			'show_tagcloud',
+			'show_in_quick_edit',
+			'show_admin_column',
+			'query_var',
 		];
+
+		foreach ( $params as $param ) {
+			if ( property_exists( $data, $param ) ) {
+				$args[ $param ] = $data->$param;
+			}
+		}
 
 		if ( ! property_exists( $data, 'rewrite_no_front' ) ) {
 			$args['rewrite'] = true;
