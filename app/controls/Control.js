@@ -73,19 +73,20 @@ const Control = ( {props, values, autoFills} ) => {
 		setState( state => ( {...state, [name]: value} ) );
 	}
 
+	let _value = state[props.name] ? state[props.name] : props.defaultValue;
 	switch (props.type) {
 		case 'text':
-			return <Input label={props.label} name={props.name} placeholder={props.placeholder} defaultValue={state[props.name]} description={props.description} required={props.required} update={handleUpdate} />
+			return <Input label={props.label} name={props.name} placeholder={props.placeholder} defaultValue={_value} description={props.description} required={props.required} update={handleUpdate} />
 		case 'textarea':
-			return <Textarea label={props.label} name={props.name} placeholder={props.placeholder} description={props.description} update={handleUpdate} />
+			return <Textarea label={props.label} name={props.name} placeholder={props.placeholder} defaultValue={_value} description={props.description} update={handleUpdate} />
 		case 'checkbox':
-			return <Checkbox label={props.label} name={props.name} description={props.description} checked={props.checked} update={handleUpdate} />
+			return <Checkbox label={props.label} name={props.name} description={props.description} checked={_value} update={handleUpdate} />
 		case 'radio':
-			return <Radio label={props.label} name={props.name} values={props.values} defaultValue={props.defaultValue} update={handleUpdate} />
+			return <Radio label={props.label} name={props.name} values={props.values} defaultValue={_value} update={handleUpdate} />
 		case 'select':
-			return <Select label={props.label} name={props.name} description={props.description} values={props.values} defaultValue={props.defaultValue} update={handleUpdate} />
+			return <Select label={props.label} name={props.name} description={props.description} values={props.values} defaultValue={_value} update={handleUpdate} />
 		case undefined:
-			return <CheckboxList label={props.label} name={props.name} values={values} checked={props.checked} update={handleUpdate} />
+			return <CheckboxList label={props.label} name={props.name} values={values} update={handleUpdate} />
 		default:
 			break;
 	}
