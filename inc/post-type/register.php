@@ -143,9 +143,12 @@ class MB_CPT_Post_Type_Register extends MB_CPT_Base_Register {
 			'rest_base',
 			'menu_position',
 			'menu_icon',
+			'capability_type',
 			'supports',
 			'taxonomies',
 			'has_archive',
+			'query_var',
+			'can_export',
 		];
 
 		foreach ( $params as $param ) {
