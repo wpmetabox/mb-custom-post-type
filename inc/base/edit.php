@@ -34,16 +34,32 @@ class MB_CPT_Base_Edit {
 		$vars = [];
 		$vars['settings'] = get_post()->post_content;
 
-		if ( 'mb-taxonomy' === get_current_screen()->id ) {
-			$options    = [];
-			$post_types = get_post_types( '', 'objects' );
-			unset( $post_types['mb-taxonomy'], $post_types['revision'], $post_types['nav_menu_item'] );
-			foreach ( $post_types as $post_type => $post_type_object ) {
-				$options[ $post_type ] = $post_type_object->labels->singular_name;
-			}
-
-			$vars['postTypeOptions'] = $options;
+		if ( 'mb-taxonomy' !== get_current_screen()->id ) {
+			return $vars;
 		}
+
+		$options    = [];
+		$post_types = get_post_types( '', 'objects' );
+		$post_types = array_diff_key( $post_types, array_flip( [
+			'custom_css',
+			'customize_changeset',
+			'oembed_cache',
+			'nav_menu_item',
+			'revision',
+			'user_request',
+			'wp_block',
+
+			'mb-post-type',
+			'mb-taxonomy',
+			'mb-views',
+			'meta-box',
+		] ) );
+
+		foreach ( $post_types as $post_type => $post_type_object ) {
+			$options[ $post_type ] = $post_type_object->labels->singular_name;
+		}
+
+		$vars['postTypeOptions'] = $options;
 
 		return $vars;
 	}
