@@ -111,22 +111,22 @@ class MB_CPT_Post_Type_Register extends MB_CPT_Base_Register {
 
 	public function set_up_post_type( $data ) {
 		$labels = [
-			'singular_name'      => property_exists( $data, 'singular_name' ) ? $data->singular_name : '',
-			'add_new'            => property_exists( $data, 'add_new' ) ? $data->add_new : '',
-			'add_new_item'       => property_exists( $data, 'add_new_item' ) ? $data->add_new_item : '',
-			'edit_item'          => property_exists( $data, 'edit_item' ) ? $data->edit_item : '',
-			'new_item'           => property_exists( $data, 'new_item' ) ? $data->new_item : '',
-			'view_item'          => property_exists( $data, 'view_item' ) ? $data->view_item : '',
-			'view_items'         => property_exists( $data, 'view_items' ) ? $data->view_items : '',
-			'search_items'       => property_exists( $data, 'search_items' ) ? $data->search_items : '',
-			'not_found'          => property_exists( $data, 'not_found' ) ? $data->not_found : '',
-			'not_found_in_trash' => property_exists( $data, 'not_found_in_trash' ) ? $data->not_found_in_trash : '',
-			'parent_item_colon'  => property_exists( $data, 'parent_item_colon' ) ? $data->parent_item_colon : '',
-			'all_items'          => property_exists( $data, 'all_items' ) ? $data->all_items : '',
-			'menu_name'          => property_exists( $data, 'name' ) ? $data->name : '',
+			'singular_name'      => mb_cpt_get_prop( $data, 'singular_name' ),
+			'add_new'            => mb_cpt_get_prop( $data, 'add_new' ),
+			'add_new_item'       => mb_cpt_get_prop( $data, 'add_new_item' ),
+			'edit_item'          => mb_cpt_get_prop( $data, 'edit_item' ),
+			'new_item'           => mb_cpt_get_prop( $data, 'new_item' ),
+			'view_item'          => mb_cpt_get_prop( $data, 'view_item' ),
+			'view_items'         => mb_cpt_get_prop( $data, 'view_items' ),
+			'search_items'       => mb_cpt_get_prop( $data, 'search_items' ),
+			'not_found'          => mb_cpt_get_prop( $data, 'not_found' ),
+			'not_found_in_trash' => mb_cpt_get_prop( $data, 'not_found_in_trash' ),
+			'parent_item_colon'  => mb_cpt_get_prop( $data, 'parent_item_colon' ),
+			'all_items'          => mb_cpt_get_prop( $data, 'all_items' ),
+			'menu_name'          => mb_cpt_get_prop( $data, 'name' ),
 		];
 		$args = [
-			'label'  => property_exists( $data, 'name' ) ? $data->name : '',
+			'label'  => mb_cpt_get_prop( $data, 'name' ),
 			'labels' => $labels,
 		];
 		$params = [
@@ -149,12 +149,12 @@ class MB_CPT_Post_Type_Register extends MB_CPT_Base_Register {
 		];
 
 		foreach ( $params as $param ) {
-			if ( property_exists( $data, $param ) && $data->$param ) {
+			if ( property_exists( $data, $param ) ) {
 				$args[ $param ] = $data->$param;
 			}
 		}
 
-		if ( property_exists ( $data, 'capability_type' ) && 'custom' === $data->capability_type ) {
+		if ( property_exists( $data, 'capability_type' ) && 'custom' === $data->capability_type ) {
 			$args['capability_type'] = [ strtolower( $data->singular_name ), strtolower( $data->name ) ];
 			$args['map_meta_cap'] = true;
 		}

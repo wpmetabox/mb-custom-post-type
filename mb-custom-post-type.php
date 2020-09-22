@@ -41,24 +41,25 @@ if ( ! function_exists( 'mb_cpt_load' ) ) {
 		// Show Meta Box admin menu.
 		add_filter( 'rwmb_admin_menu', '__return_true' );
 
-		require dirname( __FILE__ ) . '/inc/base/register.php';
-		require dirname( __FILE__ ) . '/inc/post-type/register.php';
-		require dirname( __FILE__ ) . '/inc/taxonomy/register.php';
+		require __DIR__ . '/inc/helper.php';
+		require __DIR__ . '/inc/base/register.php';
+		require __DIR__ . '/inc/post-type/register.php';
+		require __DIR__ . '/inc/taxonomy/register.php';
 
-		$cpt_register = new MB_CPT_Post_Type_Register();
-		$tax_register = new MB_CPT_Taxonomy_Register();
+		new MB_CPT_Post_Type_Register;
+		new MB_CPT_Taxonomy_Register;
 
 		if ( ! is_admin() ) {
 			return;
 		}
 
-		require dirname( __FILE__ ) . '/inc/base/edit.php';
-		require dirname( __FILE__ ) . '/inc/about/about.php';
+		require __DIR__ . '/inc/base/edit.php';
+		require __DIR__ . '/inc/about/about.php';
 
 		new MB_CPT_Base_Edit( 'mb-post-type' );
 		new MB_CPT_Base_Edit( 'mb-taxonomy' );
 
-		$about_page = new MB_CPT_About_Page();
+		$about_page = new MB_CPT_About_Page;
 		$about_page->init();
 	}
 

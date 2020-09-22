@@ -151,39 +151,39 @@ class MB_CPT_Taxonomy_Register extends MB_CPT_Base_Register {
 
 	public function set_up_taxonomy( $data ) {
 		$labels = [
-			'menu_name'                  => property_exists( $data, 'name' ) ? $data->name : '',
-			'all_items'                  => property_exists( $data, 'all_items' ) ? $data->all_items : '',
-			'edit_item'                  => property_exists( $data, 'edit_item' ) ? $data->edit_item : '',
-			'view_item'                  => property_exists( $data, 'view_item' ) ? $data->view_item : '',
-			'update_item'                => property_exists( $data, 'update_item' ) ? $data->update_item : '',
-			'add_new_item'               => property_exists( $data, 'add_new_item' ) ? $data->add_new_item : '',
-			'new_item_name'              => property_exists( $data, 'new_item_name' ) ? $data->new_item_name : '',
-			'parent_item'                => property_exists( $data, 'parent_item' ) ? $data->parent_item : '',
-			'parent_item_colon'          => property_exists( $data, 'parent_item_colon' ) ? $data->parent_item_colon : '',
-			'search_items'               => property_exists( $data, 'search_items' ) ? $data->search_items : '',
-			'popular_items'              => property_exists( $data, 'popular_items' ) ? $data->popular_items : '',
-			'separate_items_with_commas' => property_exists( $data, 'separate_items_with_commas' ) ? $data->separate_items_with_commas : '',
-			'add_or_remove_items'        => property_exists( $data, 'add_or_remove_items' ) ? $data->add_or_remove_items : '',
-			'choose_from_most_used'      => property_exists( $data, 'choose_from_most_used' ) ? $data->choose_from_most_used : '',
-			'not_found'                  => property_exists( $data, 'not_found' ) ? $data->not_found : '',
+			'menu_name'                  => mb_cpt_get_prop( $data, 'name' ),
+			'all_items'                  => mb_cpt_get_prop( $data, 'all_items' ),
+			'edit_item'                  => mb_cpt_get_prop( $data, 'edit_item' ),
+			'view_item'                  => mb_cpt_get_prop( $data, 'view_item' ),
+			'update_item'                => mb_cpt_get_prop( $data, 'update_item' ),
+			'add_new_item'               => mb_cpt_get_prop( $data, 'add_new_item' ),
+			'new_item_name'              => mb_cpt_get_prop( $data, 'new_item_name' ),
+			'parent_item'                => mb_cpt_get_prop( $data, 'parent_item' ),
+			'parent_item_colon'          => mb_cpt_get_prop( $data, 'parent_item_colon' ),
+			'search_items'               => mb_cpt_get_prop( $data, 'search_items' ),
+			'popular_items'              => mb_cpt_get_prop( $data, 'popular_items' ),
+			'separate_items_with_commas' => mb_cpt_get_prop( $data, 'separate_items_with_commas' ),
+			'add_or_remove_items'        => mb_cpt_get_prop( $data, 'add_or_remove_items' ),
+			'choose_from_most_used'      => mb_cpt_get_prop( $data, 'choose_from_most_used' ),
+			'not_found'                  => mb_cpt_get_prop( $data, 'not_found' ),
 		];
 		$args   = [
-			'label'  => $data->name,
+			'label'  => mb_cpt_get_prop( $data, 'name' ),
 			'labels' => $labels,
 			'public' => true,
 		];
 
-		if ( ! property_exists ( $data, 'rewrite_no_front' ) ) {
+		if ( ! property_exists( $data, 'rewrite_no_front' ) ) {
 			$args['rewrite'] = true;
 		} else {
 			$rewrite = [];
-			if ( property_exists ( $data, 'rewrite_slug' ) ) {
+			if ( property_exists( $data, 'rewrite_slug' ) ) {
 				$rewrite['slug'] = $data->rewrite_slug;
 			}
 			if ( $data->rewrite_no_front ) {
 				$rewrite['with_front'] = false;
 			}
-			if ( property_exists ( $data, 'rewrite_hierarchical' ) ) {
+			if ( property_exists( $data, 'rewrite_hierarchical' ) ) {
 				$rewrite['hierarchical'] = true;
 			}
 			$args['rewrite'] = $rewrite;
