@@ -32,7 +32,7 @@ export const LabelDatas = [
 
 const i18n = MbTaxonomy;
 let PostTypeDatas = [];
-const supportPostTypes = i18n.settings ? [...JSON.parse(i18n.settings).post_types] : [];
+const supportPostTypes = i18n.settings && i18n.settings.post_types ? [...i18n.settings.post_types] : [];
 let postTypes = i18n.postTypeOptions ? i18n.postTypeOptions : [];
 Object.keys( postTypes ).forEach( e => {
 	PostTypeDatas.push( { name: e, description: postTypes[e], checked: supportPostTypes.includes( e ) ? true : false } )

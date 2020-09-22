@@ -4,7 +4,7 @@ import MainTabs from './MainTabs';
 
 const { render, useEffect, useState } = wp.element;
 const i18n = MbTaxonomy;
-const settings = i18n.settings ? JSON.parse( i18n.settings ) : DefaultSettings;
+const settings = i18n.settings ? i18n.settings : DefaultSettings;
 
 const App = () => {
 	const [state, setState] = useState( settings );

@@ -32,7 +32,7 @@ class MB_CPT_Base_Edit {
 
 	public function js_vars() {
 		$vars = [];
-		$vars['settings'] = get_post()->post_content;
+		$vars['settings'] = json_decode( get_post()->post_content, ARRAY_A );
 
 		if ( 'mb-taxonomy' !== get_current_screen()->id ) {
 			return $vars;
