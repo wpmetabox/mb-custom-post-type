@@ -39,22 +39,7 @@ class MB_CPT_Base_Edit {
 		}
 
 		$options    = [];
-		$post_types = get_post_types( '', 'objects' );
-		$post_types = array_diff_key( $post_types, array_flip( [
-			'custom_css',
-			'customize_changeset',
-			'oembed_cache',
-			'nav_menu_item',
-			'revision',
-			'user_request',
-			'wp_block',
-
-			'mb-post-type',
-			'mb-taxonomy',
-			'mb-views',
-			'meta-box',
-		] ) );
-
+		$post_types = mb_cpt_get_post_types();
 		foreach ( $post_types as $post_type => $post_type_object ) {
 			$options[ $post_type ] = $post_type_object->labels->singular_name;
 		}

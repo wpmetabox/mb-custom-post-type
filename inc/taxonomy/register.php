@@ -212,9 +212,8 @@ class MB_CPT_Taxonomy_Register extends MB_CPT_Base_Register {
 		}
 
 		$options    = [];
-		$post_types = get_post_types( '', 'objects' );
-		unset( $post_types['mb-taxonomy'], $post_types['revision'], $post_types['nav_menu_item'] );
-		foreach ( $post_types as $post_type => $post_type_object ) {
+		$post_types = array_keys( mb_cpt_get_post_types() );
+		foreach ( $post_types as $post_type ) {
 			if ( property_exists( $data, $post_type ) && $data->$post_type ) {
 				array_push( $options, $post_type );
 			}
