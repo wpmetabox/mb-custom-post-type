@@ -25,11 +25,9 @@ const LabelSettings = {
 }
 
 const i18n = MbTaxonomy;
-let postTypeOptions = i18n.postTypeOptions;
-let temp = {}
-Object.keys( postTypeOptions ).forEach( e => temp[e] = false );
-
-export const PostTypeSettings = temp;
+let PostTypeSettings = {}
+Object.keys( i18n.postTypeOptions ).forEach( e => PostTypeSettings[e] = false );
+export { PostTypeSettings };
 
 export const AdvancedSettings = {
 	'public'              : true,

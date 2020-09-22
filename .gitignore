@@ -7,3 +7,4 @@ build
 *.lock
 *.log
 *.DS_Store
+js/
