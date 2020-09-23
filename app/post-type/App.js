@@ -7,7 +7,7 @@ const i18n = MbPostType;
 const settings = i18n.settings ? i18n.settings : DefaultSettings;
 
 const App = () => {
-	const [state, setState] = useState( DefaultSettings );
+	const [state, setState] = useState( settings );
 
 	useEffect( () => {
 		document.getElementById( 'post_title' ).value = state.labels.singular_name;

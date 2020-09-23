@@ -62,7 +62,7 @@ class MB_CPT_Post_Type_Register extends MB_CPT_Base_Register {
 
 		foreach ( $posts as $post ) {
 			$data = $this->get_post_type_data( $post );
-			$post_types[ mb_cpt_get_prop( $data, 'labels', 'slug' ) ] = $this->set_up_post_type( $data );
+			$post_types[ mb_cpt_get_prop( $data, 'slug' ) ] = $this->set_up_post_type( $data );
 		}
 
 		return $post_types;

@@ -1,5 +1,6 @@
 const BasicSettings = {
 	'name'         : '',
+	'slug'         : '',
 	'function_name': 'your_prefix_register_taxonomy',
 	'text_domain'  : 'your-textdomain',
 }
@@ -7,7 +8,6 @@ const BasicSettings = {
 const LabelSettings = {
 	labels: {
 		'singular_name'             : '',
-		'slug'                      : '',
 		'menu_name'                 : '',
 		'all_items'                 : '',
 		'edit_item'                 : '',
@@ -27,11 +27,11 @@ const LabelSettings = {
 }
 
 const i18n = MbTaxonomy;
-let PostTypeSettings = {}
+let PostTypeSettings = {};
 Object.keys( i18n.postTypeOptions ).forEach( e => PostTypeSettings[e] = false );
 export { PostTypeSettings };
 
-export const AdvancedSettings = {
+const AdvancedSettings = {
 	'public'              : true,
 	'show_ui'             : true,
 	'show_in_menu'        : true,

@@ -1,12 +1,12 @@
 const BasicSettings = {
 	'name'         : '',
+	'slug'         : '',
 	'function_name': 'your_prefix_register_post_type',
 	'text_domain'  : 'your-textdomain',
 }
 
-export const LabelSettings = {
+const LabelSettings = {
 	labels: {
-		'slug'              : '',
 		'singular_name'     : '',
 		'menu_name'         : '',
 		'name_admin_bar'    : '',
@@ -42,7 +42,7 @@ export const TaxonomySettings = {
 	'tag'     : false,
 }
 
-export const AdvancedSettings = {
+const AdvancedSettings = {
 	'description'        : '',
 	'public'             : true,
 	'exclude_from_search': false,

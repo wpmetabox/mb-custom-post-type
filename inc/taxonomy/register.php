@@ -96,7 +96,7 @@ class MB_CPT_Taxonomy_Register extends MB_CPT_Base_Register {
 
 		foreach ( $posts as $post ) {
 			$data = $this->get_taxonomy_data( $post );
-			$taxonomies[ mb_cpt_get_prop( $data, 'labels', 'slug' ) ] = $this->set_up_taxonomy( $data );
+			$taxonomies[ mb_cpt_get_prop( $data, 'slug' ) ] = $this->set_up_taxonomy( $data );
 		}
 
 		return $taxonomies;

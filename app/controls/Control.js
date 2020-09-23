@@ -43,7 +43,7 @@ const Control = ( {props, values, autoFills} ) => {
 			let str;
 			if ( 'slug' === e.name ) {
 				str = stringToSlug( value );
-				setState( state => ( {...state, labels: {...state.labels, [e.name]: str}} ) );
+				setState( state => ( { ...state, labels: { ...state.labels }, slug: str } ) );
 			} else {
 				str = e.defaultValue;
 				setState( state => ( {...state, labels: {...state.labels, [e.name]: str.replace( '%name%', value ).replace( '%singular_name%', value )}} ) );
