@@ -1,25 +1,27 @@
 const BasicSettings = {
 	'name'         : '',
-	'singular_name': '',
-	'slug'         : '',
 	'function_name': 'your_prefix_register_post_type',
 	'text_domain'  : 'your-textdomain',
 }
 
-const LabelSettings = {
-	'menu_name'         : '',
-	'name_admin_bar'    : '',
-	'add_new'           : '',
-	'add_new_item'      : '',
-	'new_item'          : '',
-	'edit_item'         : '',
-	'view_item'         : '',
-	'update_item'       : '',
-	'all_items'         : '',
-	'search_items'      : '',
-	'parent_item_colon' : '',
-	'not_found'         : '',
-	'not_found_in_trash': '',
+export const LabelSettings = {
+	labels: {
+		'slug'              : '',
+		'singular_name'     : '',
+		'menu_name'         : '',
+		'name_admin_bar'    : '',
+		'add_new'           : '',
+		'add_new_item'      : '',
+		'new_item'          : '',
+		'edit_item'         : '',
+		'view_item'         : '',
+		'update_item'       : '',
+		'all_items'         : '',
+		'search_items'      : '',
+		'parent_item_colon' : '',
+		'not_found'         : '',
+		'not_found_in_trash': '',
+	}
 }
 
 export const SupportSettings = {

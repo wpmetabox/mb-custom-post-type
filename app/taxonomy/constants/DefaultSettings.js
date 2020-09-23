@@ -1,27 +1,29 @@
 const BasicSettings = {
 	'name'         : '',
-	'singular_name': '',
-	'slug'         : '',
 	'function_name': 'your_prefix_register_taxonomy',
 	'text_domain'  : 'your-textdomain',
 }
 
 const LabelSettings = {
-	'menu_name'                 : '',
-	'all_items'                 : '',
-	'edit_item'                 : '',
-	'view_item'                 : '',
-	'update_item'               : '',
-	'add_new_item'              : '',
-	'new_item'                  : '',
-	'parent_item'               : '',
-	'parent_item_colon'         : '',
-	'search_items'              : '',
-	'popular_items'             : '',
-	'separate_items_with_commas': '',
-	'add_or_remove_items'       : '',
-	'choose_from_most_used'     : '',
-	'not_found'                 : '',
+	labels: {
+		'singular_name'             : '',
+		'slug'                      : '',
+		'menu_name'                 : '',
+		'all_items'                 : '',
+		'edit_item'                 : '',
+		'view_item'                 : '',
+		'update_item'               : '',
+		'add_new_item'              : '',
+		'new_item'                  : '',
+		'parent_item'               : '',
+		'parent_item_colon'         : '',
+		'search_items'              : '',
+		'popular_items'             : '',
+		'separate_items_with_commas': '',
+		'add_or_remove_items'       : '',
+		'choose_from_most_used'     : '',
+		'not_found'                 : '',
+	}
 }
 
 const i18n = MbTaxonomy;

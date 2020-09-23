@@ -96,7 +96,7 @@ class MB_CPT_Taxonomy_Register extends MB_CPT_Base_Register {
 
 		foreach ( $posts as $post ) {
 			$data = $this->get_taxonomy_data( $post );
-			$taxonomies[ $data->slug ] = $this->set_up_taxonomy( $data );
+			$taxonomies[ mb_cpt_get_prop( $data, 'labels', 'slug' ) ] = $this->set_up_taxonomy( $data );
 		}
 
 		return $taxonomies;
@@ -131,8 +131,13 @@ class MB_CPT_Taxonomy_Register extends MB_CPT_Base_Register {
 				$value = intval( $value );
 			}
 
-			$key = str_replace( ['label_', 'args_'], '', $key );
+			$key = str_replace( 'args_', '', $key );
 			$args[ $key ] = $value;
+
+			if ( strpos( $key, 'label_' ) ) {
+				$key = str_replace( 'label_', '', $key );
+				$args[ 'labels' ][] = $value;
+			}
 
 			// delete_post_meta( $post->ID, $key );
 		}
@@ -151,22 +156,22 @@ class MB_CPT_Taxonomy_Register extends MB_CPT_Base_Register {
 
 	public function set_up_taxonomy( $data ) {
 		$labels = [
-			'name'                       => mb_cpt_get_prop( $data, 'name' ),
-			'singular_name'              => mb_cpt_get_prop( $data, 'singular_name' ),
-			'search_items'               => mb_cpt_get_prop( $data, 'search_items' ),
-			'popular_items'              => mb_cpt_get_prop( $data, 'popular_items' ),
-			'all_items'                  => mb_cpt_get_prop( $data, 'all_items' ),
-			'parent_item'                => mb_cpt_get_prop( $data, 'parent_item' ),
-			'parent_item_colon'          => mb_cpt_get_prop( $data, 'parent_item_colon' ),
-			'edit_item'                  => mb_cpt_get_prop( $data, 'edit_item' ),
-			'view_item'                  => mb_cpt_get_prop( $data, 'view_item' ),
-			'update_item'                => mb_cpt_get_prop( $data, 'update_item' ),
-			'add_new_item'               => mb_cpt_get_prop( $data, 'add_new_item' ),
-			'new_item_name'              => mb_cpt_get_prop( $data, 'new_item_name' ),
-			'separate_items_with_commas' => mb_cpt_get_prop( $data, 'separate_items_with_commas' ),
-			'add_or_remove_items'        => mb_cpt_get_prop( $data, 'add_or_remove_items' ),
-			'choose_from_most_used'      => mb_cpt_get_prop( $data, 'choose_from_most_used' ),
-			'not_found'                  => mb_cpt_get_prop( $data, 'not_found' ),
+			'name'                       => mb_cpt_get_prop( $data, 'labels', 'name' ),
+			'singular_name'              => mb_cpt_get_prop( $data, 'labels', 'singular_name' ),
+			'search_items'               => mb_cpt_get_prop( $data, 'labels', 'search_items' ),
+			'popular_items'              => mb_cpt_get_prop( $data, 'labels', 'popular_items' ),
+			'all_items'                  => mb_cpt_get_prop( $data, 'labels', 'all_items' ),
+			'parent_item'                => mb_cpt_get_prop( $data, 'labels', 'parent_item' ),
+			'parent_item_colon'          => mb_cpt_get_prop( $data, 'labels', 'parent_item_colon' ),
+			'edit_item'                  => mb_cpt_get_prop( $data, 'labels', 'edit_item' ),
+			'view_item'                  => mb_cpt_get_prop( $data, 'labels', 'view_item' ),
+			'update_item'                => mb_cpt_get_prop( $data, 'labels', 'update_item' ),
+			'add_new_item'               => mb_cpt_get_prop( $data, 'labels', 'add_new_item' ),
+			'new_item_name'              => mb_cpt_get_prop( $data, 'labels', 'new_item_name' ),
+			'separate_items_with_commas' => mb_cpt_get_prop( $data, 'labels', 'separate_items_with_commas' ),
+			'add_or_remove_items'        => mb_cpt_get_prop( $data, 'labels', 'add_or_remove_items' ),
+			'choose_from_most_used'      => mb_cpt_get_prop( $data, 'labels', 'choose_from_most_used' ),
+			'not_found'                  => mb_cpt_get_prop( $data, 'labels', 'not_found' ),
 		];
 		$args   = [ 'labels' => $labels ];
 

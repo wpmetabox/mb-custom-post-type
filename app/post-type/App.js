@@ -7,11 +7,11 @@ const i18n = MbPostType;
 const settings = i18n.settings ? i18n.settings : DefaultSettings;
 
 const App = () => {
-	const [state, setState] = useState( settings );
+	const [state, setState] = useState( DefaultSettings );
 
 	useEffect( () => {
-		document.getElementById( 'post_title' ).value = state.singular_name;
-		content = document.getElementById( 'content' ).value = JSON.stringify( state );
+		document.getElementById( 'post_title' ).value = state.labels.singular_name;
+		document.getElementById( 'content' ).value = JSON.stringify( state );
 	} );
 
 	return (

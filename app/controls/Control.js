@@ -43,10 +43,10 @@ const Control = ( {props, values, autoFills} ) => {
 			let str;
 			if ( 'slug' === e.name ) {
 				str = stringToSlug( value );
-				setState( state => ( {...state, [e.name]: str} ) );
+				setState( state => ( {...state, labels: {...state.labels, [e.name]: str}} ) );
 			} else {
 				str = e.defaultValue;
-				setState( state => ( {...state, [e.name]: str.replace( '%name%', value ).replace( '%singular_name%', value )} ) );
+				setState( state => ( {...state, labels: {...state.labels, [e.name]: str.replace( '%name%', value ).replace( '%singular_name%', value )}} ) );
 			}
 
 			return '';
@@ -70,10 +70,14 @@ const Control = ( {props, values, autoFills} ) => {
 				break;
 		}
 
-		setState( state => ( {...state, [name]: value} ) );
+		if ( state.labels[props.name] || 'singular_name' === name ) { // fix singular_name state
+			setState( state => ( {...state, labels: {...state.labels, [name]: value}} ) );
+		} else {
+			setState( state => ( {...state, [name]: value} ) );
+		}
 	}
 
-	let _value = state[props.name] ? state[props.name] : props.defaultValue;
+	let _value = state.labels[props.name] ? state.labels[props.name] : state[props.name] ? state[props.name] : props.defaultValue;
 	switch (props.type) {
 		case 'text':
 			return <Input label={props.label} name={props.name} placeholder={props.placeholder} defaultValue={_value} description={props.description} required={props.required} update={handleUpdate} />
