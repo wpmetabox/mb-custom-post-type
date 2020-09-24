@@ -1,7 +1,6 @@
 <?php
 class MB_CPT_Base_Edit {
-	public $post_type;
-	public $saved = false;
+	private $post_type;
 
 	public function __construct( $post_type ) {
 		$this->post_type = $post_type;
