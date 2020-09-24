@@ -156,7 +156,7 @@ class MB_CPT_Taxonomy_Register extends MB_CPT_Base_Register {
 
 	public function set_up_taxonomy( $data ) {
 		$labels = [
-			'name'                       => mb_cpt_get_prop( $data, 'labels', 'name' ),
+			'name'                       => mb_cpt_get_prop( $data, 'name' ),
 			'singular_name'              => mb_cpt_get_prop( $data, 'labels', 'singular_name' ),
 			'search_items'               => mb_cpt_get_prop( $data, 'labels', 'search_items' ),
 			'popular_items'              => mb_cpt_get_prop( $data, 'labels', 'popular_items' ),
