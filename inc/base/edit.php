@@ -59,14 +59,6 @@ class MB_CPT_Base_Edit {
 					'type' => 'custom_html',
 					'std'  => '<div id="root" class="mb-cpt"></div>',
 				],
-				[
-					'id'   => 'post_title',
-					'type' => 'hidden',
-				],
-				[
-					'id'   => 'content',
-					'type' => 'hidden',
-				],
 			],
 		];
 

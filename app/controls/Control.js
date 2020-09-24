@@ -45,7 +45,7 @@ const Control = ( { props, values, autoFills = [] } ) => {
 				...state,
 				labels: {
 					...state.labels,
-					[field.name]: field.defaultValue.replace( '%name%', value )
+					[field.name]: field.defaultValue.replace( '%name%', value ).replace( '%singular_name%', value )
 				}
 			} ) );
 		} );
