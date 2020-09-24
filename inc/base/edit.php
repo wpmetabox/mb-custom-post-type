@@ -20,7 +20,6 @@ class MB_CPT_Base_Edit {
 		}
 
 		wp_enqueue_style( $this->post_type, MB_CPT_URL . 'css/style.css', ['wp-components'], '1.8.0' );
-		wp_enqueue_style( 'highlightjs', MB_CPT_URL . 'css/atom-one-dark.min.css', [], '9.15.8' );
 
 		$object      = str_replace( 'mb-', '', $this->post_type );
 		$object_name = str_replace( ' ', '', ucwords( str_replace( '-', ' ', $this->post_type ) ) );
