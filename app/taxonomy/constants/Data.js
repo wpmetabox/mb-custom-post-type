@@ -20,7 +20,7 @@ export const LabelDatas = [
 	{ type: 'text', name: 'add_new_item', label: __( 'Add new item', 'mb-custom-post-type' ), defaultValue: 'Add new %singular_name%', updateFrom: 'singular_name' },
 	{ type: 'text', name: 'new_item_name', label: __( 'New item name', 'mb-custom-post-type' ), defaultValue: 'New %singular_name% name', updateFrom: 'singular_name' },
 	{ type: 'text', name: 'parent_item', label: __( 'Parent item', 'mb-custom-post-type' ), defaultValue: 'Parent %singular_name%', updateFrom: 'singular_name' },
-	{ type: 'text', name: 'parent_item_colon', label: __( 'Parent item Colon', 'mb-custom-post-type' ), defaultValue: 'Parent %singular_name%', updateFrom: 'singular_name' },
+	{ type: 'text', name: 'parent_item_colon', label: __( 'Parent item colon', 'mb-custom-post-type' ), defaultValue: 'Parent %singular_name%', updateFrom: 'singular_name' },
 	{ type: 'text', name: 'search_items', label: __( 'Search items', 'mb-custom-post-type' ), defaultValue: 'Search %name%', updateFrom: 'name' },
 	{ type: 'text', name: 'popular_items', label: __( 'Popular items', 'mb-custom-post-type' ), defaultValue: 'Popular %name%', updateFrom: 'name' },
 	{ type: 'text', name: 'separate_items_with_commas', label: __( 'Separate items with commas', 'mb-custom-post-type' ), defaultValue: 'Separate %name% with commas', updateFrom: 'name' },
