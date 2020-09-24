@@ -27,53 +27,47 @@ const stringToSlug = str => {
 	return str;
 }
 
-const Control = ( {props, values, autoFills} ) => {
+const Control = ( { props, values, autoFills = [] } ) => {
 	const [state, setState] = useContext( PhpSettings );
 
-	const autoFill = ( name, autoFills, value ) => {
-		if ( ! autoFills ) {
-			return;
-		}
-
-		autoFills.map( e => {
-			if ( name !== e.updateFrom ) {
-				return '';
+	const autoFill = ( name, value ) => {
+		autoFills.filter( field => field.updateFrom === name ).forEach( field => {
+			if ( 'slug' === field.name ) {
+				setState( state => ( {
+					...state,
+					labels: { ...state.labels },
+					slug: stringToSlug( value )
+				} ) );
+				return;
 			}
 
-			let str;
-			if ( 'slug' === e.name ) {
-				str = stringToSlug( value );
-				setState( state => ( { ...state, labels: { ...state.labels }, slug: str } ) );
-			} else {
-				str = e.defaultValue;
-				setState( state => ( {...state, labels: {...state.labels, [e.name]: str.replace( '%name%', value ).replace( '%singular_name%', value )}} ) );
-			}
-
-			return '';
+			setState( state => ( {
+				...state,
+				labels: {
+					...state.labels,
+					[field.name]: field.defaultValue.replace( '%name%', value )
+				}
+			} ) );
 		} );
 	}
 
 	const handleUpdate = e => {
-		const name = e.target.name;
-		let value;
+		const name  = e.target.name;
+		let   value = e.target.value;
 
 		switch ( e.target.type ) {
 			case 'checkbox':
 				value = e.target.checked;
 				break;
 			case 'text':
-				value = e.target.value;
-				autoFill( name, autoFills, value );
-				break;
-			default:
-				value = e.target.value;
+				autoFill( name, value );
 				break;
 		}
 
-		if ( state.labels[props.name] || 'singular_name' === name ) { // fix singular_name state
-			setState( state => ( {...state, labels: {...state.labels, [name]: value}} ) );
+		if ( state.labels[ props.name ] || 'singular_name' === name ) {
+			setState( state => ( { ...state, labels: { ...state.labels, [name]: value } } ) );
 		} else {
-			setState( state => ( {...state, [name]: value} ) );
+			setState( state => ( { ...state, [name]: value } ) );
 		}
 	}
 
