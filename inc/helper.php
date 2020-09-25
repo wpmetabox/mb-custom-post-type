@@ -1,6 +1,6 @@
 <?php
 function mb_cpt_get_prop( $object, $prop_1, $prop_2 = null, $default = '' ) {
-	return property_exists( $object, $prop_1 ) ? property_exists( $object->$prop_1, $prop_2 ) ? $object->$prop_1->$prop_2 : $object->$prop_1 : $default;
+	return property_exists( $object, $prop_1 ) ? ( property_exists( $object->$prop_1, $prop_2 ) ? $object->$prop_1->$prop_2 : $object->$prop_1 ) : $default;
 }
 
 function mb_cpt_get_post_types() {
