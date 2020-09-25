@@ -7,10 +7,6 @@ class MB_CPT_Base_Edit {
 
 		add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_scripts' ) );
 		add_filter( 'rwmb_meta_boxes', array( $this, 'register_meta_boxes' ) );
-
-		// Prevent saving data in post meta.
-		add_filter( 'rwmb_post_title_value', '__return_empty_string' );
-		add_filter( 'rwmb_content_value', '__return_empty_string' );
 	}
 
 	public function enqueue_scripts() {
