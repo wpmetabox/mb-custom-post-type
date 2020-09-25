@@ -18,6 +18,7 @@ defined( 'ABSPATH' ) || exit;
 
 if ( ! function_exists( 'mb_cpt_load' ) ) {
 	// Plugin constants.
+	define( 'MB_CPT_VER', '1.9.5' );
 	define( 'MB_CPT_FILE', __FILE__ );
 	define( 'MB_CPT_URL', plugin_dir_url( __FILE__ ) );
 
