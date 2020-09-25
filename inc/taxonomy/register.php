@@ -56,16 +56,16 @@ class MB_CPT_Taxonomy_Register extends MB_CPT_Base_Register {
 			'not_found_in_trash' => __( 'Not found in Trash', 'mb-custom-post-type' ),
 		];
 		$args   = [
-			'label'        => __( 'Taxonomies', 'mb-custom-post-type' ),
-			'labels'       => $labels,
-			'supports'     => false,
-			'public'       => false,
-			'show_ui'      => true,
-			'show_in_menu' => 'meta-box',
-			'menu_icon'    => 'dashicons-exerpt-view',
-			'can_export'   => true,
-			'rewrite'      => false,
-			'query_var'    => false,
+			'label'         => __( 'Taxonomies', 'mb-custom-post-type' ),
+			'labels'        => $labels,
+			'supports'      => false,
+			'public'        => false,
+			'show_ui'       => true,
+			'show_in_menu'  => defined( 'RWMB_VER' ) ? 'meta-box' : 'edit.php?post_type=mb-post-type',
+			'menu_icon'     => 'dashicons-exerpt-view',
+			'can_export'    => true,
+			'rewrite'       => false,
+			'query_var'     => false,
 		];
 		register_post_type( 'mb-taxonomy', $args );
 

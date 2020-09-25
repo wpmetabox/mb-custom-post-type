@@ -6,7 +6,8 @@ class MB_CPT_Base_Edit {
 		$this->post_type = $post_type;
 
 		add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_scripts' ) );
-		add_filter( 'rwmb_meta_boxes', array( $this, 'register_meta_boxes' ) );
+		add_action( 'edit_form_after_title', array( $this, 'output_root' ) );
+		add_action( 'add_meta_boxes', array( $this, 'register_upgrade_meta_box' ) );
 	}
 
 	public function enqueue_scripts() {
@@ -43,38 +44,16 @@ class MB_CPT_Base_Edit {
 		return $vars;
 	}
 
-	public function register_meta_boxes( $meta_boxes ) {
-		$meta_boxes[] = [
-			'title'      => ' ',
-			'id'         => 'mb-cpt',
-			'post_types' => [ 'mb-post-type', 'mb-taxonomy' ],
-			'style'      => 'seamless',
-			'context'    => 'after_title',
-			'fields'     => [
-				[
-					'type' => 'custom_html',
-					'std'  => '<div id="root" class="mb-cpt"></div>',
-				],
-			],
-		];
-
-		if ( ! $this->is_premium_user() ) {
-			$meta_boxes[] = [
-				'id'         => 'mb-cpt-upgrade',
-				'title'      => __( 'Upgrade', 'mb-custom-post-type' ),
-				'post_types' => [ 'mb-post-type', 'mb-taxonomy' ],
-				'context'    => 'side',
-				'priority'   => 'low',
-				'fields'     => [
-					[
-						'type'     => 'custom_html',
-						'callback' => [ $this, 'upgrade_message' ],
-					],
-				],
-			];
+	public function output_root() {
+		if ( $this->is_edit_screen() ) {
+			echo '<div id="root" class="mb-cpt"></div>';
 		}
+	}
 
-		return $meta_boxes;
+	public function register_upgrade_meta_box( $meta_boxes ) {
+		if ( $this->is_edit_screen() && ! $this->is_premium_user() ) {
+			add_meta_box( 'mb-cpt-upgrade', __( 'Upgrade', 'mb-custom-post-type' ), [ $this, 'upgrade_message' ], null, 'side', 'low' );
+		}
 	}
 
 	public function is_edit_screen() {
@@ -84,23 +63,26 @@ class MB_CPT_Base_Edit {
 	}
 
 	public function is_premium_user() {
+		if ( ! defined( 'RWMB_VER' ) ) {
+			return false;
+		}
 		$update_option = new RWMB_Update_Option();
 		$update_checker = new RWMB_Update_Checker( $update_option );
 		return $update_checker->has_extensions();
 	}
 
 	public function upgrade_message() {
-		$output = '<p>' . esc_html__( 'Upgrade now to have more features & speedy technical support:', 'mb-custom-post-type' ) . '</p>';
-		$output .= '<ul>';
-		$output .= '<li><span class="dashicons dashicons-yes"></span>' . esc_html__( 'Create custom fields with UI.', 'mb-custom-post-type' ) . '</li>';
-		$output .= '<li><span class="dashicons dashicons-yes"></span>' . esc_html__( 'Add custom fields to terms and users.', 'mb-custom-post-type' ) . '</li>';
-		$output .= '<li><span class="dashicons dashicons-yes"></span>' . esc_html__( 'Create custom settings pages.', 'mb-custom-post-type' ) . '</li>';
-		$output .= '<li><span class="dashicons dashicons-yes"></span>' . esc_html__( 'Create frontend submission forms.', 'mb-custom-post-type' ) . '</li>';
-		$output .= '<li><span class="dashicons dashicons-yes"></span>' . esc_html__( 'Create frontend templates.', 'mb-custom-post-type' ) . '</li>';
-		$output .= '<li><span class="dashicons dashicons-yes"></span>' . esc_html__( 'And much more!', 'mb-custom-post-type' ) . '</li>';
-		$output .= '</ul>';
-		$output .= '<a href="https://metabox.io/pricing/?utm_source=plugin_cpt&utm_medium=btn_upgrade&utm_campaign=cpt_upgrade" class="button">' . esc_html__( 'Upgrade now', 'mb-custom-post-type' ) . '</a>';
-
-		return $output;
+		?>
+		<p><?php esc_html_e( 'Upgrade now to have more features & speedy technical support:', 'mb-custom-post-type' ) ?></p>
+		<ul>
+			<li><span class="dashicons dashicons-yes"></span><?php esc_html_e( 'Create custom fields with UI', 'mb-custom-post-type' ) ?></li>
+			<li><span class="dashicons dashicons-yes"></span><?php esc_html_e( 'Add custom fields to terms and users', 'mb-custom-post-type' ) ?></li>
+			<li><span class="dashicons dashicons-yes"></span><?php esc_html_e( 'Create custom settings pages', 'mb-custom-post-type' ) ?></li>
+			<li><span class="dashicons dashicons-yes"></span><?php esc_html_e( 'Create frontend submission forms', 'mb-custom-post-type' ) ?></li>
+			<li><span class="dashicons dashicons-yes"></span><?php esc_html_e( 'Create frontend templates', 'mb-custom-post-type' ) ?></li>
+			<li><span class="dashicons dashicons-yes"></span><?php esc_html_e( 'And much more!', 'mb-custom-post-type' ) ?></li>
+		</ul>
+		<a href="https://metabox.io/pricing/?utm_source=plugin_cpt&utm_medium=btn_upgrade&utm_campaign=cpt_upgrade" class="button" target="_blank" rel="noopenner noreferer"><?php esc_html_e( 'Upgrade now', 'mb-custom-post-type' ) ?></a>
+		<?php
 	}
 }
