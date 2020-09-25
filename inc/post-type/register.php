@@ -62,7 +62,7 @@ class MB_CPT_Post_Type_Register extends MB_CPT_Base_Register {
 
 		foreach ( $posts as $post ) {
 			$data = $this->get_post_type_data( $post );
-			$post_types[ mb_cpt_get_prop( $data, 'slug' ) ] = $this->set_up_post_type( $data );
+			$post_types[ mb_cpt_get_prop( $data, 'slug' ) ?: 'draft_post_type' ] = $this->set_up_post_type( $data );
 		}
 
 		return $post_types;
@@ -116,7 +116,7 @@ class MB_CPT_Post_Type_Register extends MB_CPT_Base_Register {
 
 	public function set_up_post_type( $data ) {
 		$labels = [
-			'singular_name'      => mb_cpt_get_prop( $data, 'labels', 'singular_name' ),
+			'singular_name'      => mb_cpt_get_prop( $data, 'labels', 'singular_name' ) ?: __( 'draft_post_type', 'mb-custom-post-type' ),
 			'add_new'            => mb_cpt_get_prop( $data, 'labels', 'add_new' ),
 			'add_new_item'       => mb_cpt_get_prop( $data, 'labels', 'add_new_item' ),
 			'edit_item'          => mb_cpt_get_prop( $data, 'labels', 'edit_item' ),
@@ -128,7 +128,7 @@ class MB_CPT_Post_Type_Register extends MB_CPT_Base_Register {
 			'not_found_in_trash' => mb_cpt_get_prop( $data, 'labels', 'not_found_in_trash' ),
 			'parent_item_colon'  => mb_cpt_get_prop( $data, 'labels', 'parent_item_colon' ),
 			'all_items'          => mb_cpt_get_prop( $data, 'labels', 'all_items' ),
-			'menu_name'          => mb_cpt_get_prop( $data, 'name' )
+			'menu_name'          => mb_cpt_get_prop( $data, 'name' ) ?: __( 'Missing label', 'mb-custom-post-type' )
 		];
 		$args = [
 			'label'  => mb_cpt_get_prop( $data, 'name' ),

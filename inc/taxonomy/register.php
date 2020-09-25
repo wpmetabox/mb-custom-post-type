@@ -96,7 +96,7 @@ class MB_CPT_Taxonomy_Register extends MB_CPT_Base_Register {
 
 		foreach ( $posts as $post ) {
 			$data = $this->get_taxonomy_data( $post );
-			$taxonomies[ mb_cpt_get_prop( $data, 'slug' ) ] = $this->set_up_taxonomy( $data );
+			$taxonomies[ mb_cpt_get_prop( $data, 'slug' ) ?: 'draft_taxonomy' ] = $this->set_up_taxonomy( $data );
 		}
 
 		return $taxonomies;
@@ -156,7 +156,7 @@ class MB_CPT_Taxonomy_Register extends MB_CPT_Base_Register {
 
 	public function set_up_taxonomy( $data ) {
 		$labels = [
-			'name'                       => mb_cpt_get_prop( $data, 'name' ),
+			'name'                       => mb_cpt_get_prop( $data, 'name' ) ?: __( 'draft_taxonomy', 'mb-custom-post-type' ),
 			'singular_name'              => mb_cpt_get_prop( $data, 'labels', 'singular_name' ),
 			'search_items'               => mb_cpt_get_prop( $data, 'labels', 'search_items' ),
 			'popular_items'              => mb_cpt_get_prop( $data, 'labels', 'popular_items' ),
