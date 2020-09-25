@@ -1,12 +1,3 @@
-<?php
-/**
- * Getting started section.
- *
- * @package    Meta Box
- * @subpackage MB Custom Post Type
- */
-
-?>
 <div id="types-taxonomies" class="gt-tab-pane">
 	<div class="two">
 		<div class="col">

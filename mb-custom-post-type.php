@@ -8,32 +8,19 @@
  * Author URI:  https://metabox.io
  * License:     GPL-2.0+
  * Text Domain: mb-custom-post-type
- *
- * @package    Meta Box
- * @subpackage MB Custom Post Type
  */
 
 // Prevent loading this file directly.
-defined( 'ABSPATH' ) || exit;
+defined( 'ABSPATH' ) || die;
 
 if ( ! function_exists( 'mb_cpt_load' ) ) {
-	// Plugin constants.
 	define( 'MB_CPT_VER', '1.9.5' );
-	define( 'MB_CPT_FILE', __FILE__ );
 	define( 'MB_CPT_URL', plugin_dir_url( __FILE__ ) );
 
 	add_action( 'init', 'mb_cpt_load', 0 );
 
-	/**
-	 * Dependent plugin activation/deactivation
-	 *
-	 * @link https://gist.github.com/mathetos/7161f6a88108aaede32a
-	 */
 	function mb_cpt_load() {
 		load_plugin_textdomain( 'mb-custom-post-type' );
-
-		// Show Meta Box admin menu.
-		add_filter( 'rwmb_admin_menu', '__return_true' );
 
 		require __DIR__ . '/inc/helper.php';
 		require __DIR__ . '/inc/base/register.php';
@@ -47,13 +34,14 @@ if ( ! function_exists( 'mb_cpt_load' ) ) {
 			return;
 		}
 
+		// Show Meta Box admin menu.
+		add_filter( 'rwmb_admin_menu', '__return_true' );
+
 		require __DIR__ . '/inc/base/edit.php';
 		require __DIR__ . '/inc/about/about.php';
 
 		new MB_CPT_Base_Edit( 'mb-post-type' );
 		new MB_CPT_Base_Edit( 'mb-taxonomy' );
-
-		$about_page = new MB_CPT_About_Page;
-		$about_page->init();
+		new MB_CPT_About_Page;
 	}
 }
