@@ -7,15 +7,15 @@ const i18n = MbTaxonomy;
 const settings = i18n.settings ? i18n.settings : DefaultSettings;
 
 const App = () => {
-	const [state, setState] = useState( settings );
+	const [ state, setState ] = useState( settings );
 
 	return (
-		<PhpSettings.Provider value={[state, setState]}>
+		<PhpSettings.Provider value={ [ state, setState ] }>
 			<MainTabs />
 			<input type="hidden" name="post_title" value={ state.labels.singular_name } />
 			<input type="hidden" name="content" value={ JSON.stringify( state ) } />
 		</PhpSettings.Provider>
 	);
-}
+};
 
 render( <App />, document.getElementById( 'root' ) );

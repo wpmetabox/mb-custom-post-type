@@ -1,7 +1,7 @@
 import { PostTypeSettings } from './DefaultSettings';
 
 const labelSettings = settings => {
-	return`'label'  => esc_html__( '${settings.name}', 'text-domain' ),
+	return `'label'  => esc_html__( '${settings.name}', 'text-domain' ),
 		'labels' => [
 			'menu_name'                  => esc_html__( '${settings.menu_name || settings.name}', '${settings.text_domain}' ),
 			'all_items'                  => esc_html__( '${settings.all_items || settings.singular_name}', '${settings.text_domain}' ),
@@ -21,7 +21,7 @@ const labelSettings = settings => {
 			'name'                       => esc_html__( '${settings.name}', '${settings.text_domain}' ),
 			'singular_name'              => esc_html__( '${settings.singular_name}', '${settings.text_domain}' ),
 		],`;
-}
+};
 
 const postTypeSettings = settings => {
 	let temp = '';
@@ -29,7 +29,7 @@ const postTypeSettings = settings => {
 
 	for ( let key in PostTypeSettings ) {
 		i += 1;
-		if ( ! settings[key] ) {
+		if ( !settings[ key ] ) {
 			continue;
 		}
 		if ( i > 1 ) {
@@ -39,7 +39,7 @@ const postTypeSettings = settings => {
 	}
 
 	return '' === temp ? '' : `[ ${temp} ]`;
-}
+};
 
 const reWrite = settings => {
 	let result = `'rewrite' => `;
@@ -51,7 +51,7 @@ const reWrite = settings => {
 	}
 
 	return result + `[ ${rewrite_slug} ]`;
-}
+};
 
 const advanceSettings = settings => {
 	return `'public'               => ${settings.public},
@@ -67,11 +67,11 @@ const advanceSettings = settings => {
 		'sort'                 => ${settings.sort},
 		'rewrite_no_front'     => ${settings.rewrite_no_front},
 		'rewrite_hierarchical' => ${settings.rewrite_hierarchical},`;
-}
+};
 
 const PhpCode = settings => {
 	return (
-`<?php
+		`<?php
 add_action( 'init', '${settings.function_name}' );
 function ${settings.function_name}() {
 	$args = [
@@ -82,6 +82,6 @@ function ${settings.function_name}() {
 	register_taxonomy( '${settings.slug}', ${postTypeSettings( settings )}, $args );
 }`
 	);
-}
+};
 
 export default PhpCode;

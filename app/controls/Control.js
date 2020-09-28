@@ -17,7 +17,7 @@ const stringToSlug = str => {
 		to = "aaaaeeeeiiiioooouuuunc------",
 		i, l;
 
-	for ( i = 0, l = from.length; i < l; i ++ ) {
+	for ( i = 0, l = from.length; i < l; i++ ) {
 		str = str.replace( new RegExp( from.charAt( i ), 'g' ), to.charAt( i ) );
 	}
 
@@ -25,10 +25,10 @@ const stringToSlug = str => {
 		.replace( /\s+/g, '-' ) // collapse whitespace and replace by -
 		.replace( /-+/g, '-' ); // collapse dashes
 	return str;
-}
+};
 
 const Control = ( { props, values, autoFills = [] } ) => {
-	const [state, setState] = useContext( PhpSettings );
+	const [ state, setState ] = useContext( PhpSettings );
 
 	const autoFill = ( name, value ) => {
 		autoFills.filter( field => field.updateFrom === name ).forEach( field => {
@@ -45,15 +45,15 @@ const Control = ( { props, values, autoFills = [] } ) => {
 				...state,
 				labels: {
 					...state.labels,
-					[field.name]: field.defaultValue.replace( `%${name}%`, value )
+					[ field.name ]: field.defaultValue.replace( `%${name}%`, value )
 				}
 			} ) );
 		} );
-	}
+	};
 
 	const handleUpdate = e => {
-		const name  = e.target.name;
-		let   value = e.target.value;
+		const name = e.target.name;
+		let value = e.target.value;
 
 		switch ( e.target.type ) {
 			case 'checkbox':
@@ -65,30 +65,30 @@ const Control = ( { props, values, autoFills = [] } ) => {
 		}
 
 		if ( state.labels[ props.name ] || 'singular_name' === name ) {
-			setState( state => ( { ...state, labels: { ...state.labels, [name]: value } } ) );
+			setState( state => ( { ...state, labels: { ...state.labels, [ name ]: value } } ) );
 		} else {
-			setState( state => ( { ...state, [name]: value } ) );
+			setState( state => ( { ...state, [ name ]: value } ) );
 		}
-	}
+	};
 
-	let _value = state.labels[props.name] ? state.labels[props.name] : ( state[props.name] ? state[props.name] : props.defaultValue );
+	let _value = state.labels[ props.name ] ? state.labels[ props.name ] : ( state[ props.name ] ? state[ props.name ] : props.defaultValue );
 	_value = _value || '';
-	switch (props.type) {
+	switch ( props.type ) {
 		case 'text':
-			return <Input label={props.label} name={props.name} placeholder={props.placeholder} defaultValue={_value} description={props.description} required={props.required} update={handleUpdate} />
+			return <Input label={ props.label } name={ props.name } placeholder={ props.placeholder } defaultValue={ _value } description={ props.description } required={ props.required } update={ handleUpdate } />;
 		case 'textarea':
-			return <Textarea label={props.label} name={props.name} placeholder={props.placeholder} defaultValue={_value} description={props.description} update={handleUpdate} />
+			return <Textarea label={ props.label } name={ props.name } placeholder={ props.placeholder } defaultValue={ _value } description={ props.description } update={ handleUpdate } />;
 		case 'checkbox':
-			return <Checkbox label={props.label} name={props.name} description={props.description} checked={_value} update={handleUpdate} />
+			return <Checkbox label={ props.label } name={ props.name } description={ props.description } checked={ _value } update={ handleUpdate } />;
 		case 'radio':
-			return <Radio label={props.label} name={props.name} values={props.values} defaultValue={_value} update={handleUpdate} />
+			return <Radio label={ props.label } name={ props.name } values={ props.values } defaultValue={ _value } update={ handleUpdate } />;
 		case 'select':
-			return <Select label={props.label} name={props.name} description={props.description} values={props.values} defaultValue={_value} update={handleUpdate} />
+			return <Select label={ props.label } name={ props.name } description={ props.description } values={ props.values } defaultValue={ _value } update={ handleUpdate } />;
 		case undefined:
-			return <CheckboxList label={props.label} name={props.name} values={values} update={handleUpdate} />
+			return <CheckboxList label={ props.label } name={ props.name } values={ values } update={ handleUpdate } />;
 		default:
 			break;
 	}
-}
+};
 
 export default Control;
