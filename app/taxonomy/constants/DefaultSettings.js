@@ -26,11 +26,6 @@ const LabelSettings = {
 	}
 }
 
-const i18n = MbTaxonomy;
-let PostTypeSettings = {};
-Object.keys( i18n.postTypeOptions ).forEach( e => PostTypeSettings[e] = false );
-export { PostTypeSettings };
-
 const AdvancedSettings = {
 	'public'              : true,
 	'show_ui'             : true,
@@ -51,7 +46,7 @@ const AdvancedSettings = {
 const DefaultSettings = {
 	...BasicSettings,
 	...LabelSettings,
-	...PostTypeSettings,
+	post_types: ['post'],
 	...AdvancedSettings
 };
 

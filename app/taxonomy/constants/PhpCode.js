@@ -1,5 +1,3 @@
-import { PostTypeSettings } from './DefaultSettings';
-
 const labelSettings = settings => {
 	return `'label'  => esc_html__( '${settings.name}', 'text-domain' ),
 		'labels' => [
@@ -23,23 +21,7 @@ const labelSettings = settings => {
 		],`;
 };
 
-const postTypeSettings = settings => {
-	let temp = '';
-	let i = 0;
-
-	for ( let key in PostTypeSettings ) {
-		i += 1;
-		if ( !settings[ key ] ) {
-			continue;
-		}
-		if ( i > 1 ) {
-			temp += `, `;
-		}
-		temp += `'${key}'`;
-	}
-
-	return '' === temp ? '' : `[ ${temp} ]`;
-};
+const postTypeSettings = settings => settings.post_types.length ? `['${settings.post_types.join( "', '" )}']` : null;
 
 const reWrite = settings => {
 	let result = `'rewrite' => `;

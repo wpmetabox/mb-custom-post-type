@@ -30,13 +30,7 @@ export const LabelDatas = [
 	{ type: 'text', name: 'back_to_items', label: __( 'Back to items', 'mb-custom-post-type' ), defaultValue: 'Back to %name%', updateFrom: 'name' },
 ];
 
-const i18n = MbTaxonomy;
-let PostTypeDatas = [];
-const supportPostTypes = i18n.settings && i18n.settings.post_types ? [ ...i18n.settings.post_types ] : [];
-let postTypes = i18n.postTypeOptions ? i18n.postTypeOptions : [];
-Object.keys( postTypes ).forEach( e => {
-	PostTypeDatas.push( { name: e, description: postTypes[ e ], checked: supportPostTypes.includes( e ) ? true : false } );
-} );
+const PostTypeDatas = MbTaxonomy.postTypeOptions;
 export { PostTypeDatas };
 
 export const AdvancedDatas = [

@@ -1,6 +1,7 @@
 import { CodeDatas, BasicDatas, LabelDatas, PostTypeDatas, AdvancedDatas } from './constants/Data';
 import Control from '../controls/Control';
 import Result from './Result';
+import CheckboxList from '../controls/CheckboxList';
 const { TabPanel } = wp.components;
 const { __ } = wp.i18n;
 const tabs = [
@@ -17,7 +18,7 @@ const tabs = [
 		title: __( 'Advanced', 'mb-custom-post-type' ),
 	},
 	{
-		name: 'support_post_types',
+		name: 'post_types',
 		title: __( 'Post Types', 'mb-custom-post-type' ),
 	},
 	{
@@ -30,7 +31,7 @@ const panels = {
 	general: Object.keys( BasicDatas ).map( key => <Control key={ key } props={ BasicDatas[ key ] } autoFills={ [ ...LabelDatas, ...BasicDatas ] } /> ),
 	labels: Object.keys( LabelDatas ).map( key => <Control key={ key } props={ LabelDatas[ key ] } /> ),
 	advanced: Object.keys( AdvancedDatas ).map( key => <Control key={ key } props={ AdvancedDatas[ key ] } /> ),
-	support_post_types: <Control support="post_types" values={ PostTypeDatas } props={ PostTypeDatas } />,
+	post_types: <CheckboxList name="post_types" options={ PostTypeDatas } label={ __( 'Post types for the taxonomy:', 'mb-custom-post-type' ) } />,
 	code: (
 		<>
 			{ Object.keys( CodeDatas ).map( key => <Control key={ key } props={ CodeDatas[ key ] } /> ) }
