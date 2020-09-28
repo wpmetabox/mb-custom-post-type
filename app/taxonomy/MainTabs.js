@@ -27,18 +27,18 @@ const tabs = [
 	}
 ];
 const panels = {
-	general: Object.keys( BasicDatas ).map( key => <Control key={key} props={BasicDatas[key]} autoFills={[...LabelDatas, ...BasicDatas]} /> ),
-	labels: Object.keys( LabelDatas ).map( key => <Control key={key} props={LabelDatas[key]} /> ),
-	advanced: Object.keys( AdvancedDatas ).map( key => <Control key={key} props={AdvancedDatas[key]} /> ),
-	support_post_types: <Control support="post_types" values={PostTypeDatas} props={PostTypeDatas} />,
+	general: Object.keys( BasicDatas ).map( key => <Control key={ key } props={ BasicDatas[ key ] } autoFills={ [ ...LabelDatas, ...BasicDatas ] } /> ),
+	labels: Object.keys( LabelDatas ).map( key => <Control key={ key } props={ LabelDatas[ key ] } /> ),
+	advanced: Object.keys( AdvancedDatas ).map( key => <Control key={ key } props={ AdvancedDatas[ key ] } /> ),
+	support_post_types: <Control support="post_types" values={ PostTypeDatas } props={ PostTypeDatas } />,
 	code: (
 		<>
-			{ Object.keys( CodeDatas ).map( key => <Control key={key} props={CodeDatas[key]} /> ) }
+			{ Object.keys( CodeDatas ).map( key => <Control key={ key } props={ CodeDatas[ key ] } /> ) }
 			<Result />
 		</>
 	)
-}
+};
 
-const MainTabs = () => <TabPanel className="mb-cpt-tabs" tabs={ tabs }>{ tab => panels[tab.name] }</TabPanel>
+const MainTabs = () => <TabPanel className="mb-cpt-tabs" tabs={ tabs }>{ tab => panels[ tab.name ] }</TabPanel>;
 
 export default MainTabs;

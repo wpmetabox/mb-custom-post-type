@@ -31,19 +31,19 @@ const tabs = [
 	}
 ];
 const panels = {
-	general: Object.keys( BasicDatas ).map( key => <Control key={key} props={BasicDatas[key]} autoFills={[...LabelDatas, ...BasicDatas]} /> ),
-	labels: Object.keys( LabelDatas ).map( key => <Control key={key} props={LabelDatas[key]} /> ),
-	advanced: Object.keys( AdvancedDatas ).map( key => <Control key={key} props={AdvancedDatas[key]} /> ),
-	supports: <Control name="supports" values={SupportDatas} props={SupportDatas} />,
-	taxonomies: <Control name="taxonomies" values={TaxonomyDatas} props={TaxonomyDatas} />,
+	general: Object.keys( BasicDatas ).map( key => <Control key={ key } props={ BasicDatas[ key ] } autoFills={ [ ...LabelDatas, ...BasicDatas ] } /> ),
+	labels: Object.keys( LabelDatas ).map( key => <Control key={ key } props={ LabelDatas[ key ] } /> ),
+	advanced: Object.keys( AdvancedDatas ).map( key => <Control key={ key } props={ AdvancedDatas[ key ] } /> ),
+	supports: <Control name="supports" values={ SupportDatas } props={ SupportDatas } />,
+	taxonomies: <Control name="taxonomies" values={ TaxonomyDatas } props={ TaxonomyDatas } />,
 	code: (
 		<>
-			{ Object.keys( CodeDatas ).map( key => <Control key={key} props={CodeDatas[key]} /> ) }
+			{ Object.keys( CodeDatas ).map( key => <Control key={ key } props={ CodeDatas[ key ] } /> ) }
 			<Result />
 		</>
 	)
-}
+};
 
-const MainTabs = () => <TabPanel className="mb-cpt-tabs" tabs={ tabs }>{ tab => panels[tab.name] }</TabPanel>
+const MainTabs = () => <TabPanel className="mb-cpt-tabs" tabs={ tabs }>{ tab => panels[ tab.name ] }</TabPanel>;
 
 export default MainTabs;

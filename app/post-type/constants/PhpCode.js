@@ -1,7 +1,7 @@
 import { SupportSettings, TaxonomySettings } from './DefaultSettings';
 
 const labelSettings = settings => {
-	return`'label'  => esc_html__( '${settings.name}', '${settings.text_domain}' ),
+	return `'label'  => esc_html__( '${settings.name}', '${settings.text_domain}' ),
 		'labels' => [
 			'menu_name'          => esc_html__( '${settings.menu_name || settings.name}', '${settings.text_domain}' ),
 			'name_admin_bar'     => esc_html__( '${settings.name_admin_bar || settings.singular_name}', '${settings.text_domain}' ),
@@ -19,27 +19,27 @@ const labelSettings = settings => {
 			'name'               => esc_html__( '${settings.name}', '${settings.text_domain}' ),
 			'singular_name'      => esc_html__( '${settings.singular_name}', '${settings.text_domain}' ),
 		],`;
-}
+};
 
 const supportSettings = settings => {
 	let temp = '';
 
 	for ( let key in SupportSettings ) {
-		temp += settings[key] === true ? `\n\t\t\t'${key}',` : '';
+		temp += settings[ key ] === true ? `\n\t\t\t'${key}',` : '';
 	}
 
 	return '' === temp ? '' : `'supports' => [${temp}\n\t\t],`;
-}
+};
 
 const taxonomySettings = settings => {
 	let temp = '';
 
 	for ( let key in TaxonomySettings ) {
-		temp += settings[key] === true ? `\n\t\t\t'${key}',` : '';
+		temp += settings[ key ] === true ? `\n\t\t\t'${key}',` : '';
 	}
 
 	return '' === temp ? '' : `'taxonomies' => [${temp}\n\t\t],`;
-}
+};
 
 const menuIcon = settings => settings.menu_icon ? `\n\t\t'menu_icon'           => '${settings.menu_icon}',` : '';
 const restBase = settings => settings.rest_base ? `\n\t\t'rest_base'           => '${settings.rest_base}',` : '';
@@ -56,7 +56,7 @@ const reWrite = settings => {
 	}
 
 	return result + `[ ${rewrite_slug},${rewrite_no_front} ]`;
-}
+};
 
 const advanceSettings = settings => {
 	let showInMenu = false;
@@ -77,11 +77,11 @@ const advanceSettings = settings => {
 		'can_export'          => ${settings.can_export},
 		'rewrite_no_front'    => ${settings.rewrite_no_front},
 		'show_in_menu'        => ${showInMenu},`;
-}
+};
 
 const PhpCode = settings => {
 	return (
-`<?php
+		`<?php
 add_action( 'init', '${settings.function_name}' );
 function ${settings.function_name}() {
 	$args = [
@@ -95,6 +95,6 @@ function ${settings.function_name}() {
 	register_post_type( '${settings.slug}', $args );
 }`
 	);
-}
+};
 
 export default PhpCode;
