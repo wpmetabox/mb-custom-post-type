@@ -63,7 +63,11 @@ class MB_CPT_Base_Edit {
 		$options    = [];
 		$post_types = mb_cpt_get_post_types();
 		foreach ( $post_types as $post_type => $post_type_object ) {
-			$options[ $post_type ] = $post_type_object->labels->singular_name;
+			$options[] = [
+				'value'   => $post_type,
+				'label'   => $post_type_object->labels->singular_name,
+				'checked' => 'post' === $post_type,
+			];
 		}
 
 		$vars['postTypeOptions'] = $options;
