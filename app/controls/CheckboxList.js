@@ -1,15 +1,32 @@
 import PhpSettings from '../PhpSettings';
 const { useContext } = wp.element;
 
-const CheckboxList = ( { label, name, update, values } ) => {
+const CheckboxList = ( { name, options } ) => {
 	const [ state, setState ] = useContext( PhpSettings );
+
+	const onChange = e => {
+		const { value, checked } = e.target;
+		let options = state[ name ];
+		if ( checked ) {
+			options.push( value );
+		} else {
+			options = options.filter( option => option !== value );
+		}
+		setState( { ...state, [ name ]: options } );
+	};
 
 	return (
 		<div className="mb-cpt-field">
-			{label && <label className="mb-cpt-label" htmlFor={ name }>{ label }</label> }
 			<div className="mb-cpt-input">
 				<ul className="mb-cpt-input-list">
-					{ values.map( ( value, key ) => <li key={ key }><label className="mb-cpt-description"><input type="checkbox" name={ value.name } checked={ state[ value.name ] } onChange={ update } /> { value.description }</label></li> ) }
+					{ options.map( ( option, key ) => (
+						<li key={ key }>
+							<label>
+								<input type="checkbox" value={ option.value } checked={ state[ name ].includes( option.value ) } onChange={ onChange } />
+								{ option.label }
+							</label>
+						</li>
+					) ) }
 				</ul>
 			</div>
 		</div>

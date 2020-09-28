@@ -25,21 +25,11 @@ const LabelSettings = {
 }
 
 export const SupportSettings = {
-	'title'          : true,
-	'editor'         : true,
-	'author'         : false,
-	'thumbnail'      : true,
-	'excerpt'        : false,
-	'trackbacks'     : false,
-	'custom-fields'  : false,
-	'comments'       : false,
-	'revisions'      : false,
-	'page-attributes': false,
+	'supports': ['title', 'editor', 'thumbnail']
 }
 
 export const TaxonomySettings = {
-	'category': false,
-	'tag'     : false,
+	'taxonomies': []
 }
 
 const AdvancedSettings = {
