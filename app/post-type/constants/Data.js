@@ -28,20 +28,20 @@ export const LabelDatas = [
 ];
 
 export const SupportDatas = [
-	{ name: 'title', description: __( 'Title', 'mb-custom-post-type' ), checked: true },
-	{ name: 'editor', description: __( 'Editor', 'mb-custom-post-type' ), checked: true },
-	{ name: 'author', description: __( 'Author', 'mb-custom-post-type' ), checked: false },
-	{ name: 'thumbnail', description: __( 'Thumbnail', 'mb-custom-post-type' ), checked: true },
-	{ name: 'trackbacks', description: __( 'Trackbacks', 'mb-custom-post-type' ), checked: false },
-	{ name: 'custom-fields', description: __( 'Custom fields', 'mb-custom-post-type' ), checked: false },
-	{ name: 'comments', description: __( 'Comments', 'mb-custom-post-type' ), checked: false },
-	{ name: 'revisions', description: __( 'Revisions', 'mb-custom-post-type' ), checked: false },
-	{ name: 'page-attributes', description: __( 'Page attributes', 'mb-custom-post-type' ), checked: false },
+	{ value: 'title', label: __( 'Title', 'mb-custom-post-type' ), checked: true },
+	{ value: 'editor', label: __( 'Editor', 'mb-custom-post-type' ), checked: true },
+	{ value: 'author', label: __( 'Author', 'mb-custom-post-type' ), checked: false },
+	{ value: 'thumbnail', label: __( 'Thumbnail', 'mb-custom-post-type' ), checked: true },
+	{ value: 'trackbacks', label: __( 'Trackbacks', 'mb-custom-post-type' ), checked: false },
+	{ value: 'custom-fields', label: __( 'Custom fields', 'mb-custom-post-type' ), checked: false },
+	{ value: 'comments', label: __( 'Comments', 'mb-custom-post-type' ), checked: false },
+	{ value: 'revisions', label: __( 'Revisions', 'mb-custom-post-type' ), checked: false },
+	{ value: 'page-attributes', label: __( 'Page attributes', 'mb-custom-post-type' ), checked: false },
 ];
 
 export const TaxonomyDatas = [
-	{ name: 'category', description: __( 'Category', 'mb-custom-post-type' ), checked: false },
-	{ name: 'tag', description: __( 'Tag', 'mb-custom-post-type' ), checked: false },
+	{ value: 'category', label: __( 'Category', 'mb-custom-post-type' ), checked: false },
+	{ value: 'tag', label: __( 'Tag', 'mb-custom-post-type' ), checked: false },
 ];
 
 const CapabilityDatas = [

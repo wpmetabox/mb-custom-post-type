@@ -1,5 +1,6 @@
 import { CodeDatas, BasicDatas, LabelDatas, TaxonomyDatas, SupportDatas, AdvancedDatas } from './constants/Data';
 import Control from '../controls/Control';
+import CheckboxList from '../controls/CheckboxList';
 import Result from './Result';
 const { TabPanel } = wp.components;
 const { __ } = wp.i18n;
@@ -34,8 +35,8 @@ const panels = {
 	general: Object.keys( BasicDatas ).map( key => <Control key={ key } props={ BasicDatas[ key ] } autoFills={ [ ...LabelDatas, ...BasicDatas ] } /> ),
 	labels: Object.keys( LabelDatas ).map( key => <Control key={ key } props={ LabelDatas[ key ] } /> ),
 	advanced: Object.keys( AdvancedDatas ).map( key => <Control key={ key } props={ AdvancedDatas[ key ] } /> ),
-	supports: <Control name="supports" values={ SupportDatas } props={ SupportDatas } />,
-	taxonomies: <Control name="taxonomies" values={ TaxonomyDatas } props={ TaxonomyDatas } />,
+	supports: <CheckboxList name="supports" options={ SupportDatas } />,
+	taxonomies: <CheckboxList name="taxonomies" options={ TaxonomyDatas } />,
 	code: (
 		<>
 			{ Object.keys( CodeDatas ).map( key => <Control key={ key } props={ CodeDatas[ key ] } /> ) }
