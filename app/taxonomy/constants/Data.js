@@ -30,8 +30,7 @@ export const LabelDatas = [
 	{ type: 'text', name: 'back_to_items', label: __( 'Back to items', 'mb-custom-post-type' ), defaultValue: 'Back to %name%', updateFrom: 'name' },
 ];
 
-const PostTypeDatas = MbTaxonomy.postTypeOptions;
-export { PostTypeDatas };
+export const PostTypeDatas = MbTaxonomy.postTypeOptions;
 
 export const AdvancedDatas = [
 	{ type: 'checkbox', name: 'public', label: __( 'Public?', 'mb-custom-post-type' ), description: __( 'If the taxonomy should be publicly queryable.', 'mb-custom-post-type' ), checked: true },
