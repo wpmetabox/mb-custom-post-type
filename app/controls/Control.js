@@ -45,7 +45,7 @@ const Control = ( { props, values, autoFills = [] } ) => {
 				...state,
 				labels: {
 					...state.labels,
-					[field.name]: field.defaultValue.replace( '%name%', value ).replace( '%singular_name%', value )
+					[field.name]: field.defaultValue.replace( `%${name}%`, value )
 				}
 			} ) );
 		} );
@@ -71,7 +71,8 @@ const Control = ( { props, values, autoFills = [] } ) => {
 		}
 	}
 
-	let _value = state.labels[props.name] ? state.labels[props.name] : state[props.name] ? state[props.name] : props.defaultValue;
+	let _value = state.labels[props.name] ? state.labels[props.name] : ( state[props.name] ? state[props.name] : props.defaultValue );
+	_value = _value || '';
 	switch (props.type) {
 		case 'text':
 			return <Input label={props.label} name={props.name} placeholder={props.placeholder} defaultValue={_value} description={props.description} required={props.required} update={handleUpdate} />
