@@ -1,5 +1,3 @@
-import { SupportSettings, TaxonomySettings } from './DefaultSettings';
-
 const labelSettings = settings => {
 	return `'label'  => esc_html__( '${settings.name}', '${settings.text_domain}' ),
 		'labels' => [
@@ -21,25 +19,8 @@ const labelSettings = settings => {
 		],`;
 };
 
-const supportSettings = settings => {
-	let temp = '';
-
-	for ( let key in SupportSettings ) {
-		temp += settings[ key ] === true ? `\n\t\t\t'${key}',` : '';
-	}
-
-	return '' === temp ? '' : `'supports' => [${temp}\n\t\t],`;
-};
-
-const taxonomySettings = settings => {
-	let temp = '';
-
-	for ( let key in TaxonomySettings ) {
-		temp += settings[ key ] === true ? `\n\t\t\t'${key}',` : '';
-	}
-
-	return '' === temp ? '' : `'taxonomies' => [${temp}\n\t\t],`;
-};
+const supportSettings = settings => settings.supports.length ? `'supports'            => ['${settings.supports.join( "', '" )}'],` : '';
+const taxonomySettings = settings => settings.taxonomies.length ? `'taxonomies'          => ['${settings.taxonomies.join( "', '" )}'],` : '';
 
 const menuIcon = settings => settings.menu_icon ? `\n\t\t'menu_icon'           => '${settings.menu_icon}',` : '';
 const restBase = settings => settings.rest_base ? `\n\t\t'rest_base'           => '${settings.rest_base}',` : '';
