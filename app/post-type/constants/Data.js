@@ -30,6 +30,7 @@ export const LabelDatas = [
 export const SupportDatas = [
 	{ value: 'title', label: __( 'Title', 'mb-custom-post-type' ), checked: true },
 	{ value: 'editor', label: __( 'Editor', 'mb-custom-post-type' ), checked: true },
+	{ value: 'excerpt', label: __( 'Excerpt', 'mb-custom-post-type' ), checked: false },
 	{ value: 'author', label: __( 'Author', 'mb-custom-post-type' ), checked: false },
 	{ value: 'thumbnail', label: __( 'Thumbnail', 'mb-custom-post-type' ), checked: true },
 	{ value: 'trackbacks', label: __( 'Trackbacks', 'mb-custom-post-type' ), checked: false },
@@ -37,6 +38,7 @@ export const SupportDatas = [
 	{ value: 'comments', label: __( 'Comments', 'mb-custom-post-type' ), checked: false },
 	{ value: 'revisions', label: __( 'Revisions', 'mb-custom-post-type' ), checked: false },
 	{ value: 'page-attributes', label: __( 'Page attributes', 'mb-custom-post-type' ), checked: false },
+	{ value: 'post-formats', label: __( 'Post formats', 'mb-custom-post-type' ), checked: false },
 ];
 
 export const TaxonomyDatas = [
