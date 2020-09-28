@@ -1,7 +1,7 @@
 import PhpSettings from '../PhpSettings';
 const { useContext } = wp.element;
 
-const CheckboxList = ( { name, options } ) => {
+const CheckboxList = ( { name, options, description } ) => {
 	const [ state, setState ] = useContext( PhpSettings );
 
 	const onChange = e => {
@@ -18,6 +18,7 @@ const CheckboxList = ( { name, options } ) => {
 	return (
 		<div className="mb-cpt-field">
 			<div className="mb-cpt-input">
+				{ description && <div className="mb-cpt-description">{ description }</div> }
 				<ul className="mb-cpt-input-list">
 					{ options.map( ( option, key ) => (
 						<li key={ key }>
