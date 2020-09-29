@@ -54,6 +54,6 @@ const Control = ( { field, autoFills } ) => {
 	}
 };
 
-const ucfirst = str => str[ 0 ].toUpperCase() + str.slice( 1 );
+const ucfirst = str => str.length ? str[ 0 ].toUpperCase() + str.slice( 1 ) : str;
 
 export default Control;
