@@ -32,9 +32,9 @@ const tabs = [
 	}
 ];
 const panels = {
-	general: Object.keys( BasicDatas ).map( key => <Control key={ key } props={ BasicDatas[ key ] } autoFills={ [ ...LabelDatas, ...BasicDatas ] } /> ),
-	labels: Object.keys( LabelDatas ).map( key => <Control key={ key } props={ LabelDatas[ key ] } /> ),
-	advanced: Object.keys( AdvancedDatas ).map( key => <Control key={ key } props={ AdvancedDatas[ key ] } /> ),
+	general: BasicDatas.map( ( field, key ) => <Control key={ key } props={ field } autoFills={ [ ...LabelDatas, ...BasicDatas ] } /> ),
+	labels: LabelDatas.map( ( field, key ) => <Control key={ key } props={ field } /> ),
+	advanced: AdvancedDatas.map( ( field, key ) => <Control key={ key } props={ field } /> ),
 	supports: <CheckboxList name="supports" options={ SupportDatas } description={ __( 'Core features the post type supports:', 'mb-custom-post-type' ) } />,
 	taxonomies: <CheckboxList name="taxonomies" options={ TaxonomyDatas } description={ __( 'Taxonomies that will be registered for the post type:', 'mb-custom-post-type' ) } />,
 	code: (
