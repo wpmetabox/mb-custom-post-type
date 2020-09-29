@@ -31,8 +31,12 @@ const tabs = [
 		className: 'mb-cpt-code button button-small'
 	}
 ];
+
+let autoFills= [ ...LabelDatas, ...BasicDatas ];
+autoFills.push( { name: 'label', default: '%name%', updateFrom: 'labels.name' } );
+
 const panels = {
-	general: BasicDatas.map( ( field, key ) => <Control key={ key } field={ field } autoFills={ [ ...LabelDatas, ...BasicDatas ].filter( f => f.updateFrom === field.name ) } /> ),
+	general: BasicDatas.map( ( field, key ) => <Control key={ key } field={ field } autoFills={ autoFills.filter( f => f.updateFrom === field.name ) } /> ),
 	labels: LabelDatas.map( ( field, key ) => <Control key={ key } field={ field } /> ),
 	advanced: AdvancedDatas.map( ( field, key ) => <Control key={ key } field={ field } /> ),
 	supports: <CheckboxList name="supports" options={ SupportDatas } description={ __( 'Core features the post type supports:', 'mb-custom-post-type' ) } />,

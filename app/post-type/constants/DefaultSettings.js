@@ -1,3 +1,5 @@
+const { __ } = wp.i18n;
+
 const DefaultSettings = {
 	// Custom attributes.
 	slug         : '',
@@ -8,7 +10,7 @@ const DefaultSettings = {
 	labels: {
 		name                    : '',
 		singular_name           : '',
-		add_new                 : '',
+		add_new                 : __( 'Add New', 'mb-custom-post-type' ),
 		add_new_item            : '',
 		edit_item               : '',
 		new_item                : '',
@@ -23,10 +25,10 @@ const DefaultSettings = {
 		attributes              : '',
 		insert_into_item        : '',
 		uploaded_to_this_item   : '',
-		featured_image          : '',
-		set_featured_image      : '',
-		remove_featured_image   : '',
-		use_featured_image      : '',
+		featured_image          : __( 'Featured image', 'mb-custom-post-type' ),
+		set_featured_image      : __( 'Set featured image', 'mb-custom-post-type' ),
+		remove_featured_image   : __( 'Remove featured image', 'mb-custom-post-type' ),
+		use_featured_image      : __( 'Use as featured image', 'mb-custom-post-type' ),
 		menu_name               : '',
 		filter_items_list       : '',
 		items_list_navigation   : '',
