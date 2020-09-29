@@ -12,7 +12,7 @@ const Result = () => {
 		setTimeout( () => setCopied( false ), 1000 );
 	};
 
-	const [ state, setState ] = useContext( PhpSettings );
+	const [ state ] = useContext( PhpSettings );
 
 	return (
 		<div className="mb-cpt-result">
