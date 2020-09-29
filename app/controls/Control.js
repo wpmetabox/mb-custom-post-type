@@ -4,7 +4,6 @@ import Textarea from './Textarea';
 import Checkbox from './Checkbox';
 import Radio from './Radio';
 import Select from './Select';
-import CheckboxList from './CheckboxList';
 const { useContext } = wp.element;
 
 const stringToSlug = str => {
@@ -27,7 +26,7 @@ const stringToSlug = str => {
 	return str;
 };
 
-const Control = ( { props, values, autoFills = [] } ) => {
+const Control = ( { props, autoFills = [] } ) => {
 	const [ state, setState ] = useContext( PhpSettings );
 
 	const autoFill = ( name, value ) => {
@@ -35,7 +34,6 @@ const Control = ( { props, values, autoFills = [] } ) => {
 			if ( 'slug' === field.name ) {
 				setState( state => ( {
 					...state,
-					labels: { ...state.labels },
 					slug: stringToSlug( value )
 				} ) );
 				return;
@@ -84,10 +82,6 @@ const Control = ( { props, values, autoFills = [] } ) => {
 			return <Radio label={ props.label } name={ props.name } values={ props.values } defaultValue={ _value } update={ handleUpdate } />;
 		case 'select':
 			return <Select label={ props.label } name={ props.name } description={ props.description } values={ props.values } defaultValue={ _value } update={ handleUpdate } />;
-		case undefined:
-			return <CheckboxList label={ props.label } name={ props.name } values={ values } update={ handleUpdate } />;
-		default:
-			break;
 	}
 };
 
