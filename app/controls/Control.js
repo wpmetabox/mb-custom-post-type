@@ -1,3 +1,5 @@
+import dotProp from 'dot-prop';
+import slugify from 'slugify';
 import PhpSettings from '../PhpSettings';
 import Input from './Input';
 import Textarea from './Textarea';
@@ -6,83 +8,52 @@ import Radio from './Radio';
 import Select from './Select';
 const { useContext } = wp.element;
 
-const stringToSlug = str => {
-	// Trim the string
-	str = str.replace( /^\s+|\s+$/g, '' );
-	str = str.toLowerCase();
-
-	// Remove accents
-	var from = "àáäâèéëêìíïîòóöôùúüûñç·/_,:;",
-		to = "aaaaeeeeiiiioooouuuunc------",
-		i, l;
-
-	for ( i = 0, l = from.length; i < l; i++ ) {
-		str = str.replace( new RegExp( from.charAt( i ), 'g' ), to.charAt( i ) );
-	}
-
-	str = str.replace( /[^a-z0-9 -]/g, '' ) // remove invalid chars
-		.replace( /\s+/g, '-' ) // collapse whitespace and replace by -
-		.replace( /-+/g, '-' ); // collapse dashes
-	return str;
-};
-
-const Control = ( { props, autoFills = [] } ) => {
+const Control = ( { field, autoFills } ) => {
 	const [ state, setState ] = useContext( PhpSettings );
 
-	const autoFill = ( name, value ) => {
-		autoFills.filter( field => field.updateFrom === name ).forEach( field => {
-			if ( 'slug' === field.name ) {
-				setState( state => ( {
-					...state,
-					slug: stringToSlug( value )
-				} ) );
-				return;
+	const update = e => {
+		const { name, type } = e.target;
+		const value = 'checkbox' === type ? e.target.checked : e.target.value;
+
+		setState( state => {
+			let newState = JSON.parse( JSON.stringify( state ) );
+
+			dotProp.set( newState, name, value );
+
+			if ( !autoFills ) {
+				return newState;
 			}
 
-			setState( state => ( {
-				...state,
-				labels: {
-					...state.labels,
-					[ field.name ]: field.defaultValue.replace( `%${name}%`, field.defaultValue.split( ' ' ).length > 2 ? value.toLowerCase() : value )
+			const placeholder = name.replace( 'labels.', '' );
+			autoFills.forEach( f => {
+				let newValue = slugify( value, { lower: true } );
+
+				if ( 'slug' !== f.name ) {
+					newValue = ucfirst( f.defaultValue.replace( `%${placeholder}%`, f.defaultValue.split( ' ' ).length > 2 ? value.toLowerCase() : value ) );
 				}
-			} ) );
+
+				dotProp.set( newState, f.name, newValue );
+			} );
+
+			return newState;
 		} );
 	};
 
-	const handleUpdate = e => {
-		const name = e.target.name;
-		let value = e.target.value;
-
-		switch ( e.target.type ) {
-			case 'checkbox':
-				value = e.target.checked;
-				break;
-			case 'text':
-				autoFill( name, value );
-				break;
-		}
-
-		if ( state.labels[ props.name ] || 'singular_name' === name ) {
-			setState( state => ( { ...state, labels: { ...state.labels, [ name ]: value } } ) );
-		} else {
-			setState( state => ( { ...state, [ name ]: value } ) );
-		}
-	};
-
-	let _value = state.labels[ props.name ] ? state.labels[ props.name ] : ( state[ props.name ] ? state[ props.name ] : props.defaultValue );
-	_value = _value || '';
-	switch ( props.type ) {
+	const _value = dotProp.get( state, field.name ) || field.defaultValue || '';
+	switch ( field.type ) {
 		case 'text':
-			return <Input label={ props.label } name={ props.name } placeholder={ props.placeholder } defaultValue={ _value } description={ props.description } required={ props.required } update={ handleUpdate } />;
+			return <Input label={ field.label } name={ field.name } value={ _value } description={ field.description } required={ field.required } update={ update } />;
 		case 'textarea':
-			return <Textarea label={ props.label } name={ props.name } placeholder={ props.placeholder } defaultValue={ _value } description={ props.description } update={ handleUpdate } />;
+			return <Textarea label={ field.label } name={ field.name } placeholder={ field.placeholder } defaultValue={ _value } description={ field.description } update={ update } />;
 		case 'checkbox':
-			return <Checkbox label={ props.label } name={ props.name } description={ props.description } checked={ _value } update={ handleUpdate } />;
+			return <Checkbox label={ field.label } name={ field.name } description={ field.description } checked={ _value } update={ update } />;
 		case 'radio':
-			return <Radio label={ props.label } name={ props.name } values={ props.values } defaultValue={ _value } update={ handleUpdate } />;
+			return <Radio label={ field.label } name={ field.name } values={ field.values } defaultValue={ _value } update={ update } />;
 		case 'select':
-			return <Select label={ props.label } name={ props.name } description={ props.description } values={ props.values } defaultValue={ _value } update={ handleUpdate } />;
+			return <Select label={ field.label } name={ field.name } description={ field.description } values={ field.values } defaultValue={ _value } update={ update } />;
 	}
 };
+
+const ucfirst = str => str[ 0 ].toUpperCase() + str.slice( 1 );
 
 export default Control;
