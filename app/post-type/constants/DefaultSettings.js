@@ -1,4 +1,5 @@
 const DefaultSettings = {
+	// Custom attributes.
 	slug         : '',
 	function_name: 'your_prefix_register_post_type',
 	text_domain  : 'your-textdomain',
@@ -54,7 +55,7 @@ const DefaultSettings = {
 	supports           : ['title', 'editor', 'thumbnail'],
 	taxonomies         : [],
 	has_archive        : true,
-	archive_slug       : '',                                 // Custom attribute.
+	archive_slug       : '', // Custom attribute.
 	rewrite            : {
 		slug      : '',
 		with_front: false,
