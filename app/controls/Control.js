@@ -12,8 +12,8 @@ const Control = ( { field, autoFills } ) => {
 	const [ state, setState ] = useContext( PhpSettings );
 
 	const update = e => {
-		const { name, type } = e.target;
-		const value = 'checkbox' === type ? e.target.checked : e.target.value;
+		const name = e.target.dataset.name;
+		const value = 'checkbox' === e.target.type ? e.target.checked : e.target.value;
 
 		setState( state => {
 			let newState = JSON.parse( JSON.stringify( state ) );

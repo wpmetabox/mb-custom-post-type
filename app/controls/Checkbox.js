@@ -6,7 +6,7 @@ const Checkbox = ( { label, name, description, update, checked } ) => {
 				{
 					description
 						? <label className="mb-cpt-description"><input type="checkbox" id={ name } name={ name } checked={ checked } onChange={ update } /> { description }</label>
-						: <input type="checkbox" id={ name } name={ name } checked={ checked } onChange={ update } />
+						: <input type="checkbox" id={ name } data-name={ name } checked={ checked } onChange={ update } />
 				}
 			</div>
 		</div>
