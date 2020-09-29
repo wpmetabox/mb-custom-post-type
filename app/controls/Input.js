@@ -5,7 +5,7 @@ const Input = ( { label, name, value, update, description = '', required = false
 			{ required && <span className="mb-cpt-required">*</span> }
 		</label>
 		<div className="mb-cpt-input">
-			<input type="text" required={ required } id={ name } name={ name } value={ value } onChange={ update } />
+			<input type="text" required={ required } id={ name } data-name={ name } value={ value } onChange={ update } />
 			{ description && <div className="mb-cpt-description">{ description }</div> }
 		</div>
 	</div>
