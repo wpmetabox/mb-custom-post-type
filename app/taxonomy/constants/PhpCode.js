@@ -1,24 +1,16 @@
 const labelSettings = settings => {
-	return `'label'  => esc_html__( '${settings.name}', 'text-domain' ),
+	const { label, labels, text_domain } = settings;
+
+	let keys = Object.keys( labels );
+	const maxLengh = Math.max.apply( null, keys.map( key => key.length ) );
+	keys = keys.map( key => `'${ key }'${ ' '.repeat( maxLengh - key.length ) } => esc_html__( '${ labels[ key ] }', '${ text_domain }' ),` );
+
+	let output = `'label'  => esc_html__( '${ label }', '${ text_domain }' ),
 		'labels' => [
-			'menu_name'                  => esc_html__( '${settings.menu_name || settings.name}', '${settings.text_domain}' ),
-			'all_items'                  => esc_html__( '${settings.all_items || settings.singular_name}', '${settings.text_domain}' ),
-			'edit_item'                  => esc_html__( '${settings.edit_item + '\'' || `${'Edit ' + settings.singular_name + '\''}`}, '${settings.text_domain}' ),
-			'view_item'                  => esc_html__( '${settings.view_item + '\'' || `${'View ' + settings.singular_name + '\''}`}, '${settings.text_domain}' ),
-			'update_item'                => esc_html__( '${settings.update_item + '\'' || `${'Update ' + settings.singular_name + '\''}`}, '${settings.text_domain}' ),
-			'add_new_item'               => esc_html__( '${settings.add_new_item + '\'' || `${'Add new ' + settings.singular_name + '\''}`}, '${settings.text_domain}' ),
-			'new_item'                   => esc_html__( '${settings.new_item + '\'' || `${'New ' + settings.singular_name + '\''}`}, '${settings.text_domain}' ),
-			'parent_item'                => esc_html__( '${settings.parent_item + '\'' || `${'Parent ' + settings.singular_name + '\''}`}, '${settings.text_domain}' ),
-			'parent_item_colon'          => esc_html__( '${settings.parent_item_colon + '\'' || `${'Parent ' + settings.singular_name + '\''}`}, '${settings.text_domain}' ),
-			'search_items'               => esc_html__( '${settings.search_items + '\'' || `${'Search ' + settings.name + '\''}`}, '${settings.text_domain}' ),
-			'popular_items'              => esc_html__( '${settings.popular_items + '\'' || `${'Search ' + settings.name + '\''}`}, '${settings.text_domain}' ),
-			'separate_items_with_commas' => esc_html__( '${settings.separate_items_with_commas + '\'' || `${'Search ' + settings.name + '\''}`}, '${settings.text_domain}' ),
-			'add_or_remove_items'        => esc_html__( '${settings.add_or_remove_items + '\'' || `${'Search ' + settings.name + '\''}`}, '${settings.text_domain}' ),
-			'choose_from_most_used'      => esc_html__( '${settings.choose_from_most_used + '\'' || `${'Search ' + settings.name + '\''}`}, '${settings.text_domain}' ),
-			'not_found'                  => esc_html__( '${settings.not_found + '\'' || `${'No ' + settings.name + ' found\''}`}, '${settings.text_domain}' ),
-			'name'                       => esc_html__( '${settings.name}', '${settings.text_domain}' ),
-			'singular_name'              => esc_html__( '${settings.singular_name}', '${settings.text_domain}' ),
-		],`;
+			${ keys.join( "\n\t\t\t" ) }
+		]`;
+
+	return output;
 };
 
 const postTypeSettings = settings => settings.post_types.length ? `['${settings.post_types.join( "', '" )}']` : null;
