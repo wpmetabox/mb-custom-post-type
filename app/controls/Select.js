@@ -1,10 +1,10 @@
-const Select = ( { label, name, update, description = '', values, defaultValue } ) => {
+const Select = ( { label, name, update, description = '', options, value } ) => {
 	return (
 		<div className="mb-cpt-field">
 			<label className="mb-cpt-label" htmlFor={ name }>{ label }</label>
 			<div className="mb-cpt-input">
-				<select id={ name } data-name={ name } value={ defaultValue } onChange={ update }>
-					{ values.map( ( value, key ) => <option key={ key } value={ value.value }>{ value.label }</option> ) }
+				<select id={ name } data-name={ name } value={ value } onChange={ update }>
+					{ options.map( ( option, key ) => <option key={ key } value={ option.value }>{ option.label }</option> ) }
 				</select>
 				{ description && <div className="mb-cpt-description">{ description }</div> }
 			</div>
