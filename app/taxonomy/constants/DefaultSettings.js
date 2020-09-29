@@ -5,6 +5,9 @@ const DefaultSettings = {
 	text_domain  : 'your-textdomain',
 
 	labels       : {
+		name                      : '',
+		singular_name             : '',
+		menu_name                 : '',
 		search_items              : '',
 		popular_items             : '',
 		all_items                 : '',
@@ -24,7 +27,6 @@ const DefaultSettings = {
 		items_list                : '',
 		most_used                 : '',
 		back_to_items             : '',
-		menu_name                 : '',
 	},
 	description       : '',
 	public            : true,
