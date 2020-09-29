@@ -29,7 +29,7 @@ const Control = ( { field, autoFills } ) => {
 				let newValue = slugify( value, { lower: true } );
 
 				if ( 'slug' !== f.name ) {
-					newValue = ucfirst( f.defaultValue.replace( `%${placeholder}%`, f.defaultValue.split( ' ' ).length > 2 ? value.toLowerCase() : value ) );
+					newValue = ucfirst( f.default.replace( `%${placeholder}%`, f.default.split( ' ' ).length > 2 ? value.toLowerCase() : value ) );
 				}
 
 				dotProp.set( newState, f.name, newValue );
@@ -39,18 +39,18 @@ const Control = ( { field, autoFills } ) => {
 		} );
 	};
 
-	const _value = dotProp.get( state, field.name ) || field.defaultValue || '';
+	const _value = dotProp.get( state, field.name ) || field.default || '';
 	switch ( field.type ) {
 		case 'text':
 			return <Input label={ field.label } name={ field.name } value={ _value } description={ field.description } required={ field.required } update={ update } />;
 		case 'textarea':
-			return <Textarea label={ field.label } name={ field.name } placeholder={ field.placeholder } defaultValue={ _value } description={ field.description } update={ update } />;
+			return <Textarea label={ field.label } name={ field.name } placeholder={ field.placeholder } value={ _value } description={ field.description } update={ update } />;
 		case 'checkbox':
 			return <Checkbox label={ field.label } name={ field.name } description={ field.description } checked={ _value } update={ update } />;
 		case 'radio':
-			return <Radio label={ field.label } name={ field.name } values={ field.values } defaultValue={ _value } update={ update } />;
+			return <Radio label={ field.label } name={ field.name } options={ field.options } value={ _value } update={ update } />;
 		case 'select':
-			return <Select label={ field.label } name={ field.name } description={ field.description } values={ field.values } defaultValue={ _value } update={ update } />;
+			return <Select label={ field.label } name={ field.name } description={ field.description } options={ field.options } value={ _value } update={ update } />;
 	}
 };
 

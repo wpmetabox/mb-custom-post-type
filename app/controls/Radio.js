@@ -1,14 +1,14 @@
-const Radio = ( { label, name, update, values, defaultValue } ) => {
+const Radio = ( { label, name, update, options, value } ) => {
 	return (
 		<div className="mb-cpt-field mb-cpt-field--radio">
 			<label className="mb-cpt-label">{ label }</label>
 			<div className="mb-cpt-input">
 				{
-					values.map( ( item, key ) => (
-						<label key={ key } className={ `mb-cpt-choice${item.icon ? ' mb-cpt-icon' : ''}` }>
-							<input type="radio" data-name={ name } value={ item.value } checked={ item.value === defaultValue } onChange={ update } />
-							{item.icon && <i className={ item.icon + " wp-menu-image dashicons-before" }></i> }
-							{item.label }
+					options.map( ( option, key ) => (
+						<label key={ key } className={ `mb-cpt-choice${option.icon ? ' mb-cpt-icon' : ''}` }>
+							<input type="radio" data-name={ name } value={ option.value } checked={ option.value === value } onChange={ update } />
+							{option.icon && <i className={ option.icon + " wp-menu-image dashicons-before" }></i> }
+							{option.label }
 						</label>
 					) )
 				}
