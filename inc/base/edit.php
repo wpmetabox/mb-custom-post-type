@@ -42,12 +42,12 @@ class MB_CPT_Base_Edit {
 			return;
 		}
 
-		wp_enqueue_style( $this->post_type, MB_CPT_URL . 'css/style.css', ['wp-components'], MB_CPT_VER );
+		wp_enqueue_style( $this->post_type, MB_CPT_URL . 'assets/style.css', ['wp-components'], MB_CPT_VER );
 
 		$object      = str_replace( 'mb-', '', $this->post_type );
 		$object_name = str_replace( ' ', '', ucwords( str_replace( '-', ' ', $this->post_type ) ) );
 		wp_enqueue_code_editor( ['type' => 'application/x-httpd-php'] );
-		wp_enqueue_script( $this->post_type, MB_CPT_URL . "js/$object.js", ['wp-element', 'wp-components', 'clipboard', 'wp-i18n'], MB_CPT_VER, true );
+		wp_enqueue_script( $this->post_type, MB_CPT_URL . "assets/$object.js", ['wp-element', 'wp-components', 'clipboard', 'wp-i18n'], MB_CPT_VER, true );
 		wp_localize_script( $this->post_type, $object_name, $this->js_vars() );
 		wp_set_script_translations( $this->post_type, 'mb-custom-post-type' );
 	}
