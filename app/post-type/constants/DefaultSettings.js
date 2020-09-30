@@ -53,7 +53,6 @@ const DefaultSettings = {
 	menu_position      : null,
 	menu_icon          : '',
 	capability_type    : 'post',
-	map_meta_cap       : false,
 	supports           : ['title', 'editor', 'thumbnail'],
 	taxonomies         : [],
 	has_archive        : true,

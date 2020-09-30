@@ -8,12 +8,23 @@ import Radio from './Radio';
 import Select from './Select';
 const { useContext } = wp.element;
 
+const ucfirst = str => str.length ? str[ 0 ].toUpperCase() + str.slice( 1 ) : str;
+const normalizeBool = value => {
+	if ( 'true' === value ) {
+		value = true;
+	} else if ( 'false' === value ) {
+		value = false;
+	}
+	return value;
+}
+
 const Control = ( { field, autoFills } ) => {
 	const [ state, setState ] = useContext( PhpSettings );
 
 	const update = e => {
 		const name = e.target.dataset.name;
-		const value = 'checkbox' === e.target.type ? e.target.checked : e.target.value;
+		let value = 'checkbox' === e.target.type ? e.target.checked : e.target.value;
+		value = normalizeBool( value );
 
 		setState( state => {
 			let newState = JSON.parse( JSON.stringify( state ) );
@@ -53,7 +64,5 @@ const Control = ( { field, autoFills } ) => {
 			return <Select label={ field.label } name={ field.name } description={ field.description } options={ field.options } value={ _value } update={ update } />;
 	}
 };
-
-const ucfirst = str => str.length ? str[ 0 ].toUpperCase() + str.slice( 1 ) : str;
 
 export default Control;

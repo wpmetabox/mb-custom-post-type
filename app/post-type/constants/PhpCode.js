@@ -8,7 +8,7 @@ const advanced = settings => {
 };
 
 const showInMenu = settings => {
-	let value = '' === settings.show_in_menu ? true : settings.show_in_menu;
+	let value = settings.show_in_menu;
 	value = [ true, false ].includes( value ) ? value : `'${ value }'`;
 	return `'show_in_menu'${ spaces( settings, 'show_in_menu' ) } => ${ value }`;
 };
@@ -44,7 +44,7 @@ function ${ settings.function_name }() {
 		${ advanced( settings ) },
 		${ archive( settings ) },
 		${ text( settings, 'rest_base' ) },
-		${ showInMenu( settings ) }
+		${ showInMenu( settings ) },
 		${ text( settings, 'menu_icon' ) },
 		${ text( settings, 'capability_type' ) },
 		${ checkboxList( settings, 'supports' ) },
