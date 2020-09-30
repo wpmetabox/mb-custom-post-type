@@ -71,8 +71,8 @@ class MB_CPT_Taxonomy_Register extends MB_CPT_Base_Register {
 
 		// Get all registered custom taxonomies.
 		$taxonomies = $this->get_taxonomies();
-		foreach ( $taxonomies as $slug => $taxonomy ) {
-			register_taxonomy( $slug, $taxonomy['types'], $taxonomy );
+		foreach ( $taxonomies as $slug => $args ) {
+			register_taxonomy( $slug, $args['types'], $args );
 		}
 	}
 
@@ -85,7 +85,7 @@ class MB_CPT_Taxonomy_Register extends MB_CPT_Base_Register {
 			'post_type'              => 'mb-taxonomy',
 			'no_found_rows'          => true,
 			'update_post_meta_cache' => false,
-			'update_post_term_cache' => false
+			'update_post_term_cache' => false,
 		] );
 
 		foreach ( $posts as $post ) {

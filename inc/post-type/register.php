@@ -2,9 +2,6 @@
 use WP_Post as WP_Post;
 
 class MB_CPT_Post_Type_Register extends MB_CPT_Base_Register {
-	/**
-	 * Register custom post types
-	 */
 	public function register_post_types() {
 		// Register main post type 'mb-post-type'.
 		$labels = array(
@@ -46,24 +43,21 @@ class MB_CPT_Post_Type_Register extends MB_CPT_Base_Register {
 		}
 	}
 
-	/**
-	 * Get all registered post types
-	 *
-	 * @return array
-	 */
 	public function get_post_types() {
 		$post_types = [];
 
 		$posts = get_posts( [
-				'posts_per_page' => -1,
-				'post_status'    => 'publish',
-				'post_type'      => 'mb-post-type',
-				'no_found_rows'  => true,
+			'posts_per_page'         => -1,
+			'post_status'            => 'publish',
+			'post_type'              => 'mb-post-type',
+			'no_found_rows'          => true,
+			'update_post_meta_cache' => false,
+			'update_post_term_cache' => false,
 		] );
 
 		foreach ( $posts as $post ) {
 			$data = $this->get_post_type_data( $post );
-			$post_types[ mb_cpt_get_prop( $data, 'slug' ) ?: 'draft_post_type' ] = $this->set_up_post_type( $data );
+			$post_types[ $data['slug'] ] = $data;
 		}
 
 		return $post_types;
@@ -72,7 +66,7 @@ class MB_CPT_Post_Type_Register extends MB_CPT_Base_Register {
 	public function get_post_type_data( WP_Post $post ) {
 		$this->migrate_data( $post );
 
-		return json_decode( $post->post_content );
+		return json_decode( $post->post_content, true );
 	}
 
 	private function migrate_data( WP_Post $post ) {
@@ -113,80 +107,6 @@ class MB_CPT_Post_Type_Register extends MB_CPT_Base_Register {
 			'ID'           => $post->ID,
 			'post_content' => wp_json_encode( $args ),
 		] );
-	}
-
-	public function set_up_post_type( $data ) {
-		$labels = [
-			'singular_name'      => mb_cpt_get_prop( $data, 'labels', 'singular_name' ) ?: __( 'draft_post_type', 'mb-custom-post-type' ),
-			'add_new'            => mb_cpt_get_prop( $data, 'labels', 'add_new' ),
-			'add_new_item'       => mb_cpt_get_prop( $data, 'labels', 'add_new_item' ),
-			'edit_item'          => mb_cpt_get_prop( $data, 'labels', 'edit_item' ),
-			'new_item'           => mb_cpt_get_prop( $data, 'labels', 'new_item' ),
-			'view_item'          => mb_cpt_get_prop( $data, 'labels', 'view_item' ),
-			'view_items'         => mb_cpt_get_prop( $data, 'labels', 'view_items' ),
-			'search_items'       => mb_cpt_get_prop( $data, 'labels', 'search_items' ),
-			'not_found'          => mb_cpt_get_prop( $data, 'labels', 'not_found' ),
-			'not_found_in_trash' => mb_cpt_get_prop( $data, 'labels', 'not_found_in_trash' ),
-			'parent_item_colon'  => mb_cpt_get_prop( $data, 'labels', 'parent_item_colon' ),
-			'all_items'          => mb_cpt_get_prop( $data, 'labels', 'all_items' ),
-			'menu_name'          => mb_cpt_get_prop( $data, 'name' ) ?: __( 'Missing label', 'mb-custom-post-type' )
-		];
-		$args = [
-			'label'  => mb_cpt_get_prop( $data, 'name' ),
-			'labels' => $labels,
-		];
-		$params = [
-			'description',
-			'public',
-			'hierarchical',
-			'exclude_from_search',
-			'publicly_queryable',
-			'show_ui',
-			'show_in_menu',
-			'show_in_nav_menus',
-			'show_in_admin_bar',
-			'show_in_rest',
-			'rest_base',
-			'menu_position',
-			'menu_icon',
-			'capability_type',
-			'supports',
-			'taxonomies',
-			'has_archive',
-			'query_var',
-			'can_export',
-		];
-
-		foreach ( $params as $param ) {
-			if ( property_exists( $data, $param ) ) {
-				$args[ $param ] = $data->$param;
-			}
-		}
-
-		if ( property_exists( $data, 'capability_type' ) && 'custom' === $data->capability_type ) {
-			$args['capability_type'] = [ strtolower( $data->labels->singular_name ), strtolower( $data->name ) ];
-			$args['map_meta_cap'] = true;
-		}
-
-		if ( property_exists( $data, 'has_archive' ) && property_exists( $data, 'archive_slug' ) ) {
-			$args['has_archive'] = $data->archive_slug;
-		}
-
-		if ( ! property_exists( $data, 'rewrite_slug' ) && ! property_exists( $data, 'rewrite_no_front' ) ) {
-			$args['rewrite'] = true;
-		} else {
-			$rewrite = [];
-			if ( property_exists( $data, 'rewrite_slug' ) ) {
-				$rewrite['slug'] = $data->rewrite_slug;
-			}
-			if ( property_exists( $data, 'rewrite_no_front' ) ) {
-				$rewrite['with_front'] = false;
-			}
-
-			$args['rewrite'] = $rewrite;
-		}
-
-		return $args;
 	}
 
 	public function updated_message( $messages ) {
