@@ -57,8 +57,13 @@ class MB_CPT_Base_Edit {
 		$vars['settings'] = json_decode( get_post()->post_content, ARRAY_A );
 
 		if ( 'mb-post-type' === get_current_screen()->id ) {
+			$taxonomies = get_taxonomies( '', 'objects' );
+			$taxonomies = array_diff_key( $taxonomies, array_flip( [
+				'nav_menu',
+				'link_category',
+			] ) );
+
 			$options = [];
-			$taxonomies = mb_cpt_get_taxonomies();
 			foreach ( $taxonomies as $slug => $taxonomy ) {
 				$options[] = [
 					'value'   => $slug,
@@ -70,8 +75,23 @@ class MB_CPT_Base_Edit {
 		}
 
 		if ( 'mb-taxonomy' === get_current_screen()->id ) {
+			$post_types = get_post_types( '', 'objects' );
+			$post_types = array_diff_key( $post_types, array_flip( [
+				'custom_css',
+				'customize_changeset',
+				'oembed_cache',
+				'nav_menu_item',
+				'revision',
+				'user_request',
+				'wp_block',
+
+				'mb-post-type',
+				'mb-taxonomy',
+				'mb-views',
+				'meta-box',
+			] ) );
+
 			$options    = [];
-			$post_types = mb_cpt_get_post_types();
 			foreach ( $post_types as $slug => $post_type ) {
 				$options[] = [
 					'value'   => $slug,

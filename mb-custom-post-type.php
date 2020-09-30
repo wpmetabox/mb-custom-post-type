@@ -22,7 +22,6 @@ if ( ! function_exists( 'mb_cpt_load' ) ) {
 	function mb_cpt_load() {
 		load_plugin_textdomain( 'mb-custom-post-type' );
 
-		require __DIR__ . '/inc/helper.php';
 		require __DIR__ . '/inc/base/register.php';
 		require __DIR__ . '/inc/post-type/register.php';
 		require __DIR__ . '/inc/taxonomy/register.php';
