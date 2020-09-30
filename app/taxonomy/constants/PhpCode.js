@@ -1,9 +1,9 @@
-import { spaces, text, general, labels } from '../../code';
+import { spaces, text, translatableText, general, labels } from '../../code';
 
-const types = settings => settings.post_types.length ? `['${ settings.post_types.join( "', '" ) }']` : null;
+const types = settings => settings.types.length ? `['${ settings.types.join( "', '" ) }']` : null;
 
 const advanced = settings => {
-	const ignore = [ 'slug', 'post_types', 'function_name', 'text_domain', 'label', 'labels', 'description', 'rest_base', 'rewrite' ];
+	const ignore = [ 'slug', 'types', 'function_name', 'text_domain', 'label', 'labels', 'description', 'rest_base', 'rewrite' ];
 
 	let keys = Object.keys( settings ).filter( key => !ignore.includes( key ) );
 	return keys.map( key => general( settings, key ) ).join( ",\n\t\t" );
@@ -30,7 +30,7 @@ function ${ settings.function_name }() {
 		${ labels( settings ) },
 	];
 	$args = [
-		${ text( settings, 'label' ) },
+		${ translatableText( settings, 'label' ) },
 		'labels'${ spaces( settings, 'labels' ) } => $labels,
 		${ text( settings, 'description' ) },
 		${ advanced( settings ) },

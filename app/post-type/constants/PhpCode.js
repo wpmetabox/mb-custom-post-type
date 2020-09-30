@@ -1,4 +1,4 @@
-import { spaces, text, checkboxList, general, labels } from '../../code';
+import { spaces, text, translatableText, checkboxList, general, labels } from '../../code';
 
 const advanced = settings => {
 	const ignore = [ 'slug', 'function_name', 'text_domain', 'label', 'labels', 'description', 'rest_base', 'menu_icon', 'capability_type', 'has_archive', 'archive_slug', 'rewrite', 'supports', 'taxonomies' ];
@@ -32,7 +32,7 @@ function ${ settings.function_name }() {
 		${ labels( settings ) },
 	];
 	$args = [
-		${ text( settings, 'label' ) },
+		${ translatableText( settings, 'label' ) },
 		'labels'${ spaces( settings, 'labels' ) } => $labels,
 		${ text( settings, 'description' ) },
 		${ advanced( settings ) },

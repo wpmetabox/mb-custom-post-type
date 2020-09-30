@@ -15,4 +15,4 @@ const labels = settings => {
     return keys.map( key => translatableText( labels, key ) ).join( ",\n\t\t" );
 };
 
-export { spaces, text, checkboxList, general, labels };
+export { spaces, text, translatableText, checkboxList, general, labels };
