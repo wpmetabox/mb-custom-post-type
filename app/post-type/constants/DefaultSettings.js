@@ -62,7 +62,7 @@ const DefaultSettings = {
 		slug      : '',
 		with_front: false,
 	},
-	query_var       : '',
+	query_var       : true,
 	can_export      : true,
 	delete_with_user: true,
 }
