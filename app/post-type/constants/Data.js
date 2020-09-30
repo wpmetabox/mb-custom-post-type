@@ -108,7 +108,7 @@ export const AdvancedDatas = [
 	{ type: 'select', name: 'show_in_menu', label: __( 'Show in menu', 'mb-custom-post-type' ), description: __( 'Where to show the post type in the admin menu. show_ui must be true.', 'mb-custom-post-type' ), options: ShowInMenuData, default: 0 },
 	{ type: 'checkbox', name: 'show_in_nav_menus', label: __( 'Show in nav menus', 'mb-custom-post-type' ), description: __( 'Whether post type is available for selection in navigation menus.', 'mb-custom-post-type' ), checked: true },
 	{ type: 'checkbox', name: 'show_in_admin_bar', label: __( 'Show in admin bar', 'mb-custom-post-type' ), description: __( 'Whether to make this post type available in the WordPress admin bar.', 'mb-custom-post-type' ), checked: true },
-	{ type: 'checkbox', name: 'show_in_rest', label: __( 'Show in REST', 'mb-custom-post-type' ), description: __( 'Whether to add the post type in the REST API.', 'mb-custom-post-type' ), checked: true },
+	{ type: 'checkbox', name: 'show_in_rest', label: __( 'Show in REST', 'mb-custom-post-type' ), description: __( 'Whether to expose this post type in the REST API. Must be true to enable the Gutenberg editor.', 'mb-custom-post-type' ), checked: true },
 	{ type: 'text', name: 'rest_base', label: __( 'REST API base slug', 'mb-custom-post-type' ), description: __( 'Leave empty to use the post type slug.', 'mb-custom-post-type' ), placeholder: __( 'Slug to use in REST API URL', 'mb-custom-post-type' ) },
 	{ type: 'select', name: 'menu_position', label: __( 'Menu position after', 'mb-custom-post-type' ), options: MenuPosition, default: '' },
 	{ type: 'radio', name: 'menu_icon', label: __( 'Menu icon', 'mb-custom-post-type' ), options: Icons },
