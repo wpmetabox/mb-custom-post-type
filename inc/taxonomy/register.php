@@ -98,54 +98,46 @@ class MB_CPT_Taxonomy_Register extends MB_CPT_Base_Register {
 
 	public function get_taxonomy_data( WP_Post $post ) {
 		$this->migrate_data( $post );
-
-		return json_decode( $post->post_content, true );
+		return empty( $post->post_content ) ? $this->migrate_data( $post ) : json_decode( $post->post_content, true );
 	}
 
-	/**
-	 * Get new taxonomy data from mb custom taxonomy id.
-	 *
-	 * @param  int $mb_cpt_id MB custom taxonomy id.
-	 * @return array          Array contains label and args of new taxonomy.
-	 */
 	public function migrate_data( WP_Post $post ) {
-		if ( ! empty( $post->post_content ) ) {
-			return;
-		}
-
-		$args   = [];
+		$args      = [ 'labels' => [] ];
 		$post_meta = get_post_meta( $post->ID );
 
+		unset( $post_meta['_edit_last'], $post_meta['_edit_lock'] );
+		$this->change_key( $post_meta, 'args_taxonomy', 'slug' );
+		$this->change_key( $post_meta, 'args_post_types', 'types' );
 		foreach ( $post_meta as $key => $value ) {
-			$value = 1 === count( $value ) && ! in_array( $key, [ 'args_taxonomies', 'args_supports' ], true ) ? $value[0] : $value;
+			$this->unarray( $value, $key );
+			$this->normalize_checkbox( $value );
 
-			if ( ! in_array( $key, [ 'args_menu_position' ] ) ) {
-				$value = is_numeric( $value ) ? ( 1 === intval( $value ) ? true : false ) : $value;
-			} else {
-				$value = intval( $value );
-			}
-
-			$key = str_replace( 'args_', '', $key );
-			$args[ $key ] = $value;
-
-			if ( strpos( $key, 'label_' ) ) {
+			if ( false !== strpos( $key, 'label_' ) ) {
 				$key = str_replace( 'label_', '', $key );
-				$args[ 'labels' ][] = $value;
+				$args['labels'][ $key ] = $value;
+			} else {
+				$key = str_replace( 'args_', '', $key );
+				$args[ $key ] = $value;
 			}
 
 			// delete_post_meta( $post->ID, $key );
 		}
 
-		$args['slug'] = $args['taxonomy'];
-		unset( $args['taxonomy'] );
-
-		$args['function_name'] = empty( $args['function_name'] ) ? 'your_function_name' : $args['function_name'];
-		$args['text_domain'] = empty( $args['text_domain'] ) ? 'text-domain' : $args['text_domain'];
+		// Rewrite.
+		$rewrite = [];
+		if ( isset( $args['rewrite_slug'] ) ) {
+			$rewrite['slug'] = $args['rewrite_slug'];
+		}
+		$rewrite['with_front'] = isset( $args['rewrite_no_front'] ) ? ! $args['rewrite_no_front'] : true;
+		$rewrite['hierarchical'] = isset( $args['rewrite_hierarchical'] ) ? (bool) $args['rewrite_hierarchical'] : false;
+		$args['rewrite'] = $rewrite;
+		unset( $args['rewrite_slug'], $args['rewrite_no_front'], $args['rewrite_hierarchical'] );
 
 		wp_update_post( [
 			'ID'           => $post->ID,
 			'post_content' => wp_json_encode( $args ),
 		] );
+		return $args;
 	}
 
 	/**
