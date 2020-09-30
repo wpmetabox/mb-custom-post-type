@@ -1,158 +1,99 @@
 <?php
-/**
- * Base class to add new or edit object.
- *
- * @package    Meta Box
- * @subpackage MB Custom Post Type
- * @author     Tran Ngoc Tuan Anh <rilwis@gmail.com>
- */
+class MB_CPT_Base_Edit {
+	private $post_type;
 
-/**
- * The base class which controls all operations for creating / modifying custom post type.
- */
-abstract class MB_CPT_Base_Edit {
-
-	/**
-	 * Post type name.
-	 *
-	 * @var string
-	 */
-	public $post_type;
-
-	/**
-	 * Used to prevent duplicated calls like revisions, manual hook to wp_insert_post, etc.
-	 *
-	 * @var bool
-	 */
-	public $saved = false;
-
-	/**
-	 * Initializing.
-	 *
-	 * @param string $post_type Post type.
-	 */
 	public function __construct( $post_type ) {
 		$this->post_type = $post_type;
 
-		// Enqueue scripts.
-		add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_scripts' ) );
-		// Add meta box.
-		add_filter( 'rwmb_meta_boxes', array( $this, 'register_meta_boxes' ) );
-		// Modify post information after save post.
-		add_action( "save_post_$post_type", array( $this, 'save_post' ) );
-		// Add ng-controller to form.
-		add_action( 'post_edit_form_tag', array( $this, 'add_ng_controller' ) );
+		add_action( 'edit_form_after_title', [ $this, 'output_root' ] );
+		add_action( 'add_meta_boxes', [ $this, 'register_upgrade_meta_box' ] );
+		add_action( 'admin_enqueue_scripts', [ $this, 'enqueue_scripts' ] );
 	}
 
-	/**
-	 * Enqueue scripts and styles.
-	 */
+	public function output_root() {
+		if ( $this->is_screen() ) {
+			echo '<div id="root" class="mb-cpt"></div>';
+		}
+	}
+
+	public function register_upgrade_meta_box( $meta_boxes ) {
+		if ( $this->is_screen() && ! $this->is_premium_user() ) {
+			add_meta_box( 'mb-cpt-upgrade', __( 'Upgrade', 'mb-custom-post-type' ), [ $this, 'upgrade_message' ], null, 'side', 'low' );
+		}
+	}
+
+	public function upgrade_message() {
+		?>
+		<p><?php esc_html_e( 'Upgrade now to have more features & speedy technical support:', 'mb-custom-post-type' ) ?></p>
+		<ul>
+			<li><span class="dashicons dashicons-yes"></span><?php esc_html_e( 'Create custom fields with UI', 'mb-custom-post-type' ) ?></li>
+			<li><span class="dashicons dashicons-yes"></span><?php esc_html_e( 'Add custom fields to terms and users', 'mb-custom-post-type' ) ?></li>
+			<li><span class="dashicons dashicons-yes"></span><?php esc_html_e( 'Create custom settings pages', 'mb-custom-post-type' ) ?></li>
+			<li><span class="dashicons dashicons-yes"></span><?php esc_html_e( 'Create frontend submission forms', 'mb-custom-post-type' ) ?></li>
+			<li><span class="dashicons dashicons-yes"></span><?php esc_html_e( 'Create frontend templates', 'mb-custom-post-type' ) ?></li>
+			<li><span class="dashicons dashicons-yes"></span><?php esc_html_e( 'And much more!', 'mb-custom-post-type' ) ?></li>
+		</ul>
+		<a href="https://metabox.io/pricing/?utm_source=plugin_cpt&utm_medium=btn_upgrade&utm_campaign=cpt_upgrade" class="button" target="_blank" rel="noopenner noreferer"><?php esc_html_e( 'Upgrade now', 'mb-custom-post-type' ) ?></a>
+		<?php
+	}
+
 	public function enqueue_scripts() {
-		if ( ! $this->is_edit_screen() ) {
+		if ( ! $this->is_screen() ) {
 			return;
 		}
 
-		$object = str_replace( 'mb-', '', $this->post_type );
+		wp_enqueue_style( $this->post_type, MB_CPT_URL . 'css/style.css', ['wp-components'], MB_CPT_VER );
 
-		wp_enqueue_style( 'highlightjs', MB_CPT_URL . 'css/atom-one-dark.min.css', array(), '9.15.8' );
-		wp_enqueue_style( 'mb-cpt', MB_CPT_URL . 'css/style.css', array(), '1.8.0' );
-
-		wp_enqueue_script( 'angular', MB_CPT_URL . 'js/angular.min.js', array( 'jquery' ), '1.7.8', true );
-		wp_enqueue_script( 'highlightjs', MB_CPT_URL . 'js/highlight.min.js', array(), '9.15.8', true );
-		wp_enqueue_script(
-			'mb-cpt',
-			MB_CPT_URL . "js/$object.js",
-			array(
-				'jquery',
-				'angular',
-				'clipboard',
-				'highlightjs',
-			),
-			'1.0.0',
-			true
-		);
-		wp_localize_script( 'mb-cpt', 'MbCptLabels', $this->js_vars() );
+		$object      = str_replace( 'mb-', '', $this->post_type );
+		$object_name = str_replace( ' ', '', ucwords( str_replace( '-', ' ', $this->post_type ) ) );
+		wp_enqueue_code_editor( ['type' => 'application/x-httpd-php'] );
+		wp_enqueue_script( $this->post_type, MB_CPT_URL . "js/$object.js", ['wp-element', 'wp-components', 'clipboard', 'wp-i18n'], MB_CPT_VER, true );
+		wp_localize_script( $this->post_type, $object_name, $this->js_vars() );
+		wp_set_script_translations( $this->post_type, 'mb-custom-post-type' );
 	}
 
-	/**
-	 * List of Javascript variables.
-	 *
-	 * @return array
-	 */
-	public function js_vars() {
-		return array(
-			'copy'       => __( 'Copy', 'mb-custom-post-type' ),
-			'copied'     => __( 'Copied', 'mb-custom-post-type' ),
-			'manualCopy' => __( 'Press Ctrl-C to copy', 'mb-custom-post-type' ),
-		);
-	}
+	private function js_vars() {
+		$vars = [];
+		$vars['settings'] = json_decode( get_post()->post_content, ARRAY_A );
 
-	/**
-	 * Register meta boxes for add/edit mb-post-type page
-	 *
-	 * @param array $meta_boxes Meat boxes.
-	 *
-	 * @return array
-	 */
-	public function register_meta_boxes( $meta_boxes ) {
-		return $meta_boxes;
-	}
-
-	/**
-	 * Modify post information and post meta after save post
-	 *
-	 * @param int $post_id Post ID.
-	 */
-	public function save_post( $post_id ) {
-		$singular = filter_input( INPUT_POST, 'label_singular_name', FILTER_SANITIZE_STRING );
-
-		// If label_singular_name is empty or if this function is called to prevent duplicated calls like revisions, manual hook to wp_insert_post, etc.
-		if ( ! $singular || true === $this->saved ) {
-			return;
+		if ( 'mb-post-type' === get_current_screen()->id ) {
+			$options = [];
+			$taxonomies = mb_cpt_get_taxonomies();
+			foreach ( $taxonomies as $slug => $taxonomy ) {
+				$options[] = [
+					'value'   => $slug,
+					'label'   => $taxonomy->labels->singular_name,
+					'checked' => false,
+				];
+			}
+			$vars['taxonomies'] = $options;
 		}
 
-		$this->saved = true;
+		if ( 'mb-taxonomy' === get_current_screen()->id ) {
+			$options    = [];
+			$post_types = mb_cpt_get_post_types();
+			foreach ( $post_types as $slug => $post_type ) {
+				$options[] = [
+					'value'   => $slug,
+					'label'   => $post_type->labels->singular_name,
+					'checked' => 'post' === $slug,
+				];
+			}
+			$vars['types'] = $options;
+		}
 
-		// Update post title.
-		$post = array(
-			'ID'         => $post_id,
-			'post_title' => $singular,
-		);
-
-		wp_update_post( $post );
-
-		// Flush rewrite rules after create new or edit taxonomies.
-		flush_rewrite_rules();
+		return $vars;
 	}
 
-	/**
-	 * Check if current link is mb-post-type post type or not.
-	 *
-	 * @return boolean
-	 */
-	public function is_edit_screen() {
+	private function is_screen() {
 		$screen = get_current_screen();
-
 		return 'post' === $screen->base && $this->post_type === $screen->post_type;
 	}
 
-	/**
-	 * Add angular controller to form tag.
-	 */
-	public function add_ng_controller() {
-		if ( $this->is_edit_screen() ) {
-			$object = str_replace( array( 'mb-', '-' ), array( '', ' ' ), $this->post_type );
-			$object = str_replace( ' ', '', ucwords( $object ) );
-			echo 'ng-controller="' . esc_attr( $object ) . 'Controller"';
+	private function is_premium_user() {
+		if ( ! defined( 'RWMB_VER' ) ) {
+			return false;
 		}
-	}
-
-	/**
-	 * Check if current user is a premium user.
-	 *
-	 * @return bool
-	 */
-	public function is_premium_user() {
 		$update_option = new RWMB_Update_Option();
 		$update_checker = new RWMB_Update_Checker( $update_option );
 		return $update_checker->has_extensions();

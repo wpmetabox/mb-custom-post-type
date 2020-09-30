@@ -1,0 +1,138 @@
+#mb-cpt-upgrade .dashicons {
+	color: #46b450;
+}
+
+#mb-cpt {
+	margin-top: 0;
+}
+.mb-cpt {
+	--color-accent: #0073aa;
+	--color-gray: #999;
+	--color-light: #ccd0d4;
+	--color-red: #e53e3e;
+	--color-pink: #ffebe8;
+
+	// Elements
+	input[type="text"],
+	input[type="number"],
+	textarea,
+	select {
+		display: block;
+		width: 100%;
+		max-width: none;
+	}
+	svg {
+		width: 16px;
+		height: 16px;
+		fill: var(--color-gray);
+	}
+	pre {
+		padding: 0;
+	}
+	.alert-error {
+		color: var(--color-red);
+		background: var(--color-pink);
+	}
+	&-required {
+		color: var(--color-red);
+	}
+	&-loading {
+		margin-left: 12px;
+		font-style: italic;
+	}
+
+	// Fields
+	&-field {
+		margin-bottom: 24px;
+		display: flex;
+		justify-content: space-between;
+	}
+	&-label {
+		width: 25%;
+		// font-weight: 700;
+	}
+	&-input {
+		flex: 1;
+	}
+	&-description {
+		font-style: italic;
+	}
+
+	&-choice {
+		margin-right: 12px;
+	}
+	&-icon {
+		position: relative;
+		display: inline-block;
+		margin: 0 4px 4px 0;
+
+		i {
+			border: 1px solid var(--color-light);
+			border-radius: 4px;
+			text-align: center;
+			width: 36px;
+			height: 36px;
+			display: inline-flex;
+			justify-content: center;
+			align-items: center;
+		}
+
+		input {
+			position: absolute;
+			opacity: 0;
+
+			&:checked ~ i {
+				color: #fff;
+				background-color: var(--color-accent);
+				border-color: var(--color-accent);
+			}
+		}
+	}
+
+	&-result {
+		code {
+			font-size: 12px;
+		}
+		.react-codemirror2 {
+			border: 1px solid var(--color-light);
+			margin-bottom: 24px;
+		}
+		&__body {
+			position: relative;
+		}
+		.button {
+			position: absolute;
+			top: 0;
+			right: 0;
+			border-color: var(--color-light);
+			border-radius: 0 0 0 4px;
+			z-index: 9;
+		}
+	}
+}
+
+// Tabs
+.components-tab-panel__tabs,
+.components-tab-panel__tab-content {
+	background: #fff;
+	border: 1px solid var(--color-light);
+}
+.components-tab-panel__tab-content {
+	border-top: none;
+	padding: 24px 16px 0;
+	margin-bottom: 24px;
+}
+.components-tab-panel__tabs {
+	align-items: center;
+}
+.mb-cpt-tabs {
+	.mb-cpt-code {
+		margin-left: auto;
+		margin-right: 12px;
+		height: auto;
+
+		&.is-active {
+			box-shadow: none;
+		}
+	}
+}

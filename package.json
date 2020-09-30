@@ -1,0 +1,39 @@
+{
+	"name": "mb-cpt",
+	"version": "1.0.0",
+	"description": "",
+	"main": "index.js",
+	"scripts": {
+		"css": "node-sass --output-style compressed -x css/style.scss -o css",
+		"watch": "node-sass --output-style compressed -x -w css -o css",
+		"start": "webpack --mode development",
+		"build": "webpack --mode production"
+	},
+	"dependencies": {
+		"dot-prop": "^5.3.0",
+		"react-clipboard.js": "^2.0.16",
+		"react-codemirror2": "^7.2.1",
+		"slugify": "^1.4.5"
+	},
+	"devDependencies": {
+		"@babel/core": "^7.11.6",
+		"@babel/plugin-transform-react-jsx": "^7.10.4",
+		"babel-loader": "^8.1.0",
+		"babel-preset-env": "^1.7.0",
+		"node-sass": "^4.14.1",
+		"webpack": "^4.44.1",
+		"webpack-cli": "^3.3.12"
+	},
+	"browserslist": {
+		"production": [
+			">0.2%",
+			"not dead",
+			"not op_mini all"
+		],
+		"development": [
+			"last 1 chrome version",
+			"last 1 firefox version",
+			"last 1 safari version"
+		]
+	}
+}
