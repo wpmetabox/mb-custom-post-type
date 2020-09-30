@@ -1,5 +1,5 @@
 === MB Custom Post Types & Custom Taxonomies ===
-Contributors: metabox, rilwis, duc88b, fitwp, truongwp
+Contributors: elightup, metabox, rilwis, duc88b, truongwp
 Donate link: https://metabox.io/pricing/
 Tags: cms, custom, custom post types, custom post type, cpt, post, post types, post type, types
 Requires at least: 5.0
