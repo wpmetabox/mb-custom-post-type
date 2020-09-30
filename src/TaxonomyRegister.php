@@ -68,6 +68,9 @@ class TaxonomyRegister extends Register {
 		// Get all registered custom taxonomies.
 		$taxonomies = $this->get_taxonomies();
 		foreach ( $taxonomies as $slug => $args ) {
+			if ( isset( $args['meta_box_cb'] ) && false !== $args['meta_box_cb'] ) {
+				unset( $args['meta_box_cb'] );
+			}
 			register_taxonomy( $slug, $args['types'], $args );
 		}
 	}
