@@ -115,7 +115,7 @@ class PostTypeRegister extends Register {
 		$label            = ucfirst( $label_lower );
 		$revision         = filter_input( INPUT_GET, 'revision', FILTER_SANITIZE_NUMBER_INT );
 
-		$message = array(
+		$message = [
 			0  => '', // Unused. Messages start at index 1.
 			// translators: %s: Name of the custom post type in singular form.
 			1  => sprintf( __( '%s updated.', 'mb-custom-post-type' ), $label ),
@@ -135,9 +135,92 @@ class PostTypeRegister extends Register {
 			9  => sprintf( __( '%1$s scheduled for: <strong>%2$s</strong>.', 'mb-custom-post-type' ), $label, date_i18n( __( 'M j, Y @ G:i', 'mb-custom-post-type' ), strtotime( $post->post_date ) ) ),
 			// translators: %s: Name of the custom post type in singular form.
 			10 => sprintf( __( '%s draft updated.', 'mb-custom-post-type' ), $label ),
-		);
+		];
+
+		// Get all post where where post_type = mb-post-type.
+		$post_types = get_posts( [
+			'posts_per_page'         => -1,
+			'post_status'            => 'any',
+			'post_type'              => 'mb-post-type',
+			'no_found_rows'          => true,
+			'update_post_meta_cache' => false,
+			'update_post_term_cache' => false,
+		] );
+		foreach ( $post_types as $post_type ) {
+			$data = $this->get_post_type_data( $post_type );
+			$slug = $data['slug'];
+
+			$messages[ $slug ] = $message;
+
+			if ( empty( $data['publicly_queryable'] ) ) {
+				continue;
+			}
+
+			$permalink = get_permalink( $post->ID );
+
+			// translators: %s: Post link, %s: View post text, %s: Post type label.
+			$view_link             = sprintf( ' <a href="%s">%s</a>.', esc_url( $permalink ), sprintf( __( 'View %s', 'mb-custom-post-type' ), $label_lower ) );
+			$messages[ $slug ][1] .= $view_link;
+			$messages[ $slug ][6] .= $view_link;
+			$messages[ $slug ][9] .= $view_link;
+
+			$preview_permalink = add_query_arg( 'preview', 'true', $permalink );
+			// translators: %s: Post link, %s: Preview post text, %s: Post type label.
+			$preview_link           = sprintf( ' <a target="_blank" href="%s">%s</a>.', esc_url( $preview_permalink ), sprintf( __( 'Preview %s', 'mb-custom-post-type' ), $label_lower ) );
+			$messages[ $slug ][8]  .= $preview_link;
+			$messages[ $slug ][10] .= $preview_link;
+		}
+
 		$messages['mb-post-type'] = $message;
 
 		return $messages;
+	}
+
+	public function bulk_updated_messages( $bulk_messages, $bulk_counts ) {
+		$labels = [
+			'mb-post-type' => [
+				'singular' => __( 'post type', 'mb-custom-post-type' ),
+				'plural'   => __( 'post types', 'mb-custom-post-type' ),
+			],
+		];
+
+		// Get all post where where post_type = mb-post-type.
+		$post_types = get_posts( [
+			'posts_per_page'         => -1,
+			'post_status'            => 'any',
+			'post_type'              => 'mb-post-type',
+			'no_found_rows'          => true,
+			'update_post_meta_cache' => false,
+			'update_post_term_cache' => false,
+		] );
+		foreach ( $post_types as $post_type ) {
+			$data = $this->get_post_type_data( $post_type );
+			$slug = $data['slug'];
+
+			$labels[ $slug ] = [
+				'singular' => strtolower( $data['labels']['singular_name'] ),
+				'plural'   => strtolower( $data['labels']['name'] ),
+			];
+		}
+
+		foreach ( $labels as $post_type => $label ) {
+			$singular = $label['singular'];
+			$plural   = $label['plural'];
+
+			$bulk_messages[ $post_type ] = array(
+				// translators: %1$s: Number of items, %2$s: Name of the post type in singular or plural form.
+				'updated'   => sprintf( __( '%1$s %2$s updated.', 'mb-custom-post-type' ), $bulk_counts['updated'], $bulk_counts['updated'] > 1 ? $plural : $singular ),
+				// translators: %1$s: Number of items, %2$s: Name of the post type in singular or plural form.
+				'locked'    => sprintf( __( '%1$s %2$s not updated, somebody is editing.', 'mb-custom-post-type' ), $bulk_counts['locked'], $bulk_counts['locked'] > 1 ? $plural : $singular ),
+				// translators: %1$s: Number of items, %2$s: Name of the post type in singular or plural form.
+				'deleted'   => sprintf( __( '%1$s %2$s permanently deleted.', 'mb-custom-post-type' ), $bulk_counts['deleted'], $bulk_counts['deleted'] > 1 ? $plural : $singular ),
+				// translators: %1$s: Number of items, %2$s: Name of the post type in singular or plural form.
+				'trashed'   => sprintf( __( '%1$s %2$s moved to the Trash.', 'mb-custom-post-type' ), $bulk_counts['trashed'], $bulk_counts['trashed'] > 1 ? $plural : $singular ),
+				// translators: %1$s: Number of items, %2$s: Name of the post type in singular or plural form.
+				'untrashed' => sprintf( __( '%1$s %2$s restored from the Trash.', 'mb-custom-post-type' ), $bulk_counts['untrashed'], $bulk_counts['untrashed'] > 1 ? $plural : $singular ),
+			);
+		}
+
+		return $bulk_messages;
 	}
 }

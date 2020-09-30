@@ -135,13 +135,6 @@ class TaxonomyRegister extends Register {
 		return $args;
 	}
 
-	/**
-	 * Custom post updated messages
-	 *
-	 * @param array $messages Post messages.
-	 *
-	 * @return array
-	 */
 	public function updated_message( $messages ) {
 		$post     = get_post();
 		$revision = filter_input( INPUT_GET, 'revision', FILTER_SANITIZE_NUMBER_INT );
@@ -165,14 +158,6 @@ class TaxonomyRegister extends Register {
 		return $messages;
 	}
 
-	/**
-	 * Custom post management WordPress messages
-	 *
-	 * @param array $bulk_messages Post bulk messages.
-	 * @param array $bulk_counts   Number of posts.
-	 *
-	 * @return array
-	 */
 	public function bulk_updated_messages( $bulk_messages, $bulk_counts ) {
 		$bulk_messages['mb-taxonomy'] = array(
 			// translators: %s: Name of the taxonomy in singular and plural form.

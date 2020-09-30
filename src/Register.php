@@ -5,6 +5,7 @@ abstract class Register {
 	public function __construct() {
 		add_action( 'init', [ $this, 'register' ], 5 );
 		add_filter( 'post_updated_messages', [ $this, 'updated_message' ] );
+		add_filter( 'bulk_post_updated_messages', [ $this, 'bulk_updated_messages' ], 10, 2 );
 	}
 
 	// Migration helper methods.
