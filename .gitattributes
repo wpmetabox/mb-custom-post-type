@@ -4,10 +4,13 @@
 # Ignore files when export
 .DS_Store export-ignore
 Thumbs.db export-ignore
+
 *.json export-ignore
 *.md export-ignore
+.distignore export-ignore
 .github export-ignore
 .gitattributes export-ignore
 .gitignore export-ignore
+
 app export-ignore
 assets/*.scss export-ignore

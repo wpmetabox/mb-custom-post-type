@@ -1,0 +1,14 @@
+/.git
+/.github
+
+.DS_Store
+Thumbs.db
+
+app
+assets/*.scss
+.distignore
+.gitattributes
+.gitignore
+*.json
+README.md
+webpack.config.js
