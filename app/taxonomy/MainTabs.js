@@ -1,4 +1,4 @@
-import { CodeDatas, BasicDatas, LabelDatas, PostTypeDatas, AdvancedDatas } from './constants/Data';
+import { CodeDatas, BasicDatas, LabelDatas, AdvancedDatas } from './constants/Data';
 import Control from '../controls/Control';
 import Result from './Result';
 import CheckboxList from '../controls/CheckboxList';
@@ -35,7 +35,7 @@ const panels = {
 	general: BasicDatas.map( ( field, key ) => <Control key={ key } field={ field } autoFills={ autoFills.filter( f => f.updateFrom === field.name ) } /> ),
 	labels: LabelDatas.map( ( field, key ) => <Control key={ key } field={ field } /> ),
 	advanced: AdvancedDatas.map( ( field, key ) => <Control key={ key } field={ field } /> ),
-	post_types: <CheckboxList name="post_types" options={ PostTypeDatas } description={ __( 'Post types for the taxonomy:', 'mb-custom-post-type' ) } />,
+	post_types: <CheckboxList name="post_types" options={ MbTaxonomy.types } description={ __( 'Post types for the taxonomy:', 'mb-custom-post-type' ) } />,
 	code: (
 		<>
 			{ CodeDatas.map( ( field, key ) => <Control key={ key } field={ field } /> ) }

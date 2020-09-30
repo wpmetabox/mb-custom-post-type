@@ -1,4 +1,4 @@
-import { CodeDatas, BasicDatas, LabelDatas, TaxonomyDatas, SupportDatas, AdvancedDatas } from './constants/Data';
+import { CodeDatas, BasicDatas, LabelDatas, SupportDatas, AdvancedDatas } from './constants/Data';
 import Control from '../controls/Control';
 import CheckboxList from '../controls/CheckboxList';
 import Result from './Result';
@@ -40,7 +40,7 @@ const panels = {
 	labels: LabelDatas.map( ( field, key ) => <Control key={ key } field={ field } /> ),
 	advanced: AdvancedDatas.map( ( field, key ) => <Control key={ key } field={ field } /> ),
 	supports: <CheckboxList name="supports" options={ SupportDatas } description={ __( 'Core features the post type supports:', 'mb-custom-post-type' ) } />,
-	taxonomies: <CheckboxList name="taxonomies" options={ TaxonomyDatas } description={ __( 'Taxonomies that will be registered for the post type:', 'mb-custom-post-type' ) } />,
+	taxonomies: <CheckboxList name="taxonomies" options={ MbPostType.taxonomies } description={ __( 'Taxonomies that will be registered for the post type:', 'mb-custom-post-type' ) } />,
 	code: (
 		<>
 			{ CodeDatas.map( ( field, key ) => <Control key={ key } field={ field } /> ) }

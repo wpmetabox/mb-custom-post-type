@@ -56,21 +56,31 @@ class MB_CPT_Base_Edit {
 		$vars = [];
 		$vars['settings'] = json_decode( get_post()->post_content, ARRAY_A );
 
-		if ( 'mb-taxonomy' !== get_current_screen()->id ) {
-			return $vars;
+		if ( 'mb-post-type' === get_current_screen()->id ) {
+			$options = [];
+			$taxonomies = mb_cpt_get_taxonomies();
+			foreach ( $taxonomies as $slug => $taxonomy ) {
+				$options[] = [
+					'value'   => $slug,
+					'label'   => $taxonomy->labels->singular_name,
+					'checked' => false,
+				];
+			}
+			$vars['taxonomies'] = $options;
 		}
 
-		$options    = [];
-		$post_types = mb_cpt_get_post_types();
-		foreach ( $post_types as $post_type => $post_type_object ) {
-			$options[] = [
-				'value'   => $post_type,
-				'label'   => $post_type_object->labels->singular_name,
-				'checked' => 'post' === $post_type,
-			];
+		if ( 'mb-taxonomy' === get_current_screen()->id ) {
+			$options    = [];
+			$post_types = mb_cpt_get_post_types();
+			foreach ( $post_types as $slug => $post_type ) {
+				$options[] = [
+					'value'   => $slug,
+					'label'   => $post_type->labels->singular_name,
+					'checked' => 'post' === $slug,
+				];
+			}
+			$vars['types'] = $options;
 		}
-
-		$vars['postTypeOptions'] = $options;
 
 		return $vars;
 	}

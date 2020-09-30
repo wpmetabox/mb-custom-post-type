@@ -22,3 +22,13 @@ function mb_cpt_get_post_types() {
 
 	return $post_types;
 }
+
+function mb_cpt_get_taxonomies() {
+	$taxonomies = get_taxonomies( '', 'objects' );
+	$taxonomies = array_diff_key( $taxonomies, array_flip( [
+		'nav_menu',
+		'link_category',
+	] ) );
+
+	return $taxonomies;
+}

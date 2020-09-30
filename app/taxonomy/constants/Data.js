@@ -36,8 +36,6 @@ export const LabelDatas = [
 	{ type: 'text', name: 'labels.menu_name', label: __( 'Menu name', 'mb-custom-post-type' ), default: __( '%name%', 'mb-custom-post-type' ), updateFrom: 'labels.name' },
 ];
 
-export const PostTypeDatas = MbTaxonomy.postTypeOptions;
-
 export const AdvancedDatas = [
 	{ type: 'textarea', name: 'description', label: __( 'Description', 'mb-custom-post-type' ), description: __( 'A short descriptive summary of what the taxonomy is for.', 'mb-custom-post-type' ) },
 	{ type: 'checkbox', name: 'public', label: __( 'Public', 'mb-custom-post-type' ), description: __( 'Whether a taxonomy is intended for use publicly either via the admin interface or by front-end users.', 'mb-custom-post-type' ), checked: true },

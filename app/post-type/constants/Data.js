@@ -59,11 +59,6 @@ export const SupportDatas = [
 	{ value: 'post-formats', label: __( 'Post formats', 'mb-custom-post-type' ), checked: false },
 ];
 
-export const TaxonomyDatas = [
-	{ value: 'category', label: __( 'Category', 'mb-custom-post-type' ), checked: false },
-	{ value: 'tag', label: __( 'Tag', 'mb-custom-post-type' ), checked: false },
-];
-
 const CapabilityDatas = [
 	{ value: 'post', label: __( 'Post', 'mb-custom-post-type' ) },
 	{ value: 'page', label: __( 'Page', 'mb-custom-post-type' ) },
