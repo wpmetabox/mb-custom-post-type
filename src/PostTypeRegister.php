@@ -1,8 +1,10 @@
 <?php
-use WP_Post as WP_Post;
+namespace MBCPT;
 
-class MB_CPT_Post_Type_Register extends MB_CPT_Base_Register {
-	public function register_post_types() {
+use WP_Post;
+
+class PostTypeRegister extends Register {
+	public function register() {
 		// Register main post type 'mb-post-type'.
 		$labels = array(
 			'name'               => _x( 'Post Types', 'Post Type General Name', 'mb-custom-post-type' ),

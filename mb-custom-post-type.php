@@ -14,6 +14,10 @@
 defined( 'ABSPATH' ) || die;
 
 if ( ! function_exists( 'mb_cpt_load' ) ) {
+	if ( file_exists( __DIR__ . '/vendor' ) ) {
+		require __DIR__ . '/vendor/autoload.php';
+	}
+
 	define( 'MB_CPT_VER', '1.9.5' );
 	define( 'MB_CPT_URL', plugin_dir_url( __FILE__ ) );
 
@@ -22,12 +26,8 @@ if ( ! function_exists( 'mb_cpt_load' ) ) {
 	function mb_cpt_load() {
 		load_plugin_textdomain( 'mb-custom-post-type' );
 
-		require __DIR__ . '/inc/base/register.php';
-		require __DIR__ . '/inc/post-type/register.php';
-		require __DIR__ . '/inc/taxonomy/register.php';
-
-		new MB_CPT_Post_Type_Register;
-		new MB_CPT_Taxonomy_Register;
+		new MBCPT\PostTypeRegister;
+		new MBCPT\TaxonomyRegister;
 
 		if ( ! is_admin() ) {
 			return;
@@ -36,11 +36,8 @@ if ( ! function_exists( 'mb_cpt_load' ) ) {
 		// Show Meta Box admin menu.
 		add_filter( 'rwmb_admin_menu', '__return_true' );
 
-		require __DIR__ . '/inc/base/edit.php';
-		require __DIR__ . '/inc/about/about.php';
-
-		new MB_CPT_Base_Edit( 'mb-post-type' );
-		new MB_CPT_Base_Edit( 'mb-taxonomy' );
-		new MB_CPT_About_Page;
+		new MBCPT\Edit( 'mb-post-type' );
+		new MBCPT\Edit( 'mb-taxonomy' );
+		new MBCPT\About;
 	}
 }

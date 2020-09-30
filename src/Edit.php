@@ -1,5 +1,7 @@
 <?php
-class MB_CPT_Base_Edit {
+namespace MBCPT;
+
+class Edit {
 	private $post_type;
 
 	public function __construct( $post_type ) {
@@ -114,8 +116,8 @@ class MB_CPT_Base_Edit {
 		if ( ! defined( 'RWMB_VER' ) ) {
 			return false;
 		}
-		$update_option = new RWMB_Update_Option();
-		$update_checker = new RWMB_Update_Checker( $update_option );
+		$update_option = new \RWMB_Update_Option();
+		$update_checker = new \RWMB_Update_Checker( $update_option );
 		return $update_checker->has_extensions();
 	}
 }

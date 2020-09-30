@@ -1,10 +1,9 @@
 <?php
-use WP_Post as WP_Post;
+namespace MBCPT;
 
-class MB_CPT_Taxonomy_Register extends MB_CPT_Base_Register {
-	/**
-	 * Initializing.
-	 */
+use WP_Post;
+
+class TaxonomyRegister extends Register {
 	public function __construct() {
 		parent::__construct();
 
@@ -33,10 +32,7 @@ class MB_CPT_Taxonomy_Register extends MB_CPT_Base_Register {
 		return $response;
 	}
 
-	/**
-	 * Register custom post type for taxonomies
-	 */
-	public function register_post_types() {
+	public function register() {
 		// Register post type of the plugin 'mb-taxonomy'.
 		$labels = [
 			'name'               => _x( 'Taxonomies', 'Taxonomy General Name', 'mb-custom-post-type' ),

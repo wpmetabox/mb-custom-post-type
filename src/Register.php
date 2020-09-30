@@ -1,11 +1,10 @@
 <?php
-abstract class MB_CPT_Base_Register {
-	public function __construct() {
-		// Register post types.
-		add_action( 'init', array( $this, 'register_post_types' ), 5 );
+namespace MBCPT;
 
-		// Change the output of post/bulk post updated messages.
-		add_filter( 'post_updated_messages', array( $this, 'updated_message' ), 10, 1 );
+abstract class Register {
+	public function __construct() {
+		add_action( 'init', [ $this, 'register' ], 5 );
+		add_filter( 'post_updated_messages', [ $this, 'updated_message' ] );
 	}
 
 	// Migration helper methods.

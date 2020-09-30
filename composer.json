@@ -22,5 +22,10 @@
       "homepage": "https://metabox.io",
       "role": "Developer"
     }
-  ]
+  ],
+  "autoload": {
+    "psr-4": {
+      "MBCPT\\" : "src/"
+    }
+  }
 }
