@@ -27,7 +27,7 @@ const CptConfig = {
 	entry: './app/post-type/App.js',
 	output: {
 		filename: 'post-type.js',
-		path: path.resolve( __dirname, './js' )
+		path: path.resolve( __dirname, './assets' )
 	},
 	externals,
 	module: commonModules
@@ -37,7 +37,7 @@ const TaxonomyConfig = {
 	entry: './app/taxonomy/App.js',
 	output: {
 		filename: 'taxonomy.js',
-		path: path.resolve( __dirname, './js' )
+		path: path.resolve( __dirname, './assets' )
 	},
 	externals,
 	module: commonModules

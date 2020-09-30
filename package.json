@@ -4,8 +4,8 @@
 	"description": "",
 	"main": "index.js",
 	"scripts": {
-		"css": "node-sass --output-style compressed -x css/style.scss -o css",
-		"watch": "node-sass --output-style compressed -x -w css -o css",
+		"css": "node-sass --output-style compressed -x assets/style.scss -o assets",
+		"watch": "node-sass --output-style compressed -x -w assets -o assets",
 		"start": "webpack --mode development",
 		"build": "webpack --mode production"
 	},
