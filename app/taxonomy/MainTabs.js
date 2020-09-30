@@ -18,7 +18,7 @@ const tabs = [
 		title: __( 'Advanced', 'mb-custom-post-type' ),
 	},
 	{
-		name: 'post_types',
+		name: 'types',
 		title: __( 'Post Types', 'mb-custom-post-type' ),
 	},
 	{
@@ -35,7 +35,7 @@ const panels = {
 	general: BasicDatas.map( ( field, key ) => <Control key={ key } field={ field } autoFills={ autoFills.filter( f => f.updateFrom === field.name ) } /> ),
 	labels: LabelDatas.map( ( field, key ) => <Control key={ key } field={ field } /> ),
 	advanced: AdvancedDatas.map( ( field, key ) => <Control key={ key } field={ field } /> ),
-	post_types: <CheckboxList name="post_types" options={ MbTaxonomy.types } description={ __( 'Post types for the taxonomy:', 'mb-custom-post-type' ) } />,
+	types: <CheckboxList name="types" options={ MbTaxonomy.types } description={ __( 'Post types for the taxonomy:', 'mb-custom-post-type' ) } />,
 	code: (
 		<>
 			{ CodeDatas.map( ( field, key ) => <Control key={ key } field={ field } /> ) }

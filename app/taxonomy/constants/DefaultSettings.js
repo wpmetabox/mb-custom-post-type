@@ -1,6 +1,6 @@
 const DefaultSettings = {
 	slug         : '',
-	post_types   : ['post'],
+	types        : ['post'],
 	function_name: 'your_prefix_register_taxonomy',
 	text_domain  : 'your-textdomain',
 
