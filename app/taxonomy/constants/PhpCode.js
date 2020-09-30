@@ -1,61 +1,44 @@
-const labelSettings = settings => {
-	const { label, labels, text_domain } = settings;
+import { spaces, text, general, labels } from '../../code';
 
-	let keys = Object.keys( labels );
-	const maxLengh = Math.max.apply( null, keys.map( key => key.length ) );
-	keys = keys.map( key => `'${ key }'${ ' '.repeat( maxLengh - key.length ) } => esc_html__( '${ labels[ key ] }', '${ text_domain }' ),` );
+const types = settings => settings.post_types.length ? `['${ settings.post_types.join( "', '" ) }']` : null;
 
-	let output = `'label'  => esc_html__( '${ label }', '${ text_domain }' ),
-		'labels' => [
-			${ keys.join( "\n\t\t\t" ) }
-		]`;
+const advanced = settings => {
+	const ignore = [ 'slug', 'post_types', 'function_name', 'text_domain', 'label', 'labels', 'description', 'rest_base', 'rewrite' ];
 
-	return output;
+	let keys = Object.keys( settings ).filter( key => !ignore.includes( key ) );
+	return keys.map( key => general( settings, key ) ).join( ",\n\t\t" );
 };
 
-const postTypeSettings = settings => settings.post_types.length ? `['${settings.post_types.join( "', '" )}']` : null;
-
-const reWrite = settings => {
-	let result = `'rewrite' => `;
-
-	const rewrite_slug = undefined === settings.rewrite_slug ? '' : `'slug' => '${settings.rewrite_slug}'`;
-
-	if ( '' === rewrite_slug ) {
-		return result + 'true';
+const rewrite = settings => {
+	let value = [];
+	if ( settings.rewrite.slug ) {
+		value.push( text( settings.rewrite, 'slug' ) );
 	}
+	value.push( general( settings.rewrite, 'with_front' ) );
+	value.push( general( settings.rewrite, 'hierarchical' ) );
 
-	return result + `[ ${rewrite_slug} ]`;
-};
-
-const advanceSettings = settings => {
-	return `'public'               => ${settings.public},
-		'show_ui'              => ${settings.show_ui},
-		'show_in_menu'         => ${settings.show_in_menu},
-		'show_in_nav_menus'    => ${settings.show_in_nav_menus},
-		'show_tagcloud'        => ${settings.show_tagcloud},
-		'show_in_quick_edit'   => ${settings.show_in_quick_edit},
-		'show_admin_column'    => ${settings.show_admin_column},
-		'show_in_rest'         => ${settings.show_in_rest},
-		'hierarchical'         => ${settings.hierarchical},
-		'query_var'            => ${settings.query_var},
-		'sort'                 => ${settings.sort},
-		'rewrite_no_front'     => ${settings.rewrite_no_front},
-		'rewrite_hierarchical' => ${settings.rewrite_hierarchical},`;
+	return `'rewrite'${ spaces( settings, 'rewrite' ) } => [
+			${ value.join( ",\n\t\t\t" ) },
+		]`;
 };
 
 const PhpCode = settings => {
-	return (
-		`<?php
-add_action( 'init', '${settings.function_name}' );
-function ${settings.function_name}() {
-	$args = [
-		${labelSettings( settings )}
-		${advanceSettings( settings )}
-		${reWrite( settings )}
+	return `<?php
+add_action( 'init', '${ settings.function_name }' );
+function ${ settings.function_name }() {
+	$labels = [
+		${ labels( settings ) },
 	];
-	register_taxonomy( '${settings.slug}', ${postTypeSettings( settings )}, $args );
-}`
-	);
+	$args = [
+		${ text( settings, 'label' ) },
+		'labels'${ spaces( settings, 'labels' ) } => $labels,
+		${ text( settings, 'description' ) },
+		${ advanced( settings ) },
+		${ text( settings, 'rest_base' ) },
+		${ rewrite( settings ) },
+	];
+	register_taxonomy( '${ settings.slug }', ${ types( settings ) }, $args );
+}`;
 };
 
 export default PhpCode;

@@ -45,7 +45,7 @@ const DefaultSettings = {
 		with_front  : false,
 		hierarchical: false,
 	},
-	query_var         : '',
+	query_var         : true,
 	sort              : false,
 };
 

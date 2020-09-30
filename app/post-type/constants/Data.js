@@ -124,7 +124,7 @@ export const AdvancedDatas = [
 	{ type: 'checkbox', name: 'has_archive', label: __( 'Has archive', 'mb-custom-post-type' ), description: __( 'Enables post type archives.', 'mb-custom-post-type' ), checked: true },
 	{ type: 'text', name: 'archive_slug', label: __( 'Custom archive slug', 'mb-custom-post-type' ), description: __( 'Default is the post type slug.', 'mb-custom-post-type' ) },
 	{ type: 'text', name: 'rewrite.slug', label: __( 'Custom rewrite slug', 'mb-custom-post-type' ), description: __( 'Leave empty to use the post type slug.', 'mb-custom-post-type' ) },
-	{ type: 'checkbox', name: 'rewrite.with_front', label: __( 'Prepended permalink structure', 'mb-custom-post-type' ), description: __( 'Example: if your permalink structure is /blog/, then your links will be: false -> /news/, true -> /blog/news/.', 'mb-custom-post-type' ), checked: true },
+	{ type: 'checkbox', name: 'rewrite.with_front', label: __( 'Prepended permalink structure', 'mb-custom-post-type' ), description: __( 'Example: if your permalink structure is /blog/, then your links will be: false -> /news/, true -> /blog/news/.', 'mb-custom-post-type' ), checked: false },
 	{ type: 'checkbox', name: 'query_var', label: __( 'Query var', 'mb-custom-post-type' ), description: __( 'Enables request the post via URL: example.com/?post_type=slug', 'mb-custom-post-type' ), checked: true },
 	{ type: 'checkbox', name: 'can_export', label: __( 'Can export', 'mb-custom-post-type' ), description: __( 'Can this post type be exported', 'mb-custom-post-type' ), checked: true },
 	{ type: 'checkbox', name: 'delete_with_user', label: __( 'Delete with user', 'mb-custom-post-type' ), description: __( 'Whether to move posts to Trash when deleting a user', 'mb-custom-post-type' ), checked: true },
