@@ -71,32 +71,26 @@ class MB_CPT_Taxonomy_Register extends MB_CPT_Base_Register {
 
 		// Get all registered custom taxonomies.
 		$taxonomies = $this->get_taxonomies();
-		foreach ( $taxonomies as $taxonomy => $tax_args ) {
-			if ( isset( $tax_args['meta_box_cb'] ) && false !== $tax_args['meta_box_cb'] ) {
-				unset( $tax_args['meta_box_cb'] );
-			}
-			register_taxonomy( $taxonomy, isset( $tax_args['post_types'] ) ? $tax_args['post_types'] : null, $tax_args );
+		foreach ( $taxonomies as $slug => $taxonomy ) {
+			register_taxonomy( $slug, $taxonomy['types'], $taxonomy );
 		}
 	}
 
-	/**
-	 * Get all registered taxonomies
-	 *
-	 * @return array
-	 */
 	public function get_taxonomies() {
 		$taxonomies = [];
 
 		$posts = get_posts( [
-			'posts_per_page' => -1,
-			'post_status'    => 'publish',
-			'post_type'      => 'mb-taxonomy',
-			'no_found_rows'  => true,
+			'posts_per_page'         => -1,
+			'post_status'            => 'publish',
+			'post_type'              => 'mb-taxonomy',
+			'no_found_rows'          => true,
+			'update_post_meta_cache' => false,
+			'update_post_term_cache' => false
 		] );
 
 		foreach ( $posts as $post ) {
 			$data = $this->get_taxonomy_data( $post );
-			$taxonomies[ mb_cpt_get_prop( $data, 'slug' ) ?: 'draft_taxonomy' ] = $this->set_up_taxonomy( $data );
+			$taxonomies[ $data['slug'] ] = $data;
 		}
 
 		return $taxonomies;
@@ -105,7 +99,7 @@ class MB_CPT_Taxonomy_Register extends MB_CPT_Base_Register {
 	public function get_taxonomy_data( WP_Post $post ) {
 		$this->migrate_data( $post );
 
-		return json_decode( $post->post_content );
+		return json_decode( $post->post_content, true );
 	}
 
 	/**
@@ -152,82 +146,6 @@ class MB_CPT_Taxonomy_Register extends MB_CPT_Base_Register {
 			'ID'           => $post->ID,
 			'post_content' => wp_json_encode( $args ),
 		] );
-	}
-
-	public function set_up_taxonomy( $data ) {
-		$labels = [
-			'name'                       => mb_cpt_get_prop( $data, 'name' ) ?: __( 'draft_taxonomy', 'mb-custom-post-type' ),
-			'singular_name'              => mb_cpt_get_prop( $data, 'labels', 'singular_name' ),
-			'search_items'               => mb_cpt_get_prop( $data, 'labels', 'search_items' ),
-			'popular_items'              => mb_cpt_get_prop( $data, 'labels', 'popular_items' ),
-			'all_items'                  => mb_cpt_get_prop( $data, 'labels', 'all_items' ),
-			'parent_item'                => mb_cpt_get_prop( $data, 'labels', 'parent_item' ),
-			'parent_item_colon'          => mb_cpt_get_prop( $data, 'labels', 'parent_item_colon' ),
-			'edit_item'                  => mb_cpt_get_prop( $data, 'labels', 'edit_item' ),
-			'view_item'                  => mb_cpt_get_prop( $data, 'labels', 'view_item' ),
-			'update_item'                => mb_cpt_get_prop( $data, 'labels', 'update_item' ),
-			'add_new_item'               => mb_cpt_get_prop( $data, 'labels', 'add_new_item' ),
-			'new_item_name'              => mb_cpt_get_prop( $data, 'labels', 'new_item_name' ),
-			'separate_items_with_commas' => mb_cpt_get_prop( $data, 'labels', 'separate_items_with_commas' ),
-			'add_or_remove_items'        => mb_cpt_get_prop( $data, 'labels', 'add_or_remove_items' ),
-			'choose_from_most_used'      => mb_cpt_get_prop( $data, 'labels', 'choose_from_most_used' ),
-			'not_found'                  => mb_cpt_get_prop( $data, 'labels', 'not_found' ),
-		];
-		$args   = [ 'labels' => $labels ];
-
-		$params = [
-			'description',
-			'public',
-			'publicly_queryable',
-			'hierarchical',
-			'show_ui',
-			'show_in_menu',
-			'show_in_nav_menus',
-			'show_in_rest',
-			'rest_base',
-			'show_tagcloud',
-			'show_in_quick_edit',
-			'show_admin_column',
-			'query_var',
-		];
-
-		foreach ( $params as $param ) {
-			if ( property_exists( $data, $param ) ) {
-				$args[ $param ] = $data->$param;
-			}
-		}
-
-		if ( ! property_exists( $data, 'rewrite_no_front' ) ) {
-			$args['rewrite'] = true;
-		} else {
-			$rewrite = [];
-			if ( property_exists( $data, 'rewrite_slug' ) ) {
-				$rewrite['slug'] = $data->rewrite_slug;
-			}
-			if ( $data->rewrite_no_front ) {
-				$rewrite['with_front'] = false;
-			}
-			if ( property_exists( $data, 'rewrite_hierarchical' ) ) {
-				$rewrite['hierarchical'] = true;
-			}
-			$args['rewrite'] = $rewrite;
-			unset( $args['rewrite_slug'] );
-			unset( $args['rewrite_no_front'] );
-			unset( $args['rewrite_hierarchical'] );
-		}
-
-		$options    = [];
-		$post_types = array_keys( mb_cpt_get_post_types() );
-		foreach ( $post_types as $post_type ) {
-			if ( property_exists( $data, $post_type ) && $data->$post_type ) {
-				array_push( $options, $post_type );
-			}
-		}
-
-		$args['post_types'] = $options;
-
-		unset( $args['taxonomy'] );
-		return $args;
 	}
 
 	/**
