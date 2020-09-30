@@ -4,12 +4,6 @@ The plugin allows you to handle all post type's arguments and taxonomy's argumen
 
 Using **MB Custom Post Type**, you will be able to craft the WordPress admin and turn it into a professional Content Management Systems.
 
-**Note:** Since version 1.1.0 MB Custom Post Type has integrated [MB Custom Taxonomy](https://wordpress.org/plugins/mb-custom-taxonomy/) to create and manage custom taxonomies with similar interface.
-
-**Video demo**:
-
-[![demo](http://icecream.me/uploads/d33f0a5a2ef0fe54aafc95566145d8f5.png)](https://www.youtube.com/watch?v=9c4w5zdeTJI)
-
 ### Features
 
 * Supports all arguments for creating custom post types (like `register_post_type()`)
