@@ -97,7 +97,6 @@ class MB_CPT_Taxonomy_Register extends MB_CPT_Base_Register {
 	}
 
 	public function get_taxonomy_data( WP_Post $post ) {
-		$this->migrate_data( $post );
 		return empty( $post->post_content ) ? $this->migrate_data( $post ) : json_decode( $post->post_content, true );
 	}
 
@@ -106,8 +105,6 @@ class MB_CPT_Taxonomy_Register extends MB_CPT_Base_Register {
 		$post_meta = get_post_meta( $post->ID );
 
 		unset( $post_meta['_edit_last'], $post_meta['_edit_lock'] );
-		$this->change_key( $post_meta, 'args_taxonomy', 'slug' );
-		$this->change_key( $post_meta, 'args_post_types', 'types' );
 		foreach ( $post_meta as $key => $value ) {
 			$this->unarray( $value, $key );
 			$this->normalize_checkbox( $value );
@@ -122,6 +119,8 @@ class MB_CPT_Taxonomy_Register extends MB_CPT_Base_Register {
 
 			// delete_post_meta( $post->ID, $key );
 		}
+		$this->change_key( $args, 'taxonomy', 'slug' );
+		$this->change_key( $args, 'post_types', 'types' );
 
 		// Rewrite.
 		$rewrite = [];
