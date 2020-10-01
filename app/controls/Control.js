@@ -16,11 +16,28 @@ const normalizeBool = value => {
 		value = false;
 	}
 	return value;
-}
+};
 const normalizeNumber = value => isNaN( parseInt( value ) ) ? value : parseInt( value );
 
-const Control = ( { field, autoFills } ) => {
+const Control = ( { field, autoFills = [] } ) => {
 	const [ state, setState ] = useContext( PhpSettings );
+
+	const autofill = ( newState, name, value ) => {
+		const placeholder = name.replace( 'labels.', '' );
+		autoFills.forEach( f => {
+			let newValue;
+
+			if ( 'slug' === f.name ) {
+				newValue = slugify( value, { lower: true } );
+			} else {
+				newValue = ucfirst( f.default.replace( `%${ placeholder }%`, f.default.split( ' ' ).length > 2 ? value.toLowerCase() : value ) );
+			}
+
+			dotProp.set( newState, f.name, newValue );
+		} );
+
+		return newState;
+	};
 
 	const update = e => {
 		const name = e.target.dataset.name;
@@ -28,30 +45,11 @@ const Control = ( { field, autoFills } ) => {
 		value = normalizeBool( value );
 		value = normalizeNumber( value );
 
-		setState( state => {
-			let newState = JSON.parse( JSON.stringify( state ) );
+		let newState = { ...state };
+		dotProp.set( newState, name, value );
+		autofill( newState, name, value );
 
-			dotProp.set( newState, name, value );
-
-			if ( !autoFills ) {
-				return newState;
-			}
-
-			const placeholder = name.replace( 'labels.', '' );
-			autoFills.forEach( f => {
-				let newValue;
-
-				if ( 'slug' !== f.name ) {
-					newValue = ucfirst( f.default.replace( `%${placeholder}%`, f.default.split( ' ' ).length > 2 ? value.toLowerCase() : value ) );
-				} else {
-					newValue = slugify( value, { lower: true } );
-				}
-
-				dotProp.set( newState, f.name, newValue );
-			} );
-
-			return newState;
-		} );
+		setState( newState );
 	};
 
 	const _value = dotProp.get( state, field.name ) || field.default || '';
