@@ -17,6 +17,7 @@ const normalizeBool = value => {
 	}
 	return value;
 }
+const normalizeNumber = value => isNaN( parseInt( value ) ) ? value : parseInt( value );
 
 const Control = ( { field, autoFills } ) => {
 	const [ state, setState ] = useContext( PhpSettings );
@@ -25,6 +26,7 @@ const Control = ( { field, autoFills } ) => {
 		const name = e.target.dataset.name;
 		let value = 'checkbox' === e.target.type ? e.target.checked : e.target.value;
 		value = normalizeBool( value );
+		value = normalizeNumber( value );
 
 		setState( state => {
 			let newState = JSON.parse( JSON.stringify( state ) );
@@ -37,10 +39,12 @@ const Control = ( { field, autoFills } ) => {
 
 			const placeholder = name.replace( 'labels.', '' );
 			autoFills.forEach( f => {
-				let newValue = slugify( value, { lower: true } );
+				let newValue;
 
 				if ( 'slug' !== f.name ) {
 					newValue = ucfirst( f.default.replace( `%${placeholder}%`, f.default.split( ' ' ).length > 2 ? value.toLowerCase() : value ) );
+				} else {
+					newValue = slugify( value, { lower: true } );
 				}
 
 				dotProp.set( newState, f.name, newValue );
