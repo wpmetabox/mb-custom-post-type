@@ -3,3 +3,4 @@ vendor
 node_modules
 *.lock
 assets/*.js
+assets/*.css

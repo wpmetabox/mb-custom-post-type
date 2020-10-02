@@ -15,6 +15,7 @@ jobs:
       run: |
         npm install
         npm run build
+        npm run css
     - uses: 10up/action-wordpress-plugin-deploy@master
       env:
         SVN_PASSWORD: ${{ secrets.SVN_PASSWORD }}

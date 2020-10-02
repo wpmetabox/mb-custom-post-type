@@ -6,7 +6,6 @@
 	margin-top: 0;
 }
 .mb-cpt {
-	--color-accent: #0073aa;
 	--color-gray: #999;
 	--color-light: #ccd0d4;
 	--color-red: #e53e3e;
@@ -83,8 +82,8 @@
 
 			&:checked ~ i {
 				color: #fff;
-				background-color: var(--color-accent);
-				border-color: var(--color-accent);
+				background-color: var(--wp-admin-theme-color);
+				border-color: var(--wp-admin-theme-color);
 			}
 		}
 	}
