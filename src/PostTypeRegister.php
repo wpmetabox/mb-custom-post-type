@@ -66,7 +66,7 @@ class PostTypeRegister extends Register {
 	}
 
 	public function get_post_type_data( WP_Post $post ) {
-		return empty( $post->post_content ) ? $this->migrate_data( $post ) : json_decode( $post->post_content, true );
+		return empty( $post->post_content ) || isset( $_GET['mbcpt-force'] ) ? $this->migrate_data( $post ) : json_decode( $post->post_content, true );
 	}
 
 	private function migrate_data( WP_Post $post ) {
