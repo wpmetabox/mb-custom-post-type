@@ -6,7 +6,13 @@ const spaces = ( settings, key ) => ' '.repeat( maxKeyLengh( settings ) - key.le
 const text = ( settings, key ) => `'${ key }'${ spaces( settings, key ) } => '${ dotProp.get( settings, key, '' ) }'`;
 const translatableText = ( settings, key ) => `'${ key }'${ spaces( settings, key ) } => esc_html__( '${ dotProp.get( settings, key, '' ) }', '${ settings.text_domain }' )`;
 const checkboxList = ( settings, key ) => `'${ key }'${ spaces( settings, key ) } => ${ dotProp.get( settings, key, [] ).length ? `['${ dotProp.get( settings, key, [] ).join( "', '" ) }']` : '[]' }`;
-const general = ( settings, key ) => `'${ key }'${ spaces( settings, key ) } => ${ dotProp.get( settings, key ) }`;
+const general = ( settings, key ) => {
+    let value = dotProp.get( settings, key );
+    if ( [ '', undefined ].includes( value ) ) {
+        value = "''";
+    }
+    return `'${ key }'${ spaces( settings, key ) } => ${ value }`;
+};
 
 const labels = settings => {
     const { labels } = settings;
