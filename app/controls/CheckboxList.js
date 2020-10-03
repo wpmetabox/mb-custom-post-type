@@ -1,18 +1,20 @@
+import dotProp from 'dot-prop';
 import PhpSettings from '../PhpSettings';
 const { useContext } = wp.element;
 
 const CheckboxList = ( { name, options, description } ) => {
 	const [ state, setState ] = useContext( PhpSettings );
+	const saved = dotProp.get( state, name, [] );
 
 	const onChange = e => {
 		const { value, checked } = e.target;
-		let options = state[ name ];
+		let newSaved = [...saved];
 		if ( checked ) {
-			options.push( value );
+			newSaved.push( value );
 		} else {
-			options = options.filter( option => option !== value );
+			newSaved = options.filter( option => option !== value );
 		}
-		setState( { ...state, [ name ]: options } );
+		setState( { ...state, [ name ]: newSaved } );
 	};
 
 	return (
@@ -23,7 +25,7 @@ const CheckboxList = ( { name, options, description } ) => {
 					{ options.map( ( option, key ) => (
 						<li key={ key }>
 							<label>
-								<input type="checkbox" value={ option.value } checked={ state[ name ].includes( option.value ) } onChange={ onChange } />
+								<input type="checkbox" value={ option.value } checked={ saved.includes( option.value ) } onChange={ onChange } />
 								{ option.label }
 							</label>
 						</li>
