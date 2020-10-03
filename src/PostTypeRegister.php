@@ -102,7 +102,7 @@ class PostTypeRegister extends Register {
 
 		wp_update_post( [
 			'ID'           => $post->ID,
-			'post_content' => wp_json_encode( $args ),
+			'post_content' => wp_json_encode( $args, JSON_UNESCAPED_UNICODE ),
 		] );
 		return $args;
 	}
