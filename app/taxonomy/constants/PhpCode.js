@@ -1,7 +1,13 @@
 import dotProp from 'dot-prop';
 import { spaces, text, translatableText, general, labels } from '../../code';
 
-const types = ( settings, key ) => `${ dotProp.get( settings, key, [] ).length ? `['${ dotProp.get( settings, key, [] ).join( "', '" ) }']` : '[]' }`;
+const types = settings => {
+	let values = dotProp.get( settings, 'types', [] );
+	if ( !Array.isArray( values ) ) {
+		values = [ values ];
+	}
+	return `${ values.length ? `['${ values.join( "', '" ) }']` : '[]' }`;
+};
 
 const advanced = settings => {
 	const ignore = [ 'slug', 'types', 'function_name', 'text_domain', 'label', 'labels', 'description', 'rest_base', 'rewrite' ];
