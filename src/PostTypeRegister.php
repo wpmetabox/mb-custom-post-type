@@ -91,6 +91,11 @@ class PostTypeRegister extends Register {
 		}
 		$this->change_key( $args, 'post_type', 'slug' );
 
+		// Bypass new post types.
+		if ( isset( $_GET['mbcpt-force'] ) && empty( $args['slug'] ) ) {
+			return json_decode( $post->post_content, true );
+		}
+
 		// Rewrite.
 		$rewrite = [];
 		if ( isset( $args['rewrite_slug'] ) ) {
