@@ -97,7 +97,7 @@ class TaxonomyRegister extends Register {
 	}
 
 	public function get_taxonomy_data( WP_Post $post ) {
-		return empty( $post->post_content ) ? $this->migrate_data( $post ) : json_decode( $post->post_content, true );
+		return empty( $post->post_content ) || isset( $_GET['mbcpt-force'] ) ? $this->migrate_data( $post ) : json_decode( $post->post_content, true );
 	}
 
 	public function migrate_data( WP_Post $post ) {
@@ -122,6 +122,11 @@ class TaxonomyRegister extends Register {
 		$this->change_key( $args, 'taxonomy', 'slug' );
 		$this->change_key( $args, 'post_types', 'types' );
 
+		// Bypass new post types.
+		if ( isset( $_GET['mbcpt-force'] ) && empty( $args['slug'] ) ) {
+			return json_decode( $post->post_content, true );
+		}
+
 		// Rewrite.
 		$rewrite = [];
 		if ( isset( $args['rewrite_slug'] ) ) {
@@ -134,7 +139,7 @@ class TaxonomyRegister extends Register {
 
 		wp_update_post( [
 			'ID'           => $post->ID,
-			'post_content' => wp_json_encode( $args ),
+			'post_content' => wp_json_encode( $args, JSON_UNESCAPED_UNICODE ),
 		] );
 		return $args;
 	}
