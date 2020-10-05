@@ -1,6 +1,7 @@
+import dotProp from 'dot-prop';
 import { spaces, text, translatableText, general, labels } from '../../code';
 
-const types = settings => settings.types.length ? `['${ settings.types.join( "', '" ) }']` : null;
+const types = ( settings, key ) => `${ dotProp.get( settings, key, [] ).length ? `['${ dotProp.get( settings, key, [] ).join( "', '" ) }']` : '[]' }`;
 
 const advanced = settings => {
 	const ignore = [ 'slug', 'types', 'function_name', 'text_domain', 'label', 'labels', 'description', 'rest_base', 'rewrite' ];
@@ -37,7 +38,7 @@ function ${ settings.function_name }() {
 		${ text( settings, 'rest_base' ) },
 		${ rewrite( settings ) },
 	];
-	register_taxonomy( '${ settings.slug }', ${ types( settings ) }, $args );
+	register_taxonomy( '${ settings.slug }', ${ types( settings, 'types' ) }, $args );
 }`;
 };
 

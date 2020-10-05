@@ -71,7 +71,8 @@ class TaxonomyRegister extends Register {
 			if ( isset( $args['meta_box_cb'] ) && false !== $args['meta_box_cb'] ) {
 				unset( $args['meta_box_cb'] );
 			}
-			register_taxonomy( $slug, $args['types'], $args );
+			$types = empty( $args['types'] ) ? [] : $args['types'];
+			register_taxonomy( $slug, $types, $args );
 		}
 	}
 
