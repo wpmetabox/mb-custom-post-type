@@ -3,8 +3,7 @@ import DefaultSettings from './constants/DefaultSettings';
 import MainTabs from './MainTabs';
 
 const { render, useState } = wp.element;
-const i18n = MbPostType;
-const settings = i18n.settings ? i18n.settings : DefaultSettings;
+const settings = MBCPT.settings ? MBCPT.settings : DefaultSettings;
 
 const App = () => {
 	const [ state, setState ] = useState( settings );
