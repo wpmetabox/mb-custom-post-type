@@ -104,12 +104,14 @@ class TaxonomyRegister extends Register {
 		$args      = [ 'labels' => [] ];
 		$post_meta = get_post_meta( $post->ID );
 
-		unset( $post_meta['_edit_last'], $post_meta['_edit_lock'] );
 		foreach ( $post_meta as $key => $value ) {
+			if ( 0 !== strpos( $key, 'label_' ) && 0 !== strpos( $key, 'args_' ) ) {
+				continue;
+			}
 			$this->unarray( $value, $key );
 			$this->normalize_checkbox( $value );
 
-			if ( false !== strpos( $key, 'label_' ) ) {
+			if ( 0 === strpos( $key, 'label_' ) ) {
 				$key = str_replace( 'label_', '', $key );
 				$args['labels'][ $key ] = $value;
 			} else {
