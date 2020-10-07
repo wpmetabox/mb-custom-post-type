@@ -20,3 +20,6 @@ jobs:
       env:
         SVN_PASSWORD: ${{ secrets.SVN_PASSWORD }}
         SVN_USERNAME: ${{ secrets.SVN_USERNAME }}
+    - name: Notify Slack
+      run: |
+        curl -X POST --data-urlencode "payload={\"channel\": \"#meta-box\", \"username\": \"Bot\", \"text\": \"New version for MB Custom Post Type has been just released!\", \"icon_emoji\": \":tada:\"}" ${{ secrets.SLACK_WEBHOOK }}
