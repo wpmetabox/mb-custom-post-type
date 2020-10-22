@@ -1,25 +1,27 @@
 import PhpCode from './constants/PhpCode';
-import Clipboard from 'react-clipboard.js';
 import PhpSettings from '../PhpSettings';
 import { UnControlled as CodeMirror } from 'react-codemirror2';
-const { useState, useContext } = wp.element;
+const { useContext } = wp.element;
 const { __ } = wp.i18n;
+const { ClipboardButton } = wp.components;
+const { withState }  = wp.compose;
 
 const Result = () => {
-	const [ copied, setCopied ] = useState( false );
-	const copy = () => {
-		setCopied( true );
-		setTimeout( () => setCopied( false ), 1000 );
-	};
-
 	const [ state ] = useContext( PhpSettings );
+	const Button = withState( {
+		hasCopied: false,
+	} )( ( { hasCopied, setState } ) => (
+		<ClipboardButton className="button" text={ PhpCode( state ) } onCopy={ () => setState( { hasCopied: true } ) } onFinishCopy={ () => setState( { hasCopied: false } ) }>
+			{ hasCopied ? __( 'Copied!', 'meta-box-builder' ) : __( 'Copy', 'meta-box-builder' ) }
+		</ClipboardButton>
+	) );
 
 	return (
 		<div className="mb-cpt-result">
 			<p>{ __( 'Copy and paste the following code into your theme\'s functions.php file.', 'mb-custom-post-type' ) }</p>
 			<div className="mb-cpt-result__body">
 				<CodeMirror value={ PhpCode( state ) } options={ { mode: 'php', lineNumbers: true } } />
-				<Clipboard className="button" title={ __( 'Click to copy the code', 'mb-custom-post-type' ) } data-clipboard-text={ PhpCode( state ) } onSuccess={ copy }>{ copied ? __( 'Copied', 'mb-custom-post-type' ) : __( 'Copy', 'mb-custom-post-type' ) }</Clipboard>
+				<Button />
 			</div>
 		</div>
 	);

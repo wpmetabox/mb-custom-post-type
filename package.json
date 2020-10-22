@@ -4,16 +4,15 @@
 	"description": "",
 	"main": "index.js",
 	"scripts": {
-		"css"      : "node-sass --output-style compressed -x assets/style.scss -o assets",
+		"css": "node-sass --output-style compressed -x assets/style.scss -o assets",
 		"watch:css": "node-sass --output-style compressed -x -w assets -o assets",
-		"start"    : "webpack --mode development",
-		"build"    : "webpack --mode production",
-		"watch:js" : "webpack --mode development --watch",
-		"sync"     : "browser-sync start --proxy \"localhost/metaboxplugins/wp-admin/post.php?post=579&action=edit\" --files \"assets/*.css, assets/*s\""
+		"start": "webpack --mode development",
+		"build": "webpack --mode production",
+		"watch:js": "webpack --mode development --watch",
+		"sync": "browser-sync start --proxy \"localhost/metaboxplugins/wp-admin/post.php?post=579&action=edit\" --files \"assets/*.css, assets/*s\""
 	},
 	"dependencies": {
 		"dot-prop": "^5.3.0",
-		"react-clipboard.js": "^2.0.16",
 		"react-codemirror2": "^7.2.1",
 		"slugify": "^1.4.5"
 	},
