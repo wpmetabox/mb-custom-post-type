@@ -66,11 +66,7 @@ class Edit {
 
 			$options = [];
 			foreach ( $taxonomies as $slug => $taxonomy ) {
-				$options[] = [
-					'value'   => $slug,
-					'label'   => $taxonomy->labels->singular_name,
-					'checked' => false,
-				];
+				$options[ $slug ] = $taxonomy->labels->singular_name;
 			}
 			$vars['taxonomies'] = $options;
 		}
@@ -94,11 +90,7 @@ class Edit {
 
 			$options    = [];
 			foreach ( $post_types as $slug => $post_type ) {
-				$options[] = [
-					'value'   => $slug,
-					'label'   => $post_type->labels->singular_name,
-					'checked' => 'post' === $slug,
-				];
+				$options[ $slug ] = $post_type->labels->singular_name;
 			}
 			$vars['types'] = $options;
 		}

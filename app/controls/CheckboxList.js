@@ -12,7 +12,7 @@ const CheckboxList = ( { name, options, description } ) => {
 		if ( checked ) {
 			newSaved.push( value );
 		} else {
-			newSaved = options.filter( option => option !== value );
+			newSaved = newSaved.filter( option => option !== value );
 		}
 		setState( { ...state, [ name ]: newSaved } );
 	};
@@ -22,11 +22,11 @@ const CheckboxList = ( { name, options, description } ) => {
 			<div className="mb-cpt-input">
 				{ description && <div className="mb-cpt-description">{ description }</div> }
 				<ul className="mb-cpt-input-list">
-					{ options.map( ( option, key ) => (
-						<li key={ key }>
+					{ Object.entries( options ).map( ( [ value, label ] ) => (
+						<li key={ value }>
 							<label>
-								<input type="checkbox" value={ option.value } checked={ saved.includes( option.value ) } onChange={ onChange } />
-								{ option.label }
+								<input type="checkbox" value={ value } checked={ saved.includes( value ) } onChange={ onChange } />
+								{ label }
 							</label>
 						</li>
 					) ) }
