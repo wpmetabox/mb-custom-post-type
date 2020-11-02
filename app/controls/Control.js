@@ -1,11 +1,12 @@
 import dotProp from 'dot-prop';
 import slugify from 'slugify';
 import PhpSettings from '../PhpSettings';
-import Input from './Input';
-import Textarea from './Textarea';
 import Checkbox from './Checkbox';
+import Icon from './Icon';
+import Input from './Input';
 import Radio from './Radio';
 import Select from './Select';
+import Textarea from './Textarea';
 const { useContext } = wp.element;
 
 const ucfirst = str => str.length ? str[ 0 ].toUpperCase() + str.slice( 1 ) : str;
@@ -62,6 +63,8 @@ const Control = ( { field, autoFills = [] } ) => {
 			return <Checkbox label={ field.label } name={ field.name } description={ field.description } checked={ _value } update={ update } />;
 		case 'radio':
 			return <Radio label={ field.label } name={ field.name } options={ field.options } value={ _value } update={ update } />;
+		case 'icon':
+			return <Icon label={ field.label } name={ field.name } value={ _value } update={ update } />;
 		case 'select':
 			return <Select label={ field.label } name={ field.name } description={ field.description } options={ field.options } value={ _value } update={ update } />;
 	}

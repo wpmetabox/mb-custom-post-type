@@ -1,4 +1,3 @@
-import { Icons } from './Icons';
 const { __ } = wp.i18n;
 
 export const BasicDatas = [
@@ -110,7 +109,7 @@ export const AdvancedDatas = [
 	{ type: 'checkbox', name: 'show_in_rest', label: __( 'Show in REST', 'mb-custom-post-type' ), description: __( 'Whether to expose this post type in the REST API. Must be true to enable the Gutenberg editor.', 'mb-custom-post-type' ) },
 	{ type: 'text', name: 'rest_base', label: __( 'REST API base slug', 'mb-custom-post-type' ), description: __( 'Leave empty to use the post type slug.', 'mb-custom-post-type' ), placeholder: __( 'Slug to use in REST API URL', 'mb-custom-post-type' ) },
 	{ type: 'select', name: 'menu_position', label: __( 'Menu position after', 'mb-custom-post-type' ), options: MenuPosition, default: '' },
-	{ type: 'radio', name: 'menu_icon', label: __( 'Menu icon', 'mb-custom-post-type' ), options: Icons },
+	{ type: 'icon', name: 'menu_icon', label: __( 'Menu icon', 'mb-custom-post-type' ) },
 	{ type: 'radio', name: 'capability_type', label: __( 'Capability type', 'mb-custom-post-type' ), description: __( 'The post type to use for checking read, edit, and delete capabilities.', 'mb-custom-post-type' ), options: CapabilityDatas, default: 'post' },
 	// map_meta_cap
 	// supports

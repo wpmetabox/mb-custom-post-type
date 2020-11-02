@@ -1,4 +1,4 @@
-import { spaces, text, translatableText, checkboxList, general, labels } from '../../code';
+import { checkboxList, general, labels, spaces, text, translatableText } from '../../code';
 
 const advanced = settings => {
 	const ignore = [ 'slug', 'function_name', 'text_domain', 'label', 'labels', 'description', 'rest_base', 'show_in_menu', 'menu_icon', 'capability_type', 'has_archive', 'archive_slug', 'rewrite', 'supports', 'taxonomies' ];
@@ -45,7 +45,7 @@ function ${ settings.function_name }() {
 		${ archive( settings ) },
 		${ text( settings, 'rest_base' ) },
 		${ showInMenu( settings ) },
-		${ text( settings, 'menu_icon' ) },
+		${ text( settings, 'menu_icon', 'dashicons-' ) },
 		${ text( settings, 'capability_type' ) },
 		${ checkboxList( settings, 'supports' ) },
 		${ checkboxList( settings, 'taxonomies' ) },
