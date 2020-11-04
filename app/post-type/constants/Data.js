@@ -44,19 +44,19 @@ export const LabelDatas = [
 	{ type: 'text', name: 'labels.item_updated', label: __( 'Item updated', 'mb-custom-post-type' ), default: __( '%singular_name% updated', 'mb-custom-post-type' ), updateFrom: 'labels.singular_name' },
 ];
 
-export const SupportDatas = [
-	{ value: 'title', label: __( 'Title', 'mb-custom-post-type' ) },
-	{ value: 'editor', label: __( 'Editor', 'mb-custom-post-type' ) },
-	{ value: 'excerpt', label: __( 'Excerpt', 'mb-custom-post-type' ) },
-	{ value: 'author', label: __( 'Author', 'mb-custom-post-type' ) },
-	{ value: 'thumbnail', label: __( 'Thumbnail', 'mb-custom-post-type' ) },
-	{ value: 'trackbacks', label: __( 'Trackbacks', 'mb-custom-post-type' ) },
-	{ value: 'custom-fields', label: __( 'Custom fields', 'mb-custom-post-type' ) },
-	{ value: 'comments', label: __( 'Comments', 'mb-custom-post-type' ) },
-	{ value: 'revisions', label: __( 'Revisions', 'mb-custom-post-type' ) },
-	{ value: 'page-attributes', label: __( 'Page attributes', 'mb-custom-post-type' ) },
-	{ value: 'post-formats', label: __( 'Post formats', 'mb-custom-post-type' ) },
-];
+export const SupportDatas = {
+	title            : __( 'Title', 'mb-custom-post-type' ),
+	editor           : __( 'Editor', 'mb-custom-post-type' ),
+	excerpt          : __( 'Excerpt', 'mb-custom-post-type' ),
+	author           : __( 'Author', 'mb-custom-post-type' ),
+	thumbnail        : __( 'Thumbnail', 'mb-custom-post-type' ),
+	trackbacks       : __( 'Trackbacks', 'mb-custom-post-type' ),
+	"custom-fields"  : __( 'Custom fields', 'mb-custom-post-type' ),
+	comments         : __( 'Comments', 'mb-custom-post-type' ),
+	revisions        : __( 'Revisions', 'mb-custom-post-type' ),
+	"page-attributes": __( 'Page attributes', 'mb-custom-post-type' ),
+	"post-formats"   : __( 'Post formats', 'mb-custom-post-type' ),
+};
 
 const CapabilityDatas = [
 	{ value: 'post', label: __( 'Post', 'mb-custom-post-type' ) },
