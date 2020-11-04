@@ -1,6 +1,6 @@
 import dotProp from 'dot-prop';
 import slugify from 'slugify';
-import PhpSettings from '../PhpSettings';
+import { SettingsContext } from '../SettingsContext';
 import Checkbox from './Checkbox';
 import Icon from './Icon';
 import Input from './Input';
@@ -21,9 +21,9 @@ const normalizeBool = value => {
 const normalizeNumber = value => isNaN( parseInt( value ) ) ? value : parseInt( value );
 
 const Control = ( { field, autoFills = [] } ) => {
-	const [ state, setState ] = useContext( PhpSettings );
+	const { settings, updateSettings } = useContext( SettingsContext );
 
-	const autofill = ( newState, name, value ) => {
+	const autofill = ( newSettings, name, value ) => {
 		const placeholder = name.replace( 'labels.', '' );
 		autoFills.forEach( f => {
 			let newValue;
@@ -34,10 +34,10 @@ const Control = ( { field, autoFills = [] } ) => {
 				newValue = ucfirst( f.default.replace( `%${ placeholder }%`, f.default.split( ' ' ).length > 2 ? value.toLowerCase() : value ) );
 			}
 
-			dotProp.set( newState, f.name, newValue );
+			dotProp.set( newSettings, f.name, newValue );
 		} );
 
-		return newState;
+		return newSettings;
 	};
 
 	const update = e => {
@@ -46,14 +46,14 @@ const Control = ( { field, autoFills = [] } ) => {
 		value = normalizeBool( value );
 		value = normalizeNumber( value );
 
-		let newState = { ...state };
-		dotProp.set( newState, name, value );
-		autofill( newState, name, value );
+		let newSettings = { ...settings };
+		dotProp.set( newSettings, name, value );
+		autofill( newSettings, name, value );
 
-		setState( newState );
+		updateSettings( newSettings );
 	};
 
-	const _value = dotProp.get( state, field.name ) || field.default || '';
+	const _value = dotProp.get( settings, field.name ) || field.default || '';
 	switch ( field.type ) {
 		case 'text':
 			return <Input label={ field.label } name={ field.name } value={ _value } description={ field.description } required={ field.required } update={ update } />;

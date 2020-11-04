@@ -1,20 +1,20 @@
 import dotProp from 'dot-prop';
-import PhpSettings from '../PhpSettings';
+import { SettingsContext } from '../SettingsContext';
 const { useContext } = wp.element;
 
 const CheckboxList = ( { name, options, description } ) => {
-	const [ state, setState ] = useContext( PhpSettings );
-	const saved = dotProp.get( state, name, [] );
+	const { settings, updateSettings } = useContext( SettingsContext );
+	const saved = dotProp.get( settings, name, [] );
 
 	const onChange = e => {
 		const { value, checked } = e.target;
-		let newSaved = [...saved];
+		let newSaved = [ ...saved ];
 		if ( checked ) {
 			newSaved.push( value );
 		} else {
 			newSaved = newSaved.filter( option => option !== value );
 		}
-		setState( { ...state, [ name ]: newSaved } );
+		updateSettings( { [ name ]: newSaved } );
 	};
 
 	return (
