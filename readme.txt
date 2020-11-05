@@ -4,7 +4,7 @@ Donate link: https://metabox.io/pricing/
 Tags: cms, custom, custom post types, custom post type, cpt, post, post types, post type, types
 Requires at least: 5.0
 Tested up to: 5.5.3
-Stable tag: 2.0.5
+Stable tag: 2.0.6
 License: GPLv2 or later
 
 Create and manage custom post types and custom taxonomies with an easy-to-use interface in WordPress.
@@ -58,6 +58,10 @@ Install **MB Custom Post Types & Custom Taxonomies** extension
 1. Edit custom post type - Taxonomies tab
 
 == Changelog ==
+= 2.0.6 - 2020-11-05 =
+- Fix menu icon not showing
+- Improve the code using React context properly
+
 = 2.0.5 - 2020-11-04 =
 - Fix supports tab not rendering
 
