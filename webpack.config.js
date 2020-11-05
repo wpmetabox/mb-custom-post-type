@@ -43,5 +43,4 @@ const TaxonomyConfig = {
 	module: commonModules
 };
 
-module.exports = [ CptConfig ];
-// module.exports = [ CptConfig, TaxonomyConfig ];
+module.exports = [ CptConfig, TaxonomyConfig ];
