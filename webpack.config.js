@@ -1,4 +1,4 @@
-const path = require('path');
+const path = require( 'path' );
 
 // https://www.cssigniter.com/how-to-use-external-react-components-in-your-gutenberg-blocks/
 const externals = {
@@ -14,14 +14,14 @@ const commonModules = {
 			test: /\.js/,
 			exclude: /node_modules/,
 			use: {
-			loader: 'babel-loader',
+				loader: 'babel-loader',
 				options: {
-					plugins: ['@babel/plugin-transform-react-jsx']
+					plugins: [ '@babel/plugin-transform-react-jsx' ]
 				}
 			}
 		},
 	]
-}
+};
 
 const CptConfig = {
 	entry: './app/post-type/App.js',
@@ -31,7 +31,7 @@ const CptConfig = {
 	},
 	externals,
 	module: commonModules
-}
+};
 
 const TaxonomyConfig = {
 	entry: './app/taxonomy/App.js',
@@ -41,6 +41,6 @@ const TaxonomyConfig = {
 	},
 	externals,
 	module: commonModules
-}
+};
 
 module.exports = [ CptConfig, TaxonomyConfig ];

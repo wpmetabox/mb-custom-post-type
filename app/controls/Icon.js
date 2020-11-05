@@ -6,7 +6,7 @@ const Icon = ( { label, name, update, value } ) => (
 			{
 				MBCPT.icons.map( icon => (
 					<label key={ icon } className="mb-cpt-choice mb-cpt-icon">
-						<input type="radio" data-name={ name } value={ icon } checked={ `dashicons-${ icon }` === value || icon === value } onChange={ update } />
+						<input type="radio" name={ name } value={ `dashicons-${ icon }` } checked={ `dashicons-${ icon }` === value } onChange={ update } />
 						<Dashicon icon={ icon } />
 					</label>
 				) )

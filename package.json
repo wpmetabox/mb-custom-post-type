@@ -9,7 +9,7 @@
 		"start": "webpack --mode development",
 		"build": "webpack --mode production",
 		"watch:js": "webpack --mode development --watch",
-		"sync": "browser-sync start --proxy \"localhost/metaboxplugins/wp-admin/post.php?post=579&action=edit\" --files \"assets/*.css, assets/*s\""
+		"sync": "browser-sync start --proxy \"localhost/metaboxplugins/wp-admin/post-new.php?post_type=mb-post-type\" --files \"assets/*.css, assets/*s\""
 	},
 	"dependencies": {
 		"dot-prop": "^5.3.0",

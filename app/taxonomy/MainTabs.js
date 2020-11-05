@@ -1,7 +1,9 @@
-import { CodeDatas, BasicDatas, LabelDatas, AdvancedDatas } from './constants/Data';
-import Control from '../controls/Control';
-import Result from './Result';
 import CheckboxList from '../controls/CheckboxList';
+import Control from '../controls/Control';
+import { SettingsContext } from '../SettingsContext';
+import { AdvancedDatas, BasicDatas, CodeDatas, LabelDatas } from './constants/Data';
+import Result from './Result';
+const { useContext } = wp.element;
 const { TabPanel } = wp.components;
 const { __ } = wp.i18n;
 const tabs = [
@@ -28,7 +30,7 @@ const tabs = [
 	}
 ];
 
-let autoFills= [ ...LabelDatas, ...BasicDatas ];
+let autoFills = [ ...LabelDatas, ...BasicDatas ];
 autoFills.push( { name: 'label', default: '%name%', updateFrom: 'labels.name' } );
 
 const panels = {
@@ -44,6 +46,14 @@ const panels = {
 	)
 };
 
-const MainTabs = () => <TabPanel className="mb-cpt-tabs" tabs={ tabs }>{ tab => panels[ tab.name ] }</TabPanel>;
+const MainTabs = () => {
+	const { settings } = useContext( SettingsContext );
+
+	return <>
+		<TabPanel className="mb-cpt-tabs" tabs={ tabs }>{ tab => panels[ tab.name ] }</TabPanel>;
+		<input type="hidden" name="post_title" value={ settings.labels.singular_name } />
+		<input type="hidden" name="content" value={ JSON.stringify( settings ) } />
+	</>;
+};
 
 export default MainTabs;

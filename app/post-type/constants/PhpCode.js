@@ -45,7 +45,7 @@ function ${ settings.function_name }() {
 		${ archive( settings ) },
 		${ text( settings, 'rest_base' ) },
 		${ showInMenu( settings ) },
-		${ text( settings, 'menu_icon', 'dashicons-' ) },
+		${ text( settings, 'menu_icon' ) },
 		${ text( settings, 'capability_type' ) },
 		${ checkboxList( settings, 'supports' ) },
 		${ checkboxList( settings, 'taxonomies' ) },
