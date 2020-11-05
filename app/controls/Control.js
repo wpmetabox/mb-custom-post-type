@@ -41,7 +41,7 @@ const Control = ( { field, autoFills = [] } ) => {
 	};
 
 	const update = e => {
-		const name = e.target.dataset.name;
+		const name = e.target.name;
 		let value = 'checkbox' === e.target.type ? e.target.checked : e.target.value;
 		value = normalizeBool( value );
 		value = normalizeNumber( value );

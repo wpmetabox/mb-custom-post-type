@@ -4,8 +4,8 @@ const Checkbox = ( { label, name, description, update, checked } ) => (
 		<div className="mb-cpt-input">
 			{
 				description
-					? <label className="mb-cpt-description"><input type="checkbox" id={ name } data-name={ name } checked={ checked } onChange={ update } /> { description }</label>
-					: <input type="checkbox" id={ name } data-name={ name } checked={ checked } onChange={ update } />
+					? <label className="mb-cpt-description"><input type="checkbox" id={ name } name={ name } checked={ checked } onChange={ update } /> { description }</label>
+					: <input type="checkbox" id={ name } name={ name } checked={ checked } onChange={ update } />
 			}
 		</div>
 	</div>

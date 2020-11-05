@@ -1,7 +1,7 @@
-import { CodeDatas, BasicDatas, LabelDatas, SupportDatas, AdvancedDatas } from './constants/Data';
-import { SettingsContext } from '../SettingsContext';
-import Control from '../controls/Control';
 import CheckboxList from '../controls/CheckboxList';
+import Control from '../controls/Control';
+import { SettingsContext } from '../SettingsContext';
+import { AdvancedDatas, BasicDatas, CodeDatas, LabelDatas, SupportDatas } from './constants/Data';
 import Result from './Result';
 const { useContext } = wp.element;
 const { TabPanel } = wp.components;

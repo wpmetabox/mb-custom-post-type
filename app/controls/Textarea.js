@@ -5,7 +5,7 @@ const Textarea = ( { label, name, placeholder, value, update, description = '', 
 			{ required && <span className="mb-cpt-required">*</span> }
 		</label>
 		<div className="mb-cpt-input">
-			<textarea id={ name } data-name={ name } placeholder={ placeholder } value={ value } onChange={ update } />
+			<textarea id={ name } name={ name } placeholder={ placeholder } value={ value } onChange={ update } />
 			{ description && <div className="mb-cpt-description">{ description }</div> }
 		</div>
 	</div>
