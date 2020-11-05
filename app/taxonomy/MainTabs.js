@@ -50,7 +50,7 @@ const MainTabs = () => {
 	const { settings } = useContext( SettingsContext );
 
 	return <>
-		<TabPanel className="mb-cpt-tabs" tabs={ tabs }>{ tab => panels[ tab.name ] }</TabPanel>;
+		<TabPanel className="mb-cpt-tabs" tabs={ tabs }>{ tab => panels[ tab.name ] }</TabPanel>
 		<input type="hidden" name="post_title" value={ settings.labels.singular_name } />
 		<input type="hidden" name="content" value={ JSON.stringify( settings ) } />
 	</>;
