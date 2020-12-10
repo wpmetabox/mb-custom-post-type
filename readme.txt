@@ -4,6 +4,7 @@ Donate link: https://metabox.io/pricing/
 Tags: cms, custom, custom post types, custom post type, cpt, post, post types, post type, types
 Requires at least: 5.0
 Tested up to: 5.5.3
+Requires PHP: 5.6
 Stable tag: 2.0.6
 License: GPLv2 or later
 

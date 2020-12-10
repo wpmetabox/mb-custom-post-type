@@ -53,7 +53,7 @@ const Control = ( { field, autoFills = [] } ) => {
 		updateSettings( newSettings );
 	};
 
-	const _value = dotProp.get( settings, field.name ) || field.default || '';
+	const _value = dotProp.get( settings, field.name, field.default || '' );
 	switch ( field.type ) {
 		case 'text':
 			return <Input label={ field.label } name={ field.name } value={ _value } description={ field.description } required={ field.required } update={ update } />;

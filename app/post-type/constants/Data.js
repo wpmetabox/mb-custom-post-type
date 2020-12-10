@@ -64,38 +64,6 @@ const CapabilityDatas = [
 	{ value: 'custom', label: __( 'Custom', 'mb-custom-post-type' ) }
 ];
 
-const ShowInMenuData = [
-	{ name: 'show_in_menu', value: true, label: __( 'Show as top-level menu', 'mb-custom-post-type' ) },
-	{ name: 'show_in_menu', value: false, label: __( 'Do not show in the admin menu', 'mb-custom-post-type' ) },
-	{ name: 'show_in_menu', value: 'index.php', label: __( 'Show as sub-menu of Dashboard', 'mb-custom-post-type' ) },
-	{ name: 'show_in_menu', value: 'upload.php', label: __( 'Show as sub-menu of Media', 'mb-custom-post-type' ) },
-	{ name: 'show_in_menu', value: 'edit-tags.php?taxonomy=link_category', label: __( 'Show as sub-menu of Links', 'mb-custom-post-type' ) },
-	{ name: 'show_in_menu', value: 'edit-comments.php', label: __( 'Show as sub-menu of Comments ', 'mb-custom-post-type' ) },
-	{ name: 'show_in_menu', value: 'edit.php', label: __( 'Show as sub-menu of Posts', 'mb-custom-post-type' ) },
-	{ name: 'show_in_menu', value: 'edit.php?post_value=page', label: __( 'Show as sub-menu of Pages', 'mb-custom-post-type' ) },
-	{ name: 'show_in_menu', value: 'themes.php', label: __( 'Show as sub-menu of Appearance', 'mb-custom-post-type' ) },
-	{ name: 'show_in_menu', value: 'plugins.php', label: __( 'Show as sub-menu of Plugins', 'mb-custom-post-type' ) },
-	{ name: 'show_in_menu', value: 'users.php', label: __( 'Show as sub-menu of Users', 'mb-custom-post-type' ) },
-	{ name: 'show_in_menu', value: 'tools.php', label: __( 'Show as sub-menu of Tools', 'mb-custom-post-type' ) },
-	{ name: 'show_in_menu', value: 'options-general.php', label: __( 'Show as sub-menu of Settings', 'mb-custom-post-type' ) }
-];
-
-const MenuPosition = [
-	{ name: 'menu_position', value: '', label: __( 'Select an item', 'mb-custom-post-type' ) },
-	{ name: 'menu_position', value: 2, label: __( 'Dashboard', 'mb-custom-post-type' ) },
-	{ name: 'menu_position', value: 5, label: __( 'Posts', 'mb-custom-post-type' ) },
-	{ name: 'menu_position', value: 10, label: __( 'Media', 'mb-custom-post-type' ) },
-	{ name: 'menu_position', value: 15, label: __( 'Links', 'mb-custom-post-type' ) },
-	{ name: 'menu_position', value: 20, label: __( 'Pages', 'mb-custom-post-type' ) },
-	{ name: 'menu_position', value: 25, label: __( 'Comments', 'mb-custom-post-type' ) },
-	{ name: 'menu_position', value: 60, label: __( 'Appearance', 'mb-custom-post-type' ) },
-	{ name: 'menu_position', value: 65, label: __( 'Plugins', 'mb-custom-post-type' ) },
-	{ name: 'menu_position', value: 70, label: __( 'Users', 'mb-custom-post-type' ) },
-	{ name: 'menu_position', value: 75, label: __( 'Tools', 'mb-custom-post-type' ) },
-	{ name: 'menu_position', value: 80, label: __( 'Settings', 'mb-custom-post-type' ) },
-	{ name: 'menu_position', value: 100, label: __( 'Metabox', 'mb-custom-post-type' ) },
-];
-
 export const AdvancedDatas = [
 	{ type: 'textarea', name: 'description', label: __( 'Description', 'mb-custom-post-type' ), placeholder: __( 'A short descriptive summary of what the post type is', 'mb-custom-post-type' ) },
 	{ type: 'checkbox', name: 'public', label: __( 'Public', 'mb-custom-post-type' ), description: __( 'Controls how the type is visible to authors and readers.', 'mb-custom-post-type' ) },
@@ -103,12 +71,12 @@ export const AdvancedDatas = [
 	{ type: 'checkbox', name: 'exclude_from_search', label: __( 'Exclude from search', 'mb-custom-post-type' ), description: __( 'Whether to exclude posts with this post type from frontend search results.', 'mb-custom-post-type' ) },
 	{ type: 'checkbox', name: 'publicly_queryable', label: __( 'Publicly queryable', 'mb-custom-post-type' ), description: __( 'Whether queries can be performed on the frontend.', 'mb-custom-post-type' ) },
 	{ type: 'checkbox', name: 'show_ui', label: __( 'Show UI', 'mb-custom-post-type' ), description: __( 'Whether to generate a default UI for managing this post type in the admin.', 'mb-custom-post-type' ) },
-	{ type: 'select', name: 'show_in_menu', label: __( 'Show in menu', 'mb-custom-post-type' ), description: __( 'Where to show the post type in the admin menu. Show UI must be enabled.', 'mb-custom-post-type' ), options: ShowInMenuData },
+	{ type: 'select', name: 'show_in_menu', label: __( 'Show in menu', 'mb-custom-post-type' ), description: __( 'Where to show the post type in the admin menu. Show UI must be enabled.', 'mb-custom-post-type' ), options: MBCPT.show_in_menu_options },
 	{ type: 'checkbox', name: 'show_in_nav_menus', label: __( 'Show in nav menus', 'mb-custom-post-type' ), description: __( 'Whether post type is available for selection in navigation menus.', 'mb-custom-post-type' ) },
 	{ type: 'checkbox', name: 'show_in_admin_bar', label: __( 'Show in admin bar', 'mb-custom-post-type' ), description: __( 'Whether to make this post type available in the WordPress admin bar.', 'mb-custom-post-type' ) },
 	{ type: 'checkbox', name: 'show_in_rest', label: __( 'Show in REST', 'mb-custom-post-type' ), description: __( 'Whether to expose this post type in the REST API. Must be true to enable the Gutenberg editor.', 'mb-custom-post-type' ) },
 	{ type: 'text', name: 'rest_base', label: __( 'REST API base slug', 'mb-custom-post-type' ), description: __( 'Leave empty to use the post type slug.', 'mb-custom-post-type' ), placeholder: __( 'Slug to use in REST API URL', 'mb-custom-post-type' ) },
-	{ type: 'select', name: 'menu_position', label: __( 'Menu position after', 'mb-custom-post-type' ), options: MenuPosition, default: '' },
+	{ type: 'select', name: 'menu_position', label: __( 'Menu position after', 'mb-custom-post-type' ), options: MBCPT.menu_position_options, default: '' },
 	{ type: 'icon', name: 'menu_icon', label: __( 'Menu icon', 'mb-custom-post-type' ) },
 	{ type: 'radio', name: 'capability_type', label: __( 'Capability type', 'mb-custom-post-type' ), description: __( 'The post type to use for checking read, edit, and delete capabilities.', 'mb-custom-post-type' ), options: CapabilityDatas, default: 'post' },
 	// map_meta_cap

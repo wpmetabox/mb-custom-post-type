@@ -71,6 +71,8 @@ class Edit {
 				$options[ $slug ] = $taxonomy->labels->singular_name;
 			}
 			$vars['taxonomies'] = $options;
+			$vars['menu_position_options'] = $this->get_menu_position_options();
+			$vars['show_in_menu_options'] = $this->get_show_in_menu_options();
 		}
 
 		if ( 'mb-taxonomy' === get_current_screen()->id ) {
@@ -340,5 +342,47 @@ class Edit {
 			'wordpress-alt',
 			'wordpress',
 		];
+	}
+
+	private function get_show_in_menu_options() {
+		global $menu;
+		$options = [
+			[
+				'value' => 'true',
+				'label' => esc_html__( 'Show as top-level menu', 'mb-custom-post-type' ),
+			],
+			[
+				'value' => 'false',
+				'label' => esc_html__( 'Do not show in the admin menu', 'mb-custom-post-type' ),
+			],
+		];
+		foreach ( $menu as $params ) {
+			if ( ! empty( $params[0] ) && ! empty( $params[2] ) ) {
+				// Translators: %s is the main menu label.
+				$options[] = [
+					'value' => $params[2],
+					'label' => sprintf( __( 'Show as sub-menu of %s', 'mb-custom-post-type' ), $this->strip_span( $params[0] ) ),
+				];
+			}
+		}
+		return $options;
+	}
+
+	private function get_menu_position_options() {
+		global $menu;
+		$positions = [];
+		foreach ( $menu as $position => $params ) {
+			if ( ! empty( $params[0] ) ) {
+				$positions[] = [
+					'value' => $position,
+					'label' => $this->strip_span( $params[0] ),
+				];
+			}
+		}
+		return $positions;
+	}
+
+	private function strip_span( $html ) {
+		return preg_replace( '@<span .*>.*</span>@si', '', $html );
 	}
 }
