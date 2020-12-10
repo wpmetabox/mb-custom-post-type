@@ -78,6 +78,18 @@
 				border-color: var(--wp-admin-theme-color);
 			}
 		}
+		.dashicons {
+			border: 1px solid var(--color-light);
+			border-radius: 4px;
+			width: 36px;
+			height: 36px;
+			padding: 8px;
+			box-sizing: border-box;
+
+			&:hover {
+				border-color: var(--wp-admin-theme-color);
+			}
+		}
 
 		input {
 			position: absolute;
@@ -85,6 +97,11 @@
 
 			&:checked ~ svg {
 				fill: #fff;
+				background-color: var(--wp-admin-theme-color);
+				border-color: var(--wp-admin-theme-color);
+			}
+			&:checked ~ .dashicons {
+				color: #fff;
 				background-color: var(--wp-admin-theme-color);
 				border-color: var(--wp-admin-theme-color);
 			}
