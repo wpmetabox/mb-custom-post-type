@@ -11,5 +11,6 @@ assets/*.scss
 .gitattributes
 .gitignore
 *.json
+*.lock
 README.md
 webpack.config.js
