@@ -1,4 +1,5 @@
 const path = require( 'path' );
+const TerserPlugin = require( "terser-webpack-plugin" );
 
 // https://www.cssigniter.com/how-to-use-external-react-components-in-your-gutenberg-blocks/
 const externals = {
@@ -6,6 +7,16 @@ const externals = {
 	'react-dom': 'ReactDOM',
 	'codemirror': 'wp.CodeMirror',
 	'clipboard': 'ClipboardJS',
+};
+
+const optimization = {
+	minimizer: [
+		new TerserPlugin( {
+			terserOptions: {
+				keep_fnames: false,
+			},
+		} ),
+	],
 };
 
 const commonModules = {
@@ -30,6 +41,7 @@ const CptConfig = {
 		path: path.resolve( __dirname, './assets' )
 	},
 	externals,
+	optimization,
 	module: commonModules
 };
 
@@ -40,6 +52,7 @@ const TaxonomyConfig = {
 		path: path.resolve( __dirname, './assets' )
 	},
 	externals,
+	optimization,
 	module: commonModules
 };
 
