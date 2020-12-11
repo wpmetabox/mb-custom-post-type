@@ -358,9 +358,9 @@ class Edit {
 		];
 		foreach ( $menu as $params ) {
 			if ( ! empty( $params[0] ) && ! empty( $params[2] ) ) {
-				// Translators: %s is the main menu label.
 				$options[] = [
 					'value' => $params[2],
+					// Translators: %s is the main menu label.
 					'label' => sprintf( __( 'Show as sub-menu of %s', 'mb-custom-post-type' ), $this->strip_span( $params[0] ) ),
 				];
 			}
