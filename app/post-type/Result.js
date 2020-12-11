@@ -1,8 +1,8 @@
-import PhpCode from './constants/PhpCode';
-import { SettingsContext } from '../SettingsContext';
+import { __ } from '@wordpress/i18n';
 import { UnControlled as CodeMirror } from 'react-codemirror2';
+import { SettingsContext } from '../SettingsContext';
+import PhpCode from './constants/PhpCode';
 const { useContext } = wp.element;
-const { __ } = wp.i18n;
 const { ClipboardButton } = wp.components;
 const { withState } = wp.compose;
 

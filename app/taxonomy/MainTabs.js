@@ -1,3 +1,4 @@
+import { __ } from '@wordpress/i18n';
 import CheckboxList from '../controls/CheckboxList';
 import Control from '../controls/Control';
 import { SettingsContext } from '../SettingsContext';
@@ -5,7 +6,6 @@ import { AdvancedDatas, BasicDatas, CodeDatas, LabelDatas } from './constants/Da
 import Result from './Result';
 const { useContext } = wp.element;
 const { TabPanel } = wp.components;
-const { __ } = wp.i18n;
 const tabs = [
 	{
 		name: 'general',

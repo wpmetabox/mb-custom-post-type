@@ -1,4 +1,4 @@
-const { __ } = wp.i18n;
+import { __ } from '@wordpress/i18n';
 
 export const BasicDatas = [
 	{ type: 'text', name: 'labels.name', label: __( 'Plural name', 'mb-custom-post-type' ), required: true },

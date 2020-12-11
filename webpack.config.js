@@ -7,16 +7,7 @@ const externals = {
 	'react-dom': 'ReactDOM',
 	'codemirror': 'wp.CodeMirror',
 	'clipboard': 'ClipboardJS',
-};
-
-const optimization = {
-	minimizer: [
-		new TerserPlugin( {
-			terserOptions: {
-				keep_fnames: false,
-			},
-		} ),
-	],
+	'@wordpress/i18n': 'wp.i18n'
 };
 
 const commonModules = {
@@ -41,7 +32,6 @@ const CptConfig = {
 		path: path.resolve( __dirname, './assets' )
 	},
 	externals,
-	optimization,
 	module: commonModules
 };
 
@@ -52,7 +42,6 @@ const TaxonomyConfig = {
 		path: path.resolve( __dirname, './assets' )
 	},
 	externals,
-	optimization,
 	module: commonModules
 };
 
