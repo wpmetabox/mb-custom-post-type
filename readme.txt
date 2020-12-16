@@ -1,22 +1,22 @@
 === MB Custom Post Types & Custom Taxonomies ===
 Contributors: elightup, metabox, rilwis, duc88b, truongwp
 Donate link: https://metabox.io/pricing/
-Tags: cms, custom, custom post types, custom post type, cpt, post, post types, post type, types
+Tags: custom post types, custom taxonomies, meta box, content types, cpt, post type, taxonomy, cms, post, post types, types, taxonomies, tax
 Requires at least: 5.0
 Tested up to: 5.6
 Requires PHP: 5.6
 Stable tag: 2.0.7
 License: GPLv2 or later
 
-Create and manage custom post types and custom taxonomies with an easy-to-use interface in WordPress.
+Create and manage custom post types and custom taxonomies with an easy-to-use UI in WordPress.
 
 == Description ==
 
-**MB Custom Post Types & Custom Taxonomies** helps you to create and manage custom post types and custom taxonomies easily in WordPress by providing an easy-to-use interface in the admin area.
+**MB Custom Post Types & Custom Taxonomies** helps you to register and edit custom post types and custom taxonomies easily in WordPress by providing an easy-to-use UI in the admin area.
 
 The plugin allows you to handle all post type's arguments and taxonomy's arguments such as menu labels, admin bar label, exclude from search, disable archive page, etc. just in minutes. You don't need to write custom PHP code to register custom post types anymore (using function `register_post_type()` and `register_taxonomy()`).
 
-Using **MB Custom Post Types & Custom Taxonomies**, you will be able to craft the WordPress admin and turn it into a professional Content Management Systems.
+Using **MB Custom Post Types & Custom Taxonomies**, you will be able to craft the WordPress content types and turn it into a professional CMS (Content Management Systems).
 
 ### Features
 
@@ -32,7 +32,7 @@ Using **MB Custom Post Types & Custom Taxonomies**, you will be able to craft th
 - [Project Page](https://metabox.io/plugins/custom-post-type/)
 - [Github Repo](https://github.com/rilwis/mb-custom-post-type/)
 
-This plugin is a free extension of [Meta Box](https://metabox.io) plugin, which is a powerful, professional solution to create custom meta boxes and custom fields for WordPress websites. Using **MB Custom Post Types & Custom Taxonomies** in combination with [other extensions](https://metabox.io/plugins/) will help you manage any content types in WordPress easily and make your website more professional.
+This plugin is a free extension of [Meta Box](https://metabox.io) plugin, which is a powerful, professional solution to create custom meta boxes and custom fields for WordPress. Using **MB Custom Post Types & Custom Taxonomies** in combination with [other Meta Box extensions](https://metabox.io/plugins/) will help you manage any content types in WordPress easily and make your website more professional.
 
 == Installation ==
 
