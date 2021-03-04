@@ -18,7 +18,7 @@ const normalizeBool = value => {
 	}
 	return value;
 };
-const normalizeNumber = value => isNaN( parseInt( value ) ) ? value : parseInt( value );
+const normalizeNumber = value => typeof value === 'string' ? value : parseInt( value );
 
 const Control = ( { field, autoFills = [] } ) => {
 	const { settings, updateSettings } = useContext( SettingsContext );
