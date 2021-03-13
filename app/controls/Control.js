@@ -18,7 +18,6 @@ const normalizeBool = value => {
 	}
 	return value;
 };
-const normalizeNumber = value => typeof value === 'string' ? value : parseInt( value );
 
 const Control = ( { field, autoFills = [] } ) => {
 	const { settings, updateSettings } = useContext( SettingsContext );
@@ -42,9 +41,8 @@ const Control = ( { field, autoFills = [] } ) => {
 
 	const update = e => {
 		const name = e.target.name;
-		let value = 'checkbox' === e.target.type ? e.target.checked : e.target.value;
+		let value = 'checkbox' === e.target.type ? dotProp.get( e.target, 'checked', false ) : e.target.value;
 		value = normalizeBool( value );
-		value = normalizeNumber( value );
 
 		let newSettings = { ...settings };
 		dotProp.set( newSettings, name, value );
@@ -56,17 +54,17 @@ const Control = ( { field, autoFills = [] } ) => {
 	const _value = dotProp.get( settings, field.name, field.default || '' );
 	switch ( field.type ) {
 		case 'text':
-			return <Input label={ field.label } name={ field.name } value={ _value } description={ field.description } required={ field.required } update={ update } />;
+			return <Input {...field} value={ _value } update={ update } />;
 		case 'textarea':
-			return <Textarea label={ field.label } name={ field.name } placeholder={ field.placeholder } value={ _value } description={ field.description } update={ update } />;
+			return <Textarea {...field} value={ _value } update={ update } />;
 		case 'checkbox':
-			return <Checkbox label={ field.label } name={ field.name } description={ field.description } checked={ _value } update={ update } />;
+			return <Checkbox {...field} checked={ _value } update={ update } />;
 		case 'radio':
-			return <Radio label={ field.label } name={ field.name } options={ field.options } value={ _value } update={ update } />;
+			return <Radio {...field} value={ _value } update={ update } />;
 		case 'icon':
-			return <Icon label={ field.label } name={ field.name } value={ _value } update={ update } />;
+			return <Icon {...field} value={ _value } update={ update } />;
 		case 'select':
-			return <Select label={ field.label } name={ field.name } description={ field.description } options={ field.options } value={ _value } update={ update } />;
+			return <Select {...field} value={ _value } update={ update } />;
 	}
 };
 
