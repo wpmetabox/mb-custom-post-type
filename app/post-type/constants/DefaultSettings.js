@@ -50,7 +50,7 @@ const DefaultSettings = {
 	show_in_admin_bar  : true,
 	show_in_rest       : true,
 	rest_base          : '',
-	menu_position      : null,
+	menu_position      : 20,
 	menu_icon          : '',
 	capability_type    : 'post',
 	supports           : ['title', 'editor', 'thumbnail'],
