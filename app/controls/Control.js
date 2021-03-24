@@ -43,6 +43,7 @@ const Control = ( { field, autoFills = [] } ) => {
 		const name = e.target.name;
 		let value = 'checkbox' === e.target.type ? dotProp.get( e.target, 'checked', false ) : e.target.value;
 		value = normalizeBool( value );
+		value = name === 'menu_position' ? parseInt( value ) : value;
 
 		let newSettings = { ...settings };
 		dotProp.set( newSettings, name, value );
@@ -54,17 +55,17 @@ const Control = ( { field, autoFills = [] } ) => {
 	const _value = dotProp.get( settings, field.name, field.default || '' );
 	switch ( field.type ) {
 		case 'text':
-			return <Input {...field} value={ _value } update={ update } />;
+			return <Input { ...field } value={ _value } update={ update } />;
 		case 'textarea':
-			return <Textarea {...field} value={ _value } update={ update } />;
+			return <Textarea { ...field } value={ _value } update={ update } />;
 		case 'checkbox':
-			return <Checkbox {...field} checked={ _value } update={ update } />;
+			return <Checkbox { ...field } checked={ _value } update={ update } />;
 		case 'radio':
-			return <Radio {...field} value={ _value } update={ update } />;
+			return <Radio { ...field } value={ _value } update={ update } />;
 		case 'icon':
-			return <Icon {...field} value={ _value } update={ update } />;
+			return <Icon { ...field } value={ _value } update={ update } />;
 		case 'select':
-			return <Select {...field} value={ _value } update={ update } />;
+			return <Select { ...field } value={ _value } update={ update } />;
 	}
 };
 
