@@ -51,7 +51,7 @@ const DefaultSettings = {
 	show_in_rest       : true,
 	rest_base          : '',
 	menu_position      : 20,
-	menu_icon          : '',
+	menu_icon          : 'dashicons-admin-generic',
 	capability_type    : 'post',
 	supports           : ['title', 'editor', 'thumbnail'],
 	taxonomies         : [],
