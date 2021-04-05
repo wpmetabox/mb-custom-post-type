@@ -370,7 +370,12 @@ class Edit {
 
 	private function get_menu_position_options() {
 		global $menu;
-		$positions = [];
+		$positions = [
+			[
+				'value' => '',
+				'label' => __( 'Default', 'mb-custom-post-type' ),
+			]
+		];
 		foreach ( $menu as $position => $params ) {
 			if ( ! empty( $params[0] ) ) {
 				$positions[] = [
