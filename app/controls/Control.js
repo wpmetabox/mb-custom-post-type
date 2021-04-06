@@ -22,6 +22,19 @@ const normalizeBool = value => {
 const Control = ( { field, autoFills = [] } ) => {
 	const { settings, updateSettings } = useContext( SettingsContext );
 
+	const isDisplay = field => {
+		const { dependency } = field;
+		if ( !dependency ) {
+			return true;
+		}
+		const dep = dependency.match( /([^:]+):([^:\s]+)/ );
+		const depName = dep[ 1 ];
+		const depValue = normalizeBool( dep[ 2 ] );
+		const currentDepValue = dotProp.get( settings, depName );
+
+		return depValue === currentDepValue;
+	};
+
 	const autofill = ( newSettings, name, value ) => {
 		const placeholder = name.replace( 'labels.', '' );
 		autoFills.forEach( f => {
@@ -43,7 +56,7 @@ const Control = ( { field, autoFills = [] } ) => {
 		const name = e.target.name;
 		let value = 'checkbox' === e.target.type ? dotProp.get( e.target, 'checked', false ) : e.target.value;
 		value = normalizeBool( value );
-		value = name === 'menu_position' ? parseInt( value ) : value;
+		value = name === 'menu_position' ? parseInt( value ) || '' : value;
 
 		let newSettings = { ...settings };
 		dotProp.set( newSettings, name, value );
@@ -53,6 +66,9 @@ const Control = ( { field, autoFills = [] } ) => {
 	};
 
 	const _value = dotProp.get( settings, field.name, field.default || '' );
+	if ( !isDisplay( field ) ) {
+		return '';
+	}
 	switch ( field.type ) {
 		case 'text':
 			return <Input { ...field } value={ _value } update={ update } />;

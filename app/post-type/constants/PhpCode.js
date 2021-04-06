@@ -1,7 +1,7 @@
 import { checkboxList, general, labels, spaces, text, translatableText } from '../../code';
 
 const advanced = settings => {
-	const ignore = [ 'slug', 'function_name', 'text_domain', 'label', 'labels', 'description', 'rest_base', 'show_in_menu', 'menu_icon', 'capability_type', 'has_archive', 'archive_slug', 'rewrite', 'supports', 'taxonomies' ];
+	const ignore = [ 'slug', 'function_name', 'text_domain', 'label', 'labels', 'description', 'rest_base', 'show_in_menu', 'menu_icon', 'menu_position', 'capability_type', 'has_archive', 'archive_slug', 'rewrite', 'supports', 'taxonomies' ];
 
 	let keys = Object.keys( settings ).filter( key => !ignore.includes( key ) );
 	return keys.map( key => general( settings, key ) ).join( ",\n\t\t" );
@@ -10,7 +10,13 @@ const advanced = settings => {
 const showInMenu = settings => {
 	let value = settings.show_in_menu;
 	value = [ true, false ].includes( value ) ? value : `'${ value }'`;
-	return `'show_in_menu'${ spaces( settings, 'show_in_menu' ) } => ${ value }`;
+	let code = `'show_in_menu'${ spaces( settings, 'show_in_menu' ) } => ${ value },`;
+	if ( value === true ) {
+		code += `
+		${ text( settings, 'menu_icon' ) },
+		${ general( settings, 'menu_position' ) },`;
+	}
+	return code;
 };
 
 const archive = settings => {
@@ -44,8 +50,7 @@ function ${ settings.function_name }() {
 		${ advanced( settings ) },
 		${ archive( settings ) },
 		${ text( settings, 'rest_base' ) },
-		${ showInMenu( settings ) },
-		${ text( settings, 'menu_icon' ) },
+		${ showInMenu( settings ) }
 		${ text( settings, 'capability_type' ) },
 		${ checkboxList( settings, 'supports' ) },
 		${ checkboxList( settings, 'taxonomies' ) },

@@ -45,17 +45,17 @@ export const LabelDatas = [
 ];
 
 export const SupportDatas = {
-	title            : __( 'Title', 'mb-custom-post-type' ),
-	editor           : __( 'Editor', 'mb-custom-post-type' ),
-	excerpt          : __( 'Excerpt', 'mb-custom-post-type' ),
-	author           : __( 'Author', 'mb-custom-post-type' ),
-	thumbnail        : __( 'Thumbnail', 'mb-custom-post-type' ),
-	trackbacks       : __( 'Trackbacks', 'mb-custom-post-type' ),
-	"custom-fields"  : __( 'Custom fields', 'mb-custom-post-type' ),
-	comments         : __( 'Comments', 'mb-custom-post-type' ),
-	revisions        : __( 'Revisions', 'mb-custom-post-type' ),
+	title: __( 'Title', 'mb-custom-post-type' ),
+	editor: __( 'Editor', 'mb-custom-post-type' ),
+	excerpt: __( 'Excerpt', 'mb-custom-post-type' ),
+	author: __( 'Author', 'mb-custom-post-type' ),
+	thumbnail: __( 'Thumbnail', 'mb-custom-post-type' ),
+	trackbacks: __( 'Trackbacks', 'mb-custom-post-type' ),
+	"custom-fields": __( 'Custom fields', 'mb-custom-post-type' ),
+	comments: __( 'Comments', 'mb-custom-post-type' ),
+	revisions: __( 'Revisions', 'mb-custom-post-type' ),
 	"page-attributes": __( 'Page attributes', 'mb-custom-post-type' ),
-	"post-formats"   : __( 'Post formats', 'mb-custom-post-type' ),
+	"post-formats": __( 'Post formats', 'mb-custom-post-type' ),
 };
 
 const CapabilityDatas = [
@@ -72,12 +72,12 @@ export const AdvancedDatas = [
 	{ type: 'checkbox', name: 'publicly_queryable', label: __( 'Publicly queryable', 'mb-custom-post-type' ), description: __( 'Whether queries can be performed on the frontend.', 'mb-custom-post-type' ) },
 	{ type: 'checkbox', name: 'show_ui', label: __( 'Show UI', 'mb-custom-post-type' ), description: __( 'Whether to generate a default UI for managing this post type in the admin.', 'mb-custom-post-type' ) },
 	{ type: 'select', name: 'show_in_menu', label: __( 'Show in menu', 'mb-custom-post-type' ), description: __( 'Where to show the post type in the admin menu. Show UI must be enabled.', 'mb-custom-post-type' ), options: MBCPT.show_in_menu_options },
+	{ type: 'select', name: 'menu_position', label: __( 'Menu position after', 'mb-custom-post-type' ), options: MBCPT.menu_position_options, dependency: 'show_in_menu:true' },
+	{ type: 'icon', name: 'menu_icon', label: __( 'Menu icon', 'mb-custom-post-type' ), dependency: 'show_in_menu:true' },
 	{ type: 'checkbox', name: 'show_in_nav_menus', label: __( 'Show in nav menus', 'mb-custom-post-type' ), description: __( 'Whether post type is available for selection in navigation menus.', 'mb-custom-post-type' ) },
 	{ type: 'checkbox', name: 'show_in_admin_bar', label: __( 'Show in admin bar', 'mb-custom-post-type' ), description: __( 'Whether to make this post type available in the WordPress admin bar.', 'mb-custom-post-type' ) },
 	{ type: 'checkbox', name: 'show_in_rest', label: __( 'Show in REST', 'mb-custom-post-type' ), description: __( 'Whether to expose this post type in the REST API. Must be true to enable the Gutenberg editor.', 'mb-custom-post-type' ) },
 	{ type: 'text', name: 'rest_base', label: __( 'REST API base slug', 'mb-custom-post-type' ), description: __( 'Leave empty to use the post type slug.', 'mb-custom-post-type' ), placeholder: __( 'Slug to use in REST API URL', 'mb-custom-post-type' ) },
-	{ type: 'select', name: 'menu_position', label: __( 'Menu position after', 'mb-custom-post-type' ), options: MBCPT.menu_position_options },
-	{ type: 'icon', name: 'menu_icon', label: __( 'Menu icon', 'mb-custom-post-type' ) },
 	{ type: 'radio', name: 'capability_type', label: __( 'Capability type', 'mb-custom-post-type' ), description: __( 'The post type to use for checking read, edit, and delete capabilities.', 'mb-custom-post-type' ), options: CapabilityDatas, default: 'post' },
 	// map_meta_cap
 	// supports
