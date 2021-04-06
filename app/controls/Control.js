@@ -66,7 +66,7 @@ const Control = ( { field, autoFills = [] } ) => {
 	};
 
 	const _value = dotProp.get( settings, field.name, field.default || '' );
-	if ( ! isDisplay( field ) ) {
+	if ( !isDisplay( field ) ) {
 		return '';
 	}
 	switch ( field.type ) {
