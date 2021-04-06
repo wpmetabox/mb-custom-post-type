@@ -56,7 +56,7 @@ const Control = ( { field, autoFills = [] } ) => {
 		const name = e.target.name;
 		let value = 'checkbox' === e.target.type ? dotProp.get( e.target, 'checked', false ) : e.target.value;
 		value = normalizeBool( value );
-		value = name === 'menu_position' ? parseInt( value ) : value;
+		value = name === 'menu_position' ? parseInt( value ) || '' : value;
 
 		let newSettings = { ...settings };
 		dotProp.set( newSettings, name, value );

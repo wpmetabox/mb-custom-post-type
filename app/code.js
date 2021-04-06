@@ -1,7 +1,7 @@
 import dotProp from 'dot-prop';
 
-const maxKeyLengh = object => Math.max.apply( null, Object.keys( object ).map( key => key.length ) );
-const spaces = ( settings, key ) => ' '.repeat( maxKeyLengh( settings ) - key.length );
+const maxKeyLength = object => Math.max.apply( null, Object.keys( object ).map( key => key.length ) );
+const spaces = ( settings, key ) => ' '.repeat( maxKeyLength( settings ) - key.length );
 
 const text = ( settings, key ) => `'${ key }'${ spaces( settings, key ) } => '${ dotProp.get( settings, key, '' ) }'`;
 const translatableText = ( settings, key ) => `'${ key }'${ spaces( settings, key ) } => esc_html__( '${ dotProp.get( settings, key, '' ) }', '${ settings.text_domain }' )`;
