@@ -31,6 +31,7 @@ const DefaultSettings = {
 		use_featured_image      : __( 'Use as featured image', 'mb-custom-post-type' ),
 		menu_name               : '',
 		filter_items_list       : '',
+		filter_by_date          : '',
 		items_list_navigation   : '',
 		items_list              : '',
 		item_published          : '',
