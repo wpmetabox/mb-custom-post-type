@@ -23,6 +23,7 @@ const DefaultSettings = {
 		choose_from_most_used     : '',
 		not_found                 : '',
 		no_terms                  : '',
+		filter_by_item            : '',
 		items_list_navigation     : '',
 		items_list                : '',
 		most_used                 : '',

@@ -29,6 +29,7 @@ export const LabelDatas = [
 	{ type: 'text', name: 'labels.choose_from_most_used', label: __( 'Choose from most used', 'mb-custom-post-type' ), default: __( 'Choose most used %name%', 'mb-custom-post-type' ), updateFrom: 'labels.name' },
 	{ type: 'text', name: 'labels.not_found', label: __( 'Not found', 'mb-custom-post-type' ), default: __( 'No %name% found', 'mb-custom-post-type' ), updateFrom: 'labels.name' },
 	{ type: 'text', name: 'labels.no_terms', label: __( 'No terms', 'mb-custom-post-type' ), default: __( 'No %name% found', 'mb-custom-post-type' ), updateFrom: 'labels.name' },
+	{ type: 'text', name: 'labels.filter_by_item', label: __( 'Filter by', 'mb-custom-post-type' ), default: __( 'Filter by %singular_name%', 'mb-custom-post-type' ), updateFrom: 'labels.singular_name' },
 	{ type: 'text', name: 'labels.items_list_navigation', label: __( 'Table pagination hidden heading', 'mb-custom-post-type' ), default: __( '%name% list pagination', 'mb-custom-post-type' ), updateFrom: 'labels.name' },
 	{ type: 'text', name: 'labels.items_list', label: __( 'Table hidden heading', 'mb-custom-post-type' ), default: __( '%name% list', 'mb-custom-post-type' ), updateFrom: 'labels.name' },
 	{ type: 'text', name: 'labels.most_used', label: __( 'Most used tab', 'mb-custom-post-type' ), default: __( 'Most Used', 'mb-custom-post-type' ), updateFrom: 'labels.name' },
