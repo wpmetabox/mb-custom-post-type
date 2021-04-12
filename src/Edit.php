@@ -68,7 +68,7 @@ class Edit {
 
 			$options = [];
 			foreach ( $taxonomies as $slug => $taxonomy ) {
-				$options[ $slug ] = $taxonomy->labels->singular_name;
+				$options[ $slug ] = sprintf( '%s (%s)', $taxonomy->labels->singular_name, $slug );
 			}
 			$vars['taxonomies'] = $options;
 			$vars['menu_position_options'] = $this->get_menu_position_options();
@@ -94,7 +94,7 @@ class Edit {
 
 			$options    = [];
 			foreach ( $post_types as $slug => $post_type ) {
-				$options[ $slug ] = $post_type->labels->singular_name;
+				$options[ $slug ] = sprintf( '%s (%s)', $post_type->labels->singular_name, $slug );
 			}
 			$vars['types'] = $options;
 		}
