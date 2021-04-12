@@ -1,7 +1,13 @@
 const { Dashicon } = wp.components;
-const Icon = ( { label, name, update, value } ) => (
+import Tooltip from './Tooltip';
+
+const Icon = ( { label, name, update, value, required = false, tooltip = '' } ) => (
 	<div className="mb-cpt-field mb-cpt-field--radio">
-		<label className="mb-cpt-label">{ label }</label>
+		<label className="mb-cpt-label" htmlFor={ name }>
+			{ label }
+			{ required && <span className="mb-cpt-required">*</span> }
+			{ tooltip && <Tooltip id={ name } content={ tooltip } /> }
+		</label>
 		<div className="mb-cpt-input">
 			{
 				MBCPT.icons.map( icon => (

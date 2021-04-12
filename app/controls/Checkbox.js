@@ -1,6 +1,12 @@
-const Checkbox = ( { label, name, description, update, checked } ) => (
+import Tooltip from './Tooltip';
+
+const Checkbox = ( { label, name, description, update, checked, required = false, tooltip = '' } ) => (
 	<div className="mb-cpt-field">
-		{label && <label className="mb-cpt-label" htmlFor={ name }>{ label }</label> }
+		<label className="mb-cpt-label" htmlFor={ name }>
+			{ label }
+			{ required && <span className="mb-cpt-required">*</span> }
+			{ tooltip && <Tooltip id={ name } content={ tooltip } /> }
+		</label>
 		<div className="mb-cpt-input">
 			{
 				description

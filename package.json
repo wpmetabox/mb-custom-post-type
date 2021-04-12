@@ -3,6 +3,7 @@
   "version": "2.1.0",
   "description": "",
   "main": "index.js",
+  "license": "GPL-2.0-or-later",
   "scripts": {
     "css": "node-sass --output-style compressed -x assets/style.scss -o assets",
     "watch:css": "node-sass --output-style compressed -x -w assets -o assets",

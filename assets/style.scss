@@ -39,6 +39,25 @@
 		margin-left: 12px;
 		font-style: italic;
 	}
+		// Tooltip
+	&-tooltip-icon {
+		// WordPress < 5.6
+		svg {
+			width: 14px;
+			height: 14px;
+			fill: var(--color-light);
+			margin-left: 6px;
+			top: 2px;
+			position: relative;
+		}
+		// WordPress 5.6+
+		.dashicon {
+			color: var(--color-light);
+			font-size: 14px;
+			position: relative;
+			top: 2px;
+		}
+	}
 
 	// Fields
 	&-field {
