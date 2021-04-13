@@ -65,6 +65,7 @@ class Edit {
 			$taxonomies = array_diff_key( $taxonomies, array_flip( [
 				'nav_menu',
 				'link_category',
+				'mb-views-category',
 			] ) );
 
 			$options = [];
@@ -89,6 +90,8 @@ class Edit {
 
 				'mb-post-type',
 				'mb-taxonomy',
+				'mb-relationship',
+				'mb-settings-page',
 				'mb-views',
 				'meta-box',
 			] ) );
