@@ -59,8 +59,8 @@ class PostTypeRegister extends Register {
 		] );
 
 		foreach ( $posts as $post ) {
-			$data = $this->get_post_type_settings( $post );
-			$post_types[ $data['slug'] ] = $data;
+			$settings = $this->get_post_type_settings( $post );
+			$post_types[ $settings['slug'] ] = $settings;
 		}
 
 		return $post_types;
@@ -158,12 +158,12 @@ class PostTypeRegister extends Register {
 			'update_post_term_cache' => false,
 		] );
 		foreach ( $post_types as $post_type ) {
-			$data = $this->get_post_type_settings( $post_type );
-			$slug = $data['slug'];
+			$settings = $this->get_post_type_settings( $post_type );
+			$slug = Arr::get( $settings, 'slug' );
 
 			$messages[ $slug ] = $message;
 
-			if ( empty( $data['publicly_queryable'] ) ) {
+			if ( ! Arr::get( $settings, 'publicly_queryable' ) ) {
 				continue;
 			}
 
@@ -205,20 +205,13 @@ class PostTypeRegister extends Register {
 			'update_post_term_cache' => false,
 		] );
 		foreach ( $post_types as $post_type ) {
-			$data = $this->get_post_type_settings( $post_type );
-			$slug = $data['slug'];
+			$settings = $this->get_post_type_settings( $post_type );
+			$slug = Arr::get( $settings, 'slug' );
 
-			$labels[ $slug ] = [
-				'singular' => strtolower( $data['labels']['singular_name'] ),
-				'plural'   => strtolower( $data['labels']['name'] ),
-			];
-		}
+			$singular = strtolower( Arr::get( $settings, 'labels.singular_name' ) );
+			$plural   = strtolower( Arr::get( $settings, 'labels.name' ) );
 
-		foreach ( $labels as $post_type => $label ) {
-			$singular = $label['singular'];
-			$plural   = $label['plural'];
-
-			$bulk_messages[ $post_type ] = array(
+			$bulk_messages[ $slug ] = array(
 				// translators: %1$s: Number of items, %2$s: Name of the post type in singular or plural form.
 				'updated'   => sprintf( __( '%1$s %2$s updated.', 'mb-custom-post-type' ), $bulk_counts['updated'], $bulk_counts['updated'] > 1 ? $plural : $singular ),
 				// translators: %1$s: Number of items, %2$s: Name of the post type in singular or plural form.
