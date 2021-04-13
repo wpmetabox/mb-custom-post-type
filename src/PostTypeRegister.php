@@ -2,6 +2,7 @@
 namespace MBCPT;
 
 use WP_Post;
+use MetaBox\Support\Arr;
 
 class PostTypeRegister extends Register {
 	public function register() {
@@ -58,15 +59,18 @@ class PostTypeRegister extends Register {
 		] );
 
 		foreach ( $posts as $post ) {
-			$data = $this->get_post_type_data( $post );
+			$data = $this->get_post_type_settings( $post );
 			$post_types[ $data['slug'] ] = $data;
 		}
 
 		return $post_types;
 	}
 
-	public function get_post_type_data( WP_Post $post ) {
-		return empty( $post->post_content ) || isset( $_GET['mbcpt-force'] ) ? $this->migrate_data( $post ) : json_decode( $post->post_content, true );
+	public function get_post_type_settings( WP_Post $post ) {
+		$settings = empty( $post->post_content ) || isset( $_GET['mbcpt-force'] ) ? $this->migrate_data( $post ) : json_decode( $post->post_content, true );
+
+		$this->parse_capabilities( $settings );
+		return $settings;
 	}
 
 	private function migrate_data( WP_Post $post ) {
@@ -154,7 +158,7 @@ class PostTypeRegister extends Register {
 			'update_post_term_cache' => false,
 		] );
 		foreach ( $post_types as $post_type ) {
-			$data = $this->get_post_type_data( $post_type );
+			$data = $this->get_post_type_settings( $post_type );
 			$slug = $data['slug'];
 
 			$messages[ $slug ] = $message;
@@ -201,7 +205,7 @@ class PostTypeRegister extends Register {
 			'update_post_term_cache' => false,
 		] );
 		foreach ( $post_types as $post_type ) {
-			$data = $this->get_post_type_data( $post_type );
+			$data = $this->get_post_type_settings( $post_type );
 			$slug = $data['slug'];
 
 			$labels[ $slug ] = [
@@ -229,5 +233,15 @@ class PostTypeRegister extends Register {
 		}
 
 		return $bulk_messages;
+	}
+
+	private function parse_capabilities( &$settings ) {
+		if ( 'custom' !== Arr::get( $settings, 'capability_type' ) ) {
+			return;
+		}
+		$plural_name = sanitize_key( Arr::get( $settings, 'labels.name' ) );
+		$singular_name = sanitize_key( Arr::get( $settings, 'labels.singular_name' ) );
+		Arr::set( $settings, 'capability_type', [ $singular_name, $plural_name ] );
+		Arr::set( $settings, 'map_meta_cap', true );
 	}
 }

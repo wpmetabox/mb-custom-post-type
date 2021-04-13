@@ -4,7 +4,6 @@ import { SettingsContext } from '../SettingsContext';
 import Checkbox from './Checkbox';
 import Icon from './Icon';
 import Input from './Input';
-import Radio from './Radio';
 import Select from './Select';
 import Slug from './Slug';
 import Textarea from './Textarea';
@@ -77,8 +76,6 @@ const Control = ( { field, autoFills = [] } ) => {
 			return <Textarea { ...field } value={ _value } update={ update } />;
 		case 'checkbox':
 			return <Checkbox { ...field } checked={ _value } update={ update } />;
-		case 'radio':
-			return <Radio { ...field } value={ _value } update={ update } />;
 		case 'icon':
 			return <Icon { ...field } value={ _value } update={ update } />;
 		case 'select':

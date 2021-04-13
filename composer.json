@@ -15,6 +15,18 @@
   "homepage": "https://metabox.io/plugins/custom-post-type/",
   "license": "GPL-2.0",
   "minimum-stability": "stable",
+  "repositories": [
+		{
+			"type": "git",
+			"url": "git@github.com:wpmetabox/support.git"
+		}
+	],
+  "config": {
+		"prepend-autoloader": false
+	},
+	"require": {
+		"meta-box/support": "dev-master"
+	},
   "authors": [
     {
       "name": "Tran Ngoc Tuan Anh",
