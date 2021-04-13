@@ -7,7 +7,8 @@ const externals = {
 	'react-dom': 'ReactDOM',
 	'codemirror': 'wp.CodeMirror',
 	'clipboard': 'ClipboardJS',
-	'@wordpress/i18n': 'wp.i18n'
+	'@wordpress/i18n': 'wp.i18n',
+	'@wordpress/element': 'wp.element',
 };
 
 const commonModules = {

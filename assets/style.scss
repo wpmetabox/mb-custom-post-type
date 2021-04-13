@@ -75,6 +75,10 @@
 	&-description {
 		font-style: italic;
 	}
+	&-error {
+		font-style: italic;
+		color: var(--color-red);
+	}
 
 	&-choice {
 		margin-right: 12px;

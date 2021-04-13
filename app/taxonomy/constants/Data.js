@@ -3,7 +3,7 @@ import { __ } from '@wordpress/i18n';
 export const BasicDatas = [
 	{ type: 'text', name: 'labels.name', label: __( 'Plural name', 'mb-custom-post-type' ), required: true, tooltip: __( 'General name for the taxonomy, usually plural', 'mb-custom-post-type' ) },
 	{ type: 'text', name: 'labels.singular_name', label: __( 'Singular name', 'mb-custom-post-type' ), required: true, tooltip: __( 'Name for one object of this taxonomy', 'mb-custom-post-type' ) },
-	{ type: 'text', name: 'slug', label: __( 'Slug', 'mb-custom-post-type' ), required: true, updateFrom: 'labels.singular_name', tooltip: __( 'Taxonomy key, must not exceed 32 characters and may only contain lowercase alphanumeric characters, dashes, and underscores', 'mb-custom-post-type' ) },
+	{ type: 'slug', name: 'slug', label: __( 'Slug', 'mb-custom-post-type' ), required: true, updateFrom: 'labels.singular_name', tooltip: __( 'Taxonomy key, must not exceed 32 characters and may only contain lowercase alphanumeric characters, dashes, and underscores', 'mb-custom-post-type' ) },
 ];
 
 export const CodeDatas = [

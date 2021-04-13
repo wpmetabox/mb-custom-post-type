@@ -6,6 +6,7 @@ import Icon from './Icon';
 import Input from './Input';
 import Radio from './Radio';
 import Select from './Select';
+import Slug from './Slug';
 import Textarea from './Textarea';
 const { useContext } = wp.element;
 
@@ -82,6 +83,8 @@ const Control = ( { field, autoFills = [] } ) => {
 			return <Icon { ...field } value={ _value } update={ update } />;
 		case 'select':
 			return <Select { ...field } value={ _value } update={ update } />;
+		case 'slug':
+			return <Slug { ...field } value={ _value } update={ update } />;
 	}
 };
 
