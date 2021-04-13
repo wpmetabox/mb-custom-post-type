@@ -18,7 +18,7 @@
   "repositories": [
 		{
 			"type": "git",
-			"url": "git@github.com:wpmetabox/support.git"
+			"url": "https://github.com/wpmetabox/support.git"
 		}
 	],
   "config": {
