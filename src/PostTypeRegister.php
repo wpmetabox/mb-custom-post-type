@@ -236,7 +236,7 @@ class PostTypeRegister extends Register {
 		}
 		$plural_name = sanitize_key( Arr::get( $settings, 'labels.name' ) );
 		$singular_name = sanitize_key( Arr::get( $settings, 'labels.singular_name' ) );
-		if( $plural_name === $singular_name ) {
+		if ( $plural_name === $singular_name ) {
 			$plural_name .= 's';
 		}
 
