@@ -20,8 +20,8 @@ const labels = settings => {
     let keys = Object.keys( labels );
     labels.text_domain = dotProp.get( settings, 'text_domain', 'your-textdomain' ); // Add text domain to run the `text` function above.
 
-    let name = dotProp.get(labels, 'name' ,'');
-    let singular_name = dotProp.get(labels, 'singular_name' ,'');
+    let name = dotProp.get( labels, 'name' , '' );
+    let singular_name = dotProp.get( labels, 'singular_name' , '' );
     if( name.toUpperCase() === singular_name.toUpperCase() ) dotProp.set( labels, 'name', name + 's' );
 
     return keys.map( key => translatableText( labels, key ) ).join( ",\n\t\t" );
