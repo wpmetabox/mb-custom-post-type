@@ -69,7 +69,7 @@ class PostTypeRegister extends Register {
 	public function get_post_type_settings( WP_Post $post ) {
 		$settings = empty( $post->post_content ) || isset( $_GET['mbcpt-force'] ) ? $this->migrate_data( $post ) : json_decode( $post->post_content, true );
 
-		$this->check_supports_setting( $settings );
+		$this->parse_supports( $settings );
 
 		$this->parse_capabilities( $settings );
 		return $settings;
@@ -240,7 +240,7 @@ class PostTypeRegister extends Register {
 		Arr::set( $settings, 'map_meta_cap', true );
 	}
 
-	private function check_supports_setting( &$settings ) {
+	private function parse_supports( &$settings ) {
 		if ( !empty( Arr::get( $settings, 'supports' ) ) ) {
 			return;
 		}
