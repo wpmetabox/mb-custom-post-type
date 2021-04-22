@@ -52,8 +52,8 @@ function ${ settings.function_name }() {
 		${ text( settings, 'rest_base' ) },
 		${ showInMenu( settings ) }
 		${ text( settings, 'capability_type' ) },
-		${ checkboxList( settings, 'supports' ) },
-		${ checkboxList( settings, 'taxonomies' ) },
+		${ checkboxList( settings, 'supports', false ) },
+		${ checkboxList( settings, 'taxonomies', '[]' ) },
 		${ rewrite( settings ) },
 	];
 
