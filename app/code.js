@@ -5,7 +5,7 @@ const spaces = ( settings, key ) => ' '.repeat( maxKeyLength( settings ) - key.l
 
 const text = ( settings, key ) => `'${ key }'${ spaces( settings, key ) } => '${ dotProp.get( settings, key, '' ) }'`;
 const translatableText = ( settings, key ) => `'${ key }'${ spaces( settings, key ) } => esc_html__( '${ dotProp.get( settings, key, '' ) }', '${ settings.text_domain }' )`;
-const checkboxList = ( settings, key ) => `'${ key }'${ spaces( settings, key ) } => ${ dotProp.get( settings, key, [] ).length ? `['${ dotProp.get( settings, key, [] ).join( "', '" ) }']` : '[]' }`;
+const checkboxList = ( settings, key, default_value ) => `'${ key }'${ spaces( settings, key ) } => ${ dotProp.get( settings, key, [] ).length ? `['${ dotProp.get( settings, key, [] ).join( "', '" ) }']` : default_value }`;
 const general = ( settings, key ) => {
     let value = dotProp.get( settings, key );
     if ( [ '', undefined ].includes( value ) ) {
