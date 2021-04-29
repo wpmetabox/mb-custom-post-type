@@ -20,10 +20,16 @@ class About {
 				<div class="col">
 					<h3><?php esc_html_e( 'Create Custom Post Types', 'mb-custom-post-type' ); ?></h3>
 					<p><?php esc_html_e( 'Create your first custom post type to add more custom content (which is not post or page) to your WordPress website.', 'mb-custom-post-type' ); ?><p>
-					<p><a href="<?php echo esc_url( admin_url( 'post-new.php?post_type=mb-post-type' ) ); ?>" class="button"><?php esc_html_e( 'Start Now', 'mb-custom-post-type' ); ?></a></p>
+					<p style="display: flex; justify-content: space-between; align-items: center">
+						<a href="<?php echo esc_url( admin_url( 'post-new.php?post_type=mb-post-type' ) ); ?>" class="button"><?php esc_html_e( 'Start Now', 'mb-custom-post-type' ); ?></a>
+						<small><a href="https://docs.metabox.io/creating-post-types/?utm_source=WordPress&utm_medium=link&utm_campaign=plugin"><?php esc_html_e( 'View documentation', 'mb-custom-post-type' ); ?></a></small>
+					</p>
 					<h3><?php esc_html_e( 'Create Custom Taxonomies', 'mb-custom-post-type' ); ?></h3>
 					<p><?php esc_html_e( 'Create your first custom taxonomy to organize your content into groups that you can query to show them in the frontend.', 'mb-custom-post-type' ); ?><p>
-					<p><a href="<?php echo esc_url( admin_url( 'post-new.php?post_type=mb-taxonomy' ) ); ?>" class="button"><?php esc_html_e( 'Start Now', 'mb-custom-post-type' ); ?></a></p>
+					<p style="display: flex; justify-content: space-between; align-items: center">
+					<a href="<?php echo esc_url( admin_url( 'post-new.php?post_type=mb-taxonomy' ) ); ?>" class="button"><?php esc_html_e( 'Start Now', 'mb-custom-post-type' ); ?></a>
+						<small><a href="https://docs.metabox.io/creating-taxonomies/?utm_source=WordPress&utm_medium=link&utm_campaign=plugin"><?php esc_html_e( 'View documentation', 'mb-custom-post-type' ); ?></a></small>
+					</p>
 				</div>
 
 				<div class="col">
