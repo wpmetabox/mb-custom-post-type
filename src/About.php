@@ -27,7 +27,9 @@ class About {
 				</div>
 
 				<div class="col">
-					<iframe width="493" height="277" src="https://www.youtube.com/embed/9c4w5zdeTJI?rel=0" frameborder="0" allowfullscreen></iframe>
+					<div class="youtube-video-container">
+						<iframe width="560" height="315" src="https://www.youtube.com/embed/-oYrHGOri4w" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+					</div>
 					<p>
 						<?php
 						echo wp_kses_post(
