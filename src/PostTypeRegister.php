@@ -234,8 +234,8 @@ class PostTypeRegister extends Register {
 		if ( 'custom' !== Arr::get( $settings, 'capability_type' ) ) {
 			return;
 		}
-		$plural_name = sanitize_key( Arr::get( $settings, 'labels.name' ) );
-		$singular_name = sanitize_key( Arr::get( $settings, 'labels.singular_name' ) );
+		$plural_name = sanitize_key( Arr::get( $settings, 'slug' ) );
+		$singular_name = sanitize_key( Arr::get( $settings, 'slug' ) );
 		if ( $plural_name === $singular_name ) {
 			$plural_name .= 's';
 		}
