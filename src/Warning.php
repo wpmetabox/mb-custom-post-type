@@ -3,7 +3,7 @@ namespace MBCPT;
 
 class Warning {
 	public function __construct() {
-		if ( get_option( 'permalink_structure' ) === "" ) {
+		if ( get_option( 'permalink_structure' ) === '' ) {
 			add_action( 'admin_notices', [ $this, 'permalink_warning' ] );
 		}
 	}
