@@ -254,18 +254,27 @@ class PostTypeRegister extends Register {
 			return;
 		}
 		if( !empty( $settings['icon_type'] ) ) {
-			switch ( true ) {
-				case ( 'dashicons' == $settings['icon_type'] && !empty( $settings['icon'] ) ) :
-					Arr::set( $settings, 'menu_icon', $settings['icon'] );
+			switch ( $settings['icon_type'] ) {
+				case 'dashicons' :
+					if ( !empty( $settings['icon'] ) ) {
+						Arr::set( $settings, 'menu_icon', $settings['icon'] );
+					}
 					break;
-				case ( 'svg' == $settings['icon_type'] && !empty( $settings['icon_svg'] ) ) :
-					Arr::set( $settings, 'menu_icon', $settings['icon_svg'] );
+				case 'svg' :
+					if ( !empty( $settings['icon_svg'] ) ) {
+						Arr::set( $settings, 'menu_icon', $settings['icon_svg'] );
+					}
 					break;
-				case ( 'custom' == $settings['icon_type'] && !empty( $settings['icon_custom'] ) ) :
-					Arr::set( $settings, 'menu_icon', $settings['icon_custom'] );
+				case 'custom' :
+					if ( !empty( $settings['icon_custom'] ) ) {
+						Arr::set( $settings, 'menu_icon', $settings['icon_custom'] );
+					}
 					break;
 				default:
 					Arr::set( $settings, 'menu_icon', 'dashicons-admin-generic' );
+			}
+			if( empty( $settings['menu_icon'] ) ) {
+				Arr::set( $settings, 'menu_icon', 'dashicons-admin-generic' );
 			}
 			unset( $settings['icon_type'] );
 		}
