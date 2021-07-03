@@ -254,9 +254,11 @@ class PostTypeRegister extends Register {
 			return;
 		}
 		if( !empty( $settings['icon_type'] ) ) {
-			switch ( true ) {
-				case ( 'dashicons' == $settings['icon_type'] && !empty( $settings['icon'] ) ) :
-					Arr::set( $settings, 'menu_icon', $settings['icon'] );
+			switch ( $settings['icon_type'] ) {
+				case 'dashicons' :
+					if ( !empty( $settings['icon'] ) ) {
+						Arr::set( $settings, 'menu_icon', $settings['icon'] );
+					}
 					break;
 				case ( 'svg' == $settings['icon_type'] && !empty( $settings['icon_svg'] ) ) :
 					Arr::set( $settings, 'menu_icon', $settings['icon_svg'] );
