@@ -68,9 +68,21 @@ class PostTypeRegister extends Register {
 
 	public function get_post_type_settings( WP_Post $post ) {
 		$settings = empty( $post->post_content ) || isset( $_GET['mbcpt-force'] ) ? $this->migrate_data( $post ) : json_decode( $post->post_content, true );
-
+		switch ( $settings['icon_type'] ) {
+			case 'dashicons' :
+				$settings['menu_icon'] = $settings['icon'];
+				break;
+			case 'svg':
+				$settings['menu_icon'] = $settings['icon_svg'];
+				break;
+			case 'custom':
+				$settings['menu_icon'] = $settings['icon_custom'];
+				break;
+			default:
+				$settings['menu_icon'] = 'dashicons-admin-generic';
+				break;
+		}
 		$this->parse_supports( $settings );
-
 		$this->parse_capabilities( $settings );
 		return $settings;
 	}
