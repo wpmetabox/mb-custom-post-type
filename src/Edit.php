@@ -69,6 +69,20 @@ class Edit {
 				$options[ $slug ] = sprintf( '%s (%s)', $taxonomy->labels->singular_name, $slug );
 			}
 			$vars['taxonomies'] = $options;
+			$vars['icon_type'] = [
+				[
+					'value' => 'dashicons',
+					'label' => esc_html__( 'Dashicons', 'mb-custom-post-type' ),
+				],
+				[
+					'value' => 'svg',
+					'label' => esc_html__( 'SVG', 'mb-custom-post-type' ),
+				],
+				[
+					'value' => 'custom',
+					'label' => esc_html__( 'Custom URL', 'mb-custom-post-type' ),
+				],
+			];
 			$vars['menu_position_options'] = $this->get_menu_position_options();
 			$vars['show_in_menu_options'] = $this->get_show_in_menu_options();
 		}
