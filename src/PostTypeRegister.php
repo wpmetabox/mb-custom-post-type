@@ -41,6 +41,7 @@ class PostTypeRegister extends Register {
 
 		// Get all registered custom post types.
 		$post_types = $this->get_post_types();
+
 		foreach ( $post_types as $post_type => $args ) {
 			register_post_type( $post_type, $args );
 		}
@@ -68,9 +69,11 @@ class PostTypeRegister extends Register {
 
 	public function get_post_type_settings( WP_Post $post ) {
 		$settings = empty( $post->post_content ) || isset( $_GET['mbcpt-force'] ) ? $this->migrate_data( $post ) : json_decode( $post->post_content, true );
+		$this->parse_archive_slug( $settings );
 		$this->parse_icon( $settings );
 		$this->parse_supports( $settings );
 		$this->parse_capabilities( $settings );
+
 		return $settings;
 	}
 
@@ -171,20 +174,19 @@ class PostTypeRegister extends Register {
 			$permalink = get_permalink( $post->ID );
 
 			// translators: %s: Post link, %s: View post text, %s: Post type label.
-			$view_link             = sprintf( ' <a href="%s">%s</a>.', esc_url( $permalink ), sprintf( __( 'View %s', 'mb-custom-post-type' ), $label_lower ) );
+			$view_link 			   = sprintf( ' <a href="%s">%s</a>.', esc_url( $permalink ), sprintf( __( 'View %s', 'mb-custom-post-type' ), $label_lower ) );
 			$messages[ $slug ][1] .= $view_link;
 			$messages[ $slug ][6] .= $view_link;
 			$messages[ $slug ][9] .= $view_link;
 
 			$preview_permalink = add_query_arg( 'preview', 'true', $permalink );
 			// translators: %s: Post link, %s: Preview post text, %s: Post type label.
-			$preview_link           = sprintf( ' <a target="_blank" href="%s">%s</a>.', esc_url( $preview_permalink ), sprintf( __( 'Preview %s', 'mb-custom-post-type' ), $label_lower ) );
+			$preview_link 			= sprintf( ' <a target="_blank" href="%s">%s</a>.', esc_url( $preview_permalink ), sprintf( __( 'Preview %s', 'mb-custom-post-type' ), $label_lower ) );
 			$messages[ $slug ][8]  .= $preview_link;
 			$messages[ $slug ][10] .= $preview_link;
 		}
 
-		$messages['mb-post-type'] = $message;
-
+		$messages['mb-post-type']	= $message;
 		return $messages;
 	}
 
@@ -229,6 +231,12 @@ class PostTypeRegister extends Register {
 		return $bulk_messages;
 	}
 
+	private function parse_archive_slug( &$settings ) {
+		if ( empty( Arr::get( $settings, 'has_archive' ) ) || empty( Arr::get( $settings, 'archive_slug' ) ) ) {
+			return;
+		}
+		Arr::set( $settings, 'has_archive', $settings['archive_slug'] );
+	}
 	private function parse_capabilities( &$settings ) {
 		if ( 'custom' !== Arr::get( $settings, 'capability_type' ) ) {
 			return;
