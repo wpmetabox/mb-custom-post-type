@@ -10,7 +10,7 @@ const types = settings => {
 };
 
 const advanced = settings => {
-	const ignore = [ 'slug', 'types', 'function_name', 'text_domain', 'label', 'labels', 'description', 'rest_base', 'rewrite' ];
+	const ignore = [ 'slug', 'types', 'function_name', 'text_domain', 'label', 'labels', 'description', 'rest_base', 'rewrite','meta_box_cb' ];
 
 	let keys = Object.keys( settings ).filter( key => !ignore.includes( key ) );
 	return keys.map( key => general( settings, key ) ).join( ",\n\t\t" );
@@ -29,6 +29,16 @@ const rewrite = settings => {
 		]`;
 };
 
+const meta_box_cb = settings => {
+	let value = settings.meta_box_cb ? `'${ settings.meta_box_cb }'` : settings.meta_box_cb;
+
+	if( value != false ){
+		value = `'post_tags_meta_box'` ;
+	}
+
+	return `'meta_box_cb'${ spaces( settings, 'meta_box_cb' ) } => ${ value }`;
+};
+
 const PhpCode = settings => {
 	return `<?php
 add_action( 'init', '${ settings.function_name }' );
@@ -41,6 +51,7 @@ function ${ settings.function_name }() {
 		'labels'${ spaces( settings, 'labels' ) } => $labels,
 		${ text( settings, 'description' ) },
 		${ advanced( settings ) },
+		${ meta_box_cb( settings ) },
 		${ text( settings, 'rest_base' ) },
 		${ rewrite( settings ) },
 	];

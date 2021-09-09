@@ -36,7 +36,7 @@ const DefaultSettings = {
 	show_ui           : true,
 	show_in_menu      : true,
 	show_in_nav_menus : true,
-	meta_box_cb       : true,
+	meta_box_cb       : 'post_tags_meta_box',
 	show_in_rest      : true,
 	rest_base         : '',
 	show_tagcloud     : true,
