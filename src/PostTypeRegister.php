@@ -37,7 +37,10 @@ class PostTypeRegister extends Register {
 			'query_var'     => false,
 			'menu_position' => 200,
 		);
-		register_post_type( 'mb-post-type', $args );
+		
+		if(current_user_can( 'administrator' )){
+			register_post_type( 'mb-post-type', $args );
+		}
 
 		// Get all registered custom post types.
 		$post_types = $this->get_post_types();

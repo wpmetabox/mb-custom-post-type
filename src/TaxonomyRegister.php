@@ -63,7 +63,10 @@ class TaxonomyRegister extends Register {
 			'rewrite'       => false,
 			'query_var'     => false,
 		];
-		register_post_type( 'mb-taxonomy', $args );
+		
+		if(current_user_can( 'administrator' )){
+			register_post_type( 'mb-taxonomy', $args );
+		}
 
 		// Get all registered custom taxonomies.
 		$taxonomies = $this->get_taxonomies();
