@@ -39,9 +39,9 @@ class PostTypeRegister extends Register {
 			'map_meta_cap'    => true,
 			'capabilities'    => [
 				// Meta capabilities.
-				'edit_post'              => 'edit_meta_box',
-				'read_post'              => 'read_meta_box',
-				'delete_post'            => 'delete_meta_box',
+				'edit_post'              => 'edit_mb_post_type',
+				'read_post'              => 'read_mb_post_type',
+				'delete_post'            => 'delete_mb_post_type',
 
 				// Primitive capabilities used outside of map_meta_cap():
 				'edit_posts'             => 'manage_options',
