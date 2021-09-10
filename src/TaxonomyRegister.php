@@ -62,11 +62,32 @@ class TaxonomyRegister extends Register {
 			'can_export'    => true,
 			'rewrite'       => false,
 			'query_var'     => false,
+			'map_meta_cap'    => true,
+			'capabilities'    => [
+				// Meta capabilities.
+				'edit_post'              => 'edit_meta_box',
+				'read_post'              => 'read_meta_box',
+				'delete_post'            => 'delete_meta_box',
+
+				// Primitive capabilities used outside of map_meta_cap():
+				'edit_posts'             => 'manage_options',
+				'edit_others_posts'      => 'manage_options',
+				'publish_posts'          => 'manage_options',
+				'read_private_posts'     => 'manage_options',
+
+				// Primitive capabilities used within map_meta_cap():
+				'read'                   => 'read',
+				'delete_posts'           => 'manage_options',
+				'delete_private_posts'   => 'manage_options',
+				'delete_published_posts' => 'manage_options',
+				'delete_others_posts'    => 'manage_options',
+				'edit_private_posts'     => 'manage_options',
+				'edit_published_posts'   => 'manage_options',
+				'create_posts'           => 'manage_options',
+			],
 		];
 		
-		if(current_user_can( 'administrator' )){
 			register_post_type( 'mb-taxonomy', $args );
-		}
 
 		// Get all registered custom taxonomies.
 		$taxonomies = $this->get_taxonomies();
