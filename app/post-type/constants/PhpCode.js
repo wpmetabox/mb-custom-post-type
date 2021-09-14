@@ -66,7 +66,7 @@ function ${ settings.function_name}() {
 		${ archive( settings ) },
 		${ text( settings, 'rest_base' ) },
 		${ showInMenu( settings ) }
-		${ menu_icon( settings ) }
+		${ menu_icon( settings ) },
 		${ text( settings, 'capability_type' ) },
 		${ checkboxList( settings, 'supports', false ) },
 		${ checkboxList( settings, 'taxonomies', '[]' ) },
