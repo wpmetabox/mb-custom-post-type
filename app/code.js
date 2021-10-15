@@ -4,7 +4,7 @@ const maxKeyLength = object => Math.max.apply( null, Object.keys( object ).map( 
 const spaces = ( settings, key ) => ' '.repeat( maxKeyLength( settings ) - key.length );
 
 const text = ( settings, key ) => `'${ key }'${ spaces( settings, key ) } => '${ dotProp.get( settings, key, '' ) }'`;
-const translatableText = ( settings, key ) => `'${ key }'${ spaces( settings, key ) } => esc_html__( '${ dotProp.get( settings, key, '' ) }', '${ settings.text_domain }' )`;
+const translatableText = ( settings, key ) => `'${ key }'${ spaces( settings, key ) } => esc_html__( "${ dotProp.get( settings, key, '' ) }", '${ settings.text_domain }' )`;
 const checkboxList = ( settings, key, defaultValue ) => `'${ key }'${ spaces( settings, key ) } => ${ dotProp.get( settings, key, [] ).length ? `['${ dotProp.get( settings, key, [] ).join( "', '" ) }']` : defaultValue }`;
 const general = ( settings, key ) => {
     let value = dotProp.get( settings, key );

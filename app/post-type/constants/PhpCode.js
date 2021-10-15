@@ -72,7 +72,7 @@ function ${ settings.function_name }() {
 		${ rewrite( settings ) },
 	];
 
-	register_post_type( '${ settings.slug }', $args );
+	register_post_type( "${ settings.slug }", $args );
 }`;
 };
 
