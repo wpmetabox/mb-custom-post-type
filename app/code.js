@@ -3,7 +3,8 @@ import dotProp from 'dot-prop';
 const maxKeyLength = object => Math.max.apply( null, Object.keys( object ).map( key => key.length ) );
 const spaces = ( settings, key ) => ' '.repeat( maxKeyLength( settings ) - key.length );
 const checktext = ( settings, key ) => {
-    let checktext = dotProp.get( settings, key, '' ).replace(/\'/g, '\\\'');
+    let checktext = dotProp.get( settings, key, '' ).replace(/\\/g, '\\\\');
+        checktext = checktext.replace(/\'/g, '\\\'');
     return checktext;
 };
 const text = ( settings, key ) => `'${ key }'${ spaces( settings, key ) } => '${ checktext( settings, key ) }'`;
