@@ -55,7 +55,7 @@ function ${ settings.function_name }() {
 		${ text( settings, 'rest_base' ) },
 		${ rewrite( settings ) },
 	];
-	register_taxonomy( '${ settings.slug }', ${ types( settings, 'types' ) }, $args );
+	register_taxonomy( '${ settings.slug.replace(/\\/g, '\\\\').replace(/\'/g, '\\\'') }', ${ types( settings, 'types' ) }, $args );
 }`;
 };
 
