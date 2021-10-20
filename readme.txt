@@ -5,7 +5,7 @@ Tags: custom post types, custom taxonomies, meta box, content types, cpt, post t
 Requires at least: 5.0
 Tested up to: 5.8.1
 Requires PHP: 5.6
-Stable tag: 2.2.4
+Stable tag: 2.2.5
 License: GPLv2 or later
 
 Create and manage custom post types and custom taxonomies with an easy-to-use UI in WordPress.
@@ -59,6 +59,10 @@ Install **MB Custom Post Types & Custom Taxonomies** extension
 1. Edit custom post type - Taxonomies tab
 
 == Changelog ==
+
+= 2.2.5 - 2021-10-20 =
+- Fix generated code if labels contain single quotes
+- Update list of Dashicons
 
 = 2.2.4 - 2021-09-16 =
 - Fix missing comma in the generated code.
