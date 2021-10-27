@@ -12,7 +12,7 @@ const showInMenu = settings => {
 	value = [ true, false ].includes( value ) ? value : `'${ value }'`;
 	let code = `'show_in_menu'${ spaces( settings, 'show_in_menu' ) } => ${ value },`;
 	if ( value === true ) {
-		code += `${ general( settings, 'menu_position' ) },`;
+		code += `\n\t\t${ general( settings, 'menu_position' ) },`;
 	}
 	return code;
 };
