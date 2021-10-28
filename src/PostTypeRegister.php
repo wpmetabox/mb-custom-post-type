@@ -60,7 +60,7 @@ class PostTypeRegister extends Register {
 				'create_posts'           => 'manage_options',
 			],
 		);
-		
+
 			register_post_type( 'mb-post-type', $args );
 
 		// Get all registered custom post types.
@@ -281,35 +281,17 @@ class PostTypeRegister extends Register {
 		}
 		Arr::set( $settings, 'supports', false );
 	}
+
 	private function parse_icon( &$settings ) {
-		if ( !empty( Arr::get( $settings, 'menu_icon' ) ) ) {
-			return;
-		}
-		if( !empty( $settings['icon_type'] ) ) {
-			switch ( $settings['icon_type'] ) {
-				case 'dashicons' :
-					if ( !empty( $settings['icon'] ) ) {
-						Arr::set( $settings, 'menu_icon', $settings['icon'] );
-					}
-					break;
-				case 'svg' :
-					if ( !empty( $settings['icon_svg'] ) ) {
-						Arr::set( $settings, 'menu_icon', $settings['icon_svg'] );
-					}
-					break;
-				case 'custom' :
-					if ( !empty( $settings['icon_custom'] ) ) {
-						Arr::set( $settings, 'menu_icon', $settings['icon_custom'] );
-					}
-					break;
-				default:
-					Arr::set( $settings, 'menu_icon', 'dashicons-admin-generic' );
-			}
-			if( empty( $settings['menu_icon'] ) ) {
-				Arr::set( $settings, 'menu_icon', 'dashicons-admin-generic' );
-			}
-			unset( $settings['icon_type'] );
-		}
+		$icons = [
+			'dashicons' => Arr::get( $settings, 'icon' ),
+			'svg'       => Arr::get( $settings, 'icon_svg' ),
+			'custom'    => Arr::get( $settings, 'icon_custom' ),
+		];
+		$type = Arr::get( $settings, 'icon_type' );
+		$icon = Arr::get( $icons, $type ) ?: 'dashicons-admin-generic';
+		Arr::set( $settings, 'menu_icon', $icon );
+		unset( $settings['icon_type'] );
 		unset( $settings['icon'] );
 		unset( $settings['icon_svg'] );
 		unset( $settings['icon_custom'] );
