@@ -40,5 +40,9 @@ if ( ! function_exists( 'mb_cpt_load' ) ) {
 		new MBCPT\Edit( 'mb-taxonomy' );
 		new MBCPT\About;
 		new MBCPT\Warning;
+		if ( defined( 'CPTUI_VERSION' ) && is_admin() ) {
+			new MBCPT\Migration;
+			new MBCPT\Ajax;
+		}
 	}
 }
