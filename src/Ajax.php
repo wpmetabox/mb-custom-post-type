@@ -11,13 +11,27 @@ class Ajax {
 			session_start();
 		}
 		$dataCptui = get_option( 'cptui_post_types' );
-		if ($dataCptui) {
-			foreach ($dataCptui as $value) {
-				$value['icon_type'] = 'dashicons';
-				$plural             = Arr::get( $value, 'label' );
-				$singular           = Arr::get( $value, 'singular_label' );
-				$value['slug']      = Arr::get( $value, 'name' );
+		if ( $dataCptui ) {
+			foreach ( array_reverse( $dataCptui ) as $value ) {
+				$value['icon_type']     = 'dashicons';
+				$plural                 = Arr::get( $value, 'label' );
+				$singular               = Arr::get( $value, 'singular_label' );
+				$value['slug']          = Arr::get( $value, 'name' );
+				$value['menu_position'] = (int) Arr::get( $value, 'menu_position' ) ?: 50;
+				$value['archive_slug']  = Arr::get( $value, 'has_archive_string' );
+				$value['icon']          = Arr::get( $value, 'menu_icon' ) ?: 'dashicons-admin-post';
+				if ( $value['show_in_menu'] === 'true' ) {
+					$value['show_in_menu'] = Arr::get( $value, 'show_in_menu_string' ) ?: 'true';
+				}
+				$value['rewrite'] = [
+					'slug'       => Arr::get( $value, 'rewrite_slug' ),
+					'with_front' => Arr::get( $value, 'rewrite_withfront' ),
+				];
+				unset( $value['rewrite_slug'] );
+				unset( $value['rewrite_withfront'] );
 				unset( $value['name'] );
+				unset( $value['menu_icon'] );
+				unset( $value['show_in_menu_string'] );
 				$array = [
 					'singular_name'            => $singular,
 					'name'                     => $plural,
@@ -70,6 +84,12 @@ class Ajax {
 				$singular       = Arr::get( $value, 'singular_label' );
 				$value['slug']  = Arr::get( $value, 'name' );
 				$value['types'] = Arr::get( $value, 'object_types' );
+				$value['rewrite'] = [
+					'slug'       => Arr::get( $value, 'rewrite_slug' ),
+					'with_front' => Arr::get( $value, 'rewrite_withfront' ),
+				];
+				unset( $value['rewrite_slug'] );
+				unset( $value['rewrite_withfront'] );
 				unset( $value['name'] );
 				unset( $value['object_types'] );
 				$array = [
