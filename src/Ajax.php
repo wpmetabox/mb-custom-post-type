@@ -4,9 +4,11 @@ use MetaBox\Support\Arr;
 
 class Ajax {
 	public function __construct() {
-		add_action('wp_ajax_mbcpt_migrate', [ $this, 'migrate' ]);
+		add_action('wp_ajax_mbcpt_migrate_post_types', [ $this, 'migrate_post_types' ]);
+		add_action('wp_ajax_mbcpt_migrate_taxonomies', [ $this, 'migrate_taxonomies' ]);
 	}
-	public function migrate() {
+
+	public function migrate_post_types() {
 		if ( session_status() !== PHP_SESSION_ACTIVE ) {
 			session_start();
 		}
@@ -83,7 +85,17 @@ class Ajax {
 			}
 			delete_option( 'cptui_post_types' );
 		}
+		wp_send_json_success([
+			'message' => 'ok',
+		]);
 
+		wp_die();
+	}
+
+	public function migrate_taxonomies() {
+		if ( session_status() !== PHP_SESSION_ACTIVE ) {
+			session_start();
+		}
 		$data_taxoui = get_option( 'cptui_taxonomies' );
 		if ( $data_taxoui ) {
 			foreach ( $data_taxoui as $value ) {
@@ -135,10 +147,9 @@ class Ajax {
 			}
 			delete_option( 'cptui_taxonomies' );
 		}
-
 		wp_send_json_success([
 			'message' => 'ok',
-			]);
+		]);
 
 		wp_die();
 	}

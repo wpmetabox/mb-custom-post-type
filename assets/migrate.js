@@ -7,14 +7,24 @@
 	button.addEventListener( 'click', async () => {
 		printMessage( i18n.start );
 
-        printMessage( i18n.migrating );
-		await migrate();
+        printMessage( i18n.migratingPostTypes );
+		await migrate_post_types();
+
+		printMessage( i18n.migratingTaxonomies );
+		await migrate_taxonomies();
 
 		printMessage( i18n.done );
 	} );
 
-	async function migrate( ) {
-		const response = await get( `${ajaxurl}?action=mbcpt_migrate` );
+	async function migrate_post_types( ) {
+		const response = await get( `${ajaxurl}?action=mbcpt_migrate_post_types` );
+		if ( response.data.type == 'continue' ) {
+			await migrate();
+		}
+	}
+
+	async function migrate_taxonomies( ) {
+		const response = await get( `${ajaxurl}?action=mbcpt_migrate_taxonomies` );
 		if ( response.data.type == 'continue' ) {
 			await migrate();
 		}
