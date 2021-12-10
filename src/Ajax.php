@@ -7,19 +7,26 @@ class Ajax {
 		add_action('wp_ajax_mbcpt_migrate', [ $this, 'migrate' ]);
 	}
 	public function migrate() {
-		if (session_status() !== PHP_SESSION_ACTIVE) {
+		if ( session_status() !== PHP_SESSION_ACTIVE ) {
 			session_start();
 		}
-		$dataCptui = get_option( 'cptui_post_types' );
-		if ( $dataCptui ) {
-			foreach ( array_reverse( $dataCptui ) as $value ) {
-				$value['icon_type']     = 'dashicons';
+		$data_cptui = get_option( 'cptui_post_types' );
+		if ( $data_cptui ) {
+			foreach ( array_reverse( $data_cptui ) as $value ) {
+
 				$plural                 = Arr::get( $value, 'label' );
 				$singular               = Arr::get( $value, 'singular_label' );
 				$value['slug']          = Arr::get( $value, 'name' );
-				$value['menu_position'] = (int) Arr::get( $value, 'menu_position' ) ?: 50;
+				$value['menu_position'] = (int) Arr::get( $value, 'menu_position' ) ?: '';
 				$value['archive_slug']  = Arr::get( $value, 'has_archive_string' );
-				$value['icon']          = Arr::get( $value, 'menu_icon' ) ?: 'dashicons-admin-post';
+				$menu_icon              = Arr::get( $value, 'menu_icon' );
+				if ( 0 === strpos( $menu_icon, 'http' ) ) {
+					$value['icon_type']   = 'custom';
+					$value['icon_custom'] = $menu_icon;
+				} else {
+					$value['icon_type'] = 'dashicons';
+					$value['icon']      = $menu_icon ?: 'dashicons-admin-post';
+				}
 				if ( $value['show_in_menu'] === 'true' ) {
 					$value['show_in_menu'] = Arr::get( $value, 'show_in_menu_string' ) ?: 'true';
 				}
@@ -77,9 +84,9 @@ class Ajax {
 			delete_option( 'cptui_post_types' );
 		}
 
-		$dataTaxoui = get_option( 'cptui_taxonomies' );
-		if ( $dataTaxoui ) {
-			foreach ( $dataTaxoui as $value ) {
+		$data_taxoui = get_option( 'cptui_taxonomies' );
+		if ( $data_taxoui ) {
+			foreach ( $data_taxoui as $value ) {
 				$plural         = Arr::get( $value, 'label' );
 				$singular       = Arr::get( $value, 'singular_label' );
 				$value['slug']  = Arr::get( $value, 'name' );

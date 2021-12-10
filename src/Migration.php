@@ -10,8 +10,8 @@ class Migration {
 	public function add_menu() {
 		$page_hook = add_submenu_page(
 			'meta-box',
-			esc_html__( 'CPTUI Migration', 'mb-custom-post-type' ),
-			esc_html__( 'CPTUI Migration', 'mb-custom-post-type' ),
+			esc_html__( 'CPT UI Migration', 'mb-custom-post-type' ),
+			esc_html__( 'CPT UI Migration', 'mb-custom-post-type' ),
 			'manage_options',
 			'mb-custom-post-type',
 			[ $this, 'render' ]
