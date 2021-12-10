@@ -17,17 +17,11 @@
 	} );
 
 	async function migrate_post_types( ) {
-		const response = await get( `${ajaxurl}?action=mbcpt_migrate_post_types` );
-		if ( response.data.type == 'continue' ) {
-			await migrate();
-		}
+		await get( `${ajaxurl}?action=mbcpt_migrate_post_types` );
 	}
 
 	async function migrate_taxonomies( ) {
-		const response = await get( `${ajaxurl}?action=mbcpt_migrate_taxonomies` );
-		if ( response.data.type == 'continue' ) {
-			await migrate();
-		}
+		await get( `${ajaxurl}?action=mbcpt_migrate_taxonomies` );
 	}
 
 	async function get( url ) {
