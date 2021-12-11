@@ -14,9 +14,7 @@ class Ajax {
 		}
 		$data_cptui = get_option( 'cptui_post_types' );
 		if ( empty( $data_cptui ) ) {
-			wp_send_json_error([
-				'message' => 'failed',
-			]);
+			wp_send_json_error();
 		}
 		foreach ( array_reverse( $data_cptui ) as $value ) {
 			$plural                 = Arr::get( $value, 'label' );
@@ -87,9 +85,7 @@ class Ajax {
 			]);
 		}
 		delete_option( 'cptui_post_types' );
-		wp_send_json_success([
-			'message' => 'ok',
-		]);
+		wp_send_json_success();
 	}
 
 	public function migrate_taxonomies() {
@@ -98,9 +94,7 @@ class Ajax {
 		}
 		$data_taxoui = get_option( 'cptui_taxonomies' );
 		if ( empty( $data_taxoui ) ) {
-			wp_send_json_error([
-				'message' => 'failed',
-			]);
+			wp_send_json_error();
 		}
 		foreach ( $data_taxoui as $value ) {
 			$plural         = Arr::get( $value, 'label' );
@@ -150,8 +144,6 @@ class Ajax {
 			]);
 		}
 		delete_option( 'cptui_taxonomies' );
-		wp_send_json_success([
-			'message' => 'ok',
-		]);
+		wp_send_json_success();
 	}
 }
