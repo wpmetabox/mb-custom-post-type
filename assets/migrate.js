@@ -1,10 +1,9 @@
 ( function ( document, i18n ) {
 	'use strict';
 
-	const status = document.querySelector( '#status-migrate' ),
-		button = document.querySelector( '#process-migrate' );
+	const status = document.querySelector( '#migrate-status' );
 
-	button.addEventListener( 'click', async () => {
+	document.querySelector( '#migrate-button' ).addEventListener( 'click', async () => {
 		printMessage( i18n.start );
 
 		printMessage( i18n.migratingPostTypes );
@@ -17,6 +16,7 @@
 		await deactivate_plugin_cptui();
 
 		printMessage( i18n.done );
+		document.querySelector( '#migrate-links' ).removeAttribute( 'style' );
 	} );
 
 	async function migrate_post_types( ) {
