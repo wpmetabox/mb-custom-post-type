@@ -4,8 +4,9 @@ use MetaBox\Support\Arr;
 
 class Ajax {
 	public function __construct() {
-		add_action('wp_ajax_mbcpt_migrate_post_types', [ $this, 'migrate_post_types' ]);
-		add_action('wp_ajax_mbcpt_migrate_taxonomies', [ $this, 'migrate_taxonomies' ]);
+		add_action( 'wp_ajax_mbcpt_migrate_post_types', [ $this, 'migrate_post_types' ] );
+		add_action( 'wp_ajax_mbcpt_migrate_taxonomies', [ $this, 'migrate_taxonomies' ] );
+		add_action( 'wp_ajax_mbcpt_deactivate_plugin_cptui', [ $this, 'deactivate_plugin_cptui' ] );
 	}
 
 	public function migrate_post_types() {
@@ -84,7 +85,6 @@ class Ajax {
 				'post_status'  => 'publish',
 			]);
 		}
-		delete_option( 'cptui_post_types' );
 		wp_send_json_success();
 	}
 
@@ -143,7 +143,17 @@ class Ajax {
 				'post_status'  => 'publish',
 			]);
 		}
-		delete_option( 'cptui_taxonomies' );
 		wp_send_json_success();
 	}
+
+	public function deactivate_plugin_cptui() {
+		if ( session_status() !== PHP_SESSION_ACTIVE ) {
+			session_start();
+		}
+		if ( is_plugin_active( 'custom-post-type-ui/custom-post-type-ui.php' ) ) {
+			deactivate_plugins( 'custom-post-type-ui/custom-post-type-ui.php' );
+		}
+		wp_send_json_success();
+	}
+
 }

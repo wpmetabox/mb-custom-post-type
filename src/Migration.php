@@ -22,9 +22,10 @@ class Migration {
 	public function enqueue() {
 		wp_enqueue_script( 'mb-cpt', MB_CPT_URL.'assets/migrate.js', [], MB_CPT_VER, true );
 		wp_localize_script( 'mb-cpt', 'MbCpt', [
-			'start'               => __( 'Start', 'mb-custom-post-type' ),
-			'migratingPostTypes'  => __( 'Migrating post types', 'mb-custom-post-type' ),
-			'migratingTaxonomies' => __( 'Migrating taxonomies', 'mb-custom-post-type' ),
+			'start'               => __( 'Start...', 'mb-custom-post-type' ),
+			'migratingPostTypes'  => __( 'Migrating post types...', 'mb-custom-post-type' ),
+			'migratingTaxonomies' => __( 'Migrating taxonomies...', 'mb-custom-post-type' ),
+			'deactivate'          => __( 'Deactivating plugin CPT UI...', 'mb-custom-post-type' ),
 			'done'                => __( 'Done', 'mb-custom-post-type' ),
 		] );
 	}
@@ -43,6 +44,8 @@ class Migration {
 				<li><?php esc_html_e( 'Not all data types and settings in CPT UI have an equivalent in Meta Box CPT. The plugin will try to migrate as much as it can.', 'mb-custom-post-type' ) ?></li>
 			</ul>
 			<div id="status-migrate"></div>
+			<p><a href="<?php echo admin_url( 'edit.php?post_type=mb-post-type' ); ?>"><?php esc_html_e( 'Metabox post types' ) ?> &rarr;</a></p>
+			<p><a href="<?php echo admin_url( 'edit.php?post_type=mb-taxonomy' ); ?>"><?php esc_html_e( 'Metabox taxonomies' ) ?> &rarr;</a></p>
 		</div>
 		<?php
 	}

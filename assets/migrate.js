@@ -13,6 +13,9 @@
 		printMessage( i18n.migratingTaxonomies );
 		await migrate_taxonomies();
 
+		printMessage( i18n.deactivate );
+		await deactivate_plugin_cptui();
+
 		printMessage( i18n.done );
 	} );
 
@@ -22,6 +25,10 @@
 
 	async function migrate_taxonomies( ) {
 		await get( `${ajaxurl}?action=mbcpt_migrate_taxonomies` );
+	}
+
+	async function deactivate_plugin_cptui( ) {
+		await get( `${ajaxurl}?action=mbcpt_deactivate_plugin_cptui` );
 	}
 
 	async function get( url ) {
