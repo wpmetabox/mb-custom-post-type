@@ -7,7 +7,7 @@
 	button.addEventListener( 'click', async () => {
 		printMessage( i18n.start );
 
-        printMessage( i18n.migratingPostTypes );
+		printMessage( i18n.migratingPostTypes );
 		await migrate_post_types();
 
 		printMessage( i18n.migratingTaxonomies );
@@ -26,10 +26,10 @@
 
 	async function get( url ) {
 		const response = await fetch( url );
-	    const json     = await response.json();
+		const json     = await response.json();
 		if ( ! response.ok ) {
-	       	throw Error( json.data );
-	    }
+			throw Error( json.data );
+		}
 		return json;
 	}
 
