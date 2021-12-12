@@ -8,25 +8,20 @@ class Migration {
 	}
 
 	public function add_menu() {
-		$page_hook_mb = add_submenu_page(
-			'meta-box',
+		if ( is_plugin_active( 'meta-box/meta-box.php' ) ) {
+			$slug = 'meta-box';
+		} else {
+			$slug = 'edit.php?post_type=mb-post-type';
+		}
+		$page_hook = add_submenu_page(
+			$slug,
 			esc_html__( 'CPT UI Migration', 'mb-custom-post-type' ),
 			esc_html__( 'CPT UI Migration', 'mb-custom-post-type' ),
 			'manage_options',
 			'mb-migrate-post-type',
 			[ $this, 'render' ]
 		);
-		add_action( "admin_print_styles-$page_hook_mb", [ $this, 'enqueue' ] );
-
-		$page_hook_cpt = add_submenu_page(
-			'edit.php?post_type=mb-post-type',
-			esc_html__( 'CPT UI Migration', 'mb-custom-post-type' ),
-			esc_html__( 'CPT UI Migration', 'mb-custom-post-type' ),
-			'manage_options',
-			'mb-migrate-post-type',
-			[ $this, 'render' ]
-		);
-		add_action( "admin_print_styles-$page_hook_cpt", [ $this, 'enqueue' ] );
+		add_action( "admin_print_styles-$page_hook", [ $this, 'enqueue' ] );
 	}
 
 	public function enqueue() {
