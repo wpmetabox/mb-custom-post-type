@@ -3,9 +3,9 @@ Contributors: elightup, metabox, rilwis, duc88b, truongwp
 Donate link: https://metabox.io/pricing/
 Tags: custom post types, custom taxonomies, meta box, content types, cpt, post type, taxonomy, cms, post, post types, types, taxonomies, tax
 Requires at least: 5.0
-Tested up to: 5.8.1
+Tested up to: 5.8.2
 Requires PHP: 5.6
-Stable tag: 2.2.6
+Stable tag: 2.3.0
 License: GPLv2 or later
 
 Create and manage custom post types and custom taxonomies with an easy-to-use UI in WordPress.
@@ -59,6 +59,9 @@ Install **MB Custom Post Types & Custom Taxonomies** extension
 1. Edit custom post type - Taxonomies tab
 
 == Changelog ==
+
+= 2.3.0 - 2021-12-13 =
+- Add migration tool from Custom Post Type UI
 
 = 2.2.6 - 2021-10-28 =
 - Fix changing menu icon not working
