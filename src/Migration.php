@@ -8,12 +8,13 @@ class Migration {
 	}
 
 	public function add_menu() {
+		$slug      = defined( 'RWMB_VER' ) ? 'meta-box' : 'edit.php?post_type=mb-post-type';
 		$page_hook = add_submenu_page(
-			'meta-box',
+			$slug,
 			esc_html__( 'CPT UI Migration', 'mb-custom-post-type' ),
 			esc_html__( 'CPT UI Migration', 'mb-custom-post-type' ),
 			'manage_options',
-			'mb-custom-post-type',
+			'mb-migrate-post-type',
 			[ $this, 'render' ]
 		);
 		add_action( "admin_print_styles-$page_hook", [ $this, 'enqueue' ] );
