@@ -1,21 +1,15 @@
-name: Release new version on WordPress.org
+name: Release
 on:
+  workflow_dispatch:
+    branch:
+      - master
   push:
     tags:
-    - "*"
+      - "*"
 jobs:
-  tag:
-    name: Release
-    runs-on: ubuntu-latest
-    steps:
-    - uses: actions/checkout@master
-    - name: Install PHP dependencies
-      run: composer install
-    - uses: 10up/action-wordpress-plugin-deploy@master
-      env:
-        SVN_PASSWORD: ${{ secrets.SVN_PASSWORD }}
-        SVN_USERNAME: ${{ secrets.SVN_USERNAME }}
-    - name: Notify Slack
-      run: |
-        tag=$(git describe --tags `git rev-list --tags --max-count=1`)
-        curl -X POST --data-urlencode "payload={\"channel\": \"#meta-box\", \"username\": \"Bot\", \"text\": \"New version $tag for MB Custom Post Type has been just released!\", \"icon_emoji\": \":tada:\"}" ${{ secrets.SLACK_WEBHOOK }}
+  call-workflow:
+    uses: wpmetabox/meta-box/.github/workflows/wordpressorg.yml@master
+    secrets:
+      SVN_PASSWORD: ${{ secrets.SVN_PASSWORD }}
+      SVN_USERNAME: ${{ secrets.SVN_USERNAME }}
+      SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}

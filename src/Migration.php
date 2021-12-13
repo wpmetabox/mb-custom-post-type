@@ -3,7 +3,6 @@ namespace MBCPT;
 
 class Migration {
 	public function __construct() {
-		add_filter( 'rwmb_admin_menu', '__return_true' );
 		add_action( 'admin_menu', [ $this, 'add_menu' ] );
 	}
 
