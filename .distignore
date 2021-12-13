@@ -14,3 +14,4 @@ assets/*.scss
 *.lock
 README.md
 webpack.config.js
+vendor/meta-box/support/.git
