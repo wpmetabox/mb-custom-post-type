@@ -8,7 +8,7 @@ class Migration {
 	}
 
 	public function add_menu() {
-		$slug      = is_plugin_active( 'meta-box/meta-box.php' ) ? 'meta-box' : 'edit.php?post_type=mb-post-type';
+		$slug      = defined( 'RWMB_VER' ) ? 'meta-box' : 'edit.php?post_type=mb-post-type';
 		$page_hook = add_submenu_page(
 			$slug,
 			esc_html__( 'CPT UI Migration', 'mb-custom-post-type' ),
