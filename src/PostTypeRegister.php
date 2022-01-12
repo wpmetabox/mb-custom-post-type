@@ -283,14 +283,17 @@ class PostTypeRegister extends Register {
 	}
 
 	private function parse_icon( &$settings ) {
+		$default = Arr::get( $settings, 'menu_icon', 'dashicons-admin-generic' );
+
 		$icons = [
 			'dashicons' => Arr::get( $settings, 'icon' ),
 			'svg'       => Arr::get( $settings, 'icon_svg' ),
 			'custom'    => Arr::get( $settings, 'icon_custom' ),
 		];
-		$type = Arr::get( $settings, 'icon_type' );
-		$icon = Arr::get( $icons, $type ) ?: 'dashicons-admin-generic';
+		$type = Arr::get( $settings, 'icon_type', 'dashicons' );
+		$icon = Arr::get( $icons, $type ) ?: $default;
 		Arr::set( $settings, 'menu_icon', $icon );
+
 		unset( $settings['icon_type'] );
 		unset( $settings['icon'] );
 		unset( $settings['icon_svg'] );
