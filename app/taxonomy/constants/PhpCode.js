@@ -10,7 +10,7 @@ const types = settings => {
 };
 
 const advanced = settings => {
-	const ignore = [ 'slug', 'types', 'function_name', 'text_domain', 'label', 'labels', 'description', 'rest_base', 'rewrite','meta_box_cb' ];
+	const ignore = [ 'slug', 'types', 'function_name', 'text_domain', 'label', 'labels', 'description', 'rest_base', 'rewrite', 'meta_box_cb' ];
 
 	let keys = Object.keys( settings ).filter( key => !ignore.includes( key ) );
 	return keys.map( key => general( settings, key ) ).join( ",\n\t\t" );
@@ -30,11 +30,7 @@ const rewrite = settings => {
 };
 
 const meta_box_cb = settings => {
-	let value = settings.meta_box_cb ? `'${ settings.meta_box_cb }'` : settings.meta_box_cb;
-
-	if( value != false ){
-		value = `'post_tags_meta_box'` ;
-	}
+	let value = settings.hierarchical ? `'post_categories_meta_box'` : `'post_tags_meta_box'`;
 
 	return `'meta_box_cb'${ spaces( settings, 'meta_box_cb' ) } => ${ value }`;
 };
