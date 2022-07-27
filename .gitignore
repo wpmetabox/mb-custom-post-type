@@ -1,5 +1,3 @@
 .svn
 vendor
 node_modules
-*.lock
-package-lock.json
