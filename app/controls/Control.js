@@ -43,7 +43,10 @@ const Control = ( { field, autoFills = [] } ) => {
 			if ( 'slug' === f.name ) {
 				newValue = slugify( value, { lower: true } );
 			} else {
-				newValue = ucfirst( f.default.replace( `%${ placeholder }%`, f.default.split( ' ' ).length > 2 ? value.toLowerCase() : value ) );
+				newValue = ucfirst( f.default
+					.replace( `%${ placeholder }%`, value )
+					.replace( `%${ placeholder }_lowercase%`, value.toLowerCase() )
+				);
 			}
 
 			dotProp.set( newSettings, f.name, newValue );
