@@ -1,17 +1,17 @@
 import { __ } from '@wordpress/i18n';
 
-export const BasicDatas = [
+export const BasicControls = [
 	{ type: 'text', name: 'labels.name', label: __( 'Plural name', 'mb-custom-post-type' ), required: true, tooltip: __( 'General name for the taxonomy, usually plural', 'mb-custom-post-type' ) },
 	{ type: 'text', name: 'labels.singular_name', label: __( 'Singular name', 'mb-custom-post-type' ), required: true, tooltip: __( 'Name for one object of this taxonomy', 'mb-custom-post-type' ) },
 	{ type: 'slug', name: 'slug', label: __( 'Slug', 'mb-custom-post-type' ), required: true, updateFrom: 'labels.singular_name', tooltip: __( 'Taxonomy key, must not exceed 32 characters and may only contain lowercase alphanumeric characters, dashes, and underscores', 'mb-custom-post-type' ) },
 ];
 
-export const CodeDatas = [
+export const CodeControls = [
 	{ type: 'text', name: 'function_name', label: __( 'Function name', 'mb-custom-post-type' ), tooltip: __( 'Your function name that registers the taxonomy', 'mb-custom-post-type' ) },
 	{ type: 'text', name: 'text_domain', label: __( 'Text domain', 'mb-custom-post-type' ), tooltip: __( 'Required for multilingual website. Used in the exported code only.', 'mb-custom-post-type' ) },
 ];
 
-export const LabelDatas = [
+export const LabelControls = [
 	// name
 	// singular_name
 	{ type: 'text', name: 'labels.search_items', label: __( 'Search items', 'mb-custom-post-type' ), default: __( 'Search %name%', 'mb-custom-post-type' ), updateFrom: 'labels.name', tooltip: __( 'Label for searching items', 'mb-custom-post-type' ) },
@@ -37,7 +37,7 @@ export const LabelDatas = [
 	{ type: 'text', name: 'labels.menu_name', label: __( 'Menu name', 'mb-custom-post-type' ), default: __( '%name%', 'mb-custom-post-type' ), updateFrom: 'labels.name', tooltip: __( 'Label for the tab in the admin menu', 'mb-custom-post-type' ) },
 ];
 
-export const AdvancedDatas = [
+export const AdvancedControls = [
 	{ type: 'textarea', name: 'description', label: __( 'Description', 'mb-custom-post-type' ), description: __( 'A short descriptive summary of what the taxonomy is for.', 'mb-custom-post-type' ), tooltip: __( 'A short descriptive summary of what the taxonomy is for', 'mb-custom-post-type' ) },
 	{ type: 'checkbox', name: 'public', label: __( 'Public', 'mb-custom-post-type' ), description: __( 'Whether a taxonomy is intended for use publicly either via the admin interface or by front-end users.', 'mb-custom-post-type' ), tooltip: __( 'Whether a taxonomy is intended for use publicly either via the admin interface or by front-end users', 'mb-custom-post-type' ) },
 	{ type: 'checkbox', name: 'publicly_queryable', label: __( 'Public queryable', 'mb-custom-post-type' ), description: __( 'Whether the taxonomy is publicly queryable.', 'mb-custom-post-type' ), tooltip: __( 'Whether the taxonomy is publicly queryable', 'mb-custom-post-type' ) },

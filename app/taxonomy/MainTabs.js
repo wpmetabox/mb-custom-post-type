@@ -2,7 +2,7 @@ import { __ } from '@wordpress/i18n';
 import CheckboxList from '../controls/CheckboxList';
 import Control from '../controls/Control';
 import { SettingsContext } from '../SettingsContext';
-import { AdvancedDatas, BasicDatas, CodeDatas, LabelDatas } from './constants/Data';
+import { AdvancedControls, BasicControls, CodeControls, LabelControls } from './constants/Data';
 import Result from './Result';
 const { useContext } = wp.element;
 const { TabPanel } = wp.components;
@@ -30,17 +30,17 @@ const tabs = [
 	}
 ];
 
-let autoFills = [ ...LabelDatas, ...BasicDatas ];
+let autoFills = [ ...LabelControls, ...BasicControls ];
 autoFills.push( { name: 'label', default: '%name%', updateFrom: 'labels.name' } );
 
 const panels = {
-	general: BasicDatas.map( ( field, key ) => <Control key={ key } field={ field } autoFills={ autoFills.filter( f => f.updateFrom === field.name ) } /> ),
-	labels: LabelDatas.map( ( field, key ) => <Control key={ key } field={ field } /> ),
-	advanced: AdvancedDatas.map( ( field, key ) => <Control key={ key } field={ field } /> ),
+	general: BasicControls.map( ( field, key ) => <Control key={ key } field={ field } autoFills={ autoFills.filter( f => f.updateFrom === field.name ) } /> ),
+	labels: LabelControls.map( ( field, key ) => <Control key={ key } field={ field } /> ),
+	advanced: AdvancedControls.map( ( field, key ) => <Control key={ key } field={ field } /> ),
 	types: <CheckboxList name="types" options={ MBCPT.types } description={ __( 'Post types for the taxonomy:', 'mb-custom-post-type' ) } />,
 	code: (
 		<>
-			{ CodeDatas.map( ( field, key ) => <Control key={ key } field={ field } /> ) }
+			{ CodeControls.map( ( field, key ) => <Control key={ key } field={ field } /> ) }
 			<Result />
 		</>
 	)

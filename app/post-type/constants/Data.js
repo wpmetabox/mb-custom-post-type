@@ -1,17 +1,17 @@
 import { __ } from '@wordpress/i18n';
 
-export const BasicDatas = [
+export const BasicControls = [
 	{ type: 'text', name: 'labels.name', label: __( 'Plural name', 'mb-custom-post-type' ), required: true, tooltip: __( 'General name for the post type, usually plural', 'mb-custom-post-type' ) },
 	{ type: 'text', name: 'labels.singular_name', label: __( 'Singular name', 'mb-custom-post-type' ), required: true, tooltip: __( 'Name for one object of this post type', 'mb-custom-post-type' ) },
 	{ type: 'slug', name: 'slug', label: __( 'Slug', 'mb-custom-post-type' ), required: true, updateFrom: 'labels.singular_name', tooltip: __( 'Post type key. Must not exceed 20 characters and may only contain lowercase alphanumeric characters, dashes, and underscores', 'mb-custom-post-type' ) },
 ];
 
-export const CodeDatas = [
+export const CodeControls = [
 	{ type: 'text', name: 'function_name', label: __( 'Function name', 'mb-custom-post-type' ), tooltip: __( 'Your function name that registers the post type', 'mb-custom-post-type' ) },
 	{ type: 'text', name: 'text_domain', label: __( 'Text domain', 'mb-custom-post-type' ), tooltip: __( 'Required for multilingual website. Used in the exported code only.', 'mb-custom-post-type' ) },
 ];
 
-export const LabelDatas = [
+export const LabelControls = [
 	// Name
 	// Singular name
 	{ type: 'text', name: 'labels.add_new', label: __( 'Add new', 'mb-custom-post-type' ), default: __( 'Add New', 'mb-custom-post-type' ), tooltip: __( 'Label for adding a new singular item', 'mb-custom-post-type' ) },
@@ -45,7 +45,7 @@ export const LabelDatas = [
 	{ type: 'text', name: 'labels.item_updated', label: __( 'Item updated', 'mb-custom-post-type' ), default: __( '%singular_name% updated', 'mb-custom-post-type' ), updateFrom: 'labels.singular_name', tooltip: __( 'Label used when an item is updated', 'mb-custom-post-type' ) },
 ];
 
-export const SupportDatas = {
+export const SupportControls = {
 	title: __( 'Title', 'mb-custom-post-type' ),
 	editor: __( 'Editor', 'mb-custom-post-type' ),
 	excerpt: __( 'Excerpt', 'mb-custom-post-type' ),
@@ -59,13 +59,13 @@ export const SupportDatas = {
 	"post-formats": __( 'Post formats', 'mb-custom-post-type' ),
 };
 
-const CapabilityDatas = [
+const CapabilityControls = [
 	{ value: 'post', label: __( 'Post', 'mb-custom-post-type' ) },
 	{ value: 'page', label: __( 'Page', 'mb-custom-post-type' ) },
 	{ value: 'custom', label: __( 'Custom', 'mb-custom-post-type' ) }
 ];
 
-export const AdvancedDatas = [
+export const AdvancedControls = [
 	{ type: 'textarea', name: 'description', label: __( 'Description', 'mb-custom-post-type' ), placeholder: __( 'A short descriptive summary of what the post type is', 'mb-custom-post-type' ), tooltip: __( 'A short descriptive summary of what the post type is', 'mb-custom-post-type' ) },
 	{ type: 'checkbox', name: 'public', label: __( 'Public', 'mb-custom-post-type' ), description: __( 'Controls how the type is visible to authors and readers.', 'mb-custom-post-type' ), tooltip: __( 'Whether a post type is intended for use publicly either via the admin interface or by front-end users', 'mb-custom-post-type' ) },
 	{ type: 'checkbox', name: 'hierarchical', label: __( 'Hierarchical', 'mb-custom-post-type' ), description: __( 'Whether the post type is hierarchical.', 'mb-custom-post-type' ), tooltip: __( 'Whether the post type is hierarchical (e.g. page)', 'mb-custom-post-type' ) },
@@ -74,15 +74,15 @@ export const AdvancedDatas = [
 	{ type: 'checkbox', name: 'show_ui', label: __( 'Show UI', 'mb-custom-post-type' ), description: __( 'Whether to generate a default UI for managing this post type in the admin.', 'mb-custom-post-type' ), tooltip: __( 'Whether to generate and allow a UI for managing this post type in the admin', 'mb-custom-post-type' ) },
 	{ type: 'select', name: 'show_in_menu', label: __( 'Show in menu', 'mb-custom-post-type' ), description: __( 'Where to show the post type in the admin menu. Show UI must be enabled.', 'mb-custom-post-type' ), options: MBCPT.show_in_menu_options, tooltip: __( 'Where to show the post type in the admin menu', 'mb-custom-post-type' ) },
 	{ type: 'select', name: 'menu_position', label: __( 'Menu position after', 'mb-custom-post-type' ), options: MBCPT.menu_position_options, dependency: 'show_in_menu:true', tooltip: __( 'The position in the menu order the post type should appear', 'mb-custom-post-type' ) },
-	{ type: 'select', name: 'icon_type', label: __('Icon type', 'mb-custom-post-type'), options: MBCPT.icon_type, dependency: 'show_in_menu:true' },
+	{ type: 'select', name: 'icon_type', label: __( 'Icon type', 'mb-custom-post-type' ), options: MBCPT.icon_type, dependency: 'show_in_menu:true' },
 	{ type: 'icon', name: 'icon', label: __( 'Icon', 'mb-custom-post-type' ), dependency: 'icon_type:dashicons', tooltip: __( 'The icon to be used for the admin menu (Dashicons)', 'mb-custom-post-type' ) },
-	{ type: 'text', name: 'icon_svg', label: __('Icon SVG', 'mb-custom-post-type'), dependency: 'icon_type:svg',tooltip: __('Must be in base64 encoded format', 'mb-custom-post-type') },
-	{ type: 'text', name: 'icon_custom', label: __('Icon URL', 'mb-custom-post-type'), dependency: 'icon_type:custom' },
+	{ type: 'text', name: 'icon_svg', label: __( 'Icon SVG', 'mb-custom-post-type' ), dependency: 'icon_type:svg', tooltip: __( 'Must be in base64 encoded format', 'mb-custom-post-type' ) },
+	{ type: 'text', name: 'icon_custom', label: __( 'Icon URL', 'mb-custom-post-type' ), dependency: 'icon_type:custom' },
 	{ type: 'checkbox', name: 'show_in_nav_menus', label: __( 'Show in nav menus', 'mb-custom-post-type' ), description: __( 'Whether post type is available for selection in navigation menus.', 'mb-custom-post-type' ), tooltip: __( 'Makes this post type available for selection in navigation menus', 'mb-custom-post-type' ) },
 	{ type: 'checkbox', name: 'show_in_admin_bar', label: __( 'Show in admin bar', 'mb-custom-post-type' ), description: __( 'Whether to make this post type available in the WordPress admin bar.', 'mb-custom-post-type' ), tooltip: __( 'Makes this post type available via the admin bar', 'mb-custom-post-type' ) },
 	{ type: 'checkbox', name: 'show_in_rest', label: __( 'Show in REST', 'mb-custom-post-type' ), description: __( 'Whether to expose this post type in the REST API. Must be true to enable the Gutenberg editor.', 'mb-custom-post-type' ), tooltip: __( 'Whether to include the post type in the REST API. Set this to true for the post type to be available in the block editor', 'mb-custom-post-type' ) },
 	{ type: 'text', name: 'rest_base', label: __( 'REST API base slug', 'mb-custom-post-type' ), description: __( 'Leave empty to use the post type slug.', 'mb-custom-post-type' ), placeholder: __( 'Slug to use in REST API URL', 'mb-custom-post-type' ), tooltip: __( 'Custom base URL of REST API route', 'mb-custom-post-type' ) },
-	{ type: 'select', name: 'capability_type', label: __( 'Capability type', 'mb-custom-post-type' ), description: __( 'If select custom capability, make sure to add capabilities to admin or other roles to add or edit posts of this type (using a plugin like Members or User Role Editor).', 'mb-custom-post-type' ), options: CapabilityDatas, default: 'post', tooltip: __( 'The string to use to build the read, edit, and delete capabilities', 'mb-custom-post-type' ) },
+	{ type: 'select', name: 'capability_type', label: __( 'Capability type', 'mb-custom-post-type' ), description: __( 'If select custom capability, make sure to add capabilities to admin or other roles to add or edit posts of this type (using a plugin like Members or User Role Editor).', 'mb-custom-post-type' ), options: CapabilityControls, default: 'post', tooltip: __( 'The string to use to build the read, edit, and delete capabilities', 'mb-custom-post-type' ) },
 	// map_meta_cap
 	// supports
 	// taxonomies
