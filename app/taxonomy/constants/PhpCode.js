@@ -30,7 +30,12 @@ const rewrite = settings => {
 };
 
 const meta_box_cb = settings => {
-	let value = settings.hierarchical ? `'post_categories_meta_box'` : `'post_tags_meta_box'`;
+	let value = settings.meta_box_cb ? `'${ settings.meta_box_cb }'` : settings.meta_box_cb;
+
+	if( value == true ){
+		value = settings.hierarchical ? `'post_categories_meta_box'` : `'post_tags_meta_box'`; ;
+	}
+
 
 	return `'meta_box_cb'${ spaces( settings, 'meta_box_cb' ) } => ${ value }`;
 };
