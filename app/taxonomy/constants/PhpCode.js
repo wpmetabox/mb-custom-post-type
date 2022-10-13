@@ -32,7 +32,7 @@ const rewrite = settings => {
 const meta_box_cb = settings => {
 	let value = settings.meta_box_cb ? `'${ settings.meta_box_cb }'` : settings.meta_box_cb;
 
-	if( value == true ){
+	if ( value ) {
 		value = settings.hierarchical ? `'post_categories_meta_box'` : `'post_tags_meta_box'`; ;
 	}
 
