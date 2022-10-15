@@ -1,5 +1,5 @@
 import dotProp from 'dot-prop';
-import { spaces, text, translatableText, general, labels } from '../../code';
+import { general, labels, spaces, text, translatableText } from '../../code';
 
 const types = settings => {
 	let values = dotProp.get( settings, 'types', [] );
