@@ -46,11 +46,11 @@ class Edit {
 			return;
 		}
 
-		wp_enqueue_style( $this->post_type, MB_CPT_URL . 'assets/style.css', ['wp-components'], MB_CPT_VER );
+		wp_enqueue_style( $this->post_type, MB_CPT_URL . 'assets/style.css', [ 'wp-components' ], MB_CPT_VER );
 
 		$object = str_replace( 'mb-', '', $this->post_type );
-		wp_enqueue_code_editor( ['type' => 'application/x-httpd-php'] );
-		wp_enqueue_script( $this->post_type, MB_CPT_URL . "assets/$object.js", ['wp-element', 'wp-components', 'wp-i18n', 'clipboard'], MB_CPT_VER, true );
+		wp_enqueue_code_editor( [ 'type' => 'application/x-httpd-php' ] );
+		wp_enqueue_script( $this->post_type, MB_CPT_URL . "assets/$object.js", [ 'wp-element', 'wp-components', 'wp-i18n', 'clipboard' ], MB_CPT_VER, true );
 		wp_localize_script( $this->post_type, 'MBCPT', $this->js_vars() );
 		wp_set_script_translations( $this->post_type, 'mb-custom-post-type' );
 	}
@@ -68,8 +68,8 @@ class Edit {
 			foreach ( $taxonomies as $slug => $taxonomy ) {
 				$options[ $slug ] = sprintf( '%s (%s)', $taxonomy->labels->singular_name, $slug );
 			}
-			$vars['taxonomies'] = $options;
-			$vars['icon_type'] = [
+			$vars['taxonomies']            = $options;
+			$vars['icon_type']             = [
 				[
 					'value' => 'dashicons',
 					'label' => esc_html__( 'Dashicons', 'mb-custom-post-type' ),
@@ -84,7 +84,7 @@ class Edit {
 				],
 			];
 			$vars['menu_position_options'] = $this->get_menu_position_options();
-			$vars['show_in_menu_options'] = $this->get_show_in_menu_options();
+			$vars['show_in_menu_options']  = $this->get_show_in_menu_options();
 		}
 
 		if ( 'mb-taxonomy' === get_current_screen()->id ) {
@@ -108,7 +108,7 @@ class Edit {
 		if ( ! defined( 'RWMB_VER' ) ) {
 			return false;
 		}
-		$update_option = new \MetaBox\Updater\Option();
+		$update_option  = new \MetaBox\Updater\Option();
 		$update_checker = new \MetaBox\Updater\Checker( $update_option );
 		return $update_checker->has_extensions();
 	}
@@ -143,7 +143,7 @@ class Edit {
 			[
 				'value' => '',
 				'label' => __( 'Default', 'mb-custom-post-type' ),
-			]
+			],
 		];
 		foreach ( $menu as $position => $params ) {
 			if ( ! empty( $params[0] ) ) {

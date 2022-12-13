@@ -12,6 +12,7 @@ assets/*.scss
 .gitignore
 *.json
 *.lock
+phpcs.xml
 README.md
 esbuild.js
 vendor/meta-box/support/.git
