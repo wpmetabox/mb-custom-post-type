@@ -6,8 +6,10 @@
   "license": "GPL-2.0-or-later",
   "scripts": {
     "build:css": "sass --no-source-map --style=compressed assets/style.scss assets/style.css",
+    "build:js": "webpack --mode production",
+    "watch:js": "webpack --mode development --watch",
     "watch:css": "sass --no-source-map --style=compressed --watch assets/style.scss assets/style.css",
-    "start": "node esbuild"
+    "start": "webpack --mode development"
   },
   "dependencies": {
     "dot-prop": "^5.3.0",
@@ -15,10 +17,13 @@
     "slugify": "^1.4.5"
   },
   "devDependencies": {
+    "@babel/core": "^7.11.6",
+    "@babel/plugin-transform-react-jsx": "^7.10.4",
     "@wordpress/element": "^2.20.1",
     "@wordpress/i18n": "^3.16.0",
-    "esbuild": "^0.16.4",
-    "esbuild-plugin-external-global": "^1.0.1",
-    "sass": "^1.54.0"
+    "babel-loader": "^8.1.0",
+    "sass": "^1.54.0",
+    "webpack": "^5.74.0",
+    "webpack-cli": "^4.10.0"
   }
 }

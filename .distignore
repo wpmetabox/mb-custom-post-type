@@ -14,6 +14,5 @@ assets/*.scss
 *.lock
 phpcs.xml
 README.md
-esbuild.js
+webpack.config.js
 vendor/meta-box/support/.git
-vendor/meta-box/support/composer.json
