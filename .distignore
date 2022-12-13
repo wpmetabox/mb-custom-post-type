@@ -13,5 +13,6 @@ assets/*.scss
 *.json
 *.lock
 README.md
-webpack.config.js
+esbuild.js
 vendor/meta-box/support/.git
+vendor/meta-box/support/composer.json
