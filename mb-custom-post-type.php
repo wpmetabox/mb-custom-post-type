@@ -44,5 +44,9 @@ if ( ! function_exists( 'mb_cpt_load' ) ) {
 			new MBCPT\Migration;
 			new MBCPT\Ajax;
 		}
+		if ( is_admin() ) {
+			new MBCPT\Import;
+			new MBCPT\Export;
+		}
 	}
 }
