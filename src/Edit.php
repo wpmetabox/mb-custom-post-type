@@ -20,7 +20,7 @@ class Edit {
 		}
 	}
 
-	public function register_upgrade_meta_box( $meta_boxes ) {
+	public function register_upgrade_meta_box() {
 		if ( $this->is_screen() && ! $this->is_premium_user() ) {
 			add_meta_box( 'mb-cpt-upgrade', __( 'Upgrade', 'mb-custom-post-type' ), [ $this, 'upgrade_message' ], null, 'side', 'low' );
 		}
@@ -108,8 +108,8 @@ class Edit {
 		if ( ! defined( 'RWMB_VER' ) ) {
 			return false;
 		}
-		$update_option = new \RWMB_Update_Option();
-		$update_checker = new \RWMB_Update_Checker( $update_option );
+		$update_option = new \MetaBox\Updater\Option();
+		$update_checker = new \MetaBox\Updater\Checker( $update_option );
 		return $update_checker->has_extensions();
 	}
 
