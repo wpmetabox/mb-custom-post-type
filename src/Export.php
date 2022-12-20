@@ -11,14 +11,14 @@ class Export {
 
 	public function add_export_link( $actions, $post ) {
 		if ( 'mb-post-type' === $post->post_type ) {
-			$actions['export'] = '<a href="' . add_query_arg( ['action' => 'mbb-export', 'post[]' => $post->ID] ) . '">' . esc_html__( 'Export111', 'mb-custom-post-type' ) . '</a>';
+			$actions['export'] = '<a href="' . add_query_arg( ['action' => 'mbcpt-export', 'post[]' => $post->ID] ) . '">' . esc_html__( 'Export', 'mb-custom-post-type' ) . '</a>';
 		}
 		return $actions;
 	}
 
 	public function export() {
-		$action  = isset( $_REQUEST['action'] ) && 'mbb-export' === $_REQUEST['action'];
-		$action2 = isset( $_REQUEST['action2'] ) && 'mbb-export' === $_REQUEST['action2'];
+		$action  = isset( $_REQUEST['action'] ) && 'mbcpt-export' === $_REQUEST['action'];
+		$action2 = isset( $_REQUEST['action2'] ) && 'mbcpt-export' === $_REQUEST['action2'];
 
 		if ( ( ! $action && ! $action2 ) || empty( $_REQUEST['post'] ) ) {
 			return;
@@ -36,12 +36,12 @@ class Export {
 
 		$data = [];
 		foreach ( $query->posts as $post ) {
-			$data[] = array_merge( (array) $post, [
-				'settings' => get_post_meta( $post->ID, 'settings', true ),
-				'fields'    => get_post_meta( $post->ID, 'fields', true ),
-				'data'     => get_post_meta( $post->ID, 'data', true ),
-				'meta_box' => get_post_meta( $post->ID, 'meta_box', true ),
-			] );
+			$data[] =  [
+				'post_content' => $post->post_content,
+				'post_title'   => $post->post_title,
+				'post_status'  => $post->post_status,
+				'post_name'    => $post->post_name,
+			];
 		}
 
 		$file_name = 'field-groups-exported';
