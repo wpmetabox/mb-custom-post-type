@@ -1,0 +1,42 @@
+/* Tooltip */
+.mbcpt-tooltip {
+	border: none;
+	background: no-repeat;
+	padding: 0;
+	color: #ccc;
+	width: 16px;
+	height: 16px;
+}
+.mbcpt-tooltip .dashicons {
+	font-size: 14px;
+	width: 16px;
+	height: 16px;
+	margin-top: 2px;
+}
+.tippy-tooltip {
+	text-align: left;
+}
+.column-shortcode input {
+	max-width: 100%;
+}
+
+/* Import form */
+.mbcpt-import-form {
+	display: none;
+	padding: 50px 0;
+}
+.mbcpt-import-form p {
+	color: #555d66;
+	font-size: 18px;
+	font-style: normal;
+	margin: 0;
+	padding: 0;
+	text-align: center;
+}
+.mbcpt-import-form form {
+	background: #fafafa;
+	border: 1px solid #e5e5e5;
+	padding: 30px;
+	margin: 30px auto;
+	max-width: 380px;
+}
