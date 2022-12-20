@@ -7,7 +7,7 @@ class TaxonomyRegister extends Register {
 	public function __construct() {
 		parent::__construct();
 
-		add_filter( 'rest_prepare_taxonomy', array( $this, 'hide_taxonomy_meta_box' ), 10, 3 );
+		add_filter( 'rest_prepare_taxonomy', [ $this, 'hide_taxonomy_meta_box' ], 10, 3 );
 	}
 
 	/**
@@ -52,18 +52,18 @@ class TaxonomyRegister extends Register {
 			'not_found_in_trash' => __( 'Not found in Trash', 'mb-custom-post-type' ),
 		];
 		$args   = [
-			'label'         => __( 'Taxonomies', 'mb-custom-post-type' ),
-			'labels'        => $labels,
-			'supports'      => false,
-			'public'        => false,
-			'show_ui'       => true,
-			'show_in_menu'  => defined( 'RWMB_VER' ) ? 'meta-box' : 'edit.php?post_type=mb-post-type',
-			'menu_icon'     => 'dashicons-exerpt-view',
-			'can_export'    => true,
-			'rewrite'       => false,
-			'query_var'     => false,
-			'map_meta_cap'    => true,
-			'capabilities'    => [
+			'label'        => __( 'Taxonomies', 'mb-custom-post-type' ),
+			'labels'       => $labels,
+			'supports'     => false,
+			'public'       => false,
+			'show_ui'      => true,
+			'show_in_menu' => defined( 'RWMB_VER' ) ? 'meta-box' : 'edit.php?post_type=mb-post-type',
+			'menu_icon'    => 'dashicons-exerpt-view',
+			'can_export'   => true,
+			'rewrite'      => false,
+			'query_var'    => false,
+			'map_meta_cap' => true,
+			'capabilities' => [
 				// Meta capabilities.
 				'edit_post'              => 'edit_mb_taxonomy',
 				'read_post'              => 'read_mb_taxonomy',
@@ -86,7 +86,7 @@ class TaxonomyRegister extends Register {
 				'create_posts'           => 'manage_options',
 			],
 		];
-		
+
 			register_post_type( 'mb-taxonomy', $args );
 
 		// Get all registered custom taxonomies.
@@ -113,7 +113,7 @@ class TaxonomyRegister extends Register {
 		] );
 
 		foreach ( $posts as $post ) {
-			$data = $this->get_taxonomy_data( $post );
+			$data                        = $this->get_taxonomy_data( $post );
 			$taxonomies[ $data['slug'] ] = $data;
 		}
 
@@ -136,10 +136,10 @@ class TaxonomyRegister extends Register {
 			$this->normalize_checkbox( $value );
 
 			if ( 0 === strpos( $key, 'label_' ) ) {
-				$key = str_replace( 'label_', '', $key );
+				$key                    = str_replace( 'label_', '', $key );
 				$args['labels'][ $key ] = $value;
 			} else {
-				$key = str_replace( 'args_', '', $key );
+				$key          = str_replace( 'args_', '', $key );
 				$args[ $key ] = $value;
 			}
 
@@ -158,9 +158,9 @@ class TaxonomyRegister extends Register {
 		if ( isset( $args['rewrite_slug'] ) ) {
 			$rewrite['slug'] = $args['rewrite_slug'];
 		}
-		$rewrite['with_front'] = isset( $args['rewrite_no_front'] ) ? ! $args['rewrite_no_front'] : true;
+		$rewrite['with_front']   = isset( $args['rewrite_no_front'] ) ? ! $args['rewrite_no_front'] : true;
 		$rewrite['hierarchical'] = isset( $args['rewrite_hierarchical'] ) ? (bool) $args['rewrite_hierarchical'] : false;
-		$args['rewrite'] = $rewrite;
+		$args['rewrite']         = $rewrite;
 		unset( $args['rewrite_slug'], $args['rewrite_no_front'], $args['rewrite_hierarchical'] );
 
 		wp_update_post( [
@@ -174,7 +174,7 @@ class TaxonomyRegister extends Register {
 		$post     = get_post();
 		$revision = filter_input( INPUT_GET, 'revision', FILTER_SANITIZE_NUMBER_INT );
 
-		$messages['mb-taxonomy'] = array(
+		$messages['mb-taxonomy'] = [
 			0  => '', // Unused. Messages start at index 1.
 			1  => __( 'Taxonomy updated.', 'mb-custom-taxonomy' ),
 			2  => __( 'Custom field updated.', 'mb-custom-taxonomy' ),
@@ -188,13 +188,13 @@ class TaxonomyRegister extends Register {
 			// translators: %s: Date and time of the revision.
 			9  => sprintf( __( 'Taxonomy scheduled for: <strong>%s</strong>.', 'mb-custom-taxonomy' ), date_i18n( __( 'M j, Y @ G:i', 'mb-custom-taxonomy' ), strtotime( $post->post_date ) ) ),
 			10 => __( 'Taxonomy draft updated.', 'mb-custom-taxonomy' ),
-		);
+		];
 
 		return $messages;
 	}
 
 	public function bulk_updated_messages( $bulk_messages, $bulk_counts ) {
-		$bulk_messages['mb-taxonomy'] = array(
+		$bulk_messages['mb-taxonomy'] = [
 			// translators: %s: Name of the taxonomy in singular and plural form.
 			'updated'   => sprintf( _n( '%s taxonomy updated.', '%s taxonomies updated.', $bulk_counts['updated'], 'mb-custom-taxonomy' ), $bulk_counts['updated'] ),
 			// translators: %s: Name of the taxonomy in singular and plural form.
@@ -205,7 +205,7 @@ class TaxonomyRegister extends Register {
 			'trashed'   => sprintf( _n( '%s taxonomy moved to the Trash.', '%s taxonomies moved to the Trash.', $bulk_counts['trashed'], 'mb-custom-taxonomy' ), $bulk_counts['trashed'] ),
 			// translators: %s: Name of the taxonomy in singular and plural form.
 			'untrashed' => sprintf( _n( '%s taxonomy restored from the Trash.', '%s taxonomies restored from the Trash.', $bulk_counts['untrashed'], 'mb-custom-taxonomy' ), $bulk_counts['untrashed'] ),
-		);
+		];
 
 		return $bulk_messages;
 	}

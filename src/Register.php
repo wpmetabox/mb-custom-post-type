@@ -17,7 +17,7 @@ abstract class Register {
 	}
 
 	protected function normalize_checkbox( &$value ) {
-		if ( is_numeric( $value ) && in_array( $value, [0, 1] ) ) {
+		if ( is_numeric( $value ) && in_array( $value, [ 0, 1 ] ) ) {
 			$value = 1 == (int) $value;
 		}
 	}

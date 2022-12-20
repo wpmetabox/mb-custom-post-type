@@ -7,7 +7,7 @@ use MetaBox\Support\Arr;
 class PostTypeRegister extends Register {
 	public function register() {
 		// Register main post type 'mb-post-type'.
-		$labels = array(
+		$labels = [
 			'name'               => _x( 'Post Types', 'Post Type General Name', 'mb-custom-post-type' ),
 			'singular_name'      => _x( 'Post Type', 'Post Type Singular Name', 'mb-custom-post-type' ),
 			'menu_name'          => __( 'Post Types', 'mb-custom-post-type' ),
@@ -23,8 +23,8 @@ class PostTypeRegister extends Register {
 			'search_items'       => __( 'Search Post Type', 'mb-custom-post-type' ),
 			'not_found'          => __( 'Not found', 'mb-custom-post-type' ),
 			'not_found_in_trash' => __( 'Not found in Trash', 'mb-custom-post-type' ),
-		);
-		$args   = array(
+		];
+		$args   = [
 			'label'         => __( 'Post Types', 'mb-custom-post-type' ),
 			'labels'        => $labels,
 			'supports'      => false,
@@ -36,8 +36,8 @@ class PostTypeRegister extends Register {
 			'rewrite'       => false,
 			'query_var'     => false,
 			'menu_position' => 200,
-			'map_meta_cap'    => true,
-			'capabilities'    => [
+			'map_meta_cap'  => true,
+			'capabilities'  => [
 				// Meta capabilities.
 				'edit_post'              => 'edit_mb_post_type',
 				'read_post'              => 'read_mb_post_type',
@@ -59,7 +59,7 @@ class PostTypeRegister extends Register {
 				'edit_published_posts'   => 'manage_options',
 				'create_posts'           => 'manage_options',
 			],
-		);
+		];
 
 			register_post_type( 'mb-post-type', $args );
 
@@ -84,7 +84,7 @@ class PostTypeRegister extends Register {
 		] );
 
 		foreach ( $posts as $post ) {
-			$settings = $this->get_post_type_settings( $post );
+			$settings                        = $this->get_post_type_settings( $post );
 			$post_types[ $settings['slug'] ] = $settings;
 		}
 
@@ -114,10 +114,10 @@ class PostTypeRegister extends Register {
 			$value = 'args_menu_position' === $key ? (int) $value : $value;
 
 			if ( 0 === strpos( $key, 'label_' ) ) {
-				$key = str_replace( 'label_', '', $key );
+				$key                    = str_replace( 'label_', '', $key );
 				$args['labels'][ $key ] = $value;
 			} else {
-				$key = str_replace( 'args_', '', $key );
+				$key          = str_replace( 'args_', '', $key );
 				$args[ $key ] = $value;
 			}
 
@@ -136,7 +136,7 @@ class PostTypeRegister extends Register {
 			$rewrite['slug'] = $args['rewrite_slug'];
 		}
 		$rewrite['with_front'] = isset( $args['rewrite_no_front'] ) ? ! $args['rewrite_no_front'] : true;
-		$args['rewrite'] = $rewrite;
+		$args['rewrite']       = $rewrite;
 		unset( $args['rewrite_slug'], $args['rewrite_no_front'] );
 
 		wp_update_post( [
@@ -187,7 +187,7 @@ class PostTypeRegister extends Register {
 		] );
 		foreach ( $post_types as $post_type ) {
 			$settings = $this->get_post_type_settings( $post_type );
-			$slug = Arr::get( $settings, 'slug' );
+			$slug     = Arr::get( $settings, 'slug' );
 
 			$messages[ $slug ] = $message;
 
@@ -198,19 +198,19 @@ class PostTypeRegister extends Register {
 			$permalink = get_permalink( $post->ID );
 
 			// translators: %s: Post link, %s: View post text, %s: Post type label.
-			$view_link 			   = sprintf( ' <a href="%s">%s</a>.', esc_url( $permalink ), sprintf( __( 'View %s', 'mb-custom-post-type' ), $label_lower ) );
+			$view_link             = sprintf( ' <a href="%s">%s</a>.', esc_url( $permalink ), sprintf( __( 'View %s', 'mb-custom-post-type' ), $label_lower ) );
 			$messages[ $slug ][1] .= $view_link;
 			$messages[ $slug ][6] .= $view_link;
 			$messages[ $slug ][9] .= $view_link;
 
 			$preview_permalink = add_query_arg( 'preview', 'true', $permalink );
 			// translators: %s: Post link, %s: Preview post text, %s: Post type label.
-			$preview_link 			= sprintf( ' <a target="_blank" href="%s">%s</a>.', esc_url( $preview_permalink ), sprintf( __( 'Preview %s', 'mb-custom-post-type' ), $label_lower ) );
+			$preview_link           = sprintf( ' <a target="_blank" href="%s">%s</a>.', esc_url( $preview_permalink ), sprintf( __( 'Preview %s', 'mb-custom-post-type' ), $label_lower ) );
 			$messages[ $slug ][8]  .= $preview_link;
 			$messages[ $slug ][10] .= $preview_link;
 		}
 
-		$messages['mb-post-type']	= $message;
+		$messages['mb-post-type'] = $message;
 		return $messages;
 	}
 
@@ -233,12 +233,12 @@ class PostTypeRegister extends Register {
 		] );
 		foreach ( $post_types as $post_type ) {
 			$settings = $this->get_post_type_settings( $post_type );
-			$slug = Arr::get( $settings, 'slug' );
+			$slug     = Arr::get( $settings, 'slug' );
 
 			$singular = strtolower( Arr::get( $settings, 'labels.singular_name' ) );
 			$plural   = strtolower( Arr::get( $settings, 'labels.name' ) );
 
-			$bulk_messages[ $slug ] = array(
+			$bulk_messages[ $slug ] = [
 				// translators: %1$s: Number of items, %2$s: Name of the post type in singular or plural form.
 				'updated'   => sprintf( __( '%1$s %2$s updated.', 'mb-custom-post-type' ), $bulk_counts['updated'], $bulk_counts['updated'] > 1 ? $plural : $singular ),
 				// translators: %1$s: Number of items, %2$s: Name of the post type in singular or plural form.
@@ -249,7 +249,7 @@ class PostTypeRegister extends Register {
 				'trashed'   => sprintf( __( '%1$s %2$s moved to the Trash.', 'mb-custom-post-type' ), $bulk_counts['trashed'], $bulk_counts['trashed'] > 1 ? $plural : $singular ),
 				// translators: %1$s: Number of items, %2$s: Name of the post type in singular or plural form.
 				'untrashed' => sprintf( __( '%1$s %2$s restored from the Trash.', 'mb-custom-post-type' ), $bulk_counts['untrashed'], $bulk_counts['untrashed'] > 1 ? $plural : $singular ),
-			);
+			];
 		}
 
 		return $bulk_messages;
@@ -265,7 +265,7 @@ class PostTypeRegister extends Register {
 		if ( 'custom' !== Arr::get( $settings, 'capability_type' ) ) {
 			return;
 		}
-		$plural_name = sanitize_key( Arr::get( $settings, 'labels.name' ) );
+		$plural_name   = sanitize_key( Arr::get( $settings, 'labels.name' ) );
 		$singular_name = sanitize_key( Arr::get( $settings, 'labels.singular_name' ) );
 		if ( $plural_name === $singular_name ) {
 			$plural_name .= 's';
@@ -276,7 +276,7 @@ class PostTypeRegister extends Register {
 	}
 
 	private function parse_supports( &$settings ) {
-		if ( !empty( Arr::get( $settings, 'supports' ) ) ) {
+		if ( ! empty( Arr::get( $settings, 'supports' ) ) ) {
 			return;
 		}
 		Arr::set( $settings, 'supports', false );
@@ -290,8 +290,8 @@ class PostTypeRegister extends Register {
 			'svg'       => Arr::get( $settings, 'icon_svg' ),
 			'custom'    => Arr::get( $settings, 'icon_custom' ),
 		];
-		$type = Arr::get( $settings, 'icon_type', 'dashicons' );
-		$icon = Arr::get( $icons, $type ) ?: $default;
+		$type  = Arr::get( $settings, 'icon_type', 'dashicons' );
+		$icon  = Arr::get( $icons, $type ) ?: $default;
 		Arr::set( $settings, 'menu_icon', $icon );
 
 		unset( $settings['icon_type'] );

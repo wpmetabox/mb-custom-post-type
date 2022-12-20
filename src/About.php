@@ -3,8 +3,8 @@ namespace MBCPT;
 
 class About {
 	public function __construct() {
-		add_action( 'rwmb_about_tabs', array( $this, 'add_tabs' ) );
-		add_action( 'rwmb_about_tabs_content', array( $this, 'add_tabs_content' ) );
+		add_action( 'rwmb_about_tabs', [ $this, 'add_tabs' ] );
+		add_action( 'rwmb_about_tabs_content', [ $this, 'add_tabs_content' ] );
 	}
 
 	public function add_tabs() {
