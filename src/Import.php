@@ -29,7 +29,7 @@ class Import {
 		}
 		?>
 		<?php if ( isset( $_GET['imported'] ) ) : ?>
-			<div class="notice notice-success is-dismissible"><p><?php esc_html_e( 'Field groups have been imported successfully!', 'mb-custom-post-type' ); ?></p></div>
+			<div class="notice notice-success is-dismissible"><p><?php esc_html_e( 'Post types have been imported successfully!', 'mb-custom-post-type' ); ?></p></div>
 		<?php endif; ?>
 
 		<script type="text/template" id="mbcpt-import-form">
@@ -38,7 +38,7 @@ class Import {
 				<form enctype="multipart/form-data" method="post" action="">
 					<?php wp_nonce_field( 'import', 'nonce' ); ?>
 					<input type="file" name="mbcpt_file">
-					<?php submit_button( esc_attr__( 'Import222', 'mb-custom-post-type' ), 'secondary', 'submit', false, ['disabled' => true] ); ?>
+					<?php submit_button( esc_attr__( 'Import', 'mb-custom-post-type' ), 'secondary', 'submit', false, ['disabled' => true] ); ?>
 				</form>
 			</div>
 		</script>
@@ -60,7 +60,8 @@ class Import {
 		}
 
 		$data = file_get_contents( $_FILES['mbcpt_file']['tmp_name'] );
-		// $result = $this->import_json( $data );
+
+		$result = $this->import_json( $data );
 
 		if ( ! $result ) {
 			wp_die( sprintf( __( 'Invalid file data. <a href="%s">Go back</a>.', 'mb-custom-post-type' ), $url ) );
@@ -88,9 +89,32 @@ class Import {
 		foreach ( $posts as $post ) {
 			unset( $post['ID'] );
 			$post_id = wp_insert_post( $post );
+			if ( ! $post_id ) {
+				wp_die( sprintf( __( 'Cannot import the post types <strong>%s</strong>. <a href="%s">Go back</a>.', 'mb-custom-post-type' ), $post['post_title'], $url ) );
+			}
+			if ( is_wp_error( $post_id ) ) {
+				wp_die( implode( '<br>', $post_id->get_error_messages() ) );
+			}
 
+			$posts = get_posts( [
+				'post_type' => 'mb-post-type',
+				'post_name' => $post['post_name'],
+			] );
+
+			if ( count( $posts ) === 0 ) {
+				continue;
+			}
+
+			$post_detail = get_post( $post_id );
+			$post_content = json_decode( $post_detail->post_content, true );
+
+			$post_content['slug'] = $post_detail->post_name;
+			$post_detail->post_content = json_encode( $post_content );
+
+			wp_update_post( $post_detail );
 		}
 
 		return true;
 	}
+
 }

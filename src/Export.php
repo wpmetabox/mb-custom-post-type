@@ -36,15 +36,10 @@ class Export {
 
 		$data = [];
 		foreach ( $query->posts as $post ) {
-			$data[] =  [
-				'post_content' => $post->post_content,
-				'post_title'   => $post->post_title,
-				'post_status'  => $post->post_status,
-				'post_name'    => $post->post_name,
-			];
+			$data[] =  $post;
 		}
 
-		$file_name = 'field-groups-exported';
+		$file_name = 'post-types-exported';
 		if ( count( $post_ids ) === 1 ) {
 			$data = reset( $data );
 			$file_name = $query->posts[0]->post_name;
