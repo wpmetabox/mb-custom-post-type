@@ -96,12 +96,12 @@ class Import {
 				wp_die( implode( '<br>', $post_id->get_error_messages() ) );
 			}
 
-			$posts = get_posts( [
+			$check_duplicate_posts = get_posts( [
 				'post_type' => 'mb-post-type',
 				'post_name' => $post['post_name'],
 			] );
 
-			if ( count( $posts ) === 0 ) {
+			if ( count( $check_duplicate_posts ) === 0 ) {
 				continue;
 			}
 
