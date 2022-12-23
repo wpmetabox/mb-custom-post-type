@@ -38,7 +38,7 @@ class Import {
 				<form enctype="multipart/form-data" method="post" action="">
 					<?php wp_nonce_field( 'import', 'nonce' ); ?>
 					<input type="file" name="mbcpt_file">
-					<?php submit_button( esc_attr__( 'Import', 'mb-custom-post-type' ), 'secondary', 'submit', false, ['disabled' => true] ); ?>
+					<?php submit_button( esc_attr__( 'Import', 'mb-custom-post-type' ), 'secondary', 'submit', false, [ 'disabled' => true ] ); ?>
 				</form>
 			</div>
 		</script>
@@ -56,7 +56,8 @@ class Import {
 		// Verify nonce.
 		$nonce = filter_input( INPUT_POST, 'nonce' );
 		if ( ! wp_verify_nonce( $nonce, 'import' ) ) {
-			wp_die( sprintf( __( 'Invalid form submit. <a href="%s">Go back</a>.', 'mb-custom-post-type' ), $url ) );
+			// Translators: %s - go back URL.
+			wp_die( wp_kses_post( sprintf( __( 'Invalid form submit. <a href="%s">Go back</a>.', 'mb-custom-post-type' ), $url ) ) );
 		}
 
 		$data = file_get_contents( $_FILES['mbcpt_file']['tmp_name'] );
@@ -64,7 +65,8 @@ class Import {
 		$result = $this->import_json( $data );
 
 		if ( ! $result ) {
-			wp_die( sprintf( __( 'Invalid file data. <a href="%s">Go back</a>.', 'mb-custom-post-type' ), $url ) );
+			// Translators: %s - go back URL.
+			wp_die( wp_kses_post( sprintf( __( 'Invalid file data. <a href="%s">Go back</a>.', 'mb-custom-post-type' ), $url ) ) );
 		}
 
 		$url = add_query_arg( 'imported', 'true', $url );
@@ -88,14 +90,15 @@ class Import {
 			$post['post_content'] = wp_json_encode( $post['settings'] );
 			$post_id              = wp_insert_post( $post );
 			if ( ! $post_id ) {
-				wp_die( sprintf(
-					__( 'Cannot import the post type <strong>%s</strong>. <a href="%s">Go back</a>.', 'mb-custom-post-type' ),
+				wp_die( wp_kses_post( sprintf(
+					// Translators: %s - go back URL.
+					__( 'Cannot import the post type <strong>%1$s</strong>. <a href="%2$s">Go back</a>.', 'mb-custom-post-type' ),
 					$post['title'],
-					admin_url( 'edit.php?post_type=mb-post-type' ),
-				) );
+					admin_url( 'edit.php?post_type=mb-post-type' )
+				) ) );
 			}
 			if ( is_wp_error( $post_id ) ) {
-				wp_die( implode( '<br>', $post_id->get_error_messages() ) );
+				wp_die( wp_kses_post( implode( '<br>', $post_id->get_error_messages() ) ) );
 			}
 		}
 

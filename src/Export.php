@@ -5,13 +5,17 @@ use WP_Query;
 
 class Export {
 	public function __construct() {
-		add_filter( 'post_row_actions', [$this, 'add_export_link'], 10, 2 );
+		add_filter( 'post_row_actions', [ $this, 'add_export_link' ], 10, 2 );
 		add_action( 'admin_init', [ $this, 'export' ] );
 	}
 
 	public function add_export_link( $actions, $post ) {
 		if ( 'mb-post-type' === $post->post_type ) {
-			$actions['export'] = '<a href="' . add_query_arg( ['action' => 'mbcpt-export', 'post[]' => $post->ID] ) . '">' . esc_html__( 'Export', 'mb-custom-post-type' ) . '</a>';
+			$url               = add_query_arg( [
+				'action' => 'mbcpt-export',
+				'post[]' => $post->ID,
+			] );
+			$actions['export'] = '<a href="' . $url . '">' . esc_html__( 'Export', 'mb-custom-post-type' ) . '</a>';
 		}
 		return $actions;
 	}
@@ -24,7 +28,7 @@ class Export {
 			return;
 		}
 
-		$post_ids = $_REQUEST['post'];
+		$post_ids = wp_unslash( $_REQUEST['post'] );
 
 		$query = new WP_Query( [
 			'post_type'              => 'mb-post-type',
@@ -46,11 +50,11 @@ class Export {
 
 		$file_name = 'post-types-exported';
 		if ( count( $post_ids ) === 1 ) {
-			$data = reset( $data );
+			$data      = reset( $data );
 			$file_name = $query->posts[0]->post_name;
 		}
 
-		$data = json_encode( $data, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT );
+		$data = wp_json_encode( $data, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT );
 
 		header( 'Content-Type: application/octet-stream' );
 		header( "Content-Disposition: attachment; filename=$file_name.json" );
