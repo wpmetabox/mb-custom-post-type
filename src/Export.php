@@ -36,7 +36,12 @@ class Export {
 
 		$data = [];
 		foreach ( $query->posts as $post ) {
-			$data[] =  $post;
+			$data[] = [
+				'post_title'  => $post->post_title,
+				'settings'    => json_decode( $post->post_content, true ),
+				'post_date'   => $post->post_date,
+				'post_status' => $post->post_status,
+			];
 		}
 
 		$file_name = 'post-types-exported';

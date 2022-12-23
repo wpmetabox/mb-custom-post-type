@@ -72,9 +72,6 @@ class Import {
 		die;
 	}
 
-	/**
-	 * Import .json from v4.
-	 */
 	private function import_json( $data ) {
 		$posts = json_decode( $data, true );
 		if ( json_last_error() !== JSON_ERROR_NONE ) {
@@ -82,36 +79,24 @@ class Import {
 		}
 
 		// If import only one post.
-		if ( isset( $posts['ID'] ) ) {
+		if ( isset( $posts['post_title'] ) ) {
 			$posts = [ $posts ];
 		}
 
 		foreach ( $posts as $post ) {
-			unset( $post['ID'] );
-			$post_id = wp_insert_post( $post );
+			$post['post_type']    = 'mb-post-type';
+			$post['post_content'] = wp_json_encode( $post['settings'] );
+			$post_id              = wp_insert_post( $post );
 			if ( ! $post_id ) {
-				wp_die( sprintf( __( 'Cannot import the post types <strong>%s</strong>. <a href="%s">Go back</a>.', 'mb-custom-post-type' ), $post['post_title'], $url ) );
+				wp_die( sprintf(
+					__( 'Cannot import the post type <strong>%s</strong>. <a href="%s">Go back</a>.', 'mb-custom-post-type' ),
+					$post['title'],
+					admin_url( 'edit.php?post_type=mb-post-type' ),
+				) );
 			}
 			if ( is_wp_error( $post_id ) ) {
 				wp_die( implode( '<br>', $post_id->get_error_messages() ) );
 			}
-
-			$check_duplicate_posts = get_posts( [
-				'post_type' => 'mb-post-type',
-				'post_name' => $post['post_name'],
-			] );
-
-			if ( count( $check_duplicate_posts ) === 0 ) {
-				continue;
-			}
-
-			$post_detail = get_post( $post_id );
-			$post_content = json_decode( $post_detail->post_content, true );
-
-			$post_content['slug'] = $post_detail->post_name;
-			$post_detail->post_content = json_encode( $post_content );
-
-			wp_update_post( $post_detail );
 		}
 
 		return true;
