@@ -10,7 +10,7 @@ class Import {
 	}
 
 	public function enqueue() {
-		if ( 'edit-mb-post-type' !== get_current_screen()->id ) {
+		if ( ! in_array( get_current_screen()->id, [ 'edit-mb-post-type', 'edit-mb-taxonomy' ] ) ) {
 			return;
 		}
 
@@ -24,7 +24,7 @@ class Import {
 	}
 
 	public function output_js_templates() {
-		if ( 'edit-mb-post-type' !== get_current_screen()->id ) {
+		if ( ! in_array( get_current_screen()->id, [ 'edit-mb-post-type', 'edit-mb-taxonomy' ] ) ) {
 			return;
 		}
 		?>
@@ -38,6 +38,7 @@ class Import {
 				<form enctype="multipart/form-data" method="post" action="">
 					<?php wp_nonce_field( 'import', 'nonce' ); ?>
 					<input type="file" name="mbcpt_file">
+					<input type="hidden" name="mbcpt_post_type" value=" <?php echo esc_attr( get_current_screen()->post_type ) ?> ">
 					<?php submit_button( esc_attr__( 'Import', 'mb-custom-post-type' ), 'secondary', 'submit', false, [ 'disabled' => true ] ); ?>
 				</form>
 			</div>
@@ -47,11 +48,11 @@ class Import {
 
 	public function import() {
 		// No file uploaded.
-		if ( empty( $_FILES['mbcpt_file'] ) || empty( $_FILES['mbcpt_file']['tmp_name'] ) ) {
+		if ( empty( $_FILES['mbcpt_file'] ) || empty( $_FILES['mbcpt_file']['tmp_name'] ) || empty( $_REQUEST['mbcpt_post_type'] ) ) {
 			return;
 		}
 
-		$url = admin_url( 'edit.php?post_type=mb-post-type' );
+		$url = admin_url( 'edit.php?post_type=' . str_replace( ' ', '', wp_unslash( $_REQUEST['mbcpt_post_type'] ) ) );
 
 		// Verify nonce.
 		$nonce = filter_input( INPUT_POST, 'nonce' );
@@ -60,7 +61,7 @@ class Import {
 			wp_die( wp_kses_post( sprintf( __( 'Invalid form submit. <a href="%s">Go back</a>.', 'mb-custom-post-type' ), $url ) ) );
 		}
 
-		$data = file_get_contents( $_FILES['mbcpt_file']['tmp_name'] );
+		$data = file_get_contents( wp_unslash( $_FILES['mbcpt_file']['tmp_name'] ) );
 
 		$result = $this->import_json( $data );
 
@@ -86,15 +87,15 @@ class Import {
 		}
 
 		foreach ( $posts as $post ) {
-			$post['post_type']    = 'mb-post-type';
 			$post['post_content'] = wp_json_encode( $post['settings'] );
+
 			$post_id              = wp_insert_post( $post );
 			if ( ! $post_id ) {
 				wp_die( wp_kses_post( sprintf(
 					// Translators: %s - go back URL.
 					__( 'Cannot import the post type <strong>%1$s</strong>. <a href="%2$s">Go back</a>.', 'mb-custom-post-type' ),
 					$post['title'],
-					admin_url( 'edit.php?post_type=mb-post-type' )
+					admin_url( 'edit.php?post_type=' . str_replace( ' ', '', wp_unslash( $_REQUEST['mbcpt_post_type'] ) ) )
 				) ) );
 			}
 			if ( is_wp_error( $post_id ) ) {

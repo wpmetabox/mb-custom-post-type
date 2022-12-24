@@ -10,10 +10,11 @@ class Export {
 	}
 
 	public function add_export_link( $actions, $post ) {
-		if ( 'mb-post-type' === $post->post_type ) {
+		if ( in_array( $post->post_type, [ 'mb-post-type', 'mb-taxonomy' ] ) ) {
 			$url               = add_query_arg( [
-				'action' => 'mbcpt-export',
-				'post[]' => $post->ID,
+				'action'    => 'mbcpt-export',
+				'post_type' => $post->post_type,
+				'post[]'    => $post->ID,
 			] );
 			$actions['export'] = '<a href="' . $url . '">' . esc_html__( 'Export', 'mb-custom-post-type' ) . '</a>';
 		}
@@ -31,7 +32,7 @@ class Export {
 		$post_ids = wp_unslash( $_REQUEST['post'] );
 
 		$query = new WP_Query( [
-			'post_type'              => 'mb-post-type',
+			'post_type'              => wp_unslash( $_REQUEST['post_type'] ),
 			'post__in'               => $post_ids,
 			'posts_per_page'         => count( $post_ids ),
 			'no_found_rows'          => true,
@@ -45,6 +46,7 @@ class Export {
 				'settings'    => json_decode( $post->post_content, true ),
 				'post_date'   => $post->post_date,
 				'post_status' => $post->post_status,
+				'post_type'   => wp_unslash( $_REQUEST['post_type'] ),
 			];
 		}
 
