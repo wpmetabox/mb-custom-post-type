@@ -10,14 +10,17 @@ class Export {
 	}
 
 	public function add_export_link( $actions, $post ) {
-		if ( in_array( $post->post_type, [ 'mb-post-type', 'mb-taxonomy' ] ) ) {
-			$url               = add_query_arg( [
-				'action'    => 'mbcpt-export',
-				'post_type' => $post->post_type,
-				'post[]'    => $post->ID,
-			] );
-			$actions['export'] = '<a href="' . $url . '">' . esc_html__( 'Export', 'mb-custom-post-type' ) . '</a>';
+		if ( ! in_array( $post->post_type, [ 'mb-post-type', 'mb-taxonomy' ], true ) ) {
+			return $actions;
 		}
+
+		$url               = wp_nonce_url( add_query_arg( [
+			'action'    => 'mbcpt-export',
+			'post_type' => $post->post_type,
+			'post[]'    => $post->ID,
+		] ), 'bulk-posts' ); // @see WP_List_Table::display_tablenav()
+		$actions['export'] = '<a href="' . esc_url( $url ) . '">' . esc_html__( 'Export', 'mb-custom-post-type' ) . '</a>';
+
 		return $actions;
 	}
 
@@ -25,14 +28,16 @@ class Export {
 		$action  = isset( $_REQUEST['action'] ) && 'mbcpt-export' === $_REQUEST['action'];
 		$action2 = isset( $_REQUEST['action2'] ) && 'mbcpt-export' === $_REQUEST['action2'];
 
-		if ( ( ! $action && ! $action2 ) || empty( $_REQUEST['post'] ) ) {
+		if ( ( ! $action && ! $action2 ) || empty( $_REQUEST['post'] ) || empty( $_REQUEST['post_type'] ) ) {
 			return;
 		}
 
-		$post_ids = wp_unslash( $_REQUEST['post'] );
+		check_ajax_referer( 'bulk-posts' );
+
+		$post_ids = wp_parse_id_list( wp_unslash( $_REQUEST['post'] ) );
 
 		$query = new WP_Query( [
-			'post_type'              => wp_unslash( $_REQUEST['post_type'] ),
+			'post_type'              => sanitize_text_field( wp_unslash( $_REQUEST['post_type'] ) ),
 			'post__in'               => $post_ids,
 			'posts_per_page'         => count( $post_ids ),
 			'no_found_rows'          => true,
@@ -46,14 +51,15 @@ class Export {
 				'settings'    => json_decode( $post->post_content, true ),
 				'post_date'   => $post->post_date,
 				'post_status' => $post->post_status,
-				'post_type'   => wp_unslash( $_REQUEST['post_type'] ),
+				'post_type'   => $post->post_type,
 			];
 		}
 
 		$file_name = 'post-types-exported';
 		if ( count( $post_ids ) === 1 ) {
 			$data      = reset( $data );
-			$file_name = $query->posts[0]->post_name;
+			$post      = $query->posts[0];
+			$file_name = $post->post_name ?: sanitize_key( $post->post_title );
 		}
 
 		$data = wp_json_encode( $data, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT );
