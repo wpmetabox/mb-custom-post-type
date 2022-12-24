@@ -1,11 +1,11 @@
 === MB Custom Post Types & Custom Taxonomies ===
-Contributors: elightup, metabox, rilwis, duc88b, truongwp
+Contributors: elightup, metabox, rilwis, duc88b, truongwp, barcavn2
 Donate link: https://metabox.io/pricing/
 Tags: custom post types, custom taxonomies, meta box, content types, cpt, post type, taxonomy, cms, post, post types, types, taxonomies, tax
 Requires at least: 5.9
 Tested up to: 6.1.1
 Requires PHP: 7.0
-Stable tag: 2.3.5
+Stable tag: 2.4.0
 License: GPLv2 or later
 
 Create and manage custom post types and custom taxonomies with an easy-to-use UI in WordPress.
@@ -34,6 +34,13 @@ Using **MB Custom Post Types & Custom Taxonomies**, you will be able to craft th
 
 This plugin is a free extension of [Meta Box](https://metabox.io) plugin, which is a powerful, professional solution to create custom meta boxes and custom fields for WordPress. Using **MB Custom Post Types & Custom Taxonomies** in combination with [other Meta Box extensions](https://metabox.io/plugins/) will help you manage any content types in WordPress easily and make your website more professional.
 
+### You might also like
+
+- [Slim SEO](https://wpslimseo.com): A fast, lightweight, full-featured SEO plugin with minimal configuration.
+- [Slim SEO Schema](https://wpslimseo.com/slim-seo-schema/): The best schema plugin for WordPress.
+- [Auto Listings](https://wpautolistings.com): The best WordPress plugin for car dealership and car selling websites.
+- [GretaThemes](https://gretathemes.com): Clean and elegant WordPress themes (free and premium).
+
 == Installation ==
 
 You need to install [Meta Box](https://metabox.io) plugin first
@@ -59,6 +66,9 @@ Install **MB Custom Post Types & Custom Taxonomies** extension
 1. Edit custom post type - Taxonomies tab
 
 == Changelog ==
+
+= 2.4.0 - 2022-12-24 =
+- Add import export feature for post types and taxonomies
 
 = 2.3.5 - 2022-12-13 =
 - Fix error with Meta Box 5.6.14 when edit post types
