@@ -54,7 +54,7 @@ class Import {
 		check_ajax_referer( 'import' );
 
 		$url    = admin_url( 'edit.php?post_type=' . sanitize_text_field( wp_unslash( $_POST['mbcpt_post_type'] ) ) );
-		$data   = file_get_contents( sanitize_text_field( wp_unslash( $_FILES['mbcpt_file']['tmp_name'] ) ) );
+		$data   = file_get_contents( sanitize_text_field( $_FILES['mbcpt_file']['tmp_name'] ) );
 		$result = $this->import_json( $data );
 
 		if ( ! $result ) {
