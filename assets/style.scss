@@ -94,6 +94,22 @@
 	}
 
 	// search icon
+	&-icon-selected {
+		display: flex;
+
+		span {
+			width: 36px;
+			height: 36px;
+			padding: 4px;
+			box-sizing: border-box;
+			font-size: 24px;
+			border-radius: 4px;
+			color: #fff;
+			background: var(--wp-admin-theme-color);
+			margin-right: 10px;
+		}
+	}
+
 	&-items {
 		display: grid;
 		grid-template-columns: repeat(auto-fit, 55px);
@@ -103,6 +119,7 @@
 		padding: 1px;
 		margin-top: 15px;
 	}
+
 	&-item {
 		display: flex;
 		flex-direction: column;
@@ -135,6 +152,7 @@
 			padding: 4px;
 			box-sizing: border-box;
 			font-size: 24px;
+			border-radius: 4px;
 		}
 
 		input {
