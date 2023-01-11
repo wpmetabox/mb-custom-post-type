@@ -5,6 +5,7 @@
 #mb-cpt {
 	margin-top: 0;
 }
+
 .mb-cpt {
 	--color-gray: #999;
 	--color-light: #ccd0d4;
@@ -20,27 +21,34 @@
 		width: 100%;
 		max-width: none;
 	}
+
 	svg {
 		width: 16px;
 		height: 16px;
 		fill: var(--color-gray);
 	}
+
 	pre {
 		padding: 0;
 	}
+
 	.alert-error {
 		color: var(--color-red);
 		background: var(--color-pink);
 	}
+
 	&-required {
 		color: var(--color-red);
 	}
+
 	&-loading {
 		margin-left: 12px;
 		font-style: italic;
 	}
-		// Tooltip
+
+	// Tooltip
 	&-tooltip-icon {
+
 		// WordPress < 5.6
 		svg {
 			width: 14px;
@@ -50,6 +58,7 @@
 			top: 2px;
 			position: relative;
 		}
+
 		// WordPress 5.6+
 		.dashicon {
 			color: var(--color-light);
@@ -65,68 +74,75 @@
 		display: flex;
 		justify-content: space-between;
 	}
+
 	&-label {
 		width: 25%;
 		// font-weight: 700;
 	}
+
 	&-input {
 		flex: 1;
 	}
+
 	&-description {
 		font-style: italic;
 	}
+
 	&-error {
 		font-style: italic;
 		color: var(--color-red);
 	}
 
-	&-choice {
-		margin-right: 12px;
+	// search icon
+	&-items {
+		display: grid;
+		grid-template-columns: repeat(auto-fit, 55px);
+		gap: 10px 15px;
+		max-height: 25em;
+		overflow: auto;
+		padding: 1px;
+		margin-top: 15px;
 	}
-	&-icon {
-		position: relative;
-		display: inline-block;
-		margin: 0 4px 4px 0;
+	&-item {
+		display: flex;
+		flex-direction: column;
+		justify-content: start;
+		align-items: center;
+		text-align: center;
 
-		svg {
-			border: 1px solid var(--color-light);
-			border-radius: 4px;
-			width: 36px;
-			height: 36px;
-			padding: 8px;
-			box-sizing: border-box;
-			fill: currentColor;
+		&:hover {
+			cursor: pointer;
 
-			&:hover {
-				border-color: var(--wp-admin-theme-color);
+			.mb-cpt-icon {
+				box-shadow: 0 0 0 1px rgba(0, 0, 0, .3);
 			}
 		}
+
+		&__text {
+			color: var(--color-gray);
+			font-size: 11px;
+			line-height: 1.1;
+			margin-top: 4px;
+		}
+	}
+
+	&-icon {
+		border-radius: 4px;
+
 		.dashicons {
-			border: 1px solid var(--color-light);
-			border-radius: 4px;
 			width: 36px;
 			height: 36px;
-			padding: 8px;
+			padding: 4px;
 			box-sizing: border-box;
-
-			&:hover {
-				border-color: var(--wp-admin-theme-color);
-			}
+			font-size: 24px;
 		}
 
 		input {
-			position: absolute;
-			opacity: 0;
+			display: none;
 
-			&:checked ~ svg {
-				fill: #fff;
-				background-color: var(--wp-admin-theme-color);
-				border-color: var(--wp-admin-theme-color);
-			}
-			&:checked ~ .dashicons {
+			&:checked~.dashicons {
 				color: #fff;
-				background-color: var(--wp-admin-theme-color);
-				border-color: var(--wp-admin-theme-color);
+				background: var(--wp-admin-theme-color);
 			}
 		}
 	}
@@ -135,13 +151,16 @@
 		code {
 			font-size: 12px;
 		}
+
 		.react-codemirror2 {
 			border: 1px solid var(--color-light);
 			margin-bottom: 24px;
 		}
+
 		&__body {
 			position: relative;
 		}
+
 		.button {
 			position: absolute;
 			top: 0;
@@ -160,14 +179,17 @@
 	background: #fff;
 	border: 1px solid var(--color-light);
 }
+
 .components-tab-panel__tab-content {
 	border-top: none;
 	padding: 24px 16px 0;
 	margin-bottom: 24px;
 }
+
 .components-tab-panel__tabs {
 	align-items: center;
 }
+
 .mb-cpt-tabs {
 	.mb-cpt-code {
 		margin-left: auto;
@@ -179,8 +201,9 @@
 		}
 	}
 }
+
 .wp-menu-image {
-	img{
+	img {
 		max-width: 20px;
 	}
 }
