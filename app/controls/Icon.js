@@ -5,18 +5,21 @@ const Icon = ( { label, name, update, value, required = false, tooltip = '' } ) 
 	const [ query, setQuery ] = useState( "" );
 	let data = MBCPT.icons.map( icon => {
 		let label = icon.replace( /-/g, ' ' ).trim();
+
 		const startsText = [ 'admin', 'controls', 'editor', 'format', 'image', 'welcome' ];
-		for ( let text in startsText ) {
+		startsText.forEach( text => {
 			if ( icon.startsWith( text ) ) {
 				label = label.replace( text, '' );
 			}
-		}
+		} );
+
 		const endsText = [ 'alt', 'alt2', 'alt3' ];
-		for ( let text in endsText ) {
+		endsText.forEach( text => {
 			if ( icon.endsWith( text ) ) {
 				label = label.replace( text, `(${ text })` );
 			}
-		}
+		} );
+
 		return [ icon, label.trim().toLowerCase() ];
 	} );
 
@@ -37,8 +40,8 @@ const Icon = ( { label, name, update, value, required = false, tooltip = '' } ) 
 				<div className="mb-cpt-items">
 					{
 						data.map( ( [ icon, label ] ) => (
-							<div className='mb-cpt-item'>
-								<label key={ icon } className="mb-cpt-icon">
+							<div key={ icon } className='mb-cpt-item'>
+								<label className="mb-cpt-icon">
 									<input type="radio" name={ name } value={ `dashicons-${ icon }` } checked={ `dashicons-${ icon }` === value } onChange={ update } />
 									<span className={ `dashicons dashicons-${ icon }` }></span>
 								</label>
