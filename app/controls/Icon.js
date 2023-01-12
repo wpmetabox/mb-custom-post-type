@@ -1,51 +1,47 @@
 import { useState } from "@wordpress/element";
 import Tooltip from './Tooltip';
 
-const Label = ( icon ) => {
+const getIconLabel = icon => {
 	let label = icon.replace( /-/g, ' ' ).trim();
 
 	const startsText = [ 'admin', 'controls', 'editor', 'format', 'image', 'media', 'welcome' ];
 	startsText.forEach( text => {
-		if ( icon.startsWith( text ) ) {
+		if ( label.startsWith( text ) ) {
 			label = label.replace( text, '' );
 		}
 	} );
 
 	const endsText = [ 'alt', 'alt2', 'alt3' ];
 	endsText.forEach( text => {
-		if ( icon.endsWith( text ) ) {
+		if ( label.endsWith( text ) ) {
 			label = label.replace( text, `(${ text })` );
 		}
 	} );
 
+	label = label.trim();
 	const specialText = {
-		businessman: "business man",
-		aligncenter: "align center",
-		alignleft: "align left",
-		alignright: "align right",
-		customchar: "custom character",
-		distractionfree: "distraction free",
-		removeformatting: "remove formatting",
-		strikethrough: "strike through",
-		skipback: "skip back",
+		businessman: 'business man',
+		aligncenter: 'align center',
+		alignleft: 'align left',
+		alignright: 'align right',
+		customchar: 'custom character',
+		distractionfree: 'distraction free',
+		removeformatting: 'remove formatting',
+		strikethrough: 'strike through',
+		skipback: 'skip back',
 		skipforward: 'skip forward',
-		leftright: 'left right'
+		leftright: 'left right',
+		screenoptions: 'screen options',
 	};
-	for ( let text in specialText ) {
-		if ( icon.includes( text ) ) {
-			label = specialText[ text ];
-		}
-	}
+	label = specialText[ label ] || label;
 
 	return label.trim().toLowerCase();
 };
 
 const Icon = ( { label, name, update, value, required = false, tooltip = '' } ) => {
 	const [ query, setQuery ] = useState( "" );
-	let data = MBCPT.icons.map( icon => {
-		return [ icon, Label( icon ) ];
-	} );
-	data = data.filter( item => query === '' || item[ 1 ].includes( query.toLowerCase() ) );
+	let data = MBCPT.icons.map( icon => [ icon, getIconLabel( icon ) ] )
+		.filter( item => query === '' || item[ 1 ].includes( query.toLowerCase() ) );
 
 	return (
 		<div className="mb-cpt-field mb-cpt-field--radio">
