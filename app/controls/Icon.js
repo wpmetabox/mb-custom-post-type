@@ -1,28 +1,50 @@
 import { useState } from "@wordpress/element";
 import Tooltip from './Tooltip';
 
+const Label = ( icon ) => {
+	let label = icon.replace( /-/g, ' ' ).trim();
+
+	const startsText = [ 'admin', 'controls', 'editor', 'format', 'image', 'media', 'welcome' ];
+	startsText.forEach( text => {
+		if ( icon.startsWith( text ) ) {
+			label = label.replace( text, '' );
+		}
+	} );
+
+	const endsText = [ 'alt', 'alt2', 'alt3' ];
+	endsText.forEach( text => {
+		if ( icon.endsWith( text ) ) {
+			label = label.replace( text, `(${ text })` );
+		}
+	} );
+
+	const specialText = {
+		businessman: "business man",
+		aligncenter: "align center",
+		alignleft: "align left",
+		alignright: "align right",
+		customchar: "custom character",
+		distractionfree: "distraction free",
+		removeformatting: "remove formatting",
+		strikethrough: "strike through",
+		skipback: "skip back",
+		skipforward: 'skip forward',
+		leftright: 'left right'
+	};
+	for ( let text in specialText ) {
+		if ( icon.includes( text ) ) {
+			label = specialText[ text ];
+		}
+	}
+
+	return label.trim().toLowerCase();
+};
+
 const Icon = ( { label, name, update, value, required = false, tooltip = '' } ) => {
 	const [ query, setQuery ] = useState( "" );
 	let data = MBCPT.icons.map( icon => {
-		let label = icon.replace( /-/g, ' ' ).trim();
-
-		const startsText = [ 'admin', 'controls', 'editor', 'format', 'image', 'welcome' ];
-		startsText.forEach( text => {
-			if ( icon.startsWith( text ) ) {
-				label = label.replace( text, '' );
-			}
-		} );
-
-		const endsText = [ 'alt', 'alt2', 'alt3' ];
-		endsText.forEach( text => {
-			if ( icon.endsWith( text ) ) {
-				label = label.replace( text, `(${ text })` );
-			}
-		} );
-
-		return [ icon, label.trim().toLowerCase() ];
+		return [ icon, Label( icon ) ];
 	} );
-
 	data = data.filter( item => query === '' || item[ 1 ].includes( query.toLowerCase() ) );
 
 	return (
