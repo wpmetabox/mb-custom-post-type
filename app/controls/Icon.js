@@ -1,27 +1,26 @@
-import Tooltip from './Tooltip';
 import { useState } from "@wordpress/element";
+import Tooltip from './Tooltip';
 
 const Icon = ( { label, name, update, value, required = false, tooltip = '' } ) => {
 	const [ query, setQuery ] = useState( "" );
 	let data = MBCPT.icons.map( icon => {
-			let label = icon;
-			if ( icon.includes( '-' ) ) {
-				label = icon.replace( /-/g, ' ' );
+		let label = icon.replace( /-/g, ' ' ).trim();
+		const startsText = [ 'admin', 'controls', 'editor', 'format', 'image', 'welcome' ];
+		for ( let text in startsText ) {
+			if ( icon.startsWith( text ) ) {
+				label = label.replace( text, '' );
 			}
-			let startsText = [ 'admin', 'controls', 'editor', 'format', 'image', 'welcom' ];
-			for ( let text in startsText ) {
-				if ( icon.startsWith( text ) ) {
-					label = label.replace( text, '' );
-				}
+		}
+		const endsText = [ 'alt', 'alt2', 'alt3' ];
+		for ( let text in endsText ) {
+			if ( icon.endsWith( text ) ) {
+				label = label.replace( text, `(${ text })` );
 			}
-			let endsText = [ 'alt', 'alt2', 'alt3' ];
-			for ( let text in endsText ) {
-				if ( icon.endsWith( text ) ) {
-					label = label.replace( text, `(${ text })` );
-				}
-			}
-			return [ icon, label ];
-		} );
+		}
+		return [ icon, label.trim().toLowerCase() ];
+	} );
+
+	data = data.filter( item => query === '' || item[ 1 ].includes( query.toLowerCase() ) );
 
 	return (
 		<div className="mb-cpt-field mb-cpt-field--radio">
@@ -37,17 +36,11 @@ const Icon = ( { label, name, update, value, required = false, tooltip = '' } ) 
 				</div>
 				<div className="mb-cpt-items">
 					{
-						data.filter( ( [ key, label ] ) => {
-							if ( query === '' ) {
-								return [ key, label ];
-							} else if ( label.toLowerCase().includes( query.toLowerCase() ) ) {
-								return [ key, label ];
-							}
-						} ).map( ( [ key, label ] ) => (
+						data.map( ( [ icon, label ] ) => (
 							<div className='mb-cpt-item'>
-								<label key={ key } className="mb-cpt-icon">
-									<input type="radio" name={ name } value={ `dashicons-${ key }` } checked={ `dashicons-${ key }` === value } onChange={ update } />
-									<span className={ `dashicons dashicons-${ key }` }></span>
+								<label key={ icon } className="mb-cpt-icon">
+									<input type="radio" name={ name } value={ `dashicons-${ icon }` } checked={ `dashicons-${ icon }` === value } onChange={ update } />
+									<span className={ `dashicons dashicons-${ icon }` }></span>
 								</label>
 								<span className='mb-cpt-item__text'>{ label }</span>
 							</div>
