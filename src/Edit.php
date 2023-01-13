@@ -82,6 +82,10 @@ class Edit {
 					'value' => 'custom',
 					'label' => esc_html__( 'Custom URL', 'mb-custom-post-type' ),
 				],
+				[
+					'value' => 'font_awesome',
+					'label' => esc_html__( 'Font Awesome', 'mb-custom-post-type' ),
+				],
 			];
 			$vars['menu_position_options'] = $this->get_menu_position_options();
 			$vars['show_in_menu_options']  = $this->get_show_in_menu_options();

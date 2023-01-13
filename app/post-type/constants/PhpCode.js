@@ -1,7 +1,7 @@
 import { checkboxList, general, labels, spaces, text, translatableText } from '../../code';
 
 const advanced = settings => {
-	const ignore = [ 'slug', 'function_name', 'text_domain', 'label', 'labels', 'description', 'rest_base', 'show_in_menu', 'menu_icon', 'menu_position', 'capability_type', 'has_archive', 'archive_slug', 'rewrite', 'supports', 'taxonomies', 'icon_type', 'icon', 'icon_svg', 'icon_custom' ];
+	const ignore = [ 'slug', 'function_name', 'text_domain', 'label', 'labels', 'description', 'rest_base', 'show_in_menu', 'menu_icon', 'menu_position', 'capability_type', 'has_archive', 'archive_slug', 'rewrite', 'supports', 'taxonomies', 'icon_type', 'icon', 'icon_svg', 'icon_custom', 'font_awesome' ];
 
 	let keys = Object.keys( settings ).filter( key => !ignore.includes( key ) );
 	return keys.map( key => general( settings, key ) ).join( ",\n\t\t" );
@@ -27,6 +27,8 @@ const menu_icon = settings => {
 		value = settings.icon_svg ? `'${ settings.icon_svg }'` : settings.icon_svg;
 	} else if ( value_type == `'custom'` ) {
 		value = settings.icon_custom ? `'${ settings.icon_custom }'` : settings.icon_custom;
+	} else if ( value_type == `'font_awesome'` ) {
+		value = settings.font_awesome ? `'${ settings.font_awesome }'` : settings.font_awesome;
 	}
 
 	return `'menu_icon'${ spaces( settings, 'menu_icon' ) } => ${ value }`;

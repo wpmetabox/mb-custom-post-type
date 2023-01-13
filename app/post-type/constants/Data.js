@@ -378,6 +378,12 @@ export const AdvancedControls = [
 		dependency: 'icon_type:custom',
 	},
 	{
+		type: 'text',
+		name: 'font_awesome',
+		label: __( 'Icon font awesome', 'mb-custom-post-type' ),
+		dependency: 'icon_type:font_awesome',
+	},
+	{
 		type: 'checkbox',
 		name: 'show_in_nav_menus',
 		label: __( 'Show in nav menus', 'mb-custom-post-type' ),
