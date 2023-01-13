@@ -12,8 +12,6 @@ class Edit {
 		add_action( 'edit_form_after_title', [ $this, 'output_root' ] );
 		add_action( 'add_meta_boxes', [ $this, 'register_upgrade_meta_box' ] );
 		add_action( 'admin_enqueue_scripts', [ $this, 'enqueue_scripts' ] );
-		add_action( 'admin_init', [ $this, 'fontawesome_dashboard' ] );
-		add_filter( 'sanitize_html_class', [ $this, 'sanitize_html_class_fontawesome' ], 0, 3 );
 	}
 
 	public function output_root() {
@@ -41,26 +39,6 @@ class Edit {
 		</ul>
 		<a href="https://metabox.io/pricing/?utm_source=plugin_cpt&utm_medium=btn_upgrade&utm_campaign=cpt_upgrade" class="button" target="_blank" rel="noopenner noreferer"><?php esc_html_e( 'Upgrade now', 'mb-custom-post-type' ) ?></a>
 		<?php
-	}
-
-	public function fontawesome_dashboard() {
-		wp_enqueue_style( 'font-awesome',  MB_CPT_URL . 'assets/fontawesome/css/all.min.css', '', ' 6.2.1' );
-		wp_add_inline_style(
-			'font-awesome',
-			'.fa:before, fas, .fa-solid:before, .fal:before, .fa-light:before, .fab:before, .fa-brand:before, .far:before, .fa-regular:before{
-			font-family: inherit;
-		}'
-		);
-	}
-
-	public function sanitize_html_class_fontawesome ( $sanitized, $class ) {
-		$strpos = [ 'fa', 'fas', 'fa-solid', 'fal', 'fa-light', 'fab', 'fa-brand', 'far', 'fa-regular' ];
-		foreach ( $strpos as $value) {
-			if ( strpos( $class, $value ) ) {
-				return str_replace( 'dashicons-', '', $class );
-			}
-		}
-		return $sanitized;
 	}
 
 	public function enqueue_scripts() {
