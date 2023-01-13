@@ -369,7 +369,7 @@ export const AdvancedControls = [
 		name: 'icon_svg',
 		label: __( 'Icon SVG', 'mb-custom-post-type' ),
 		dependency: 'icon_type:svg',
-		tooltip: __( 'Must be in base64 encoded format', 'mb-custom-post-type' ),
+		description: __( 'Must be in base64 encoded format.', 'mb-custom-post-type' ),
 	},
 	{
 		type: 'text',
@@ -380,7 +380,8 @@ export const AdvancedControls = [
 	{
 		type: 'text',
 		name: 'font_awesome',
-		label: __( 'FontAwesome icon', 'mb-custom-post-type' ),
+		label: __( 'Icon', 'mb-custom-post-type' ),
+		tooltip: __( 'The icon to be used for the admin menu (FontAwesome)', 'mb-custom-post-type' ),
 		description: __( 'Enter <a href="https://fontawesome.com/search?o=r&m=free">FontAwesome</a> icon class here. Supports FontAwesome free version only.', 'mb-custom-post-type' ),
 		dependency: 'icon_type:font_awesome',
 	},
