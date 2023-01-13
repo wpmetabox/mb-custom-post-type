@@ -1,3 +1,4 @@
+import { RawHTML } from '@wordpress/element';
 import Tooltip from './Tooltip';
 
 const Input = ( { label, name, value, update, tooltip = '', description = '', required = false } ) => (
@@ -9,7 +10,7 @@ const Input = ( { label, name, value, update, tooltip = '', description = '', re
 		</label>
 		<div className="mb-cpt-input">
 			<input type="text" required={ required } id={ name } name={ name } value={ value } onChange={ update } />
-			{ description && <div className="mb-cpt-description">{ description }</div> }
+			{ description && <div className="mb-cpt-description"><RawHTML>{ description }</RawHTML></div> }
 		</div>
 	</div>
 );

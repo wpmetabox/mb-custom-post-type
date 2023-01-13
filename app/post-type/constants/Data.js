@@ -380,7 +380,8 @@ export const AdvancedControls = [
 	{
 		type: 'text',
 		name: 'font_awesome',
-		label: __( 'Icon font awesome', 'mb-custom-post-type' ),
+		label: __( 'FontAwesome icon', 'mb-custom-post-type' ),
+		description: __( 'Enter <a href="https://fontawesome.com/search?o=r&m=free">FontAwesome</a> icon class here. Supports FontAwesome free version only.', 'mb-custom-post-type' ),
 		dependency: 'icon_type:font_awesome',
 	},
 	{
