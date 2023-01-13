@@ -3,6 +3,7 @@ import slugify from 'slugify';
 import { SettingsContext } from '../SettingsContext';
 import Checkbox from './Checkbox';
 import Icon from './Icon';
+import Fontawesome from './Fontawesome';
 import Input from './Input';
 import Select from './Select';
 import Slug from './Slug';
@@ -81,6 +82,8 @@ const Control = ( { field, autoFills = [] } ) => {
 			return <Checkbox { ...field } checked={ _value } update={ update } />;
 		case 'icon':
 			return <Icon { ...field } value={ _value } update={ update } />;
+		case 'fontawesome':
+			return <Fontawesome { ...field } value={ _value } update={ update } />;
 		case 'select':
 			return <Select { ...field } value={ _value } update={ update } />;
 		case 'slug':

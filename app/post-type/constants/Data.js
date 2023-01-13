@@ -378,7 +378,7 @@ export const AdvancedControls = [
 		dependency: 'icon_type:custom',
 	},
 	{
-		type: 'text',
+		type: 'fontawesome',
 		name: 'font_awesome',
 		label: __( 'Icon', 'mb-custom-post-type' ),
 		tooltip: __( 'The icon to be used for the admin menu (FontAwesome)', 'mb-custom-post-type' ),
