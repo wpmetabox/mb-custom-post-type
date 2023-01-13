@@ -85,8 +85,6 @@ class PostTypeRegister extends Register {
 				font-size: 16px;
 				font-family: inherit;
 				font-weight: inherit;
-				position: relative;
-				top: 2px;
 			}'
 		);
 	}

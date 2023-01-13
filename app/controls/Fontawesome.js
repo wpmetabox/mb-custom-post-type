@@ -9,8 +9,8 @@ const Fontawesome = ( { label, name, update, value, required = false, tooltip = 
 				{ tooltip && <Tooltip id={ name } content={ tooltip } /> }
 			</label>
 			<div className='mb-cpt-input mb-cpt-icon-selected'>
-					<span className={ `icon-fontawesome ${ value }` }></span>
-					<input type="text" name={ name } value={ value } onChange={ update } />
+				<span className={ `icon-fontawesome ${ value }` }></span>
+				<input type="text" name={ name } value={ value } onChange={ update } />
 			</div>
 		</div>
 	);
