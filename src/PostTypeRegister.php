@@ -62,9 +62,9 @@ class PostTypeRegister extends Register {
 		];
 
 			register_post_type( 'mb-post-type', $args );
-			add_action( 'admin_init', [ $this, 'fontawesome_dashboard' ] );
+			add_action( 'admin_init', [ $this, 'enqueue_fontawesome' ] );
 			add_action( 'admin_menu', [ $this, 'filter_class_fontawesome' ] );
-			remove_action( 'admin_menu', [ $this, 'filter_class_fontawesome' ], 99 );
+			add_action( 'adminmenu', [ $this, 'remove_filter_class_fontawesome' ] );
 
 		// Get all registered custom post types.
 		$post_types = $this->get_post_types();
@@ -75,7 +75,7 @@ class PostTypeRegister extends Register {
 
 	}
 
-	public function fontawesome_dashboard() {
+	public function enqueue_fontawesome() {
 		wp_enqueue_style( 'font-awesome', 'https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.2.1/css/all.min.css', '', ' 6.2.1' );
 		wp_add_inline_style(
 			'font-awesome',
@@ -101,6 +101,10 @@ class PostTypeRegister extends Register {
 
 	public function filter_class_fontawesome () {
 		add_filter( 'sanitize_html_class', [ $this, 'sanitize_html_class_fontawesome' ], 10, 3 );
+	}
+
+	public function remove_filter_class_fontawesome () {
+		remove_filter( 'sanitize_html_class', [ $this, 'sanitize_html_class_fontawesome' ] );
 	}
 
 	public function get_post_types() {
