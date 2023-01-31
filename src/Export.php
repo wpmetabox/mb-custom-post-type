@@ -54,8 +54,11 @@ class Export {
 				'post_type'   => $post->post_type,
 			];
 		}
-
-		$file_name = 'post-types-exported';
+		if ( $_REQUEST['post_type'] === 'mb-post-type' ) {
+			$file_name = 'post-types-exported';
+		} elseif ( $_REQUEST['post_type'] === 'mb-taxonomy' ) {
+			$file_name = 'taxonomies-exported';
+		}
 		if ( count( $post_ids ) === 1 ) {
 			$data      = reset( $data );
 			$post      = $query->posts[0];
