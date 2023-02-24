@@ -63,11 +63,6 @@ class PostTypeRegister extends Register {
 
 		register_post_type( 'mb-post-type', $args );
 
-		// Font Awesome.
-		add_action( 'admin_init', [ $this, 'enqueue_font_awesome' ] );
-		add_action( 'admin_menu', [ $this, 'filter_class_font_awesome' ] );
-		add_action( 'adminmenu', [ $this, 'remove_filter_class_font_awesome' ] );
-
 		// Get all registered custom post types.
 		$post_types = $this->get_post_types();
 
@@ -75,36 +70,6 @@ class PostTypeRegister extends Register {
 			register_post_type( $post_type, $args );
 		}
 
-	}
-
-	public function enqueue_font_awesome() {
-		wp_enqueue_style( 'font-awesome', 'https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.2.1/css/all.min.css', '', ' 6.2.1' );
-		wp_add_inline_style(
-			'font-awesome',
-			'.fa:before, fas, .fa-solid:before, .fab:before, .fa-brand:before, .far:before, .fa-regular:before {
-				font-size: 16px;
-				font-family: inherit;
-				font-weight: inherit;
-			}'
-		);
-	}
-
-	public function filter_class_font_awesome() {
-		add_filter( 'sanitize_html_class', [ $this, 'sanitize_html_class_font_awesome' ], 10, 2 );
-	}
-
-	public function remove_filter_class_font_awesome() {
-		remove_filter( 'sanitize_html_class', [ $this, 'sanitize_html_class_font_awesome' ] );
-	}
-
-	public function sanitize_html_class_font_awesome( $sanitized, $class ) {
-		$strpos = [ 'fa', 'fas', 'fa-solid', 'fab', 'fa-brand', 'far', 'fa-regular' ];
-		foreach ( $strpos as $value ) {
-			if ( strpos( $class, $value ) !== false ) {
-				return str_replace( 'dashicons-', '', $class );
-			}
-		}
-		return $sanitized;
 	}
 
 	public function get_post_types() {
@@ -130,6 +95,7 @@ class PostTypeRegister extends Register {
 	public function get_post_type_settings( WP_Post $post ) {
 		$settings = empty( $post->post_content ) || isset( $_GET['mbcpt-force'] ) ? $this->migrate_data( $post ) : json_decode( $post->post_content, true );
 		$this->parse_archive_slug( $settings );
+		$this->has_font_awesome( $settings );
 		$this->parse_icon( $settings );
 		$this->parse_supports( $settings );
 		$this->parse_capabilities( $settings );
@@ -339,5 +305,44 @@ class PostTypeRegister extends Register {
 		unset( $settings['icon_svg'] );
 		unset( $settings['icon_custom'] );
 		unset( $settings['font_awesome'] );
+	}
+
+	public function has_font_awesome( &$settings ) {
+		$type = Arr::get( $settings, 'icon_type', 'dashicons' );
+		if ( $type === 'font_awesome' ) {
+			add_action( 'admin_init', [ $this, 'enqueue_font_awesome' ] );
+			add_action( 'admin_menu', [ $this, 'filter_class_font_awesome' ] );
+			add_action( 'adminmenu', [ $this, 'remove_filter_class_font_awesome' ] );
+		}
+	}
+
+	public function enqueue_font_awesome() {
+		wp_enqueue_style( 'font-awesome', 'https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.2.1/css/all.min.css', '', '6.2.1' );
+		wp_add_inline_style(
+			'font-awesome',
+			'.fa:before, fas, .fa-solid:before, .fab:before, .fa-brand:before, .far:before, .fa-regular:before {
+				font-size: 16px;
+				font-family: inherit;
+				font-weight: inherit;
+			}'
+		);
+	}
+
+	public function filter_class_font_awesome() {
+		add_filter( 'sanitize_html_class', [ $this, 'sanitize_html_class_font_awesome' ], 10, 2 );
+	}
+
+	public function remove_filter_class_font_awesome() {
+		remove_filter( 'sanitize_html_class', [ $this, 'sanitize_html_class_font_awesome' ] );
+	}
+
+	public function sanitize_html_class_font_awesome( $sanitized, $class ) {
+		$strpos = [ 'fa', 'fas', 'fa-solid', 'fab', 'fa-brand', 'far', 'fa-regular' ];
+		foreach ( $strpos as $value ) {
+			if ( strpos( $class, $value ) !== false ) {
+				return str_replace( 'dashicons-', '', $class );
+			}
+		}
+		return $sanitized;
 	}
 }
