@@ -47,6 +47,7 @@ class Edit {
 		}
 
 		wp_enqueue_style( $this->post_type, MB_CPT_URL . 'assets/style.css', [ 'wp-components' ], MB_CPT_VER );
+		wp_enqueue_style( 'font-awesome', 'https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.2.1/css/all.min.css', '', '6.2.1' );
 
 		$object = str_replace( 'mb-', '', $this->post_type );
 		wp_enqueue_code_editor( [ 'type' => 'application/x-httpd-php' ] );
