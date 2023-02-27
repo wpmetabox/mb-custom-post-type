@@ -69,7 +69,6 @@ class PostTypeRegister extends Register {
 		foreach ( $post_types as $post_type => $args ) {
 			register_post_type( $post_type, $args );
 		}
-
 	}
 
 	public function get_post_types() {
@@ -95,8 +94,12 @@ class PostTypeRegister extends Register {
 	public function get_post_type_settings( WP_Post $post ) {
 		$settings = empty( $post->post_content ) || isset( $_GET['mbcpt-force'] ) ? $this->migrate_data( $post ) : json_decode( $post->post_content, true );
 		$this->parse_archive_slug( $settings );
-		$this->has_font_awesome( $settings );
+
+		if ( $this->has_font_awesome( $settings ) ) {
+			$this->add_font_awesome_hooks();
+		}
 		$this->parse_icon( $settings );
+
 		$this->parse_supports( $settings );
 		$this->parse_capabilities( $settings );
 
@@ -307,13 +310,14 @@ class PostTypeRegister extends Register {
 		unset( $settings['font_awesome'] );
 	}
 
-	public function has_font_awesome( &$settings ) {
-		$type = Arr::get( $settings, 'icon_type', 'dashicons' );
-		if ( $type === 'font_awesome' ) {
-			add_action( 'admin_init', [ $this, 'enqueue_font_awesome' ] );
-			add_action( 'admin_menu', [ $this, 'filter_class_font_awesome' ] );
-			add_action( 'adminmenu', [ $this, 'remove_filter_class_font_awesome' ] );
-		}
+	private function has_font_awesome( $settings ) {
+		return Arr::get( $settings, 'icon_type', 'dashicons' ) === 'font_awesome';
+	}
+
+	private function add_font_awesome_hooks() {
+		add_action( 'admin_init', [ $this, 'enqueue_font_awesome' ] );
+		add_action( 'admin_menu', [ $this, 'filter_class_font_awesome' ] );
+		add_action( 'adminmenu', [ $this, 'remove_filter_class_font_awesome' ] );
 	}
 
 	public function enqueue_font_awesome() {
