@@ -24,7 +24,7 @@
     "@wordpress/i18n": "^3.16.0",
     "babel-loader": "^8.1.0",
     "sass": "^1.54.0",
-    "webpack": "^5.74.0",
+    "webpack": "^5.76.0",
     "webpack-cli": "^4.10.0"
   }
 }
