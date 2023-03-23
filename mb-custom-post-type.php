@@ -23,8 +23,12 @@ if ( ! function_exists( 'mb_cpt_load' ) ) {
 	function mb_cpt_load() {
 		define( 'MB_CPT_VER', '2.5.3' );
 
-		list( , $url ) = \RWMB_Loader::get_path( __DIR__ );
-		define( 'MB_CPT_URL', $url );
+		if ( class_exists( 'RWMB_Loader' ) ) {
+			list( , $url ) = RWMB_Loader::get_path( __DIR__ );
+			define( 'MB_CPT_URL', $url );
+		} else {
+			define( 'MB_CPT_URL', plugin_dir_url( __FILE__ ) );
+		}
 
 		load_plugin_textdomain( 'mb-custom-post-type' );
 
