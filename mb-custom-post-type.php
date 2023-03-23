@@ -18,12 +18,14 @@ if ( ! function_exists( 'mb_cpt_load' ) ) {
 		require __DIR__ . '/vendor/autoload.php';
 	}
 
-	define( 'MB_CPT_VER', '2.5.2' );
-	define( 'MB_CPT_URL', plugin_dir_url( __FILE__ ) );
-
 	add_action( 'init', 'mb_cpt_load', 0 );
 
 	function mb_cpt_load() {
+		define( 'MB_CPT_VER', '2.5.2' );
+
+		list( , $url ) = \RWMB_Loader::get_path( __DIR__ );
+		define( 'MB_CPT_URL', $url );
+
 		load_plugin_textdomain( 'mb-custom-post-type' );
 
 		new MBCPT\PostTypeRegister;
