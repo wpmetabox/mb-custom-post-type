@@ -110,7 +110,7 @@ class Edit {
 	}
 
 	private function is_premium_user() {
-		if ( ! defined( 'RWMB_VER' ) ) {
+		if ( ! class_exists( 'MetaBox\Updater\Option' ) || ! class_exists( 'MetaBox\Updater\Checker' ) ) {
 			return false;
 		}
 		$update_option  = new \MetaBox\Updater\Option();
