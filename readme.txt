@@ -3,9 +3,9 @@ Contributors: elightup, metabox, rilwis, duc88b, truongwp, barcavn2
 Donate link: https://metabox.io/pricing/
 Tags: custom post types, custom taxonomies, meta box, content types, cpt, post type, taxonomy, cms, post, post types, types, taxonomies, tax
 Requires at least: 5.9
-Tested up to: 6.1.1
+Tested up to: 6.2.2
 Requires PHP: 7.0
-Stable tag: 2.5.4
+Stable tag: 2.5.5
 License: GPLv2 or later
 
 Create and manage custom post types and custom taxonomies with an easy-to-use UI in WordPress.
@@ -36,10 +36,13 @@ This plugin is a free extension of [Meta Box](https://metabox.io) plugin, which 
 
 ### You might also like
 
-- [Slim SEO](https://wpslimseo.com): A fast, lightweight, full-featured SEO plugin with minimal configuration.
-- [Slim SEO Schema](https://wpslimseo.com/slim-seo-schema/): The best schema plugin for WordPress.
-- [Auto Listings](https://wpautolistings.com): The best WordPress plugin for car dealership and car selling websites.
-- [GretaThemes](https://gretathemes.com): Clean and elegant WordPress themes (free and premium).
+If you like this plugin, you might also like our other WordPress products:
+
+- [Slim SEO](https://wpslimseo.com): A fast, lightweight and full-featured SEO plugin for WordPress with minimal configuration.
+- [Slim SEO Schema](https://wpslimseo.com/products/slim-seo-schema/): The best plugin to add schemas (structured data, rich snippets) to WordPress.
+- [Slim SEO Link Manager](https://wpslimseo.com/products/slim-seo-link-manager/): Build internal link easier in WordPress with real-time reports.
+- [GretaThemes](https://gretathemes.com): Free and premium WordPress themes that clean, simple and just work.
+- [Auto Listings](https://wpautolistings.com): The car sale and dealership plugin for WordPress
 
 == Installation ==
 
@@ -66,6 +69,9 @@ Install **MB Custom Post Types & Custom Taxonomies** extension
 1. Edit custom post type - Taxonomies tab
 
 == Changelog ==
+
+= 2.5.5 - 2023-07-18 =
+- Fix error when Meta Box is not available
 
 = 2.5.4 - 2023-03-23 =
 - Fix error when not using with Meta Box
