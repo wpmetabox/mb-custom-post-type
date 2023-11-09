@@ -30,11 +30,11 @@ class EditSettingRegister {
 			if ( $post_obj ) {
 				continue;
 			}
-			$value              = json_decode( json_encode( $post_type ), true );
+			$value              = get_object_vars( $post_type );
 			$value['slug']      = $slug;
 			$value['icon_type'] = 'dashicons';
 			$value['icon']      = Arr::get( $value, 'menu_icon' );
-			$labels             = json_decode( json_encode( Arr::get( $value, 'labels' ) ), true );
+			$labels             = get_object_vars( Arr::get( $value, 'labels' ) );
 			$value['labels']    = array_filter( $labels );
 			$value['query_var'] = Arr::get( $value, 'query_var' ) ? true : false;
 			$value['rewrite']   = Arr::get( $value, 'rewrite' ) ?: [ 'with_front' => false ];
@@ -77,9 +77,9 @@ class EditSettingRegister {
 			if ( $post_obj ) {
 				continue;
 			}
-			$value              = json_decode( json_encode( $taxonomy ), true );
+			$value              = get_object_vars( $taxonomy );
 			$value['slug']      = $slug;
-			$labels             = json_decode( json_encode( Arr::get( $value, 'labels' ) ), true );
+			$labels             = get_object_vars( Arr::get( $value, 'labels' ) );
 			$value['labels']    = array_filter( $labels );
 			$value['types']     = Arr::get( $value, 'object_type' );
 			$value['query_var'] = Arr::get( $value, 'query_var' ) ? true : false;
@@ -104,7 +104,7 @@ class EditSettingRegister {
 
 	public function sort_post_type_query( $query ) {
 		global $pagenow;
-		if ( is_admin() && 'edit.php' == $pagenow && ! empty( $_GET['post_type'] ) && 'mb-post-type' == $_GET['post_type'] ) {
+		if ( 'edit.php' == $pagenow && ! empty( $_GET['post_type'] ) && 'mb-post-type' == $_GET['post_type'] ) {
 			$query->set( 'orderby', 'menu_order' );
 			$query->set( 'order', 'ASC' );
 		}
@@ -112,7 +112,7 @@ class EditSettingRegister {
 
 	public function sort_taxonomies_query( $query ) {
 		global $pagenow;
-		if ( is_admin() && 'edit.php' == $pagenow && ! empty( $_GET['post_type'] ) && 'mb-taxonomy' == $_GET['post_type'] ) {
+		if ( 'edit.php' == $pagenow && ! empty( $_GET['post_type'] ) && 'mb-taxonomy' == $_GET['post_type'] ) {
 			$query->set( 'orderby', 'menu_order' );
 			$query->set( 'order', 'ASC' );
 		}
@@ -135,7 +135,7 @@ class EditSettingRegister {
 	public function add_class_post_type( $classes ) {
 		global $post;
 		if ( $post->post_type == 'mb-post-type' && $post->menu_order == 1 ) {
-			$classes[] = 'edit-mb-post-type';
+			$classes[] = 'mbcpt-register-outside';
 		}
 		return $classes;
 	}
@@ -143,7 +143,7 @@ class EditSettingRegister {
 	public function add_class_taxonomies( $classes ) {
 		global $post;
 		if ( $post->post_type == 'mb-taxonomy' && $post->menu_order == 1 ) {
-			$classes[] = 'edit-mb-taxonomy';
+			$classes[] = 'mbcpt-register-outside';
 		}
 		return $classes;
 	}
@@ -151,7 +151,7 @@ class EditSettingRegister {
 	public function add_css_post_type() {
 		?>
 		<style type="text/css">
-			.edit-mb-post-type, .edit-mb-taxonomy{
+			.mbcpt-register-outside{
 				opacity: 0.6;
 			}
 		</style>
