@@ -3,7 +3,7 @@ namespace MBCPT;
 
 abstract class Register {
 	public function __construct() {
-		$this->register();
+		add_action( 'wp_loaded', [ $this, 'register' ] );
 		add_filter( 'post_updated_messages', [ $this, 'updated_message' ] );
 		add_filter( 'bulk_post_updated_messages', [ $this, 'bulk_updated_messages' ], 10, 2 );
 	}
