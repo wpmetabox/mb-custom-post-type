@@ -5,7 +5,7 @@ Tags: custom post types, custom taxonomies, meta box, content types, cpt, post t
 Requires at least: 5.9
 Tested up to: 6.4.1
 Requires PHP: 7.2
-Stable tag: 2.6.1
+Stable tag: 2.6.2
 License: GPLv2 or later
 
 Create and manage custom post types and custom taxonomies with an easy-to-use UI in WordPress.
@@ -69,6 +69,9 @@ Install **MB Custom Post Types & Custom Taxonomies** extension
 1. Edit custom post type - Taxonomies tab
 
 == Changelog ==
+
+= 2.6.2 - 2023-11-18 =
+- Revert feature "Allow to edit WordPress's built-in post types and post types registered by other code/plugins" in 2.6.0.
 
 = 2.6.1 - 2023-11-17 =
 - Fix Blocksy not recognizing post types
