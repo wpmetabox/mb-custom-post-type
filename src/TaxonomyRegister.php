@@ -42,7 +42,7 @@ class TaxonomyRegister extends Register {
 			'parent_item_colon'  => __( 'Parent Taxonomy:', 'mb-custom-post-type' ),
 			'all_items'          => __( 'Taxonomies', 'mb-custom-post-type' ),
 			'add_new_item'       => __( 'Add New Taxonomy', 'mb-custom-post-type' ),
-			'add_new'            => __( 'Add New', 'mb-custom-post-type' ),
+			'add_new'            => __( 'New Taxonomy', 'mb-custom-post-type' ),
 			'new_item'           => __( 'New Taxonomy', 'mb-custom-post-type' ),
 			'edit_item'          => __( 'Edit Taxonomy', 'mb-custom-post-type' ),
 			'update_item'        => __( 'Update Taxonomy', 'mb-custom-post-type' ),
@@ -176,18 +176,18 @@ class TaxonomyRegister extends Register {
 
 		$messages['mb-taxonomy'] = [
 			0  => '', // Unused. Messages start at index 1.
-			1  => __( 'Taxonomy updated.', 'mb-custom-taxonomy' ),
-			2  => __( 'Custom field updated.', 'mb-custom-taxonomy' ),
-			3  => __( 'Custom field deleted.', 'mb-custom-taxonomy' ),
-			4  => __( 'Taxonomy updated.', 'mb-custom-taxonomy' ),
+			1  => __( 'Taxonomy updated.', 'mb-custom-post-type' ),
+			2  => __( 'Custom field updated.', 'mb-custom-post-type' ),
+			3  => __( 'Custom field deleted.', 'mb-custom-post-type' ),
+			4  => __( 'Taxonomy updated.', 'mb-custom-post-type' ),
 			// translators: %s: Date and time of the revision.
-			5  => $revision ? sprintf( __( 'Taxonomy restored to revision from %s.', 'mb-custom-taxonomy' ), wp_post_revision_title( $revision, false ) ) : false,
-			6  => __( 'Taxonomy published.', 'mb-custom-taxonomy' ),
-			7  => __( 'Taxonomy saved.', 'mb-custom-taxonomy' ),
-			8  => __( 'Taxonomy submitted.', 'mb-custom-taxonomy' ),
+			5  => $revision ? sprintf( __( 'Taxonomy restored to revision from %s.', 'mb-custom-post-type' ), wp_post_revision_title( $revision, false ) ) : false,
+			6  => __( 'Taxonomy published.', 'mb-custom-post-type' ),
+			7  => __( 'Taxonomy saved.', 'mb-custom-post-type' ),
+			8  => __( 'Taxonomy submitted.', 'mb-custom-post-type' ),
 			// translators: %s: Date and time of the revision.
-			9  => sprintf( __( 'Taxonomy scheduled for: <strong>%s</strong>.', 'mb-custom-taxonomy' ), date_i18n( __( 'M j, Y @ G:i', 'mb-custom-taxonomy' ), strtotime( $post->post_date ) ) ),
-			10 => __( 'Taxonomy draft updated.', 'mb-custom-taxonomy' ),
+			9  => sprintf( __( 'Taxonomy scheduled for: <strong>%s</strong>.', 'mb-custom-post-type' ), date_i18n( __( 'M j, Y @ G:i', 'mb-custom-post-type' ), strtotime( $post->post_date ) ) ),
+			10 => __( 'Taxonomy draft updated.', 'mb-custom-post-type' ),
 		];
 
 		return $messages;
@@ -196,15 +196,15 @@ class TaxonomyRegister extends Register {
 	public function bulk_updated_messages( $bulk_messages, $bulk_counts ) {
 		$bulk_messages['mb-taxonomy'] = [
 			// translators: %s: Name of the taxonomy in singular and plural form.
-			'updated'   => sprintf( _n( '%s taxonomy updated.', '%s taxonomies updated.', $bulk_counts['updated'], 'mb-custom-taxonomy' ), $bulk_counts['updated'] ),
+			'updated'   => sprintf( _n( '%s taxonomy updated.', '%s taxonomies updated.', $bulk_counts['updated'], 'mb-custom-post-type' ), $bulk_counts['updated'] ),
 			// translators: %s: Name of the taxonomy in singular and plural form.
-			'locked'    => sprintf( _n( '%s taxonomy not updated, somebody is editing.', '%s taxonomies not updated, somebody is editing.', $bulk_counts['locked'], 'mb-custom-taxonomy' ), $bulk_counts['locked'] ),
+			'locked'    => sprintf( _n( '%s taxonomy not updated, somebody is editing.', '%s taxonomies not updated, somebody is editing.', $bulk_counts['locked'], 'mb-custom-post-type' ), $bulk_counts['locked'] ),
 			// translators: %s: Name of the taxonomy in singular and plural form.
-			'deleted'   => sprintf( _n( '%s taxonomy permanently deleted.', '%s taxonomies permanently deleted.', $bulk_counts['deleted'], 'mb-custom-taxonomy' ), $bulk_counts['deleted'] ),
+			'deleted'   => sprintf( _n( '%s taxonomy permanently deleted.', '%s taxonomies permanently deleted.', $bulk_counts['deleted'], 'mb-custom-post-type' ), $bulk_counts['deleted'] ),
 			// translators: %s: Name of the taxonomy in singular and plural form.
-			'trashed'   => sprintf( _n( '%s taxonomy moved to the Trash.', '%s taxonomies moved to the Trash.', $bulk_counts['trashed'], 'mb-custom-taxonomy' ), $bulk_counts['trashed'] ),
+			'trashed'   => sprintf( _n( '%s taxonomy moved to the Trash.', '%s taxonomies moved to the Trash.', $bulk_counts['trashed'], 'mb-custom-post-type' ), $bulk_counts['trashed'] ),
 			// translators: %s: Name of the taxonomy in singular and plural form.
-			'untrashed' => sprintf( _n( '%s taxonomy restored from the Trash.', '%s taxonomies restored from the Trash.', $bulk_counts['untrashed'], 'mb-custom-taxonomy' ), $bulk_counts['untrashed'] ),
+			'untrashed' => sprintf( _n( '%s taxonomy restored from the Trash.', '%s taxonomies restored from the Trash.', $bulk_counts['untrashed'], 'mb-custom-post-type' ), $bulk_counts['untrashed'] ),
 		];
 
 		return $bulk_messages;
