@@ -114,6 +114,10 @@ class TaxonomyRegister extends Register {
 
 		foreach ( $posts as $post ) {
 			$data                        = $this->get_taxonomy_data( $post );
+			if ( empty( $data ) ) {
+				continue;
+			}
+
 			$taxonomies[ $data['slug'] ] = $data;
 		}
 
