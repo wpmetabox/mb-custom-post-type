@@ -85,6 +85,10 @@ class PostTypeRegister extends Register {
 
 		foreach ( $posts as $post ) {
 			$settings                        = $this->get_post_type_settings( $post );
+			if ( empty( $settings ) ) {
+				continue;
+			}
+
 			$post_types[ $settings['slug'] ] = $settings;
 		}
 
