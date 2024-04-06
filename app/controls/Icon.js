@@ -1,5 +1,6 @@
 import { useState } from "@wordpress/element";
 import Tooltip from './Tooltip';
+import { __ } from "@wordpress/i18n";
 
 const getIconLabel = icon => {
 	let label = icon.replace( /-/g, ' ' ).trim();
@@ -53,7 +54,7 @@ const Icon = ( { label, name, update, value, required = false, tooltip = '' } ) 
 			<div className='mb-cpt-input'>
 				<div className='mb-cpt-icon-selected'>
 					<span className={ `dashicons ${ value }` }></span>
-					<input type="text" className="mb-cpt-search" placeholder="Search..." value={ query } onChange={ event => setQuery( event.target.value ) } />
+					<input type="text" className="mb-cpt-search" placeholder={ __( 'Search...', 'mb-custom-post-type' ) } value={ query } onChange={ event => setQuery( event.target.value ) } />
 				</div>
 				<div className="mb-cpt-items">
 					{
