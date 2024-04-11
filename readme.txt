@@ -1,11 +1,11 @@
 === MB Custom Post Types & Custom Taxonomies ===
 Contributors: elightup, metabox, rilwis, duc88b, truongwp, barcavn2
 Donate link: https://metabox.io/pricing/
-Tags: custom post types, custom taxonomies, meta box, content types, cpt, post type, taxonomy, cms, post, post types, types, taxonomies, tax
+Tags: custom post types, custom taxonomies, posts, taxonomies
 Requires at least: 5.9
-Tested up to: 6.4.3
+Tested up to: 6.5.2
 Requires PHP: 7.2
-Stable tag: 2.6.3
+Stable tag: 2.6.4
 License: GPLv2 or later
 
 Create and manage custom post types and custom taxonomies with an easy-to-use UI in WordPress.
@@ -38,21 +38,13 @@ This plugin is a free extension of [Meta Box](https://metabox.io) plugin, which 
 
 If you like this plugin, you might also like our other WordPress products:
 
-- [Slim SEO](https://wpslimseo.com): A fast, lightweight and full-featured SEO plugin for WordPress with minimal configuration.
-- [Slim SEO Schema](https://wpslimseo.com/products/slim-seo-schema/): The best plugin to add schemas (structured data, rich snippets) to WordPress.
-- [Slim SEO Link Manager](https://wpslimseo.com/products/slim-seo-link-manager/): Build internal link easier in WordPress with real-time reports.
-- [GretaThemes](https://gretathemes.com): Free and premium WordPress themes that clean, simple and just work.
-- [Auto Listings](https://wpautolistings.com): The car sale and dealership plugin for WordPress
+- [Slim SEO](https://wpslimseo.com) - A fast, lightweight and full-featured SEO plugin for WordPress with minimal configuration.
+- [Slim SEO Schema](https://wpslimseo.com/products/slim-seo-schema/) - An advanced, powerful and flexible plugin to add schemas to WordPress.
+- [Slim SEO Link Manager](https://wpslimseo.com/products/slim-seo-link-manager/) - Build internal link easier in WordPress with real-time reports.
+- [GretaThemes](https://gretathemes.com) - Free and premium WordPress themes that clean, simple and just work.
+- [Auto Listings](https://wpautolistings.com) - A car sale and dealership plugin for WordPress.
 
 == Installation ==
-
-You need to install [Meta Box](https://metabox.io) plugin first
-
-- Go to Plugins | Add New and search for Meta Box
-- Click **Install Now** button to install the plugin
-- After installing, click **Activate Plugin** to activate the plugin
-
-Install **MB Custom Post Types & Custom Taxonomies** extension
 
 - Go to **Plugins | Add New** and search for **MB Custom Post Types & Custom Taxonomies**
 - Click **Install Now** button to install the plugin
@@ -69,6 +61,10 @@ Install **MB Custom Post Types & Custom Taxonomies** extension
 1. Edit custom post type - Taxonomies tab
 
 == Changelog ==
+
+= 2.6.4 - 2024-04-11 =
+- Fix admin color scheme
+- Fix strings not localized
 
 = 2.6.3 - 2024-03-07=
 - Improve i18n issues
