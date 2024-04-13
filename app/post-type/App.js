@@ -8,4 +8,4 @@ const App = () => <SettingsProvider value={ MBCPT.settings ? MBCPT.settings : De
 	<MainTabs />
 </SettingsProvider>;
 
-render( <App />, document.getElementById( 'root' ) );
+render( <App />, document.getElementById( 'poststuff' ) );

@@ -8,16 +8,8 @@ class Edit {
 
 	public function __construct( $post_type ) {
 		$this->post_type = $post_type;
-
-		add_action( 'edit_form_after_title', [ $this, 'output_root' ] );
 		add_action( 'add_meta_boxes', [ $this, 'register_upgrade_meta_box' ] );
 		add_action( 'admin_enqueue_scripts', [ $this, 'enqueue_scripts' ] );
-	}
-
-	public function output_root() {
-		if ( $this->is_screen() ) {
-			echo '<div id="root" class="mb-cpt"></div>';
-		}
 	}
 
 	public function register_upgrade_meta_box() {
@@ -62,6 +54,7 @@ class Edit {
 			'icons'         => Data::get_dashicons(),
 			'settings'      => json_decode( get_post()->post_content, ARRAY_A ),
 			'reservedTerms' => $this->get_reserved_terms(),
+			'action'        => get_current_screen()->action
 		];
 
 		if ( 'mb-post-type' === get_current_screen()->id ) {
