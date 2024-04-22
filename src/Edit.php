@@ -256,8 +256,7 @@ class Edit {
 		];
 	}
 
-	public function save_post_type() {
-
+	public function save( $type ) {
 		$post_id = $_POST['post_ID'] ?? '';
 		$content = $_POST['content'] ?? '';
 		$title   = $_POST['title'] ?? '';
@@ -266,27 +265,19 @@ class Edit {
 			'ID'           => $post_id,
 			'post_title'   => $title,
 			'post_content' => $content,
-			'post_type'    => 'mb-post-type',
+			'post_type'    => $type,
 			'post_status'  => $status,
 		] );
 
 		wp_send_json_success( __( 'Settings updated.', 'mb-custom-post-type' ) );
+
+	}
+
+	public function save_post_type() {
+		$this->save( 'mb-post-type' );
 	}
 
 	public function save_taxonomy() {
-
-		$post_id = $_POST['post_ID'] ?? '';
-		$content = $_POST['content'] ?? '';
-		$title   = $_POST['title'] ?? '';
-		$status  = $_POST['status'] ?? 'draft';
-		wp_update_post( [
-			'ID'           => $post_id,
-			'post_title'   => $title,
-			'post_content' => $content,
-			'post_type'    => 'mb-taxonomy',
-			'post_status'  => $status,
-		] );
-
-		wp_send_json_success( __( 'Settings updated.', 'mb-custom-post-type' ) );
+		$this->save( 'mb-taxonomy' );
 	}
 }
