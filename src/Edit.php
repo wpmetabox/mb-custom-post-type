@@ -10,6 +10,7 @@ class Edit {
 		$this->post_type = $post_type;
 		add_action( 'add_meta_boxes', [ $this, 'register_upgrade_meta_box' ] );
 		add_action( 'admin_enqueue_scripts', [ $this, 'enqueue_scripts' ] );
+		add_action( 'wp_ajax_mbcpt_save_settings', [ $this, 'save' ] );
 	}
 
 	public function register_upgrade_meta_box() {
@@ -54,7 +55,11 @@ class Edit {
 			'icons'         => Data::get_dashicons(),
 			'settings'      => json_decode( get_post()->post_content, ARRAY_A ),
 			'reservedTerms' => $this->get_reserved_terms(),
-			'action'        => get_current_screen()->action
+			'action'        => get_current_screen()->action,
+			'ajax_url'      => admin_url( 'admin-ajax.php' ),
+			'saving'        => __( 'Saving...', 'mb-custom-post-type' ),
+			'publish'       => __( 'Publish', 'mb-custom-post-type' ),
+			'draft'         => __( 'Save Draft', 'mb-custom-post-type' ),
 		];
 
 		if ( 'mb-post-type' === get_current_screen()->id ) {
@@ -248,5 +253,22 @@ class Edit {
 			'withoutcomments',
 			'year',
 		];
+	}
+
+	public function save() {
+
+		$post_id = $_POST['post_ID'] ?? '';
+		$content = $_POST['content'] ?? '';
+		$title   = $_POST['title'] ?? '';
+		$status  = $_POST['status'] ?? 'draft';
+		wp_update_post( [
+			'ID'           => $post_id,
+			'post_title'   => $title,
+			'post_content' => $content,
+			'post_type'    => 'mb-post-type',
+			'post_status'  => $status,
+		] );
+
+		wp_send_json_success( __( 'Settings updated.', 'mb-custom-post-type' ) );
 	}
 }

@@ -5,9 +5,10 @@ import Tooltip from './Tooltip';
 const Slug = ( { label, name, value, update, tooltip = '', description = '', required = false } ) => {
 	const error = MBCPT.reservedTerms.includes( value ) ? __( 'ERROR: the slug must not be one of WordPress <a href="https://codex.wordpress.org/Reserved_Terms" target="_blank" rel="noopenner noreferrer">reserved terms</a>', 'mb-custom-post-type' ) : null;
 
-/*	useEffect( () => {
-		document.querySelector( '#publish' ).disabled = MBCPT.reservedTerms.includes( value );
-	}, [ value ] );*/
+	useEffect( () => {
+		document.querySelector( '.mb-cpt-publish' ).disabled = MBCPT.reservedTerms.includes( value );
+		document.querySelector( '.mb-cpt-draft' ).disabled = MBCPT.reservedTerms.includes( value );
+	}, [ value ] );
 
 	return (
 		<div className="mb-cpt-field">
