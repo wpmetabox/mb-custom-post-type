@@ -16,7 +16,7 @@ const submit = ( e, submitButton, status, save ) => {
 	submitButton.textContent = MBCPT.saving;
 
 	let formData = new FormData();
-	formData.append( 'action', 'mbcpt_save_settings' );
+	formData.append( 'action', 'mbcpt_save_post_type' );
 	formData.append( 'post_ID', document.querySelector( '#post_ID' ).value );
 	formData.append( 'title', document.getElementsByName( "post_title" )[ 0 ].value );
 	formData.append( 'content', document.getElementsByName( "content" )[ 0 ].value );

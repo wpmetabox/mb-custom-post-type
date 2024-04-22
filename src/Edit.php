@@ -10,7 +10,8 @@ class Edit {
 		$this->post_type = $post_type;
 		add_action( 'add_meta_boxes', [ $this, 'register_upgrade_meta_box' ] );
 		add_action( 'admin_enqueue_scripts', [ $this, 'enqueue_scripts' ] );
-		add_action( 'wp_ajax_mbcpt_save_settings', [ $this, 'save' ] );
+		add_action( 'wp_ajax_mbcpt_save_post_type', [ $this, 'save_post_type' ] );
+		add_action( 'wp_ajax_mbcpt_save_taxonomy', [ $this, 'save_taxonomy' ] );
 	}
 
 	public function register_upgrade_meta_box() {
@@ -255,7 +256,7 @@ class Edit {
 		];
 	}
 
-	public function save() {
+	public function save_post_type() {
 
 		$post_id = $_POST['post_ID'] ?? '';
 		$content = $_POST['content'] ?? '';
@@ -266,6 +267,23 @@ class Edit {
 			'post_title'   => $title,
 			'post_content' => $content,
 			'post_type'    => 'mb-post-type',
+			'post_status'  => $status,
+		] );
+
+		wp_send_json_success( __( 'Settings updated.', 'mb-custom-post-type' ) );
+	}
+
+	public function save_taxonomy() {
+
+		$post_id = $_POST['post_ID'] ?? '';
+		$content = $_POST['content'] ?? '';
+		$title   = $_POST['title'] ?? '';
+		$status  = $_POST['status'] ?? 'draft';
+		wp_update_post( [
+			'ID'           => $post_id,
+			'post_title'   => $title,
+			'post_content' => $content,
+			'post_type'    => 'mb-taxonomy',
 			'post_status'  => $status,
 		] );
 
