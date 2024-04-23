@@ -208,9 +208,9 @@
 	gap: 8px;
 	align-items: center;
 	height: 60px;
-	position: absolute;
-	left: 0;
-	top: 0;
+	position: fixed;
+	top: 32px;
+	z-index: 100;
 
 	a {
 		//background: #000;
@@ -231,6 +231,9 @@
 }
 
 .components-tab-panel__tabs {
+	position: sticky;
+	top: 32px;
+	z-index: 99;
 	background: #fff;
 	border: 1px solid var(--color-light);
 	align-items: center;
