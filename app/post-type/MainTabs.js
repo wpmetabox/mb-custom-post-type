@@ -31,7 +31,7 @@ const tabs = [
 	},
 	{
 		name: 'code',
-		title: __( '', 'mb-custom-post-type' ),
+		title: __( 'Get PHP Code', 'mb-custom-post-type' ),
 		icon: 'editor-code',
 		className: 'mb-cpt-code'
 	},
