@@ -57,10 +57,9 @@ class Edit {
 			'settings'      => json_decode( get_post()->post_content, ARRAY_A ),
 			'reservedTerms' => $this->get_reserved_terms(),
 			'action'        => get_current_screen()->action,
-			'ajax_url'      => admin_url( 'admin-ajax.php' ),
+			'url'           => admin_url( 'edit.php?' . get_current_screen()->id ),
+			'status'        => get_post()->post_status,
 			'saving'        => __( 'Saving...', 'mb-custom-post-type' ),
-			'publish'       => __( 'Publish', 'mb-custom-post-type' ),
-			'draft'         => __( 'Save Draft', 'mb-custom-post-type' ),
 		];
 
 		if ( 'mb-post-type' === get_current_screen()->id ) {
@@ -269,7 +268,13 @@ class Edit {
 			'post_status'  => $status,
 		] );
 
-		wp_send_json_success( __( 'Settings updated.', 'mb-custom-post-type' ) );
+		wp_send_json_success(
+			[
+				'message' => __( 'Settings updated.', 'mb-custom-post-type' ),
+				'publish' => ( $status == 'publish' ) ? __( 'Update', 'mb-custom-post-type' ) : __( 'Publish', 'mb-custom-post-type' ),
+				'draft'   => ( $status == 'publish' ) ? __( 'Switch to draft', 'mb-custom-post-type' ) : __( 'Save draft', 'mb-custom-post-type' ),
+			]
+		);
 
 	}
 

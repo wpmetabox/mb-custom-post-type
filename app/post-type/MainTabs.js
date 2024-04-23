@@ -2,18 +2,13 @@ import { __ } from '@wordpress/i18n';
 import CheckboxList from '../controls/CheckboxList';
 import Control from '../controls/Control';
 import Sidebar from '../controls/Sidebar';
+import Logo from '../controls/logo.svg';
 import { SettingsContext } from '../SettingsContext';
 import { AdvancedControls, BasicControls, CodeControls, LabelControls, SupportControls } from './constants/Data';
 import Result from './Result';
 const { useContext } = wp.element;
 const { TabPanel } = wp.components;
 const tabs = [
-	{
-		name: 'logo',
-		title: ( MBCPT.action == 'add' ) ? __( 'Add Post Type', 'mb-custom-post-type' ) : __( 'Edit Post Type', 'mb-custom-post-type' ),
-		className: 'mb-cpt-logo',
-		disabled: true
-	},
 	{
 		name: 'general',
 		title: __( 'General', 'mb-custom-post-type' ),
@@ -36,17 +31,18 @@ const tabs = [
 	},
 	{
 		name: 'code',
-		title: __( 'Get PHP Code', 'mb-custom-post-type' ),
-		className: 'mb-cpt-code button button-small'
+		title: __( '', 'mb-custom-post-type' ),
+		icon: 'editor-code',
+		className: 'mb-cpt-code'
 	},
 	{
 		name: 'draft',
-		title: __( 'Save Draft', 'mb-custom-post-type' ),
-		className: 'mb-cpt-draft button button-small'
+		title: ( MBCPT.status == 'publish' ) ? __( 'Switch to draft', 'mb-custom-post-type' ) : __( 'Save draft', 'mb-custom-post-type' ),
+		className: 'mb-cpt-draft'
 	},
 	{
 		name: 'publish',
-		title: __( 'Publish', 'mb-custom-post-type' ),
+		title: ( MBCPT.status == 'publish' ) ? __( 'Update', 'mb-custom-post-type' ) : __( 'Publish', 'mb-custom-post-type' ),
 		className: 'mb-cpt-publish button button-primary button-large'
 	}
 ];
@@ -112,6 +108,10 @@ const MainTabs = () => {
 
 	return <>
 		<div className="mb-cpt">
+			<div className="mb-cpt-logo">
+				<a href={ MBCPT.url }><Logo /></a>
+				<h1>{ ( MBCPT.action == 'add' ) ? __( 'Add Post Type', 'mb-custom-post-type' ) : __( 'Edit Post Type', 'mb-custom-post-type' ) }</h1>
+			</div>
 			<TabPanel className="mb-cpt-tabs" tabs={ tabs }>
 				{ tab => panels[ tab.name ] }
 			</TabPanel>

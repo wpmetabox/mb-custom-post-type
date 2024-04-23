@@ -8,7 +8,7 @@ const App = () => <SettingsProvider value={ MBCPT.settings ? MBCPT.settings : De
 	<MainTabs />
 </SettingsProvider>;
 
-const submit = ( e, submitButton, status, save ) => {
+const submit = ( e, submitButton, status ) => {
 	e.preventDefault();
 	const message = document.querySelector( '.mb-cpt-message' );
 
@@ -28,9 +28,10 @@ const submit = ( e, submitButton, status, save ) => {
 		.then( response => response.json() )
 		.then( response => {
 			submitButton.disabled = false;
-			submitButton.textContent = save;
+			document.querySelector( '.mb-cpt-publish' ).textContent = response.data.publish;
+			document.querySelector( '.mb-cpt-draft' ).textContent = response.data.draft;
 
-			message.textContent = response.data;
+			message.textContent = response.data.message;
 			message.classList.remove( 'hidden' );
 
 			setTimeout( () => {
@@ -41,12 +42,12 @@ const submit = ( e, submitButton, status, save ) => {
 
 const submitPublish = ( e ) => {
 	const publicButton = document.querySelector( '.mb-cpt-publish' );
-	submit( e, publicButton, 'publish', MBCPT.publish );
+	submit( e, publicButton, 'publish' );
 };
 
 const submitDraft = ( e ) => {
 	const draftButton = document.querySelector( '.mb-cpt-draft' );
-	submit( e, draftButton, 'draft', MBCPT.draft );
+	submit( e, draftButton, 'draft' );
 };
 
 render( <App />, document.getElementById( 'poststuff' ) );
