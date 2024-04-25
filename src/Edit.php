@@ -258,7 +258,7 @@ class Edit {
 	public function save( $type ) {
 		$post_id = $_POST['post_ID'] ?? '';
 		$content = $_POST['content'] ?? '';
-		$title   = $_POST['title'] ?? '';
+		$title   = $_POST['post_title'] ?? '';
 		$status  = $_POST['status'] ?? 'draft';
 		wp_update_post( [
 			'ID'           => $post_id,

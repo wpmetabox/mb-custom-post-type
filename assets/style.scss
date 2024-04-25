@@ -203,14 +203,24 @@
 }
 
 // Tabs
+.mb-cpt-header {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	height: 60px;
+	background: #fff;
+
+	h1 {
+		font-size: 20px;
+		padding: 0;
+	}
+}
+
 .mb-cpt-logo {
 	display: inline-flex;
 	gap: 8px;
 	align-items: center;
 	height: 60px;
-	position: fixed;
-	top: 32px;
-	z-index: 100;
 
 	a {
 		//background: #000;
@@ -223,11 +233,12 @@
 		height: 48px;
 		padding: 6px;
 	}
+}
 
-	h1 {
-		font-size: 20px;
-		padding: 0;
-	}
+.mb-cpt-action {
+	padding-right: 12px;
+	display: flex;
+	gap: 12px;
 }
 
 .components-tab-panel__tabs {
@@ -237,12 +248,13 @@
 	background: #fff;
 	border: 1px solid var(--color-light);
 	align-items: center;
+	justify-content: center;
 	flex-wrap: wrap;
-	padding-left: 220px;
+	border-top: none;
 }
 
 .components-tab-panel__tabs-item {
-	height: 60px;
+	//height: 60px;
 }
 
 .components-tab-panel__tab-content {
@@ -274,8 +286,9 @@
 
 .mb-cpt-tabs {
 	.mb-cpt-code {
-		margin-left: auto;
-		margin-right: 12px;
+		//margin-left: auto;
+		//margin-right: 12px;
+		margin-left: 12px;
 
 		&.is-active {
 			box-shadow: none;
@@ -285,16 +298,6 @@
 		&.is-active::after {
 			height: 0;
 		}
-	}
-
-	.mb-cpt-draft {
-		color: var(--color);
-	}
-
-	.mb-cpt-draft,
-	.mb-cpt-publish {
-		margin-right: 12px;
-		height: 36px;
 	}
 }
 
