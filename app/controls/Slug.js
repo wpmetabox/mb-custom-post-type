@@ -7,7 +7,7 @@ const Slug = ({ label, name, initialValue = '', tooltip = '', description = '', 
     const isReservedTerm = MBCPT.reservedTerms.includes(value);
     const isTooLong = value.length > 20;
     const error = isReservedTerm
-        ? __('Q-ERROR: the slug must not be one of WordPress <a href="https://codex.wordpress.org/Reserved_Terms" target="_blank" rel="noopener noreferrer">reserved terms</a>', 'mb-custom-post-type')
+        ? __('ERROR: the slug must not be one of WordPress <a href="https://codex.wordpress.org/Reserved_Terms" target="_blank" rel="noopener noreferrer">reserved terms</a>', 'mb-custom-post-type')
         : isTooLong
         ? sprintf(__('ERROR: the slug must not exceed %d characters.', 'mb-custom-post-type'), 20)
         : null;
