@@ -3,11 +3,17 @@ import { __ } from '@wordpress/i18n';
 import Tooltip from './Tooltip';
 
 const Slug = ( { label, name, value, update, tooltip = '', description = '', required = false } ) => {
-	const error = MBCPT.reservedTerms.includes( value ) ? __( 'ERROR: the slug must not be one of WordPress <a href="https://codex.wordpress.org/Reserved_Terms" target="_blank" rel="noopenner noreferrer">reserved terms</a>', 'mb-custom-post-type' ) : null;
+	const isReservedTerm = MBCPT.reservedTerms.includes( value );
+	const isTooLong = value.length > 20;
+	const error = isReservedTerm
+		? __( 'ERROR: the slug must not be one of WordPress <a href="https://codex.wordpress.org/Reserved_Terms" target="_blank" rel="noopener noreferrer">reserved terms</a>', 'mb-custom-post-type' )
+		: isTooLong
+			? sprintf( __( 'ERROR: the slug must not exceed %d characters.', 'mb-custom-post-type' ), 20 )
+			: '';
 
 	useEffect( () => {
-		document.querySelector( '#publish' ).disabled = MBCPT.reservedTerms.includes( value );
-	}, [ value ] );
+		document.querySelector( '#publish' ).disabled = !!error;
+	}, [ error ] );
 
 	return (
 		<div className="mb-cpt-field">
