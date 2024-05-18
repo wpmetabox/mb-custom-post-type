@@ -39,5 +39,11 @@ const submit = ( e ) => {
 		} );
 };
 
+const toggleSidebar = () => {
+	document.querySelector( '.toggle-sidebar' ).classList.toggle( 'active' );
+	document.querySelector( '.mb-cpt-sidebar' ).classList.toggle( 'display' );
+};
+
 render( <App />, document.getElementById( 'poststuff' ) );
 document.querySelector( '#post' ).addEventListener( 'submit', submit );
+document.querySelector( '.toggle-sidebar' ).addEventListener( 'click', toggleSidebar );

@@ -101,11 +101,12 @@ const MainTabs = () => {
 			<div className="mb-cpt-header">
 				<div className="mb-cpt-logo">
 					<a href={ MBCPT.url }><Logo /></a>
+					<h1>{ ( MBCPT.action == 'add' ) ? __( 'Add Post Type', 'mb-custom-post-type' ) : __( 'Edit Post Type', 'mb-custom-post-type' ) }</h1>
 				</div>
-				<h1>{ ( MBCPT.action == 'add' ) ? __( 'Add Post Type', 'mb-custom-post-type' ) : __( 'Edit Post Type', 'mb-custom-post-type' ) }</h1>
 				<div className="mb-cpt-action">
 					<input type="submit" name="draft" className="mb-cpt-draft" value={ ( MBCPT.status == 'publish' ) ? __( 'Switch to draft', 'mb-custom-post-type' ) : __( 'Save draft', 'mb-custom-post-type' ) } />
 					<input type="submit" name="publish" className="mb-cpt-publish button button-primary button-large" value={ ( MBCPT.status == 'publish' ) ? __( 'Update', 'mb-custom-post-type' ) : __( 'Publish', 'mb-custom-post-type' ) } />
+					<span className="toggle-sidebar dashicons dashicons-info"></span>
 				</div>
 			</div>
 			<TabPanel className="mb-cpt-tabs" tabs={ tabs }>
