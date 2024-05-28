@@ -211,7 +211,7 @@
 	background: #fff;
 	position: sticky;
 	top: 32px;
-	z-index: 99;
+	z-index: 2;
 
 	h1 {
 		font-size: 20px;
@@ -226,7 +226,6 @@
 	height: 60px;
 
 	a {
-		//background: #000;
 		width: 60px;
 		height: 60px;
 	}
@@ -238,9 +237,16 @@
 	}
 }
 
+.mb-cpt-header .components-popover__content {
+	background: #000;
+	box-shadow: none;
+	width: max-content;
+}
+
 .mb-cpt-action {
 	padding-right: 12px;
 	display: flex;
+	align-items: center;
 	gap: 12px;
 	cursor: pointer;
 
@@ -250,7 +256,7 @@
 		line-height: 32px;
 	}
 
-	.toggle-sidebar.active {
+	.toggle-sidebar.is-active {
 		background: #1e1e1e;
 		color: #fff;
 		animation: fadein .5s;
@@ -260,16 +266,25 @@
 .components-tab-panel__tabs {
 	position: sticky;
 	top: 92px;
-	z-index: 99;
+	z-index: 2;
 	background: #fff;
-	border: 1px solid var(--color-light);
+	border-bottom: 1px solid var(--color-light);
 	align-items: center;
-	justify-content: center;
 	flex-wrap: wrap;
-	border-top: none;
+	padding-left: 24px;
+	margin-bottom: 24px;
+	gap: 32px;
+}
+
+.components-tab-panel__tabs-item {
+	padding: 0;
 }
 
 .components-tab-panel__tab-content {
+	padding: 0 24px;
+}
+
+.mb-cpt-tabs {
 	display: flex;
 	justify-content: center;
 	align-items: start;
@@ -278,6 +293,10 @@
 	margin: 40px 24px 24px;
 	max-width: 1140px;
 	margin-inline: auto;
+
+	.mb-cpt-code {
+		display: none;
+	}
 }
 
 .mb-cpt-content,
@@ -288,32 +307,34 @@
 }
 
 .mb-cpt-content {
-	padding: 24px 24px 0;
 	width: calc(100% - 324px);
 }
 
 .mb-cpt-sidebar {
-	padding: 24px 24px 8px;
-	display: none;
 	width: 300px;
-	animation: fadein .5s;
-}
 
-.mb-cpt-sidebar.display {
-	display: block;
-}
+	svg {
+		width: 24px;
+		height: 24px;
+	}
 
-.mb-cpt-tabs {
-	.mb-cpt-code {
-		margin-left: 12px;
+	.components-panel__body.is-opened {
+		padding: 0;
+	}
 
-		&.is-active {
-			box-shadow: none;
-			color: var(--color);
-		}
+	.components-panel__row {
+		display: block;
+	}
 
-		&.is-active::after {
-			height: 0;
+	.mb-cpt-box {
+		padding: 0 16px 16px;
+
+		&.box-summary p {
+			display: flex;
+
+			label {
+				width: 40%;
+			}
 		}
 	}
 }
@@ -389,21 +410,13 @@
 	color: #00a32a;
 }
 
-@media (max-width: 767px) {
-
-	.components-tab-panel__tabs {
-		padding: 12px;
-		margin-right: 12px;
-	}
-
-	.components-tab-panel__tab-content {
+@media (max-width:767px) {
+	.mb-cpt-tabs {
 		display: block;
-		margin: 20px 12px 12px 0;
-	}
 
-	.mb-cpt-content,
-	.mb-cpt-sidebar {
-		width: 100%;
-		padding: 12px;
+		.mb-cpt-content,
+		.mb-cpt-sidebar {
+			width: 100%;
+		}
 	}
 }

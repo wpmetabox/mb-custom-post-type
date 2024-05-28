@@ -39,11 +39,15 @@ const submit = ( e ) => {
 		} );
 };
 
-const toggleSidebar = () => {
-	document.querySelector( '.toggle-sidebar' ).classList.toggle( 'active' );
-	document.querySelector( '.mb-cpt-sidebar' ).classList.toggle( 'display' );
+const code = () => {
+	document.querySelector( '.mb-cpt-code' ).click();
+};
+
+const sidebar = () => {
+	document.querySelector( '.toggle-sidebar' ).classList.toggle( 'is-active' );
 };
 
 render( <App />, document.getElementById( 'poststuff' ) );
 document.querySelector( '#post' ).addEventListener( 'submit', submit );
-document.querySelector( '.toggle-sidebar' ).addEventListener( 'click', toggleSidebar );
+document.querySelector( '.php-code' ).addEventListener( 'click', code );
+document.querySelector( '.toggle-sidebar' ).addEventListener( 'click', sidebar );
