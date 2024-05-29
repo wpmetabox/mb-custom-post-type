@@ -35,8 +35,7 @@ const tabs = [
 	{
 		name: 'code',
 		title: __( 'Get PHP Code', 'mb-custom-post-type' ),
-		icon: 'editor-code',
-		className: 'mb-cpt-code'
+		className: 'mb-cpt-code button button-small'
 	}
 ];
 
@@ -72,9 +71,6 @@ const MainTabs = () => {
 					<h1>{ ( MBCPT.action == 'add' ) ? __( 'Add Post Type', 'mb-custom-post-type' ) : __( 'Edit Post Type', 'mb-custom-post-type' ) }</h1>
 				</div>
 				<div className="mb-cpt-action">
-					<Tooltip text={ __( 'Get PHP Code', 'mb-custom-post-type' ) }>
-						<Icon icon="editor-code" className="php-code" />
-					</Tooltip>
 					<input type="submit" name="draft" className="components-button is-compact is-tertiary mb-cpt-draft" value={ ( MBCPT.status == 'publish' ) ? __( 'Switch to draft', 'mb-custom-post-type' ) : __( 'Save draft', 'mb-custom-post-type' ) } />
 					<input type="submit" name="publish" className="mb-cpt-publish button button-primary button-large" value={ ( MBCPT.status == 'publish' ) ? __( 'Update', 'mb-custom-post-type' ) : __( 'Publish', 'mb-custom-post-type' ) } />
 					<Tooltip text={ __( 'Toggle sidebar', 'mb-custom-post-type' ) }>

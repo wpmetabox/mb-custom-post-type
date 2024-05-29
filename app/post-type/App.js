@@ -39,15 +39,11 @@ const submit = ( e ) => {
 		} );
 };
 
-const code = () => {
-	document.querySelector( '.mb-cpt-code' ).click();
-};
-
 const sidebar = () => {
 	document.querySelector( '.toggle-sidebar' ).classList.toggle( 'is-active' );
+	document.querySelector( '.mb-cpt-content' ).classList.toggle( 'has-sidebar' );
 };
 
 render( <App />, document.getElementById( 'poststuff' ) );
 document.querySelector( '#post' ).addEventListener( 'submit', submit );
-document.querySelector( '.php-code' ).addEventListener( 'click', code );
 document.querySelector( '.toggle-sidebar' ).addEventListener( 'click', sidebar );
