@@ -250,7 +250,7 @@
 	gap: 12px;
 	cursor: pointer;
 
-	.mb-cpt-publish.button.button-large{
+	.mb-cpt-publish.button.button-large {
 		min-height: 36px;
 	}
 
@@ -287,9 +287,11 @@
 	background: #fff;
 	border: 1px solid #e0e0e0;
 	border-radius: 6px;
+
 	&.has-sidebar {
 		width: calc(100% - 324px);
 	}
+
 	.components-tab-panel__tabs {
 		position: sticky;
 		top: 92px;
@@ -352,6 +354,10 @@
 			label {
 				width: 40%;
 			}
+		}
+
+		.dashicons-yes {
+			color: #46b450;
 		}
 	}
 }
@@ -429,6 +435,7 @@
 
 @media (max-width:767px) {
 	.mb-cpt-tabs {
+
 		.mb-cpt-content,
 		.mb-cpt-sidebar {
 			position: unset;

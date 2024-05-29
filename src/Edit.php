@@ -35,7 +35,7 @@ class Edit {
 			'settings'      => json_decode( get_post()->post_content, ARRAY_A ),
 			'reservedTerms' => $this->get_reserved_terms(),
 			'action'        => get_current_screen()->action,
-			'url'           => admin_url( 'edit.php?' . get_current_screen()->id ),
+			'url'           => admin_url( 'edit.php?post_type='. get_current_screen()->id ),
 			'status'        => get_post()->post_status,
 			'author'        => get_the_author_meta( 'display_name', get_post()->post_author ),
 			'trash'         => get_delete_post_link(),
