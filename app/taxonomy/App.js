@@ -8,18 +8,17 @@ const App = () => <SettingsProvider value={ MBCPT.settings ? MBCPT.settings : De
 	<MainTabs />
 </SettingsProvider>;
 
-const submit = ( e, submitButton, status, save ) => {
+const submit = ( e ) => {
 	e.preventDefault();
 	const message = document.querySelector( '.mb-cpt-message' );
+	const submitButton = e.submitter;
+	const status = submitButton.getAttribute( 'name' );
 
 	submitButton.disabled = true;
-	submitButton.textContent = MBCPT.saving;
+	submitButton.setAttribute( 'value', MBCPT.saving );
 
-	let formData = new FormData();
+	let formData = new FormData( e.target );
 	formData.append( 'action', 'mbcpt_save_taxonomy' );
-	formData.append( 'post_ID', document.querySelector( '#post_ID' ).value );
-	formData.append( 'title', document.getElementsByName( "post_title" )[ 0 ].value );
-	formData.append( 'content', document.getElementsByName( "content" )[ 0 ].value );
 	formData.append( 'status', status );
 	fetch( ajaxurl, {
 		method: 'POST',
@@ -28,9 +27,10 @@ const submit = ( e, submitButton, status, save ) => {
 		.then( response => response.json() )
 		.then( response => {
 			submitButton.disabled = false;
-			submitButton.textContent = save;
+			document.querySelector( '.mb-cpt-publish' ).setAttribute( 'value', response.data.publish );
+			document.querySelector( '.mb-cpt-draft' ).setAttribute( 'value', response.data.draft );
 
-			message.textContent = response.data;
+			message.textContent = response.data.message;
 			message.classList.remove( 'hidden' );
 
 			setTimeout( () => {
@@ -39,16 +39,11 @@ const submit = ( e, submitButton, status, save ) => {
 		} );
 };
 
-const submitPublish = ( e ) => {
-	const publicButton = document.querySelector( '.mb-cpt-publish' );
-	submit( e, publicButton, 'publish', MBCPT.publish );
-};
-
-const submitDraft = ( e ) => {
-	const draftButton = document.querySelector( '.mb-cpt-draft' );
-	submit( e, draftButton, 'draft', MBCPT.draft );
+const sidebar = () => {
+	document.querySelector( '.toggle-sidebar' ).classList.toggle( 'is-active' );
+	document.querySelector( '.mb-cpt-content' ).classList.toggle( 'has-sidebar' );
 };
 
 render( <App />, document.getElementById( 'poststuff' ) );
-document.querySelector( '.mb-cpt-publish' ).addEventListener( 'click', submitPublish );
-document.querySelector( '.mb-cpt-draft' ).addEventListener( 'click', submitDraft );
+document.querySelector( '#post' ).addEventListener( 'submit', submit );
+document.querySelector( '.toggle-sidebar' ).addEventListener( 'click', sidebar );
