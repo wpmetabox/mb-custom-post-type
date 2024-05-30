@@ -41,7 +41,6 @@ const submit = ( e ) => {
 
 const sidebar = () => {
 	document.querySelector( '.toggle-sidebar' ).classList.toggle( 'is-active' );
-	document.querySelector( '.mb-cpt-content' ).classList.toggle( 'has-sidebar' );
 };
 
 render( <App />, document.getElementById( 'poststuff' ) );

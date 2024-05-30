@@ -73,9 +73,11 @@ const MainTabs = () => {
 				</div>
 			</div>
 			<div className="mb-cpt-tabs">
-				<TabPanel className="mb-cpt-content" tabs={ tabs }>
-					{ tab => panels[ tab.name ] }
-				</TabPanel>
+				<div className="mb-cpt-content">
+					<TabPanel className="mb-cpt-wrapper" tabs={ tabs }>
+						{ tab => panels[ tab.name ] }
+					</TabPanel>
+				</div>
 				{ toggle && <Sidebar /> }
 			</div>
 			<div className="mb-cpt-message hidden"></div>

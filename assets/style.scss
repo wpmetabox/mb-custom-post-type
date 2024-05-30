@@ -284,12 +284,8 @@
 }
 
 .mb-cpt-content {
-	width: 100%;
 	margin: 40px 16px 16px;
-
-	&.has-sidebar {
-		width: calc(100% - 316px);
-	}
+	flex: 1;
 
 	.mb-cpt-wrapper {
 		background: #fff;
@@ -433,6 +429,7 @@
 @media (max-width:767px) {
 	.mb-cpt-tabs {
 		display: block;
+
 		.mb-cpt-content,
 		.mb-cpt-sidebar {
 			position: unset;
