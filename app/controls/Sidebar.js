@@ -8,7 +8,7 @@ const Sidebar = () => {
 				<PanelBody title={ __( 'Summary', 'mb-custom-post-type' ) } initialOpen={ true }>
 					<PanelRow>
 						<div className="mb-cpt-box box-summary">
-							<p><label>{ __( 'Status', 'mb-custom-post-type' ) }</label> { MBCPT.status }</p>
+							<p className="status"><label>{ __( 'Status', 'mb-custom-post-type' ) }</label> { MBCPT.status }</p>
 							<p><label>{ __( 'Published', 'mb-custom-post-type' ) }</label> { MBCPT.published }</p>
 							{ MBCPT.modifiedtime && <p><label>{ __( 'Last modified', 'mb-custom-post-type' ) }</label> { MBCPT.modifiedtime }</p> }
 							<p><label>{ __( 'Author', 'mb-custom-post-type' ) }</label> { MBCPT.author }</p>

@@ -63,6 +63,7 @@ const MainTabs = () => {
 						<a href={ MBCPT.url }><Logo /></a>
 					</Tooltip>
 					<h1>{ ( MBCPT.action == 'add' ) ? __( 'Add Taxonomies', 'mb-custom-post-type' ) : __( 'Edit Taxonomies', 'mb-custom-post-type' ) }</h1>
+					{ !( MBCPT.action == 'add' ) && <a href={ MBCPT.add }>{ __( 'Add New', 'mb-custom-post-type' ) }</a> }
 				</div>
 				<div className="mb-cpt-action">
 					<input type="submit" name="draft" className="components-button is-compact is-tertiary mb-cpt-draft" value={ ( MBCPT.status == 'publish' ) ? __( 'Switch to draft', 'mb-custom-post-type' ) : __( 'Save draft', 'mb-custom-post-type' ) } />
@@ -72,17 +73,18 @@ const MainTabs = () => {
 					</Tooltip>
 				</div>
 			</div>
-			<div className="mb-cpt-tabs">
-				<div className="mb-cpt-content">
-					<TabPanel className="mb-cpt-wrapper" tabs={ tabs }>
-						{ tab => panels[ tab.name ] }
-					</TabPanel>
-					<div className="mb-cpt-message hidden"></div>
+				<div className="mb-cpt-tabs">
+					<div className="mb-cpt-content">
+						<TabPanel className="mb-cpt-wrapper" tabs={ tabs }>
+							{ tab => panels[ tab.name ] }
+						</TabPanel>
+						<div className="mb-cpt-message hidden"></div>
+					</div>
+					{ toggle && <Sidebar /> }
 				</div>
-				{ toggle && <Sidebar /> }
-			</div>
-			<input type="hidden" name="post_title" value={ settings.labels.singular_name } />
-			<input type="hidden" name="content" value={ JSON.stringify( settings ) } />
+				<input type="hidden" name="post_title" value={ settings.labels.singular_name } />
+				<input type="hidden" name="content" value={ JSON.stringify( settings ) } />
+				<input type="hidden" className="post_status" name="post_status" value="draft" />
 		</div>
 	</>;
 };

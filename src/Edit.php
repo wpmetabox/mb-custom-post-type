@@ -9,8 +9,6 @@ class Edit {
 	public function __construct( $post_type ) {
 		$this->post_type = $post_type;
 		add_action( 'admin_enqueue_scripts', [ $this, 'enqueue_scripts' ] );
-		add_action( 'wp_ajax_mbcpt_save_post_type', [ $this, 'save_post_type' ] );
-		add_action( 'wp_ajax_mbcpt_save_taxonomy', [ $this, 'save_taxonomy' ] );
 	}
 
 	public function enqueue_scripts() {
@@ -36,12 +34,14 @@ class Edit {
 			'reservedTerms' => $this->get_reserved_terms(),
 			'action'        => get_current_screen()->action,
 			'url'           => admin_url( 'edit.php?post_type='. get_current_screen()->id ),
+			'add'           => admin_url( 'post-new.php?post_type='. get_current_screen()->id ),
 			'status'        => get_post()->post_status,
 			'author'        => get_the_author_meta( 'display_name', get_post()->post_author ),
 			'trash'         => get_delete_post_link(),
 			'published'     => get_the_date('F d, Y').' '.get_the_time('g:i a'),
 			'modifiedtime'  => get_post_modified_time( 'F d, Y g:i a', true, null, true ),
 			'saving'        => __( 'Saving...', 'mb-custom-post-type' ),
+			'message'       => __( 'Settings saving.', 'mb-custom-post-type' ),
 			'upgrade'       => ( $this->is_screen() && ! $this->is_premium_user() ) ?: '',
 		];
 
@@ -236,36 +236,5 @@ class Edit {
 			'withoutcomments',
 			'year',
 		];
-	}
-
-	public function save( $type ) {
-		$post_id = $_POST['post_ID'] ?? '';
-		$content = $_POST['content'] ?? '';
-		$title   = $_POST['post_title'] ?? '';
-		$status  = $_POST['status'] ?? 'draft';
-		wp_update_post( [
-			'ID'           => $post_id,
-			'post_title'   => $title,
-			'post_content' => $content,
-			'post_type'    => $type,
-			'post_status'  => $status,
-		] );
-
-		wp_send_json_success(
-			[
-				'message' => __( 'Settings updated.', 'mb-custom-post-type' ),
-				'publish' => ( $status == 'publish' ) ? __( 'Update', 'mb-custom-post-type' ) : __( 'Publish', 'mb-custom-post-type' ),
-				'draft'   => ( $status == 'publish' ) ? __( 'Switch to draft', 'mb-custom-post-type' ) : __( 'Save draft', 'mb-custom-post-type' ),
-			]
-		);
-
-	}
-
-	public function save_post_type() {
-		$this->save( 'mb-post-type' );
-	}
-
-	public function save_taxonomy() {
-		$this->save( 'mb-taxonomy' );
 	}
 }

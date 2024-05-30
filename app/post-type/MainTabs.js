@@ -66,9 +66,10 @@ const MainTabs = () => {
 			<div className="mb-cpt-header">
 				<div className="mb-cpt-logo">
 					<Tooltip text={ __( 'Back to all post types', 'mb-custom-post-type' ) } position={ 'bottom right' }>
-						<a href={ MBCPT.url }><Logo /></a>
+						<a className="logo" href={ MBCPT.url }><Logo /></a>
 					</Tooltip>
 					<h1>{ ( MBCPT.action == 'add' ) ? __( 'Add Post Type', 'mb-custom-post-type' ) : __( 'Edit Post Type', 'mb-custom-post-type' ) }</h1>
+					{ !( MBCPT.action == 'add' ) && <a className="page-title-action" href={ MBCPT.add }>{ __( 'New Post Type', 'mb-custom-post-type' ) }</a> }
 				</div>
 				<div className="mb-cpt-action">
 					<input type="submit" name="draft" className="components-button is-compact is-tertiary mb-cpt-draft" value={ ( MBCPT.status == 'publish' ) ? __( 'Switch to draft', 'mb-custom-post-type' ) : __( 'Save draft', 'mb-custom-post-type' ) } />
@@ -89,6 +90,7 @@ const MainTabs = () => {
 			</div>
 			<input type="hidden" name="post_title" value={ settings.labels.singular_name } />
 			<input type="hidden" name="content" value={ JSON.stringify( settings ) } />
+			<input type="hidden" className="post_status" name="post_status" value="draft" />
 		</div>
 	</>;
 };

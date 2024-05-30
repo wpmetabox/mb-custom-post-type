@@ -226,9 +226,13 @@
 	align-items: center;
 	height: 60px;
 
-	a {
+	.logo {
 		width: 60px;
 		height: 60px;
+	}
+
+	.page-title-action {
+		top: unset;
 	}
 
 	svg {
@@ -325,6 +329,7 @@
 	.components-panel {
 		overflow-y: scroll;
 		height: 100vh;
+		border-top: none;
 	}
 
 	.components-panel__body {
@@ -344,6 +349,10 @@
 
 		&.box-summary p {
 			display: flex;
+
+			&.status {
+				text-transform: capitalize;
+			}
 
 			label {
 				width: 40%;
