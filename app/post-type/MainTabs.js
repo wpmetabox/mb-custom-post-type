@@ -83,10 +83,10 @@ const MainTabs = () => {
 					<TabPanel className="mb-cpt-wrapper" tabs={ tabs }>
 						{ tab => panels[ tab.name ] }
 					</TabPanel>
+					<div className="mb-cpt-message hidden"></div>
 				</div>
 				{ toggle && <Sidebar /> }
 			</div>
-			<div className="mb-cpt-message hidden"></div>
 			<input type="hidden" name="post_title" value={ settings.labels.singular_name } />
 			<input type="hidden" name="content" value={ JSON.stringify( settings ) } />
 		</div>

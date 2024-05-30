@@ -271,6 +271,7 @@
 
 .mb-cpt-tabs {
 	display: flex;
+	position: relative;
 
 	.mb-cpt-code {
 		margin-left: auto;
@@ -418,7 +419,7 @@
 
 .mb-cpt-message {
 	position: absolute;
-	top: 75px;
+	top: 15px;
 	left: 50%;
 	transform: translateX(-50%);
 	animation: fadein .5s;
