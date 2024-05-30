@@ -39,6 +39,7 @@ class Edit {
 			'status'        => get_post()->post_status,
 			'author'        => get_the_author_meta( 'display_name', get_post()->post_author ),
 			'trash'         => get_delete_post_link(),
+			'published'     => get_the_date('F d, Y').' '.get_the_time('g:i a'),
 			'modifiedtime'  => get_post_modified_time( 'F d, Y g:i a', true, null, true ),
 			'saving'        => __( 'Saving...', 'mb-custom-post-type' ),
 			'upgrade'       => ( $this->is_screen() && ! $this->is_premium_user() ) ?: '',

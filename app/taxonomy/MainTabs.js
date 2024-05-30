@@ -59,7 +59,7 @@ const MainTabs = () => {
 		<div className="mb-cpt">
 			<div className="mb-cpt-header">
 				<div className="mb-cpt-logo">
-					<Tooltip text={ __( 'Back all taxonomies', 'mb-custom-post-type' ) } position={ 'bottom right' }>
+					<Tooltip text={ __( 'Back to all taxonomies', 'mb-custom-post-type' ) } position={ 'bottom right' }>
 						<a href={ MBCPT.url }><Logo /></a>
 					</Tooltip>
 					<h1>{ ( MBCPT.action == 'add' ) ? __( 'Add Taxonomies', 'mb-custom-post-type' ) : __( 'Edit Taxonomies', 'mb-custom-post-type' ) }</h1>

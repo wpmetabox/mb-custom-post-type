@@ -9,6 +9,7 @@ const Sidebar = () => {
 					<PanelRow>
 						<div className="mb-cpt-box box-summary">
 							<p><label>{ __( 'Status', 'mb-custom-post-type' ) }</label> { MBCPT.status }</p>
+							<p><label>{ __( 'Published', 'mb-custom-post-type' ) }</label> { MBCPT.published }</p>
 							{ MBCPT.modifiedtime && <p><label>{ __( 'Last modified', 'mb-custom-post-type' ) }</label> { MBCPT.modifiedtime }</p> }
 							<p><label>{ __( 'Author', 'mb-custom-post-type' ) }</label> { MBCPT.author }</p>
 							<p><a href={ MBCPT.trash }><button type="button" className="components-button is-secondary is-destructive">Move to trash</button></a></p>
@@ -19,29 +20,17 @@ const Sidebar = () => {
 					<PanelRow>
 						<div className="mb-cpt-box">
 							<p>{ __( 'Like this plugin? Check out our other WordPress plugins:', 'mb-custom-post-type' ) }</p>
-							<p><a href="https://wpslimseo.com?utm_source=WordPress&utm_medium=link&utm_campaign=meta-box" target="_blank" rel="noopenner noreferrer">Slim SEO</a> - { __( 'Automated & fast SEO plugin for WordPress', 'mb-custom-post-type' ) }</p>
-							<p><a href="https://wpslimseo.com/slim-seo-schema/?utm_source=WordPress&utm_medium=link&utm_campaign=meta-box" target="_blank" rel="noopenner noreferrer">Slim SEO Schema</a> - { __( 'The best schema plugin for WordPress', 'mb-custom-post-type' ) }</p>
-							<p><a href="https://gretathemes.com?utm_source=WordPress&utm_medium=link&utm_campaign=meta-box" target="_blank" rel="noopenner noreferrer">GretaThemes</a> - { __( 'Simple, elegant and clean WordPress themes', 'mb-custom-post-type' ) }</p>
+							<p><a href="https://wpslimseo.com?utm_source=WordPress&utm_medium=link&utm_campaign=meta-box" target="_blank" rel="noopenner noreferrer">Slim SEO</a> - { __( 'A fast, lightweight and full-featured SEO plugin for WordPress with minimal configuration.', 'mb-custom-post-type' ) }</p>
+							<p><a href="https://wpslimseo.com/slim-seo-schema/?utm_source=WordPress&utm_medium=link&utm_campaign=meta-box" target="_blank" rel="noopenner noreferrer">Slim SEO Schema</a> - { __( 'An advanced, powerful and flexible plugin to add schemas to WordPress', 'mb-custom-post-type' ) }</p>
+							<p><a href="https://wpslimseo.com/products/slim-seo-link-manager/?utm_source=WordPress&utm_medium=link&utm_campaign=meta-box" target="_blank" rel="noopenner noreferrer">Slim SEO Link Manager</a> - { __( 'Build internal link easier in WordPress with real-time reports.', 'mb-custom-post-type' ) }</p>
 						</div>
 					</PanelRow>
 				</PanelBody>
-				<PanelBody title={ __( 'Write a review for MB Custom Post Types & Custom Taxonomies', 'mb-custom-post-type' ) } initialOpen={ true }>
+				<PanelBody title={ __( 'Write a review', 'mb-custom-post-type' ) } initialOpen={ true }>
 					<PanelRow>
 						<div className="mb-cpt-box">
 							<p>{ __( 'If you like MB Custom Post Types & Custom Taxonomies, please write a review on WordPress.org to help us spread the word. We really appreciate that!', 'mb-custom-post-type' ) }</p>
 							<p><a href="https://wordpress.org/support/plugin/mb-custom-post-type/reviews/?filter=5" className="button" target="_blank" rel="noopenner noreferrer">{ __( 'Write a review', 'mb-custom-post-type' ) }</a></p>
-						</div>
-					</PanelRow>
-				</PanelBody>
-				<PanelBody title={ __( 'Tutorials', 'mb-custom-post-type' ) } initialOpen={ true }>
-					<PanelRow>
-						<div className="mb-cpt-box">
-							<p><a href="https://docs.metabox.io/tutorials/beginners/" target="_blank">{ __( 'Beginners', 'mb-custom-post-type' ) }</a> - { __( 'Let’s start with some basic practices with Meta Box.', 'mb-custom-post-type' ) }</p>
-							<p><a href="https://docs.metabox.io/tutorials/case-studies/" target="_blank">{ __( 'Case Studies', 'mb-custom-post-type' ) }</a> - { __( 'See how to use Meta Box in the real case studies with comprehensive tutorials.', 'mb-custom-post-type' ) }</p>
-							<p><a href="https://docs.metabox.io/tutorials/general-guide/" target="_blank">{ __( 'General Guide', 'mb-custom-post-type' ) }</a> - { __( 'See how to use Meta box in common tasks.', 'mb-custom-post-type' ) }</p>
-							<p><a href="https://docs.metabox.io/tutorials/extensions/" target="_blank">{ __( 'Extensions', 'mb-custom-post-type' ) }</a> - { __( 'Learn about Meta Box extensions, what features they offer and how to use them.', 'mb-custom-post-type' ) }</p>
-							<p><a href="https://docs.metabox.io/tutorials/builders/" target="_blank">{ __( 'Page Builders', 'mb-custom-post-type' ) }</a> - { __( 'Tutorials on combining Meta Box and other builders or tools for real case studies.', 'mb-custom-post-type' ) }</p>
-							<p><a href="https://docs.metabox.io/tutorials/mb-views/" target="_blank">{ __( 'MB Views', 'mb-custom-post-type' ) }</a> - { __( 'Build front-end templates for WordPress without touching theme files. Support Twig and all field types.', 'mb-custom-post-type' ) }</p>
 						</div>
 					</PanelRow>
 				</PanelBody>

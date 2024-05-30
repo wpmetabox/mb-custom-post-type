@@ -6,6 +6,7 @@ import CheckboxList from '../controls/CheckboxList';
 import Control from '../controls/Control';
 import Sidebar from '../controls/Sidebar';
 import Logo from '../controls/logo.svg';
+import Toggle from '../controls/Toggle.svg';
 import { SettingsContext } from '../SettingsContext';
 import { AdvancedControls, BasicControls, CodeControls, LabelControls, SupportControls } from './constants/Data';
 import Result from './Result';
@@ -65,7 +66,7 @@ const MainTabs = () => {
 		<div className="mb-cpt">
 			<div className="mb-cpt-header">
 				<div className="mb-cpt-logo">
-					<Tooltip text={ __( 'Back all post type', 'mb-custom-post-type' ) } position={ 'bottom right' }>
+					<Tooltip text={ __( 'Back to all post types', 'mb-custom-post-type' ) } position={ 'bottom right' }>
 						<a href={ MBCPT.url }><Logo /></a>
 					</Tooltip>
 					<h1>{ ( MBCPT.action == 'add' ) ? __( 'Add Post Type', 'mb-custom-post-type' ) : __( 'Edit Post Type', 'mb-custom-post-type' ) }</h1>
@@ -74,14 +75,16 @@ const MainTabs = () => {
 					<input type="submit" name="draft" className="components-button is-compact is-tertiary mb-cpt-draft" value={ ( MBCPT.status == 'publish' ) ? __( 'Switch to draft', 'mb-custom-post-type' ) : __( 'Save draft', 'mb-custom-post-type' ) } />
 					<input type="submit" name="publish" className="mb-cpt-publish button button-primary button-large" value={ ( MBCPT.status == 'publish' ) ? __( 'Update', 'mb-custom-post-type' ) : __( 'Publish', 'mb-custom-post-type' ) } />
 					<Tooltip text={ __( 'Toggle sidebar', 'mb-custom-post-type' ) }>
-						<Icon icon="format-aside" onClick={ () => setToggle( !toggle ) } className="toggle-sidebar" />
+						<a><Toggle onClick={ () => setToggle( !toggle ) } className="toggle-sidebar" /></a>
 					</Tooltip>
 				</div>
 			</div>
 			<div className="mb-cpt-tabs">
-				<TabPanel className="mb-cpt-content" tabs={ tabs }>
-					{ tab => panels[ tab.name ] }
-				</TabPanel>
+				<div className="mb-cpt-content">
+					<TabPanel className="mb-cpt-wrapper" tabs={ tabs }>
+						{ tab => panels[ tab.name ] }
+					</TabPanel>
+				</div>
 				{ toggle && <Sidebar /> }
 			</div>
 			<div className="mb-cpt-message hidden"></div>
