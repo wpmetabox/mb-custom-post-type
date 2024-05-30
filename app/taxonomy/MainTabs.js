@@ -1,5 +1,5 @@
 import { __ } from '@wordpress/i18n';
-import { Icon } from '@wordpress/components';
+import Toggle from '../controls/Toggle.svg';
 import { Tooltip } from '@wordpress/components';
 import { useState } from "@wordpress/element";
 import CheckboxList from '../controls/CheckboxList';
@@ -68,7 +68,7 @@ const MainTabs = () => {
 					<input type="submit" name="draft" className="components-button is-compact is-tertiary mb-cpt-draft" value={ ( MBCPT.status == 'publish' ) ? __( 'Switch to draft', 'mb-custom-post-type' ) : __( 'Save draft', 'mb-custom-post-type' ) } />
 					<input type="submit" name="publish" className="mb-cpt-publish button button-primary button-large" value={ ( MBCPT.status == 'publish' ) ? __( 'Update', 'mb-custom-post-type' ) : __( 'Publish', 'mb-custom-post-type' ) } />
 					<Tooltip text={ __( 'Toggle sidebar', 'mb-custom-post-type' ) }>
-						<Icon icon="format-aside" onClick={ () => setToggle( !toggle ) } className="toggle-sidebar" />
+						<a><Toggle onClick={ () => setToggle( !toggle ) } className="toggle-sidebar" /></a>
 					</Tooltip>
 				</div>
 			</div>

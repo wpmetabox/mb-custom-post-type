@@ -1,5 +1,4 @@
 import { __ } from '@wordpress/i18n';
-import { Icon } from '@wordpress/components';
 import { Tooltip } from '@wordpress/components';
 import { useState } from "@wordpress/element";
 import CheckboxList from '../controls/CheckboxList';
