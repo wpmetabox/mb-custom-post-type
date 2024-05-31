@@ -79,6 +79,9 @@ const MainTabs = () => {
 					</Tooltip>
 				</div>
 			</div>
+			<div className="mb-cpt-notice">
+				<hr class="wp-header-end"></hr>
+			</div>
 			<div className="mb-cpt-tabs">
 				<div className="mb-cpt-content">
 					<TabPanel className="mb-cpt-wrapper" tabs={ tabs }>

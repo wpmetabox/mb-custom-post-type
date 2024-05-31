@@ -26,6 +26,8 @@ const sidebar = () => {
 	document.querySelector( '.toggle-sidebar' ).classList.toggle( 'is-active' );
 };
 
+document.querySelector( ".wp-header-end" ).remove();
+
 render( <App />, document.getElementById( 'poststuff' ) );
 document.querySelector( '#post' ).addEventListener( 'submit', submit );
 document.querySelector( '.toggle-sidebar' ).addEventListener( 'click', sidebar );
