@@ -1,14 +1,14 @@
-import { __ } from '@wordpress/i18n';
 import { Tooltip } from '@wordpress/components';
 import { useState } from "@wordpress/element";
+import { __ } from '@wordpress/i18n';
+import { SettingsContext } from '../SettingsContext';
 import CheckboxList from '../controls/CheckboxList';
 import Control from '../controls/Control';
 import Sidebar from '../controls/Sidebar';
-import Logo from '../controls/logo.svg';
 import Toggle from '../controls/Toggle.svg';
-import { SettingsContext } from '../SettingsContext';
-import { AdvancedControls, BasicControls, CodeControls, LabelControls, SupportControls } from './constants/Data';
+import Logo from '../controls/logo.svg';
 import Result from './Result';
+import { AdvancedControls, BasicControls, CodeControls, LabelControls, SupportControls } from './constants/Data';
 const { useContext } = wp.element;
 const { TabPanel } = wp.components;
 const tabs = [
@@ -79,15 +79,15 @@ const MainTabs = () => {
 					</Tooltip>
 				</div>
 			</div>
-			<div className="mb-cpt-notice">
-				<hr class="wp-header-end"></hr>
-			</div>
-			<div className="mb-cpt-tabs">
+			<div className="mb-cpt-body">
 				<div className="mb-cpt-content">
-					<TabPanel className="mb-cpt-wrapper" tabs={ tabs }>
-						{ tab => panels[ tab.name ] }
-					</TabPanel>
-					<div className="mb-cpt-message hidden"></div>
+					<div className="mb-cpt-tabs-wrapper">
+						<div className="wp-header-end" />
+
+						<TabPanel className="mb-cpt-tabs" tabs={ tabs }>
+							{ tab => panels[ tab.name ] }
+						</TabPanel>
+					</div>
 				</div>
 				{ toggle && <Sidebar /> }
 			</div>
