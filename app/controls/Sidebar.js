@@ -1,5 +1,5 @@
-import { __ } from "@wordpress/i18n";
 import { Panel, PanelBody, PanelRow } from '@wordpress/components';
+import { __ } from "@wordpress/i18n";
 
 const Sidebar = () => {
 	return (
@@ -16,21 +16,21 @@ const Sidebar = () => {
 						</div>
 					</PanelRow>
 				</PanelBody>
+				<PanelBody title={ __( 'Write a review', 'mb-custom-post-type' ) } initialOpen={ true }>
+					<PanelRow>
+						<div className="mb-cpt-box">
+							<p>{ __( 'If you like this plugin, please write a review on WordPress.org to help us spread the word. We really appreciate that!', 'mb-custom-post-type' ) }</p>
+							<p><a href="https://wordpress.org/support/plugin/mb-custom-post-type/reviews/" className="button" target="_blank">{ __( 'Write a review', 'mb-custom-post-type' ) }</a></p>
+						</div>
+					</PanelRow>
+				</PanelBody>
 				<PanelBody title={ __( 'Our WordPress Plugins', 'mb-custom-post-type' ) } initialOpen={ true }>
 					<PanelRow>
 						<div className="mb-cpt-box">
 							<p>{ __( 'Like this plugin? Check out our other WordPress plugins:', 'mb-custom-post-type' ) }</p>
-							<p><a href="https://wpslimseo.com?utm_source=WordPress&utm_medium=link&utm_campaign=meta-box" target="_blank" rel="noopenner noreferrer">Slim SEO</a> - { __( 'A fast, lightweight and full-featured SEO plugin for WordPress with minimal configuration.', 'mb-custom-post-type' ) }</p>
-							<p><a href="https://wpslimseo.com/slim-seo-schema/?utm_source=WordPress&utm_medium=link&utm_campaign=meta-box" target="_blank" rel="noopenner noreferrer">Slim SEO Schema</a> - { __( 'An advanced, powerful and flexible plugin to add schemas to WordPress', 'mb-custom-post-type' ) }</p>
-							<p><a href="https://wpslimseo.com/products/slim-seo-link-manager/?utm_source=WordPress&utm_medium=link&utm_campaign=meta-box" target="_blank" rel="noopenner noreferrer">Slim SEO Link Manager</a> - { __( 'Build internal link easier in WordPress with real-time reports.', 'mb-custom-post-type' ) }</p>
-						</div>
-					</PanelRow>
-				</PanelBody>
-				<PanelBody title={ __( 'Write a review', 'mb-custom-post-type' ) } initialOpen={ true }>
-					<PanelRow>
-						<div className="mb-cpt-box">
-							<p>{ __( 'If you like MB Custom Post Types & Custom Taxonomies, please write a review on WordPress.org to help us spread the word. We really appreciate that!', 'mb-custom-post-type' ) }</p>
-							<p><a href="https://wordpress.org/support/plugin/mb-custom-post-type/reviews/?filter=5" className="button" target="_blank" rel="noopenner noreferrer">{ __( 'Write a review', 'mb-custom-post-type' ) }</a></p>
+							<p><a href="https://elu.to/mbcptss" target="_blank">Slim SEO</a> - { __( 'A fast, lightweight and full-featured SEO plugin for WordPress with minimal configuration.', 'mb-custom-post-type' ) }</p>
+							<p><a href="https://elu.to/mbcptsss" target="_blank">Slim SEO Schema</a> - { __( 'An advanced, powerful and flexible plugin to add schemas to WordPress', 'mb-custom-post-type' ) }</p>
+							<p><a href="https://elu.to/mbcptssl" target="_blank">Slim SEO Link Manager</a> - { __( 'Build internal link easier in WordPress with real-time reports.', 'mb-custom-post-type' ) }</p>
 						</div>
 					</PanelRow>
 				</PanelBody>
@@ -47,7 +47,7 @@ const Sidebar = () => {
 									<li><span className="dashicons dashicons-yes"></span>{ __( 'Create frontend templates', 'mb-custom-post-type' ) }</li>
 									<li><span className="dashicons dashicons-yes"></span>{ __( 'And much more!', 'mb-custom-post-type' ) }</li>
 								</ul>
-								<a href="https://metabox.io/pricing/?utm_source=plugin_cpt&utm_medium=btn_upgrade&utm_campaign=cpt_upgrade" className="button" target="_blank" rel="noopenner noreferer">{ __( 'Upgrade now', 'mb-custom-post-type' ) }</a>
+								<a href="https://elu.to/mbcptsp" className="button" target="_blank">{ __( 'Upgrade now', 'mb-custom-post-type' ) }</a>
 							</div>
 						</PanelRow>
 					</PanelBody>

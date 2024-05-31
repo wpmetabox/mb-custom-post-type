@@ -17,7 +17,7 @@ class Edit {
 		}
 
 		wp_enqueue_style( $this->post_type, MB_CPT_URL . 'assets/style.css', [ 'wp-components' ], MB_CPT_VER );
-		wp_enqueue_style( 'font-awesome', 'https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.2.1/css/all.min.css', '', '6.2.1' );
+		wp_enqueue_style( 'font-awesome', 'https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.2.1/css/all.min.css', [], '6.2.1' );
 		wp_enqueue_style( 'wp-edit-post' );
 
 		$object = str_replace( 'mb-', '', $this->post_type );
@@ -33,16 +33,15 @@ class Edit {
 			'settings'      => json_decode( get_post()->post_content, ARRAY_A ),
 			'reservedTerms' => $this->get_reserved_terms(),
 			'action'        => get_current_screen()->action,
-			'url'           => admin_url( 'edit.php?post_type='. get_current_screen()->id ),
-			'add'           => admin_url( 'post-new.php?post_type='. get_current_screen()->id ),
+			'url'           => admin_url( 'edit.php?post_type=' . get_current_screen()->id ),
+			'add'           => admin_url( 'post-new.php?post_type=' . get_current_screen()->id ),
 			'status'        => get_post()->post_status,
 			'author'        => get_the_author_meta( 'display_name', get_post()->post_author ),
 			'trash'         => get_delete_post_link(),
-			'published'     => get_the_date('F d, Y').' '.get_the_time('g:i a'),
+			'published'     => get_the_date( 'F d, Y' ) . ' ' . get_the_time( 'g:i a' ),
 			'modifiedtime'  => get_post_modified_time( 'F d, Y g:i a', true, null, true ),
 			'saving'        => __( 'Saving...', 'mb-custom-post-type' ),
-			'message'       => __( 'Settings saving.', 'mb-custom-post-type' ),
-			'upgrade'       => ( $this->is_screen() && ! $this->is_premium_user() ) ?: '',
+			'upgrade'       => ! $this->is_premium_user(),
 		];
 
 		if ( 'mb-post-type' === get_current_screen()->id ) {
@@ -91,7 +90,7 @@ class Edit {
 		return 'post' === $screen->base && $this->post_type === $screen->post_type;
 	}
 
-	private function is_premium_user() {
+	private function is_premium_user(): bool {
 		if ( ! class_exists( 'MetaBox\Updater\Option' ) || ! class_exists( 'MetaBox\Updater\Checker' ) ) {
 			return false;
 		}
