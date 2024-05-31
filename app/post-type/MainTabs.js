@@ -1,11 +1,11 @@
-import { Tooltip } from '@wordpress/components';
+import { Button, Tooltip } from '@wordpress/components';
 import { useState } from "@wordpress/element";
 import { __ } from '@wordpress/i18n';
+import { drawerRight } from "@wordpress/icons";
 import { SettingsContext } from '../SettingsContext';
 import CheckboxList from '../controls/CheckboxList';
 import Control from '../controls/Control';
 import Sidebar from '../controls/Sidebar';
-import Toggle from '../controls/Toggle.svg';
 import Logo from '../controls/logo.svg';
 import Result from './Result';
 import { AdvancedControls, BasicControls, CodeControls, LabelControls, SupportControls } from './constants/Data';
@@ -73,10 +73,8 @@ const MainTabs = () => {
 				</div>
 				<div className="mb-cpt-action">
 					<input type="submit" name="draft" className="components-button is-compact is-tertiary mb-cpt-draft" value={ ( MBCPT.status == 'publish' ) ? __( 'Switch to draft', 'mb-custom-post-type' ) : __( 'Save draft', 'mb-custom-post-type' ) } />
-					<input type="submit" name="publish" className="mb-cpt-publish button button-primary button-large" value={ ( MBCPT.status == 'publish' ) ? __( 'Update', 'mb-custom-post-type' ) : __( 'Publish', 'mb-custom-post-type' ) } />
-					<Tooltip text={ __( 'Toggle sidebar', 'mb-custom-post-type' ) }>
-						<a><Toggle onClick={ () => setToggle( !toggle ) } className="toggle-sidebar" /></a>
-					</Tooltip>
+					<input type="submit" name="publish" className="mb-cpt-publish components-button is-primary" value={ ( MBCPT.status == 'publish' ) ? __( 'Update', 'mb-custom-post-type' ) : __( 'Publish', 'mb-custom-post-type' ) } />
+					<Button onClick={ () => setToggle( !toggle ) } className="is-compact" icon={ drawerRight } size="compact" label={ __( 'Toggle sidebar', 'mb-custom-post-type' ) } showTooltip={ true } isPressed={ toggle } />
 				</div>
 			</div>
 			<div className="mb-cpt-body">

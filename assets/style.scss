@@ -255,21 +255,10 @@
 	gap: 12px;
 	cursor: pointer;
 
-	.mb-cpt-publish.button.button-large {
-		min-height: 36px;
-	}
-
-	.toggle-sidebar {
-		width: unset;
-		height: unset;
-		padding: 4px;
-		fill: #000;
-	}
-
-	.toggle-sidebar.is-active {
-		background: #1e1e1e;
-		animation: fadein .5s;
-		fill: #fff;
+	.components-button svg {
+		width: auto;
+		height: auto;
+		fill: currentColor;
 	}
 }
 
