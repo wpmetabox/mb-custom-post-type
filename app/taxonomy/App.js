@@ -16,12 +16,8 @@ const submit = e => {
 	document.querySelector( '.post_status' ).setAttribute( 'value', status );
 };
 
-const toggleSidebar = () => {
-	document.querySelector( '.toggle-sidebar' ).classList.toggle( 'is-active' );
-};
-
 document.querySelector( '.wp-header-end' ).remove();
 
 render( <App />, document.getElementById( 'poststuff' ) );
+
 document.querySelector( '#post' ).addEventListener( 'submit', submit );
-document.querySelector( '.toggle-sidebar' ).addEventListener( 'click', toggleSidebar );
