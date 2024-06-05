@@ -91,7 +91,8 @@ const MainTabs = () => {
 			</div>
 			<input type="hidden" name="post_title" value={ settings.labels.singular_name } />
 			<input type="hidden" name="content" value={ JSON.stringify( settings ) } />
-			<input type="hidden" className="post_status" name="post_status" value="draft" />
+			<input type="hidden" className="post_status" name="post_status" value={ MBCPT.status || 'draft' } />
+			<input type="hidden" name="messages" className="mb-cpt-messages" value="" />
 		</div>
 	</>;
 };
