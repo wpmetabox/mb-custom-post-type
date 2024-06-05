@@ -88,6 +88,7 @@
 	&-description {
 		font-style: italic;
 		margin-top: 4px;
+		color: var(--color-gray);
 	}
 
 	&-error {
@@ -301,6 +302,7 @@
 		border-right-color: #e0e0e0;
 		padding-block: 6px;
 	}
+
 	.notice-dismiss {
 		bottom: 0;
 	}
@@ -439,9 +441,8 @@
 }
 
 .mb-cpt-toggle {
-	cursor: pointer;
-
 	&__switch {
+		cursor: pointer;
 		display: inline-block;
 		background: #ccc;
 		height: 16px;
@@ -464,7 +465,7 @@
 		}
 	}
 
-	.mb-cpt-description {
+	label {
 		display: flex;
 		align-items: center;
 		gap: .25em;
