@@ -8,37 +8,7 @@ class Edit {
 
 	public function __construct( $post_type ) {
 		$this->post_type = $post_type;
-
-		add_action( 'edit_form_after_title', [ $this, 'output_root' ] );
-		add_action( 'add_meta_boxes', [ $this, 'register_upgrade_meta_box' ] );
 		add_action( 'admin_enqueue_scripts', [ $this, 'enqueue_scripts' ] );
-	}
-
-	public function output_root() {
-		if ( $this->is_screen() ) {
-			echo '<div id="root" class="mb-cpt"></div>';
-		}
-	}
-
-	public function register_upgrade_meta_box() {
-		if ( $this->is_screen() && ! $this->is_premium_user() ) {
-			add_meta_box( 'mb-cpt-upgrade', __( 'Upgrade', 'mb-custom-post-type' ), [ $this, 'upgrade_message' ], null, 'side', 'low' );
-		}
-	}
-
-	public function upgrade_message() {
-		?>
-		<p><?php esc_html_e( 'Upgrade now to have more features & speedy technical support:', 'mb-custom-post-type' ) ?></p>
-		<ul>
-			<li><span class="dashicons dashicons-yes"></span><?php esc_html_e( 'Create custom fields with UI', 'mb-custom-post-type' ) ?></li>
-			<li><span class="dashicons dashicons-yes"></span><?php esc_html_e( 'Add custom fields to terms and users', 'mb-custom-post-type' ) ?></li>
-			<li><span class="dashicons dashicons-yes"></span><?php esc_html_e( 'Create custom settings pages', 'mb-custom-post-type' ) ?></li>
-			<li><span class="dashicons dashicons-yes"></span><?php esc_html_e( 'Create frontend submission forms', 'mb-custom-post-type' ) ?></li>
-			<li><span class="dashicons dashicons-yes"></span><?php esc_html_e( 'Create frontend templates', 'mb-custom-post-type' ) ?></li>
-			<li><span class="dashicons dashicons-yes"></span><?php esc_html_e( 'And much more!', 'mb-custom-post-type' ) ?></li>
-		</ul>
-		<a href="https://metabox.io/pricing/?utm_source=plugin_cpt&utm_medium=btn_upgrade&utm_campaign=cpt_upgrade" class="button" target="_blank" rel="noopenner noreferer"><?php esc_html_e( 'Upgrade now', 'mb-custom-post-type' ) ?></a>
-		<?php
 	}
 
 	public function enqueue_scripts() {
@@ -47,7 +17,7 @@ class Edit {
 		}
 
 		wp_enqueue_style( $this->post_type, MB_CPT_URL . 'assets/style.css', [ 'wp-components' ], MB_CPT_VER );
-		wp_enqueue_style( 'font-awesome', 'https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.2.1/css/all.min.css', '', '6.2.1' );
+		wp_enqueue_style( 'font-awesome', 'https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.2.1/css/all.min.css', [], '6.2.1' );
 		wp_enqueue_style( 'wp-edit-post' );
 
 		$object = str_replace( 'mb-', '', $this->post_type );
@@ -62,6 +32,16 @@ class Edit {
 			'icons'         => Data::get_dashicons(),
 			'settings'      => json_decode( get_post()->post_content, ARRAY_A ),
 			'reservedTerms' => $this->get_reserved_terms(),
+			'action'        => get_current_screen()->action,
+			'url'           => admin_url( 'edit.php?post_type=' . get_current_screen()->id ),
+			'add'           => admin_url( 'post-new.php?post_type=' . get_current_screen()->id ),
+			'status'        => get_post()->post_status,
+			'author'        => get_the_author_meta( 'display_name', get_post()->post_author ),
+			'trash'         => get_delete_post_link(),
+			'published'     => get_the_date( 'F d, Y' ) . ' ' . get_the_time( 'g:i a' ),
+			'modifiedtime'  => get_post_modified_time( 'F d, Y g:i a', true, null, true ),
+			'saving'        => __( 'Saving...', 'mb-custom-post-type' ),
+			'upgrade'       => ! $this->is_premium_user(),
 		];
 
 		if ( 'mb-post-type' === get_current_screen()->id ) {
@@ -110,7 +90,7 @@ class Edit {
 		return 'post' === $screen->base && $this->post_type === $screen->post_type;
 	}
 
-	private function is_premium_user() {
+	private function is_premium_user(): bool {
 		if ( ! class_exists( 'MetaBox\Updater\Option' ) || ! class_exists( 'MetaBox\Updater\Checker' ) ) {
 			return false;
 		}

@@ -1,3 +1,4 @@
 .svn
 vendor
 node_modules
+*.LICENSE.txt

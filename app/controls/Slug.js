@@ -12,8 +12,9 @@ const Slug = ( { label, name, value, update, tooltip = '', description = '', req
 			: '';
 
 	useEffect( () => {
-		document.querySelector( '#publish' ).disabled = !!error;
-	}, [ error ] );
+		document.querySelector( '.mb-cpt-publish' ).disabled = !!error;
+		document.querySelector( '.mb-cpt-draft' ).disabled = !!error;
+	}, [ value ] );
 
 	return (
 		<div className="mb-cpt-field">

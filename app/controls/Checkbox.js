@@ -10,8 +10,9 @@ const Checkbox = ( { label, name, description, update, checked, required = false
 		<div className="mb-cpt-input">
 			{
 				description
-					? <label className="mb-cpt-description"><input type="checkbox" id={ name } name={ name } checked={ checked } onChange={ update } /> { description }</label>
-					: <input type="checkbox" id={ name } name={ name } checked={ checked } onChange={ update } />
+					? <div className="mb-cpt-toggle"><label><input type="checkbox" id={ name } name={ name } checked={ checked } onChange={ update } /><div className="mb-cpt-toggle__switch"></div>{ description }</label>
+						</div>
+					: <div className="mb-cpt-toggle"><input type="checkbox" id={ name } name={ name } checked={ checked } onChange={ update } /><div className="mb-cpt-toggle__switch"></div></div>
 			}
 		</div>
 	</div>
