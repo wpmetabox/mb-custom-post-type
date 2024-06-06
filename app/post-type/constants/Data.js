@@ -452,7 +452,7 @@ export const AdvancedControls = [
 		name: 'rewrite.with_front',
 		label: __( 'Prepended permalink structure', 'mb-custom-post-type' ),
 		description: __( 'Example: if your permalink structure is /blog/, then your links will be: false -> /news/, true -> /blog/news/.', 'mb-custom-post-type' ),
-		tooltip: __( 'Whether the permastruct should be prepended', 'mb-custom-post-type' ),
+		tooltip: __( 'Whether the custom permastruct should be prepended', 'mb-custom-post-type' ),
 	},
 	{
 		type: 'checkbox',
