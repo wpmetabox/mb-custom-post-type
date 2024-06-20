@@ -1,3 +1,13 @@
+// Do not show update nag.
+.update-nag {
+	display: none;
+}
+
+// Block editor components.
+.components-tooltip {
+	max-width: 400px;
+}
+
 #mb-cpt-upgrade .dashicons {
 	color: #46b450;
 }
@@ -31,6 +41,10 @@
 
 	pre {
 		padding: 0;
+	}
+
+	label {
+		cursor: pointer;
 	}
 
 	.alert-error {
@@ -78,7 +92,6 @@
 
 	&-label {
 		width: 25%;
-		// font-weight: 700;
 	}
 
 	&-input {
@@ -139,12 +152,11 @@
 		align-items: center;
 		text-align: center;
 
-		&:hover {
-			cursor: pointer;
-
-			.mb-cpt-icon {
-				box-shadow: 0 0 0 1px rgba(0, 0, 0, .3);
-			}
+		&:hover .mb-cpt-icon {
+			box-shadow: 0 0 0 1px rgba(0, 0, 0, .3);
+		}
+		&:has(input:checked):hover .mb-cpt-icon {
+			box-shadow: none;
 		}
 
 		&__text {
@@ -254,7 +266,6 @@
 	display: flex;
 	align-items: center;
 	gap: 12px;
-	cursor: pointer;
 
 	.components-button svg {
 		width: auto;
@@ -442,7 +453,6 @@
 
 .mb-cpt-toggle {
 	&__switch {
-		cursor: pointer;
 		display: inline-block;
 		background: #ccc;
 		height: 16px;
