@@ -1,4 +1,4 @@
-import { Button, Tooltip } from '@wordpress/components';
+import { Button, Flex, Tooltip } from '@wordpress/components';
 import { useState } from "@wordpress/element";
 import { __ } from '@wordpress/i18n';
 import { drawerRight } from "@wordpress/icons";
@@ -63,20 +63,20 @@ const MainTabs = () => {
 
 	return <>
 		<div className="mb-cpt">
-			<div className="mb-cpt-header">
-				<div className="mb-cpt-logo">
+			<Flex className="mb-cpt-header">
+				<Flex gap={ 2 } expanded={ false }>
 					<Tooltip text={ __( 'Back to all post types', 'mb-custom-post-type' ) } position={ 'bottom right' }>
 						<a className="logo" href={ MBCPT.url }><Logo /></a>
 					</Tooltip>
 					<h1>{ ( MBCPT.action == 'add' ) ? __( 'Add Post Type', 'mb-custom-post-type' ) : __( 'Edit Post Type', 'mb-custom-post-type' ) }</h1>
 					{ !( MBCPT.action == 'add' ) && <a className="page-title-action" href={ MBCPT.add }>{ __( 'Add New', 'mb-custom-post-type' ) }</a> }
-				</div>
-				<div className="mb-cpt-action">
+				</Flex>
+				<Flex gap={ 3 } expanded={ false } className="mb-cpt-action">
 					<input type="submit" name="draft" className="components-button is-compact is-tertiary mb-cpt-draft" value={ ( MBCPT.status == 'publish' ) ? __( 'Switch to draft', 'mb-custom-post-type' ) : __( 'Save draft', 'mb-custom-post-type' ) } />
 					<input type="submit" name="publish" className="mb-cpt-publish components-button is-primary" value={ ( MBCPT.status == 'publish' ) ? __( 'Update', 'mb-custom-post-type' ) : __( 'Publish', 'mb-custom-post-type' ) } />
 					<Button onClick={ () => setToggle( !toggle ) } className="is-compact" icon={ drawerRight } size="compact" label={ __( 'Toggle sidebar', 'mb-custom-post-type' ) } showTooltip={ true } isPressed={ toggle } />
-				</div>
-			</div>
+				</Flex>
+			</Flex>
 			<div className="mb-cpt-body">
 				<div className="mb-cpt-content">
 					<div className="mb-cpt-tabs-wrapper">
