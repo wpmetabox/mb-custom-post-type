@@ -53,7 +53,6 @@ If you like this plugin, you might also like our other WordPress products:
 == Frequently Asked Questions ==
 
 == Screenshots ==
-1. All registered custom post types
 1. Edit custom post type - General tab
 1. Edit custom post type - Labels tab
 1. Edit custom post type - Advanced tab
