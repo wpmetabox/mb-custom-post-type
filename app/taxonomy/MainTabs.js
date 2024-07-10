@@ -63,7 +63,11 @@ const MainTabs = () => {
 						<a className="logo" href={ MBCPT.url }><Logo /></a>
 					</Tooltip>
 					<h1>{ ( MBCPT.action == 'add' ) ? __( 'Add Taxonomies', 'mb-custom-post-type' ) : __( 'Edit Taxonomies', 'mb-custom-post-type' ) }</h1>
-					{ !( MBCPT.action == 'add' ) && <a className="page-title-action" href={ MBCPT.add }>{ __( 'Add New', 'mb-custom-post-type' ) }</a> }
+					{ !( MBCPT.action == 'add' ) &&
+						<Flex gap={ 2 } expanded={ false }>
+							<a className="page-title-action" href={ MBCPT.add }>{ __( 'Add New', 'mb-custom-post-type' ) }</a>
+							{ ( MBCPT.addField ) && <a className="page-title-action" href={ MBCPT.addField }>{ __( 'Add field', 'mb-custom-post-type' ) }</a> }
+						</Flex> }
 				</Flex>
 				<Flex gap={ 3 } expanded={ false } className="mb-cpt-action">
 					<input type="submit" name="draft" className="components-button is-compact is-tertiary mb-cpt-draft" value={ ( MBCPT.status == 'publish' ) ? __( 'Switch to draft', 'mb-custom-post-type' ) : __( 'Save draft', 'mb-custom-post-type' ) } />

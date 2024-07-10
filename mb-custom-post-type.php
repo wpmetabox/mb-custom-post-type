@@ -48,6 +48,7 @@ if ( ! function_exists( 'mb_cpt_load' ) ) {
 		new MBCPT\Warning();
 		new MBCPT\Import();
 		new MBCPT\Export();
+		new MBCPT\AddField();
 
 		if ( defined( 'CPTUI_VERSION' ) ) {
 			new MBCPT\Migration();

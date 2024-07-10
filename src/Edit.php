@@ -35,6 +35,7 @@ class Edit {
 			'action'        => get_current_screen()->action,
 			'url'           => admin_url( 'edit.php?post_type=' . get_current_screen()->id ),
 			'add'           => admin_url( 'post-new.php?post_type=' . get_current_screen()->id ),
+			'addField'      => defined( 'MBB_VER' ) ? admin_url( 'post-new.php?post_type=meta-box&' . get_current_screen()->id . '=' . get_the_ID() ) : '',
 			'status'        => get_post()->post_status,
 			'author'        => get_the_author_meta( 'display_name', get_post()->post_author ),
 			'trash'         => get_delete_post_link(),
