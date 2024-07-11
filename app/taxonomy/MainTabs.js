@@ -66,7 +66,7 @@ const MainTabs = () => {
 					{ !( MBCPT.action == 'add' ) &&
 						<Flex gap={ 2 } expanded={ false }>
 							<a className="page-title-action" href={ MBCPT.add }>{ __( 'Add New', 'mb-custom-post-type' ) }</a>
-							{ ( MBCPT.addField ) && <a className="page-title-action" href={ MBCPT.addField }>{ __( 'Add field', 'mb-custom-post-type' ) }</a> }
+							{ ( MBCPT.linkTaxonomy ) && <a className="page-title-action" href={ MBCPT.linkTaxonomy }>{ __( 'Add new field group', 'mb-custom-post-type' ) }</a> }
 						</Flex> }
 				</Flex>
 				<Flex gap={ 3 } expanded={ false } className="mb-cpt-action">

@@ -28,14 +28,17 @@ class Edit {
 	}
 
 	private function js_vars() {
-		$vars = [
+		$settings   = json_decode( get_post()->post_content, ARRAY_A );
+		$link_field = admin_url( 'post-new.php?post_type=meta-box&post_title=' . get_the_title(). ' Fields' );
+		$vars       = [
 			'icons'         => Data::get_dashicons(),
-			'settings'      => json_decode( get_post()->post_content, ARRAY_A ),
+			'settings'      => $settings,
 			'reservedTerms' => $this->get_reserved_terms(),
 			'action'        => get_current_screen()->action,
 			'url'           => admin_url( 'edit.php?post_type=' . get_current_screen()->id ),
 			'add'           => admin_url( 'post-new.php?post_type=' . get_current_screen()->id ),
-			'addField'      => defined( 'MBB_VER' ) ? admin_url( 'post-new.php?post_type=meta-box&' . get_current_screen()->id . '=' . get_the_ID() ) : '',
+			'linkPostType'  => ( defined( 'MBB_VER' ) && $settings ) ? $link_field . '&mb-post-type=' . $settings['slug'] : '',
+			'linkTaxonomy'  => ( defined( 'MBB_VER' ) && $settings ) ? $link_field . '&settings[object_type]=term&settings[taxonomies][]=' . $settings['slug'] : '',
 			'status'        => get_post()->post_status,
 			'author'        => get_the_author_meta( 'display_name', get_post()->post_author ),
 			'trash'         => get_delete_post_link(),
