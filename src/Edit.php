@@ -29,7 +29,7 @@ class Edit {
 
 	private function js_vars() {
 		$settings   = json_decode( get_post()->post_content, ARRAY_A );
-		$link_field = admin_url( 'post-new.php?post_type=meta-box&post_title=' . get_the_title(). ' Fields' );
+		$link_field = sprintf( admin_url( 'post-new.php?post_type=meta-box&post_title=%s' ), get_the_title() . ' Fields' );
 		$vars       = [
 			'icons'         => Data::get_dashicons(),
 			'settings'      => $settings,
