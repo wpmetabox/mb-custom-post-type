@@ -177,15 +177,15 @@ class PostTypeRegister extends Register {
 		$message = [
 			0  => '', // Unused. Messages start at index 1.
 			// translators: %s: Name of the custom post type in singular form.
-			1  => sprintf( __( '%s updated. ', 'mb-custom-post-type' ), $label ),
+			1  => sprintf( __( '%s updated.', 'mb-custom-post-type' ), $label ),
 			2  => __( 'Custom field updated.', 'mb-custom-post-type' ),
 			3  => __( 'Custom field deleted.', 'mb-custom-post-type' ),
 			// translators: %s: Name of the custom post type in singular form.
-			4  => sprintf( __( '%s updated. ', 'mb-custom-post-type' ), $label ),
+			4  => sprintf( __( '%s updated.', 'mb-custom-post-type' ), $label ),
 			// translators: %1$s: Name of the custom post type in singular form, %2$s: Revision title.
 			5  => $revision ? sprintf( __( '%1$s restored to revision from %2$s.', 'mb-custom-post-type' ), $label, wp_post_revision_title( $revision, false ) ) : false,
 			// translators: %s: Name of the custom post type in singular form.
-			6  => sprintf( __( '%s published. ', 'mb-custom-post-type' ), $label ) . $add_fields_link,
+			6  => sprintf( __( '%s published. %s', 'mb-custom-post-type' ), $label, $add_fields_link ),
 			// translators: %s: Name of the custom post type in singular form.
 			7  => sprintf( __( '%s saved.', 'mb-custom-post-type' ), $label ),
 			// translators: %s: Name of the custom post type in singular form.

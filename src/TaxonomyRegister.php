@@ -193,13 +193,13 @@ class TaxonomyRegister extends Register {
 
 		$messages['mb-taxonomy'] = [
 			0  => '', // Unused. Messages start at index 1.
-			1  => __( 'Taxonomy updated. ', 'mb-custom-post-type' ),
+			1  => __( 'Taxonomy updated.', 'mb-custom-post-type' ),
 			2  => __( 'Custom field updated.', 'mb-custom-post-type' ),
 			3  => __( 'Custom field deleted.', 'mb-custom-post-type' ),
-			4  => __( 'Taxonomy updated. ', 'mb-custom-post-type' ),
+			4  => __( 'Taxonomy updated.', 'mb-custom-post-type' ),
 			// translators: %s: Date and time of the revision.
 			5  => $revision ? sprintf( __( 'Taxonomy restored to revision from %s.', 'mb-custom-post-type' ), wp_post_revision_title( $revision, false ) ) : false,
-			6  => __( 'Taxonomy published. ', 'mb-custom-post-type' ) . $add_fields_link,
+			6  => sprintf( __( 'Taxonomy published. %s', 'mb-custom-post-type' ), $add_fields_link ),
 			7  => __( 'Taxonomy saved.', 'mb-custom-post-type' ),
 			8  => __( 'Taxonomy submitted.', 'mb-custom-post-type' ),
 			// translators: %s: Date and time of the revision.
