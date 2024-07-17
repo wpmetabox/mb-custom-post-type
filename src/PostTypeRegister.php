@@ -84,7 +84,7 @@ class PostTypeRegister extends Register {
 		] );
 
 		foreach ( $posts as $post ) {
-			$settings                        = $this->get_post_type_settings( $post );
+			$settings = $this->get_post_type_settings( $post );
 			if ( empty( $settings ) ) {
 				continue;
 			}
@@ -163,6 +163,17 @@ class PostTypeRegister extends Register {
 		$label            = ucfirst( $label_lower );
 		$revision         = filter_input( INPUT_GET, 'revision', FILTER_SANITIZE_NUMBER_INT );
 
+		$add_fields_link = '';
+		$settings        = json_decode( $post->post_content, true );
+		if ( defined( 'MBB_VER' ) && $settings ) {
+			$link = add_query_arg( [
+				'post_type' => 'meta-box',
+				'post_title' => sprintf( __( '%s Fields', 'mb-custom-post-type' ), $post->post_title ),
+				'mb-post-type' => $settings['slug'],
+			], admin_url( 'post-new.php' ) );
+			$add_fields_link = '<a href=' . esc_url( $link ) . '>' . __( 'Add custom fields to this post type', 'mb-custom-post-type' ) . ' &rarr;</a>';
+		}
+
 		$message = [
 			0  => '', // Unused. Messages start at index 1.
 			// translators: %s: Name of the custom post type in singular form.
@@ -174,7 +185,7 @@ class PostTypeRegister extends Register {
 			// translators: %1$s: Name of the custom post type in singular form, %2$s: Revision title.
 			5  => $revision ? sprintf( __( '%1$s restored to revision from %2$s.', 'mb-custom-post-type' ), $label, wp_post_revision_title( $revision, false ) ) : false,
 			// translators: %s: Name of the custom post type in singular form.
-			6  => sprintf( __( '%s published.', 'mb-custom-post-type' ), $label ),
+			6  => sprintf( __( '%s published. %s', 'mb-custom-post-type' ), $label, $add_fields_link ),
 			// translators: %s: Name of the custom post type in singular form.
 			7  => sprintf( __( '%s saved.', 'mb-custom-post-type' ), $label ),
 			// translators: %s: Name of the custom post type in singular form.

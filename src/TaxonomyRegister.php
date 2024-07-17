@@ -113,7 +113,7 @@ class TaxonomyRegister extends Register {
 		] );
 
 		foreach ( $posts as $post ) {
-			$data                        = $this->get_taxonomy_data( $post );
+			$data = $this->get_taxonomy_data( $post );
 			if ( empty( $data ) ) {
 				continue;
 			}
@@ -175,8 +175,21 @@ class TaxonomyRegister extends Register {
 	}
 
 	public function updated_message( $messages ) {
-		$post     = get_post();
-		$revision = filter_input( INPUT_GET, 'revision', FILTER_SANITIZE_NUMBER_INT );
+		$post       = get_post();
+		$revision   = filter_input( INPUT_GET, 'revision', FILTER_SANITIZE_NUMBER_INT );
+
+		$add_fields_link = '';
+		$settings        = json_decode( $post->post_content, true );
+		if ( defined( 'MBB_VER' ) && $settings ) {
+			$link       = sprintf( admin_url( 'post-new.php?post_type=meta-box&post_title=%s' ), get_the_title() . ' Fields' );
+			$link = add_query_arg( [
+				'post_type' => 'meta-box',
+				'post_title' => sprintf( __( '%s Fields', 'mb-custom-post-type' ), $post->post_title ),
+				'settings[object_type]' => 'term',
+				'settings[taxonomies][]' => $settings['slug'],
+			], admin_url( 'post-new.php' ) );
+			$add_fields_link = '<a href=' . esc_url( $link ) . '>' . __( 'Add custom fields to this taxonomy', 'mb-custom-post-type' ) . ' &rarr;</a>';
+		}
 
 		$messages['mb-taxonomy'] = [
 			0  => '', // Unused. Messages start at index 1.
@@ -186,7 +199,7 @@ class TaxonomyRegister extends Register {
 			4  => __( 'Taxonomy updated.', 'mb-custom-post-type' ),
 			// translators: %s: Date and time of the revision.
 			5  => $revision ? sprintf( __( 'Taxonomy restored to revision from %s.', 'mb-custom-post-type' ), wp_post_revision_title( $revision, false ) ) : false,
-			6  => __( 'Taxonomy published.', 'mb-custom-post-type' ),
+			6  => sprintf( __( 'Taxonomy published. %s', 'mb-custom-post-type' ), $add_fields_link ),
 			7  => __( 'Taxonomy saved.', 'mb-custom-post-type' ),
 			8  => __( 'Taxonomy submitted.', 'mb-custom-post-type' ),
 			// translators: %s: Date and time of the revision.
