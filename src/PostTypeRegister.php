@@ -169,7 +169,8 @@ class PostTypeRegister extends Register {
 			$link = add_query_arg( [
 				'post_type' => 'meta-box',
 				'post_title' => sprintf( __( '%s Fields', 'mb-custom-post-type' ), $post->post_title ),
-				'mb-post-type' => $settings['slug'],
+				'settings[object_type]' => 'post',
+				'settings[post_types][]' => $settings['slug'],
 			], admin_url( 'post-new.php' ) );
 			$add_fields_link = '<a href=' . esc_url( $link ) . '>' . __( 'Add custom fields to this post type', 'mb-custom-post-type' ) . ' &rarr;</a>';
 		}
