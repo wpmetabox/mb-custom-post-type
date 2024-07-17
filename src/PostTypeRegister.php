@@ -162,25 +162,30 @@ class PostTypeRegister extends Register {
 		$label_lower      = strtolower( $label );
 		$label            = ucfirst( $label_lower );
 		$revision         = filter_input( INPUT_GET, 'revision', FILTER_SANITIZE_NUMBER_INT );
-		$link             = sprintf( admin_url( 'post-new.php?post_type=meta-box&post_title=%s' ), get_the_title() . ' Fields' );
-		$settings         = json_decode( $post->post_content, ARRAY_A );
-		$link_field       = '';
+
+		$add_fields_link = '';
+		$settings        = json_decode( $post->post_content, true );
 		if ( defined( 'MBB_VER' ) && $settings ) {
-			$link_field = '<a href=' . esc_url( $link . '&mb-post-type=' . $settings['slug'] ) . '>' . __( 'Add new field group', 'mb-custom-post-type' ) . '</a>';
+			$link = add_query_arg( [
+				'post_type' => 'meta-box',
+				'post_title' => sprintf( __( '%s Fields', 'mb-custom-post-type' ), $post->post_title ),
+				'mb-post-type' => $settings['slug'],
+			], admin_url( 'post-new.php' ) );
+			$add_fields_link = '<a href=' . esc_url( $link ) . '>' . __( 'Add custom fields to this post type', 'mb-custom-post-type' ) . ' &rarr;</a>';
 		}
 
 		$message = [
 			0  => '', // Unused. Messages start at index 1.
 			// translators: %s: Name of the custom post type in singular form.
-			1  => sprintf( __( '%s updated. ', 'mb-custom-post-type' ), $label ) . $link_field,
+			1  => sprintf( __( '%s updated. ', 'mb-custom-post-type' ), $label ),
 			2  => __( 'Custom field updated.', 'mb-custom-post-type' ),
 			3  => __( 'Custom field deleted.', 'mb-custom-post-type' ),
 			// translators: %s: Name of the custom post type in singular form.
-			4  => sprintf( __( '%s updated. ', 'mb-custom-post-type' ), $label ) . $link_field,
+			4  => sprintf( __( '%s updated. ', 'mb-custom-post-type' ), $label ),
 			// translators: %1$s: Name of the custom post type in singular form, %2$s: Revision title.
 			5  => $revision ? sprintf( __( '%1$s restored to revision from %2$s.', 'mb-custom-post-type' ), $label, wp_post_revision_title( $revision, false ) ) : false,
 			// translators: %s: Name of the custom post type in singular form.
-			6  => sprintf( __( '%s published. ', 'mb-custom-post-type' ), $label ) . $link_field,
+			6  => sprintf( __( '%s published. ', 'mb-custom-post-type' ), $label ) . $add_fields_link,
 			// translators: %s: Name of the custom post type in singular form.
 			7  => sprintf( __( '%s saved.', 'mb-custom-post-type' ), $label ),
 			// translators: %s: Name of the custom post type in singular form.
