@@ -2,8 +2,8 @@ import dotProp from 'dot-prop';
 import slugify from 'slugify';
 import { SettingsContext } from '../SettingsContext';
 import Checkbox from './Checkbox';
-import Icon from './Icon';
 import Fontawesome from './Fontawesome';
+import Icon from './Icon';
 import Input from './Input';
 import Select from './Select';
 import Slug from './Slug';
@@ -60,7 +60,7 @@ const Control = ( { field, autoFills = [] } ) => {
 		const name = e.target.name;
 		let value = 'checkbox' === e.target.type ? dotProp.get( e.target, 'checked', false ) : e.target.value;
 		value = normalizeBool( value );
-		value = name === 'menu_position' ? parseInt( value ) || '' : value;
+		value = name === 'menu_position' ? parseFloat( value ) || '' : value;
 
 		let newSettings = { ...settings };
 		dotProp.set( newSettings, name, value );

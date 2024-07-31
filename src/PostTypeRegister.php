@@ -5,6 +5,8 @@ use WP_Post;
 use MetaBox\Support\Arr;
 
 class PostTypeRegister extends Register {
+	private $menu_positions = [];
+
 	public function register() {
 		// Register main post type 'mb-post-type'.
 		$labels = [
@@ -66,8 +68,17 @@ class PostTypeRegister extends Register {
 		// Get all registered custom post types.
 		$post_types = $this->get_post_types();
 
-		foreach ( $post_types as $post_type => $args ) {
-			register_post_type( $post_type, $args );
+		foreach ( $post_types as $post_type => $settings ) {
+			// Menu position can be float value. In this case, WordPress will ignore the value. We'll need to fix it later.
+			if ( ! empty( $settings['menu_position'] ) && ! is_int( $settings['menu_position'] ) ) {
+				$this->menu_positions[ $post_type ] = $settings;
+			}
+			register_post_type( $post_type, $settings );
+		}
+
+		// Fix menu position if a post type is set with float value.
+		if ( ! empty( $this->menu_positions ) ) {
+			add_action( 'admin_menu', [ $this, 'fix_menu_positions' ] );
 		}
 	}
 
@@ -120,7 +131,6 @@ class PostTypeRegister extends Register {
 			}
 			$this->unarray( $value, $key, [ 'args_taxonomies', 'args_supports' ] );
 			$this->normalize_checkbox( $value );
-			$value = 'args_menu_position' === $key ? (int) $value : $value;
 
 			if ( 0 === strpos( $key, 'label_' ) ) {
 				$key                    = str_replace( 'label_', '', $key );
@@ -337,7 +347,7 @@ class PostTypeRegister extends Register {
 	}
 
 	public function enqueue_font_awesome() {
-		wp_enqueue_style( 'font-awesome', 'https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.2.1/css/all.min.css', '', '6.2.1' );
+		wp_enqueue_style( 'font-awesome', 'https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.2.1/css/all.min.css', [], '6.2.1' );
 		wp_add_inline_style(
 			'font-awesome',
 			'.fa:before, fas, .fa-solid:before, .fab:before, .fa-brand:before, .far:before, .fa-regular:before {
@@ -364,5 +374,36 @@ class PostTypeRegister extends Register {
 			}
 		}
 		return $sanitized;
+	}
+
+	public function fix_menu_positions(): void {
+		foreach ( $this->menu_positions as $post_type => $settings ) {
+			$this->fix_menu_position_for_post_type( $post_type, $settings );
+		}
+	}
+
+	private function fix_menu_position_for_post_type( string $post_type, array $settings ): void {
+		global $menu;
+
+		$post_type_url = $post_type === 'post' ? 'edit.php' : "edit.php?post_type=$post_type";
+
+		// Find the post type menu.
+		foreach ( $menu as $position => $args ) {
+			// Only process the menu of the post type.
+			if ( $args[2] !== $post_type_url ) {
+				continue;
+			}
+
+			// Remove the existing menu.
+			unset( $menu[ $position ] );
+
+			// Avoid the same position by adding a small number.
+			// Same technique as in add_menu_page().
+			$collision_avoider = base_convert( substr( md5( serialize( $settings ) ), -4 ), 16, 10 ) * 0.00001;
+			$position          = (string) ( $settings['menu_position'] + $collision_avoider );
+
+			// Re-add the menu with new position.
+			$menu[ $position ] = $args;
+		}
 	}
 }
