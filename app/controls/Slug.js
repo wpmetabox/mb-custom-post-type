@@ -2,13 +2,13 @@ import { RawHTML, useEffect } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
 import Tooltip from './Tooltip';
 
-const Slug = ( { label, name, value, update, tooltip = '', description = '', required = false } ) => {
+const Slug = ( { label, name, value, update, tooltip = '', description = '', required = false, limit = 20 } ) => {
 	const isReservedTerm = MBCPT.reservedTerms.includes( value );
-	const isTooLong = value.length > 20;
+	const isTooLong = value.length > limit;
 	const error = isReservedTerm
 		? __( 'ERROR: the slug must not be one of WordPress <a href="https://codex.wordpress.org/Reserved_Terms" target="_blank" rel="noopener noreferrer">reserved terms</a>', 'mb-custom-post-type' )
 		: isTooLong
-			? sprintf( __( 'ERROR: the slug must not exceed %d characters.', 'mb-custom-post-type' ), 20 )
+			? sprintf( __( 'ERROR: the slug must not exceed %d characters.', 'mb-custom-post-type' ), limit )
 			: '';
 
 	useEffect( () => {

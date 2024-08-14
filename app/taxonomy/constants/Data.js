@@ -22,6 +22,7 @@ export const BasicControls = [
 		required: true,
 		updateFrom: 'labels.singular_name',
 		tooltip: __( 'Taxonomy key, must not exceed 32 characters and may only contain lowercase alphanumeric characters, dashes, and underscores', 'mb-custom-post-type' ),
+		limit: 32,
 	},
 ];
 

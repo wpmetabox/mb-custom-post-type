@@ -8,6 +8,7 @@ const config = {
 		'clipboard': 'ClipboardJS',
 		'@wordpress/i18n': 'wp.i18n',
 		'@wordpress/element': 'wp.element',
+		'@wordpress/components': 'wp.components',
 	},
 	module: {
 		rules: [

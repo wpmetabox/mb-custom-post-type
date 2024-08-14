@@ -30,7 +30,7 @@ class Edit {
 	private function js_vars() {
 		$vars = [
 			'icons'         => Data::get_dashicons(),
-			'settings'      => json_decode( get_post()->post_content, ARRAY_A ),
+			'settings'      => json_decode( get_post()->post_content, true ),
 			'reservedTerms' => $this->get_reserved_terms(),
 			'action'        => get_current_screen()->action,
 			'url'           => admin_url( 'edit.php?post_type=' . get_current_screen()->id ),
