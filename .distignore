@@ -13,6 +13,7 @@ assets/*.scss
 *.json
 *.lock
 phpcs.xml
+pnpm-lock.yaml
 README.md
 webpack.config.js
 vendor/meta-box/support/.git

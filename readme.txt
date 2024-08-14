@@ -3,9 +3,9 @@ Contributors: elightup, metabox, rilwis, duc88b, truongwp, barcavn2
 Donate link: https://metabox.io/pricing/
 Tags: custom post types, custom taxonomies, posts, taxonomies
 Requires at least: 5.9
-Tested up to: 6.6
+Tested up to: 6.6.1
 Requires PHP: 7.2
-Stable tag: 2.7.2
+Stable tag: 2.7.3
 License: GPLv2 or later
 
 Create and manage custom post types and custom taxonomies with an easy-to-use UI in WordPress.
@@ -60,6 +60,11 @@ If you like this plugin, you might also like our other WordPress products:
 1. Edit custom post type - Taxonomies tab
 
 == Changelog ==
+
+= 2.7.3 - 2024-08-14 =
+- Fix menu position not working if set after Bricks
+- Fix limit of taxonomy slug 32
+- Do not auto generate slug when it's manually changed
 
 = 2.7.2 - 2024-07-22 =
 - Fix showing excerpt in post table lists
