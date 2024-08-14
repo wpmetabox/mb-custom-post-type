@@ -2,7 +2,18 @@ import { RawHTML, useEffect } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
 import Tooltip from './Tooltip';
 
-const Slug = ( { label, name, value, update, tooltip = '', description = '', required = false, limit = 20 } ) => {
+const Slug = ( {
+	label,
+	name,
+	value,
+	update,
+	tooltip = '',
+	description = '',
+	required = false,
+	limit = 20,
+	settings,
+	updateSettings
+} ) => {
 	const isReservedTerm = MBCPT.reservedTerms.includes( value );
 	const isTooLong = value.length > limit;
 	const error = isReservedTerm
@@ -16,6 +27,12 @@ const Slug = ( { label, name, value, update, tooltip = '', description = '', req
 		document.querySelector( '.mb-cpt-draft' ).disabled = !!error;
 	}, [ value ] );
 
+	const setSlugChanged = () => {
+		const newSettings = { ...settings };
+		newSettings._slug_changed = true;
+		updateSettings( newSettings );
+	};
+
 	return (
 		<div className="mb-cpt-field">
 			<label className="mb-cpt-label" htmlFor={ name }>
@@ -24,7 +41,15 @@ const Slug = ( { label, name, value, update, tooltip = '', description = '', req
 				{ tooltip && <Tooltip id={ name } content={ tooltip } /> }
 			</label>
 			<div className="mb-cpt-input">
-				<input type="text" required={ required } id={ name } name={ name } value={ value } onChange={ update } />
+				<input
+					type="text"
+					required={ required }
+					id={ name }
+					name={ name }
+					value={ value }
+					onChange={ update }
+					onBlur={ setSlugChanged }
+				/>
 				{ description && <div className="mb-cpt-description">{ description }</div> }
 				{ error && <RawHTML className="mb-cpt-error">{ error }</RawHTML> }
 			</div>

@@ -42,6 +42,10 @@ const Control = ( { field, autoFills = [] } ) => {
 			let newValue;
 
 			if ( 'slug' === f.name ) {
+				// Only generate slug when it's not manually changed.
+				if ( newSettings._slug_changed ) {
+					return;
+				}
 				newValue = slugify( value, { lower: true } );
 			} else {
 				newValue = ucfirst( f.default
@@ -87,7 +91,7 @@ const Control = ( { field, autoFills = [] } ) => {
 		case 'select':
 			return <Select { ...field } value={ _value } update={ update } />;
 		case 'slug':
-			return <Slug { ...field } value={ _value } update={ update } />;
+			return <Slug { ...field } value={ _value } update={ update } settings={ settings } updateSettings={ updateSettings } />;
 	}
 };
 
