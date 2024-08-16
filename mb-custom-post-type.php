@@ -11,7 +11,9 @@
  */
 
 // Prevent loading this file directly.
-defined( 'ABSPATH' ) || die;
+if ( ! defined( 'ABSPATH' ) ) {
+	return;
+}
 
 if ( ! function_exists( 'mb_cpt_load' ) ) {
 	if ( file_exists( __DIR__ . '/vendor' ) ) {
