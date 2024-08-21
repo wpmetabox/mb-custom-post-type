@@ -1,8 +1,7 @@
+import { createRoot } from "@wordpress/element";
 import { SettingsProvider } from '../SettingsContext';
 import DefaultSettings from './constants/DefaultSettings';
 import MainTabs from './MainTabs';
-
-const { render } = wp.element;
 
 const App = () => <SettingsProvider value={ MBCPT.settings || DefaultSettings }>
 	<MainTabs />
@@ -25,6 +24,11 @@ const submit = e => {
 
 document.querySelector( '.wp-header-end' ).remove();
 
-render( <App />, document.getElementById( 'poststuff' ) );
+const container = document.getElementById( 'poststuff' );
+container.classList.add( 'mb-cpt' );
+container.id = 'mb-cpt-app';
+
+const root = createRoot( container );
+root.render( <App /> );
 
 document.querySelector( '#post' ).addEventListener( 'submit', submit );
