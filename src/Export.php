@@ -18,7 +18,7 @@ class Export {
 			'action'    => 'mbcpt-export',
 			'post_type' => $post->post_type,
 			'post[]'    => $post->ID,
-		] ), 'bulk-posts' ); // @see WP_List_Table::display_tablenav()
+		] ), 'bulk-posts' );
 		$actions['export'] = '<a href="' . esc_url( $url ) . '">' . esc_html__( 'Export', 'mb-custom-post-type' ) . '</a>';
 
 		return $actions;
@@ -73,7 +73,7 @@ class Export {
 		header( 'Cache-Control: must-revalidate' );
 		header( 'Pragma: public' );
 		header( 'Content-Length: ' . strlen( $data ) );
-		echo $data;
+		echo $data; // phpcs:ignore
 		die;
 	}
 }

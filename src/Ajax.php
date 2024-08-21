@@ -156,5 +156,4 @@ class Ajax {
 		}
 		wp_send_json_success();
 	}
-
 }
