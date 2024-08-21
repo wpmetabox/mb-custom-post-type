@@ -23,9 +23,10 @@ const CheckboxList = ( { name, options, description } ) => {
 				{ description && <div className="mb-cpt-description">{ description }</div> }
 				<ul className="mb-cpt-input-list">
 					{ Object.entries( options ).map( ( [ value, label ] ) => (
-						<li key={ value }>
+						<li key={ value } className="mb-cpt-toggle">
 							<label>
 								<input type="checkbox" value={ value } checked={ saved.includes( value ) } onChange={ onChange } />
+								<div className="mb-cpt-toggle__switch"></div>
 								{ label }
 							</label>
 						</li>
