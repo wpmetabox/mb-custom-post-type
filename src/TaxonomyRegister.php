@@ -125,6 +125,7 @@ class TaxonomyRegister extends Register {
 	}
 
 	public function get_taxonomy_data( WP_Post $post ) {
+		// phpcs:ignore
 		return empty( $post->post_content ) || isset( $_GET['mbcpt-force'] ) ? $this->migrate_data( $post ) : json_decode( $post->post_content, true );
 	}
 
@@ -146,14 +147,12 @@ class TaxonomyRegister extends Register {
 				$key          = str_replace( 'args_', '', $key );
 				$args[ $key ] = $value;
 			}
-
-			// delete_post_meta( $post->ID, $key );
 		}
 		$this->change_key( $args, 'taxonomy', 'slug' );
 		$this->change_key( $args, 'post_types', 'types' );
 
 		// Bypass new post types.
-		if ( isset( $_GET['mbcpt-force'] ) && empty( $args['slug'] ) ) {
+		if ( isset( $_GET['mbcpt-force'] ) && empty( $args['slug'] ) ) { // phpcs:ignore
 			return json_decode( $post->post_content, true );
 		}
 
@@ -175,17 +174,18 @@ class TaxonomyRegister extends Register {
 	}
 
 	public function updated_message( $messages ) {
-		$post       = get_post();
-		$revision   = filter_input( INPUT_GET, 'revision', FILTER_SANITIZE_NUMBER_INT );
+		$post     = get_post();
+		$revision = filter_input( INPUT_GET, 'revision', FILTER_SANITIZE_NUMBER_INT );
 
 		$add_fields_link = '';
 		$settings        = json_decode( $post->post_content, true );
-		if ( defined( 'MBB_VER' ) && $settings ) {
-			$link       = sprintf( admin_url( 'post-new.php?post_type=meta-box&post_title=%s' ), get_the_title() . ' Fields' );
-			$link = add_query_arg( [
-				'post_type' => 'meta-box',
-				'post_title' => sprintf( __( '%s Fields', 'mb-custom-post-type' ), $post->post_title ),
-				'settings[object_type]' => 'term',
+		if ( defined( 'MBB_VER' ) && is_array( $settings ) && ! empty( $settings['slug'] ) ) {
+			$link            = sprintf( admin_url( 'post-new.php?post_type=meta-box&post_title=%s' ), get_the_title() . ' Fields' );
+			$link            = add_query_arg( [
+				'post_type'              => 'meta-box',
+				// Translators: %s - taxonomy singular label.
+				'post_title'             => sprintf( __( '%s Fields', 'mb-custom-post-type' ), $post->post_title ),
+				'settings[object_type]'  => 'term',
 				'settings[taxonomies][]' => $settings['slug'],
 			], admin_url( 'post-new.php' ) );
 			$add_fields_link = '<a href=' . esc_url( $link ) . '>' . __( 'Add custom fields to this taxonomy', 'mb-custom-post-type' ) . ' &rarr;</a>';
@@ -197,12 +197,13 @@ class TaxonomyRegister extends Register {
 			2  => __( 'Custom field updated.', 'mb-custom-post-type' ),
 			3  => __( 'Custom field deleted.', 'mb-custom-post-type' ),
 			4  => __( 'Taxonomy updated.', 'mb-custom-post-type' ),
-			// translators: %s: Date and time of the revision.
+			// Translators: %s - date and time of the revision.
 			5  => $revision ? sprintf( __( 'Taxonomy restored to revision from %s.', 'mb-custom-post-type' ), wp_post_revision_title( $revision, false ) ) : false,
+			// Translators: %s - add fields link.
 			6  => sprintf( __( 'Taxonomy published. %s', 'mb-custom-post-type' ), $add_fields_link ),
 			7  => __( 'Taxonomy saved.', 'mb-custom-post-type' ),
 			8  => __( 'Taxonomy submitted.', 'mb-custom-post-type' ),
-			// translators: %s: Date and time of the revision.
+			// Translators: %s - date and time of the revision.
 			9  => sprintf( __( 'Taxonomy scheduled for: <strong>%s</strong>.', 'mb-custom-post-type' ), date_i18n( __( 'M j, Y @ G:i', 'mb-custom-post-type' ), strtotime( $post->post_date ) ) ),
 			10 => __( 'Taxonomy draft updated.', 'mb-custom-post-type' ),
 		];
@@ -212,15 +213,15 @@ class TaxonomyRegister extends Register {
 
 	public function bulk_updated_messages( $bulk_messages, $bulk_counts ) {
 		$bulk_messages['mb-taxonomy'] = [
-			// translators: %s: Name of the taxonomy in singular and plural form.
+			// Translators: %s - taxonomy label in singular and plural forms.
 			'updated'   => sprintf( _n( '%s taxonomy updated.', '%s taxonomies updated.', $bulk_counts['updated'], 'mb-custom-post-type' ), $bulk_counts['updated'] ),
-			// translators: %s: Name of the taxonomy in singular and plural form.
+			// Translators: %s - taxonomy label in singular and plural forms.
 			'locked'    => sprintf( _n( '%s taxonomy not updated, somebody is editing.', '%s taxonomies not updated, somebody is editing.', $bulk_counts['locked'], 'mb-custom-post-type' ), $bulk_counts['locked'] ),
-			// translators: %s: Name of the taxonomy in singular and plural form.
+			// Translators: %s - taxonomy label in singular and plural forms.
 			'deleted'   => sprintf( _n( '%s taxonomy permanently deleted.', '%s taxonomies permanently deleted.', $bulk_counts['deleted'], 'mb-custom-post-type' ), $bulk_counts['deleted'] ),
-			// translators: %s: Name of the taxonomy in singular and plural form.
+			// Translators: %s - taxonomy label in singular and plural forms.
 			'trashed'   => sprintf( _n( '%s taxonomy moved to the Trash.', '%s taxonomies moved to the Trash.', $bulk_counts['trashed'], 'mb-custom-post-type' ), $bulk_counts['trashed'] ),
-			// translators: %s: Name of the taxonomy in singular and plural form.
+			// Translators: %s - taxonomy label in singular and plural forms.
 			'untrashed' => sprintf( _n( '%s taxonomy restored from the Trash.', '%s taxonomies restored from the Trash.', $bulk_counts['untrashed'], 'mb-custom-post-type' ), $bulk_counts['untrashed'] ),
 		];
 

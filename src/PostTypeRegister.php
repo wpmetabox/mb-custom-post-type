@@ -107,6 +107,7 @@ class PostTypeRegister extends Register {
 	}
 
 	public function get_post_type_settings( WP_Post $post ) {
+		// phpcs:ignore
 		$settings = empty( $post->post_content ) || isset( $_GET['mbcpt-force'] ) ? $this->migrate_data( $post ) : json_decode( $post->post_content, true );
 		$this->parse_archive_slug( $settings );
 
@@ -139,13 +140,11 @@ class PostTypeRegister extends Register {
 				$key          = str_replace( 'args_', '', $key );
 				$args[ $key ] = $value;
 			}
-
-			// delete_post_meta( $post->ID, $key );
 		}
 		$this->change_key( $args, 'post_type', 'slug' );
 
 		// Bypass new post types.
-		if ( isset( $_GET['mbcpt-force'] ) && empty( $args['slug'] ) ) {
+		if ( isset( $_GET['mbcpt-force'] ) && empty( $args['slug'] ) ) { // phpcs:ignore
 			return json_decode( $post->post_content, true );
 		}
 
@@ -175,11 +174,12 @@ class PostTypeRegister extends Register {
 
 		$add_fields_link = '';
 		$settings        = json_decode( $post->post_content, true );
-		if ( defined( 'MBB_VER' ) && $settings ) {
-			$link = add_query_arg( [
-				'post_type' => 'meta-box',
-				'post_title' => sprintf( __( '%s Fields', 'mb-custom-post-type' ), $post->post_title ),
-				'settings[object_type]' => 'post',
+		if ( defined( 'MBB_VER' ) && is_array( $settings ) && ! empty( $settings['slug'] ) ) {
+			$link            = add_query_arg( [
+				'post_type'              => 'meta-box',
+				// Translators: %s - post type singular label.
+				'post_title'             => sprintf( __( '%s Fields', 'mb-custom-post-type' ), $post->post_title ),
+				'settings[object_type]'  => 'post',
 				'settings[post_types][]' => $settings['slug'],
 			], admin_url( 'post-new.php' ) );
 			$add_fields_link = '<a href=' . esc_url( $link ) . '>' . __( 'Add custom fields to this post type', 'mb-custom-post-type' ) . ' &rarr;</a>';
@@ -187,23 +187,23 @@ class PostTypeRegister extends Register {
 
 		$message = [
 			0  => '', // Unused. Messages start at index 1.
-			// translators: %s: Name of the custom post type in singular form.
+			// translators: %s - post type singular label.
 			1  => sprintf( __( '%s updated.', 'mb-custom-post-type' ), $label ),
 			2  => __( 'Custom field updated.', 'mb-custom-post-type' ),
 			3  => __( 'Custom field deleted.', 'mb-custom-post-type' ),
-			// translators: %s: Name of the custom post type in singular form.
+			// translators: %s - post type singular label.
 			4  => sprintf( __( '%s updated.', 'mb-custom-post-type' ), $label ),
-			// translators: %1$s: Name of the custom post type in singular form, %2$s: Revision title.
+			// translators: %1$s: post type singular label, %2$s - revision title.
 			5  => $revision ? sprintf( __( '%1$s restored to revision from %2$s.', 'mb-custom-post-type' ), $label, wp_post_revision_title( $revision, false ) ) : false,
-			// translators: %s: Name of the custom post type in singular form.
-			6  => sprintf( __( '%s published. %s', 'mb-custom-post-type' ), $label, $add_fields_link ),
-			// translators: %s: Name of the custom post type in singular form.
+			// translators: %1$s - post type singular label, %2$s - add fields link.
+			6  => sprintf( __( '%1$s published. %2$s', 'mb-custom-post-type' ), $label, $add_fields_link ),
+			// translators: %s - post type singular label.
 			7  => sprintf( __( '%s saved.', 'mb-custom-post-type' ), $label ),
-			// translators: %s: Name of the custom post type in singular form.
+			// translators: %s - post type singular label.
 			8  => sprintf( __( '%s submitted.', 'mb-custom-post-type' ), $label ),
-			// translators: %1$s: Name of the custom post type in singular form, %2$s: Revision title.
+			// translators: %1$s: post type singular label, %2$s - revision title.
 			9  => sprintf( __( '%1$s scheduled for: <strong>%2$s</strong>.', 'mb-custom-post-type' ), $label, date_i18n( __( 'M j, Y @ G:i', 'mb-custom-post-type' ), strtotime( $post->post_date ) ) ),
-			// translators: %s: Name of the custom post type in singular form.
+			// translators: %s - post type singular label.
 			10 => sprintf( __( '%s draft updated.', 'mb-custom-post-type' ), $label ),
 		];
 
@@ -228,14 +228,14 @@ class PostTypeRegister extends Register {
 
 			$permalink = get_permalink( $post->ID );
 
-			// translators: %s: Post link, %s: View post text, %s: Post type label.
+			// Translators: %s - post link, %s - view post text, %s - post type label.
 			$view_link             = sprintf( ' <a href="%s">%s</a>.', esc_url( $permalink ), sprintf( __( 'View %s', 'mb-custom-post-type' ), $label_lower ) );
 			$messages[ $slug ][1] .= $view_link;
 			$messages[ $slug ][6] .= $view_link;
 			$messages[ $slug ][9] .= $view_link;
 
 			$preview_permalink = add_query_arg( 'preview', 'true', $permalink );
-			// translators: %s: Post link, %s: Preview post text, %s: Post type label.
+			// Translators: %s - post link, %s - preview post text, %s - post type label.
 			$preview_link           = sprintf( ' <a target="_blank" href="%s">%s</a>.', esc_url( $preview_permalink ), sprintf( __( 'Preview %s', 'mb-custom-post-type' ), $label_lower ) );
 			$messages[ $slug ][8]  .= $preview_link;
 			$messages[ $slug ][10] .= $preview_link;
@@ -270,15 +270,15 @@ class PostTypeRegister extends Register {
 			$plural   = strtolower( Arr::get( $settings, 'labels.name' ) );
 
 			$bulk_messages[ $slug ] = [
-				// translators: %1$s: Number of items, %2$s: Name of the post type in singular or plural form.
+				// Translators: %1$s - number of items, %2$s - post type label in singular or plural forms.
 				'updated'   => sprintf( __( '%1$s %2$s updated.', 'mb-custom-post-type' ), $bulk_counts['updated'], $bulk_counts['updated'] > 1 ? $plural : $singular ),
-				// translators: %1$s: Number of items, %2$s: Name of the post type in singular or plural form.
+				// Translators: %1$s - number of items, %2$s - post type label in singular or plural forms.
 				'locked'    => sprintf( __( '%1$s %2$s not updated, somebody is editing.', 'mb-custom-post-type' ), $bulk_counts['locked'], $bulk_counts['locked'] > 1 ? $plural : $singular ),
-				// translators: %1$s: Number of items, %2$s: Name of the post type in singular or plural form.
+				// Translators: %1$s - number of items, %2$s - post type label in singular or plural forms.
 				'deleted'   => sprintf( __( '%1$s %2$s permanently deleted.', 'mb-custom-post-type' ), $bulk_counts['deleted'], $bulk_counts['deleted'] > 1 ? $plural : $singular ),
-				// translators: %1$s: Number of items, %2$s: Name of the post type in singular or plural form.
+				// Translators: %1$s - number of items, %2$s - post type label in singular or plural forms.
 				'trashed'   => sprintf( __( '%1$s %2$s moved to the Trash.', 'mb-custom-post-type' ), $bulk_counts['trashed'], $bulk_counts['trashed'] > 1 ? $plural : $singular ),
-				// translators: %1$s: Number of items, %2$s: Name of the post type in singular or plural form.
+				// Translators: %1$s - number of items, %2$s - post type label in singular or plural forms.
 				'untrashed' => sprintf( __( '%1$s %2$s restored from the Trash.', 'mb-custom-post-type' ), $bulk_counts['untrashed'], $bulk_counts['untrashed'] > 1 ? $plural : $singular ),
 			];
 		}
@@ -366,14 +366,14 @@ class PostTypeRegister extends Register {
 		remove_filter( 'sanitize_html_class', [ $this, 'sanitize_html_class_font_awesome' ] );
 	}
 
-	public function sanitize_html_class_font_awesome( $sanitized, $class ) {
-		$strpos = [ 'fa', 'fas', 'fa-solid', 'fab', 'fa-brand', 'far', 'fa-regular' ];
-		foreach ( $strpos as $value ) {
-			if ( strpos( $class, $value ) !== false ) {
-				return str_replace( 'dashicons-', '', $class );
+	public function sanitize_html_class_font_awesome( $classname, $fallback ) {
+		$fa_classnames = [ 'fa', 'fas', 'fa-solid', 'fab', 'fa-brand', 'far', 'fa-regular' ];
+		foreach ( $fa_classnames as $fa_classname ) {
+			if ( str_contains( $fallback, $fa_classname ) ) {
+				return str_replace( 'dashicons-', '', $fallback );
 			}
 		}
-		return $sanitized;
+		return $classname;
 	}
 
 	public function fix_menu_positions(): void {
@@ -399,11 +399,11 @@ class PostTypeRegister extends Register {
 
 			// Avoid the same position by adding a small number.
 			// Same technique as in add_menu_page().
-			$collision_avoider = base_convert( substr( md5( serialize( $settings ) ), -4 ), 16, 10 ) * 0.00001;
+			$collision_avoider = base_convert( substr( md5( serialize( $settings ) ), -4 ), 16, 10 ) * 0.00001; // phpcs:ignore
 			$position          = (string) ( $settings['menu_position'] + $collision_avoider );
 
 			// Re-add the menu with new position.
-			$menu[ $position ] = $args;
+			$menu[ $position ] = $args; // phpcs:ignore
 		}
 	}
 }

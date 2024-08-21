@@ -75,6 +75,6 @@
 	USE THE PHPCompatibility RULESET
 	#############################################################################
 	-->
-	<config name="testVersion" value="7.0-"/>
+	<config name="testVersion" value="7.2-"/>
 	<rule ref="PHPCompatibilityWP"/>
 </ruleset>
