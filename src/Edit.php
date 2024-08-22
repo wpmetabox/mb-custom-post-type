@@ -91,7 +91,6 @@ class Edit {
 	}
 
 	private function is_premium_user(): bool {
-		return false;
 		if ( ! class_exists( 'MetaBox\Updater\Option' ) || ! class_exists( 'MetaBox\Updater\Checker' ) ) {
 			return false;
 		}
