@@ -475,4 +475,11 @@ export const AdvancedControls = [
 		description: __( 'Whether to move posts to Trash when deleting a user', 'mb-custom-post-type' ),
 		tooltip: __( 'Whether to delete posts of this type when deleting a user', 'mb-custom-post-type' ),
 	},
+	{
+		type: 'checkbox',
+		name: 'order',
+		label: __( 'Order', 'mb-custom-post-type' ),
+		description: __( 'Order posts', 'mb-custom-post-type' ),
+		tooltip: __( 'Using a Drag and Drop Sortable', 'mb-custom-post-type' ),
+	},
 ];
