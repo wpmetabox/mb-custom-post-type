@@ -1,10 +1,10 @@
+import { ClipboardButton } from '@wordpress/components';
+import { withState } from '@wordpress/compose';
+import { useContext } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
 import { UnControlled as CodeMirror } from 'react-codemirror2';
 import { SettingsContext } from '../SettingsContext';
 import PhpCode from './constants/PhpCode';
-const { useContext } = wp.element;
-const { ClipboardButton } = wp.components;
-const { withState } = wp.compose;
 
 const Result = () => {
 	const { settings } = useContext( SettingsContext );

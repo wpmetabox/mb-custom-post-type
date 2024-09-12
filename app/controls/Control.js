@@ -1,3 +1,4 @@
+import { useContext } from '@wordpress/element';
 import dotProp from 'dot-prop';
 import slugify from 'slugify';
 import { SettingsContext } from '../SettingsContext';
@@ -8,7 +9,6 @@ import Input from './Input';
 import Select from './Select';
 import Slug from './Slug';
 import Textarea from './Textarea';
-const { useContext } = wp.element;
 
 const ucfirst = str => str.length ? str[ 0 ].toUpperCase() + str.slice( 1 ) : str;
 const normalizeBool = value => {

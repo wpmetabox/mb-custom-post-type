@@ -22,7 +22,9 @@ class Edit {
 
 		$object = str_replace( 'mb-', '', $this->post_type );
 		wp_enqueue_code_editor( [ 'type' => 'application/x-httpd-php' ] );
-		wp_enqueue_script( $this->post_type, MB_CPT_URL . "assets/$object.js", [ 'wp-element', 'wp-components', 'wp-i18n', 'clipboard' ], MB_CPT_VER, true );
+
+		$asset = require MB_CPT_DIR . "/assets/build/$object.asset.php";
+		wp_enqueue_script( $this->post_type, MB_CPT_URL . "assets/build/$object.js", $asset['dependencies'], $asset['version'], true );
 		wp_localize_script( $this->post_type, 'MBCPT', $this->js_vars() );
 		wp_set_script_translations( $this->post_type, 'mb-custom-post-type' );
 	}

@@ -5,11 +5,11 @@
   "main": "index.js",
   "license": "GPL-2.0-or-later",
   "scripts": {
-    "build:css": "sass --no-source-map --style=compressed assets/style.scss assets/style.css",
-    "build:js": "webpack --mode production",
-    "watch:js": "webpack --mode development --watch",
     "watch:css": "sass --no-source-map --style=compressed --watch assets/style.scss assets/style.css",
-    "start": "webpack --mode development"
+    "build:css": "sass --no-source-map --style=compressed assets/style.scss assets/style.css",
+    "build:js": "wp-scripts build",
+    "build": "npm run build:css && npm run build:js",
+    "start": "wp-scripts start"
   },
   "dependencies": {
     "dot-prop": "^5.3.0",
@@ -17,16 +17,10 @@
     "slugify": "^1.4.5"
   },
   "devDependencies": {
-    "@babel/core": "^7.11.6",
-    "@babel/plugin-transform-react-jsx": "^7.10.4",
     "@svgr/webpack": "^8.1.0",
-    "@wordpress/components": "^23.1.0",
-    "@wordpress/element": "^5.1.0",
-    "@wordpress/i18n": "^3.16.0",
-    "@wordpress/icons": "^10.5.0",
-    "babel-loader": "^8.1.0",
+    "@wordpress/icons": "^10.7.0",
+    "@wordpress/scripts": "^29.0.0",
     "sass": "^1.54.0",
-    "webpack": "^5.94.0",
-    "webpack-cli": "^4.10.0"
+    "url-loader": "^4.1.1"
   }
 }

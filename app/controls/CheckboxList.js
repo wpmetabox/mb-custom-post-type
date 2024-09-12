@@ -1,6 +1,6 @@
+import { useContext } from '@wordpress/element';
 import dotProp from 'dot-prop';
 import { SettingsContext } from '../SettingsContext';
-const { useContext } = wp.element;
 
 const CheckboxList = ( { name, options, description } ) => {
 	const { settings, updateSettings } = useContext( SettingsContext );
