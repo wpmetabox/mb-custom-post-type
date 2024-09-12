@@ -23,6 +23,7 @@ if ( ! function_exists( 'mb_cpt_load' ) ) {
 	add_action( 'init', 'mb_cpt_load', 0 );
 
 	function mb_cpt_load() {
+		define( 'MB_CPT_DIR', __DIR__ );
 		define( 'MB_CPT_VER', '2.7.6' );
 
 		if ( class_exists( 'RWMB_Loader' ) ) {

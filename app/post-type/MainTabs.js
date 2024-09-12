@@ -7,7 +7,7 @@ import Sidebar from '../components/Sidebar';
 import Upgrade from '../components/Upgrade';
 import CheckboxList from '../controls/CheckboxList';
 import Control from '../controls/Control';
-import Logo from '../controls/logo.svg';
+import { ReactComponent as Logo } from '../controls/logo.svg';
 import Result from './Result';
 import { AdvancedControls, BasicControls, CodeControls, LabelControls, SupportControls } from './constants/Data';
 

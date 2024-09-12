@@ -1,50 +1,31 @@
+// Import the original config from the @wordpress/scripts package.
+const defaultConfig = require( '@wordpress/scripts/config/webpack.config' );
+
 const path = require( 'path' );
 
-const config = {
-	externals: {
-		'react': 'React',
-		'react-dom': 'ReactDOM',
-		'codemirror': 'wp.CodeMirror',
-		'clipboard': 'ClipboardJS',
-		'@wordpress/i18n': 'wp.i18n',
-		'@wordpress/element': 'wp.element',
-		'@wordpress/components': 'wp.components',
-	},
-	module: {
-		rules: [
-			{
-				test: /\.js/,
-				exclude: /node_modules/,
-				use: {
-					loader: 'babel-loader',
-					options: {
-						plugins: [ '@babel/plugin-transform-react-jsx' ]
-					}
-				}
-			},
-			{
-				test: /\.svg$/,
-				use: ['@svgr/webpack'],
-			}
-		]
-	}
-};
-
 const postType = {
-	...config,
+	...defaultConfig,
+	externals: {
+		...defaultConfig.externals,
+		codemirror: 'wp.CodeMirror',
+	},
 	entry: './app/post-type/App.js',
 	output: {
 		filename: 'post-type.js',
-		path: path.resolve( __dirname, './assets' )
+		path: path.resolve( __dirname, 'assets/build' )
 	},
 };
 
 const taxonomy = {
-	...config,
+	...defaultConfig,
+	externals: {
+		...defaultConfig.externals,
+		codemirror: 'wp.CodeMirror',
+	},
 	entry: './app/taxonomy/App.js',
 	output: {
 		filename: 'taxonomy.js',
-		path: path.resolve( __dirname, './assets' )
+		path: path.resolve( __dirname, 'assets/build' )
 	},
 };
 

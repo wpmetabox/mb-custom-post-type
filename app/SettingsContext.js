@@ -1,4 +1,4 @@
-const { createContext, useState } = wp.element;
+import { createContext, useState } from '@wordpress/element';
 
 export const SettingsContext = createContext();
 
