@@ -1,18 +1,20 @@
 <?php
 namespace MBCPT;
 
+use WP_Query;
+
 class Order {
 	public function __construct() {
-		add_action( 'admin_init', [ $this, 'load_script_css_order' ] );
-		add_action( 'wp_ajax_update_menu_order', [ $this, 'update_menu_order' ] );
-		add_action( 'pre_get_posts', [ $this, 'order_pre_get_posts' ], 99 );
+		add_action( 'admin_enqueue_scripts', [ $this, 'load_script_css_order' ] );
+		add_action( 'wp_ajax_mbcpt_update_menu_order', [ $this, 'update_menu_order' ] );
+		add_action( 'pre_get_posts', [ $this, 'order_pre_get_posts' ] );
 		add_filter( 'get_previous_post_where', [ $this, 'order_previous_post_where' ] );
 		add_filter( 'get_previous_post_sort', [ $this, 'order_previous_post_sort' ] );
 		add_filter( 'get_next_post_where', [ $this, 'order_next_post_where' ] );
 		add_filter( 'get_next_post_sort', [ $this, 'order_next_post_sort' ] );
 	}
 
-	public function load_script_css_order() {
+	public function load_script_css_order(): void {
 
 		global $pagenow;
 		$post_type = $_GET['post_type'] ?? '';
@@ -21,31 +23,12 @@ class Order {
 		}
 
 		wp_enqueue_script( 'jquery-ui-sortable' );
+		wp_enqueue_style( 'order', MB_CPT_URL . 'assets/order.css', [], MB_CPT_VER );
 		wp_enqueue_script( 'order', MB_CPT_URL . 'assets/order.js', [], MB_CPT_VER, true );
-		add_action( 'admin_print_styles', [ $this, 'print_order_style' ] );
-		$this->refresh( $post_type );
+		wp_localize_script( 'order', 'MBCPT', [ 'security' => wp_create_nonce( 'order' ) ] );
 	}
 
-	public function print_order_style() {
-		?>
-		<style>
-			.ui-sortable tr:hover {
-				cursor : move;
-			}
-
-			.ui-sortable tr.alternate {
-				background-color : #F9F9F9;
-			}
-
-			.ui-sortable tr.ui-sortable-helper {
-				background-color : #F9F9F9;
-				border-top       : 1px solid #DFDFDF;
-			}
-		</style>
-		<?php
-	}
-
-	public function refresh( $post_type ) {
+	private function refresh( string $post_type ): void {
 
 		if ( $this->order_doing_ajax() ) {
 			return;
@@ -81,11 +64,11 @@ class Order {
 		);
 	}
 
-	public function update_menu_order() {
+	public function update_menu_order(): void {
+		check_ajax_referer( 'order', 'security' );
+
 		global $wpdb;
-
 		parse_str( $_POST['order'], $data );
-
 		if ( ! is_array( $data ) ) {
 			return;
 		}
@@ -122,11 +105,14 @@ class Order {
 		}
 	}
 
-	public function order_pre_get_posts( $wp_query ) {
+	public function order_pre_get_posts( WP_Query $wp_query ): void {
 		$post_type = $wp_query->query['post_type'] ?? '';
 
 		if ( ! $post_type || ! $this->check_order_post_type( $post_type ) ) {
 			return;
+		}
+		if ( is_admin() ) {
+			$this->refresh( $post_type );
 		}
 		if ( ! $wp_query->get( 'orderby' ) ) {
 			$wp_query->set( 'orderby', 'menu_order' );
@@ -136,7 +122,7 @@ class Order {
 		}
 	}
 
-	public function order_previous_post_where( $where ) {
+	public function order_previous_post_where( string $where ): string {
 		global $post;
 
 		if ( ! empty( $post->post_type ) && $this->check_order_post_type( $post->post_type ) ) {
@@ -145,7 +131,7 @@ class Order {
 		return $where;
 	}
 
-	public function order_previous_post_sort( $orderby ) {
+	public function order_previous_post_sort( string $orderby ): string {
 		global $post;
 
 		if ( ! empty( $post->post_type ) && $this->check_order_post_type( $post->post_type ) ) {
@@ -154,7 +140,7 @@ class Order {
 		return $orderby;
 	}
 
-	public function order_next_post_where( $where ) {
+	public function order_next_post_where( string $where ): string {
 		global $post;
 
 		if ( ! empty( $post->post_type ) && $this->check_order_post_type( $post->post_type ) ) {
@@ -163,7 +149,7 @@ class Order {
 		return $where;
 	}
 
-	public function order_next_post_sort( $orderby ) {
+	public function order_next_post_sort( string $orderby ): string {
 		global $post;
 
 		if ( ! empty( $post->post_type ) && $this->check_order_post_type( $post->post_type ) ) {
@@ -172,7 +158,7 @@ class Order {
 		return $orderby;
 	}
 
-	public function check_order_post_type( $post_type ) {
+	private function check_order_post_type( string $post_type ): bool {
 		$post_types = get_post_type_object( $post_type );
 		if ( empty( $post_types->order ) ) {
 			return false;
@@ -180,7 +166,7 @@ class Order {
 		return true;
 	}
 
-	public function order_doing_ajax() {
+	private function order_doing_ajax(): bool {
 
 		if ( function_exists( 'wp_doing_ajax' ) ) {
 			return wp_doing_ajax();
@@ -190,6 +176,6 @@ class Order {
 			return true;
 		}
 
-		return;
+		return false;
 	}
 }

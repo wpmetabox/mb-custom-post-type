@@ -9,6 +9,7 @@ import Input from './Input';
 import Select from './Select';
 import Slug from './Slug';
 import Textarea from './Textarea';
+import Toggle from './Toggle';
 
 const ucfirst = str => str.length ? str[ 0 ].toUpperCase() + str.slice( 1 ) : str;
 const normalizeBool = value => {
@@ -82,6 +83,8 @@ const Control = ( { field, autoFills = [] } ) => {
 			return <Input { ...field } value={ _value } update={ update } />;
 		case 'textarea':
 			return <Textarea { ...field } value={ _value } update={ update } />;
+		case 'toggle':
+			return <Toggle { ...field } checked={ _value } update={ update } />;
 		case 'checkbox':
 			return <Checkbox { ...field } checked={ _value } update={ update } />;
 		case 'icon':
