@@ -25,7 +25,7 @@ class Order {
 		wp_localize_script( 'order', 'MBCPT', [ 'security' => wp_create_nonce( 'order' ) ] );
 	}
 
-	private function refresh( string $post_type ): void {
+	private function set_initial_orders( string $post_type ): void {
 		if ( $this->is_doing_ajax() ) {
 			return;
 		}
@@ -33,26 +33,25 @@ class Order {
 		global $wpdb;
 		$query = $wpdb->prepare(
 			"
-			SELECT COUNT(*) AS cnt, MAX(menu_order) AS max, MIN(menu_order) AS min
+			SELECT COUNT(*) AS total, MAX(menu_order) AS max
 			FROM $wpdb->posts
-			WHERE post_type = %s AND post_status IN ('publish', 'pending', 'draft', 'private', 'future')
+			WHERE post_type = %s
 			",
 			$post_type
 		);
 
-		$result = $wpdb->get_results( $query );
+		$result = $wpdb->get_row( $query );
 
-		if ( $result[0]->cnt == 0 || $result[0]->cnt == $result[0]->max ) {
+		if ( $result->total == 0 || $result->total == $result->max ) {
 			return;
 		}
 
-		$wpdb->query( 'SET @row_number = 0;' );
+		$wpdb->query( 'SET @count = 0;' );
 		$wpdb->query(
 			"UPDATE $wpdb->posts as pt JOIN (
-
-			SELECT ID, (@row_number:=@row_number + 1) AS `rank`
+			SELECT ID, (@count:=@count + 1) AS `rank`
 			FROM $wpdb->posts
-			WHERE post_type = '$post_type' AND post_status IN ( 'publish', 'pending', 'draft', 'private', 'future' )
+			WHERE post_type = '$post_type'
 			ORDER BY menu_order ASC
 		) as pt2
 		ON pt.id = pt2.id
@@ -72,18 +71,14 @@ class Order {
 		$id_arr = [];
 		foreach ( $data as $values ) {
 			foreach ( $values as $id ) {
-				$id_arr[] = $id;
+				$id_arr[] = (int) $id;
 			}
 		}
 
 		$menu_order_arr = [];
 		foreach ( $id_arr as $id ) {
-			$id          = intval( $id );
-			$sql         = "SELECT menu_order FROM $wpdb->posts WHERE ID = %d";
-			$menu_orders = $wpdb->get_col( $wpdb->prepare( $sql, $id ) );
-			foreach ( $menu_orders as $menu_order ) {
-				$menu_order_arr[] = $menu_order;
-			}
+			$sql              = "SELECT menu_order FROM $wpdb->posts WHERE ID = %d";
+			$menu_order_arr[] = (int) $wpdb->get_var( $wpdb->prepare( $sql, $id ) );
 		}
 
 		sort( $menu_order_arr );
@@ -93,7 +88,7 @@ class Order {
 				$wpdb->update(
 					$wpdb->posts,
 					[ 'menu_order' => $menu_order_arr[ $position ] ],
-					[ 'ID' => intval( $id ) ],
+					[ 'ID' => $id ],
 					[ '%d' ],
 					[ '%d' ]
 				);
@@ -108,7 +103,7 @@ class Order {
 			return;
 		}
 		if ( is_admin() ) {
-			$this->refresh( $post_type );
+			$this->set_initial_orders( $post_type );
 			add_filter( "manage_{$post_type}_posts_columns", [ $this, 'add_admin_order_column' ] );
 			add_action( "manage_{$post_type}_posts_custom_column", [ $this, 'show_admin_order_column' ] );
 		}
