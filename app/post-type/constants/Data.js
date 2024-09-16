@@ -476,3 +476,12 @@ export const AdvancedControls = [
 		tooltip: __( 'Whether to delete posts of this type when deleting a user', 'mb-custom-post-type' ),
 	},
 ];
+
+export const FeatureControls = [
+	{
+		type: 'toggle',
+		name: 'order',
+		label: __( 'Re-Order Posts', 'mb-custom-post-type' ),
+		description: __( 'Order posts of this post type using a drag and drop interface.', 'mb-custom-post-type' ),
+	},
+];

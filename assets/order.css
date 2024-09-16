@@ -1,0 +1,31 @@
+.wp-list-table .column-mbcpt_order {
+	width: 20px;
+	padding-top: 10px;
+	padding-right: 0;
+	padding-left: 4px;
+}
+
+.column-mbcpt_order svg {
+	display: none;
+	width: 18px;
+	height: 18px;
+	cursor: grab;
+	fill: #aaa;
+}
+
+tr:hover .column-mbcpt_order svg {
+	display: inline-block;
+}
+
+.column-mbcpt_order+.check-column.check-column {
+	padding-left: 0;
+}
+
+.column-mbcpt_order+.check-column>input[type="checkbox"] {
+	margin-left: 0;
+}
+
+.column-mbcpt_order+.check-column label:hover,
+.column-mbcpt_order+.check-column input:hover+label {
+	background: none;
+}

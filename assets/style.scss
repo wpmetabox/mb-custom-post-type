@@ -445,6 +445,19 @@
 			left: 14px;
 		}
 	}
+
+	.mb-cpt-toggle__wrapper {
+		align-items: start;
+		gap: 8px;
+		flex-wrap: nowrap;
+	}
+
+	&__title {
+		font-weight: 600;
+		margin-bottom: 4px;
+		font-size: 14px;
+		line-height: 1;
+	}
 }
 
 .mb-cpt-upgrade {
