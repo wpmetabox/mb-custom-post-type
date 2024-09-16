@@ -1,12 +1,11 @@
-.ui-sortable tr:hover {
+.wp-list-table #mbcpt_order{
+	width: 20px;
+}
+.ui-sortable .mbcpt_order{
+	opacity: 0.3;
+}
+
+.ui-sortable .mbcpt_order:hover {
 	cursor : move;
-}
-
-.ui-sortable tr.alternate {
-	background-color : #F9F9F9;
-}
-
-.ui-sortable tr.ui-sortable-helper {
-	background-color : #F9F9F9;
-	border-top       : 1px solid #DFDFDF;
+	opacity: 1;
 }

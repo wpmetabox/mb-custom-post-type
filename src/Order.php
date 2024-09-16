@@ -113,12 +113,28 @@ class Order {
 		}
 		if ( is_admin() ) {
 			$this->refresh( $post_type );
+			add_filter( "manage_{$post_type}_posts_columns", [ $this, 'order_custom_columns_list' ] );
+			add_action( "manage_{$post_type}_posts_custom_column", [ $this, 'order_custom_column_values' ] );
 		}
 		if ( ! $wp_query->get( 'orderby' ) ) {
 			$wp_query->set( 'orderby', 'menu_order' );
 		}
 		if ( ! $wp_query->get( 'order' ) ) {
 			$wp_query->set( 'order', 'ASC' );
+		}
+	}
+
+	public function order_custom_columns_list( array $defaults ): array {
+		$new_columns = [];
+		$columns_1   = array_slice( $defaults, 0, 1 );
+		$columns_2   = array_slice( $defaults, 1 );
+		$new_columns = $columns_1 + [ 'mbcpt_order' => '' ] + $columns_2;
+		return $new_columns;
+	}
+
+	public function order_custom_column_values( string $name ): void {
+		if ( $name == 'mbcpt_order' ) {
+			echo '<span class="dashicons dashicons-menu"></span>';
 		}
 	}
 
