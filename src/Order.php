@@ -99,7 +99,7 @@ class Order {
 	public function order_pre_get_posts( WP_Query $query ): void {
 		$post_type = $query->get( 'post_type' );
 
-		if ( ! $post_type || ! $this->is_enabled_ordering( $post_type ) ) {
+		if ( ! $post_type || ! is_string( $post_type ) || ! $this->is_enabled_ordering( $post_type ) ) {
 			return;
 		}
 		if ( is_admin() ) {
