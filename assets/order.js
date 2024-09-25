@@ -1,5 +1,5 @@
 ( function ( $ ) {
-	$( 'table.posts #the-list' ).sortable( {
+	$( 'table.posts #the-list, table.pages #the-list' ).sortable( {
 		'items': 'tr',
 		'axis': 'y',
 		'handle': '.mbcpt_order',
