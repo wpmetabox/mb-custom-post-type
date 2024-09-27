@@ -126,7 +126,11 @@ class TaxonomyRegister extends Register {
 
 	public function get_taxonomy_data( WP_Post $post ) {
 		// phpcs:ignore
-		return empty( $post->post_content ) || isset( $_GET['mbcpt-force'] ) ? $this->migrate_data( $post ) : json_decode( $post->post_content, true );
+		$settings = empty( $post->post_content ) || isset( $_GET['mbcpt-force'] ) ? $this->migrate_data( $post ) : json_decode( $post->post_content, true );
+
+		$this->sanitize_labels( $settings );
+
+		return $settings;
 	}
 
 	public function migrate_data( WP_Post $post ) {
