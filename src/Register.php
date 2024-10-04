@@ -1,6 +1,8 @@
 <?php
 namespace MBCPT;
 
+use MetaBox\Support\Arr;
+
 abstract class Register {
 	public function __construct() {
 		$this->register();
@@ -25,5 +27,15 @@ abstract class Register {
 			$arr[ $to ] = $arr[ $from ];
 		}
 		unset( $arr[ $from ] );
+	}
+
+
+	protected function sanitize_labels( &$settings ): void {
+		$labels = Arr::get( $settings, 'labels', [] );
+		$labels = array_map( 'sanitize_text_field', $labels );
+		$labels = array_map( function ($text) {
+			return str_replace( [ '&lt;', '&gt;' ], '', $text );
+		}, $labels );
+		Arr::set( $settings, 'labels', $labels );
 	}
 }

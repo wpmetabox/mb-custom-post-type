@@ -2,9 +2,17 @@ import { createContext, useState } from '@wordpress/element';
 
 export const SettingsContext = createContext();
 
+const removeHtml = text => text.replace( /<.*?>/g, '' ).replace( /(&lt;|&gt;)/g, '' );
+
 export const SettingsProvider = ( { children, value } ) => {
 	const [ settings, setSettings ] = useState( value );
-	const updateSettings = data => setSettings( prev => ( { ...prev, ...data } ) );
+	const updateSettings = data => {
+		const labels = data?.labels || {};
+		Object.keys( labels ).forEach( key => labels[ key ] = removeHtml( labels[ key ] ) );
+		data.labels = labels;
+
+		setSettings( prev => ( { ...prev, ...data } ) );
+	};
 
 	return <SettingsContext.Provider value={ { settings, updateSettings } }>{ children }</SettingsContext.Provider>;
 };
