@@ -35,39 +35,47 @@ class Order {
 
 	private function set_initial_orders( string $post_type ): void {
 		global $wpdb;
-		$query = $wpdb->prepare(
+
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- Error.
+		$result = $wpdb->get_row( $wpdb->prepare(
 			"
 			SELECT COUNT(*) AS total, MAX(menu_order) AS max
 			FROM $wpdb->posts
 			WHERE post_type = %s
 			",
 			$post_type
-		);
-
-		$result = $wpdb->get_row( $query );
+		) );
 
 		if ( $result->total == 0 || $result->total == $result->max ) {
 			return;
 		}
 
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- Error.
 		$wpdb->query( 'SET @count = 0;' );
-		$wpdb->query(
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- Error.
+		$wpdb->query( $wpdb->prepare(
 			"UPDATE $wpdb->posts as pt JOIN (
-			SELECT ID, (@count:=@count + 1) AS `rank`
-			FROM $wpdb->posts
-			WHERE post_type = '$post_type'
-			ORDER BY menu_order ASC
-		) as pt2
-		ON pt.id = pt2.id
-		SET pt.menu_order = pt2.`rank`;"
-		);
+				SELECT ID, (@count:=@count + 1) AS `rank`
+				FROM $wpdb->posts
+				WHERE post_type = %s
+				ORDER BY menu_order ASC
+			) as pt2
+			ON pt.id = pt2.id
+			SET pt.menu_order = pt2.`rank`;",
+		$post_type
+		) );
 	}
 
 	public function update_menu_order(): void {
 		check_ajax_referer( 'order', 'security' );
 
 		global $wpdb;
-		parse_str( $_POST['order'], $data );
+
+		if ( empty( $_POST['order'] ) ) {
+			return;
+		}
+
+		parse_str( wp_unslash( $_POST['order'] ), $data );// phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
 		if ( ! is_array( $data ) ) {
 			return;
 		}
@@ -81,14 +89,14 @@ class Order {
 
 		$menu_order_arr = [];
 		foreach ( $id_arr as $id ) {
-			$sql              = "SELECT menu_order FROM $wpdb->posts WHERE ID = %d";
-			$menu_order_arr[] = (int) $wpdb->get_var( $wpdb->prepare( $sql, $id ) );
+			$menu_order_arr[] = (int) $wpdb->get_var( $wpdb->prepare( "SELECT menu_order FROM $wpdb->posts WHERE ID = %d", $id ) ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- Error.
 		}
 
 		sort( $menu_order_arr );
 
 		foreach ( $data as $values ) {
 			foreach ( $values as $position => $id ) {
+				// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- Error.
 				$wpdb->update(
 					$wpdb->posts,
 					[ 'menu_order' => $menu_order_arr[ $position ] ],

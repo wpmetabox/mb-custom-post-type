@@ -12,7 +12,7 @@ class Warning {
 		?>
 		<div class="notice notice-warning">
 			<?php // Translators: %s - URl to permalink settings page ?>
-			<p><?= wp_kses_post( sprintf( __( 'Permalink is not set. It\'s recommended to set permalink for custom post types. <a href="%s">Set it here.</a>', 'mb-custom-post-type' ), admin_url( 'options-permalink.php' ) ) ); ?></p>
+			<p><?php echo wp_kses_post( sprintf( __( 'Permalink is not set. It\'s recommended to set permalink for custom post types. <a href="%s">Set it here.</a>', 'mb-custom-post-type' ), admin_url( 'options-permalink.php' ) ) ); ?></p>
 		</div>
 		<?php
 	}
