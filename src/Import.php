@@ -38,7 +38,7 @@ class Import {
 				<form enctype="multipart/form-data" method="post" action="">
 					<?php wp_nonce_field( 'import' ); ?>
 					<input type="file" name="mbcpt_file">
-					<input type="hidden" name="mbcpt_post_type" value="<?= esc_attr( get_current_screen()->post_type ) ?>">
+					<input type="hidden" name="mbcpt_post_type" value="<?php echo esc_attr( get_current_screen()->post_type ) ?>">
 					<?php submit_button( esc_attr__( 'Import', 'mb-custom-post-type' ), 'secondary', 'submit', false, [ 'disabled' => true ] ); ?>
 				</form>
 			</div>

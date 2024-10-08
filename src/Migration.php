@@ -44,8 +44,8 @@ class Migration {
 			</ul>
 			<div id="migrate-status"></div>
 			<div id="migrate-links" style="display: none">
-				<a href="<?= esc_url( admin_url( 'edit.php?post_type=mb-post-type' ) ) ?>"><?php esc_html_e( 'View post types', 'mb-custom-post-type' ) ?> &rarr;</a> |
-				<a href="<?= esc_url( admin_url( 'edit.php?post_type=mb-taxonomy' ) ) ?>"><?php esc_html_e( 'View taxonomies', 'mb-custom-post-type' ) ?> &rarr;</a>
+				<a href="<?php echo esc_url( admin_url( 'edit.php?post_type=mb-post-type' ) ) ?>"><?php esc_html_e( 'View post types', 'mb-custom-post-type' ) ?> &rarr;</a> |
+				<a href="<?php echo esc_url( admin_url( 'edit.php?post_type=mb-taxonomy' ) ) ?>"><?php esc_html_e( 'View taxonomies', 'mb-custom-post-type' ) ?> &rarr;</a>
 			</div>
 		</div>
 		<?php
