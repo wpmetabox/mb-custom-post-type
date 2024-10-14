@@ -22,7 +22,8 @@
 		}
 	],
   "config": {
-		"prepend-autoloader": false
+		"prepend-autoloader": false,
+    "sort-packages": true
 	},
 	"require": {
 		"meta-box/support": "dev-master"
@@ -44,6 +45,14 @@
     "format": [
       "phpcbf src/",
       "phpcbf src/ --standard=Generic --sniffs=Generic.Arrays.DisallowLongArraySyntax"
+    ],
+    "post-update-cmd": [
+      "echo Deleting .git dirs...",
+      "rm -rf vendor/**/**/.git"
+    ],
+    "post-install-cmd": [
+      "echo Deleting .git dirs...",
+      "rm -rf vendor/**/**/.git"
     ]
   }
 }
