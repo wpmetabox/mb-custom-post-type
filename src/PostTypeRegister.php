@@ -348,7 +348,8 @@ class PostTypeRegister extends Register {
 		add_action( 'adminmenu', [ $this, 'remove_filter_class_font_awesome' ] );
 	}
 
-	public function enqueue_font_awesome() {
+	public function enqueue_font_awesome(): void {
+		// phpcs:ignore PluginCheck.CodeAnalysis.EnqueuedResourceOffloading.OffloadedContent
 		wp_enqueue_style( 'font-awesome', 'https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.2.1/css/all.min.css', [], '6.2.1' );
 		wp_add_inline_style(
 			'font-awesome',
