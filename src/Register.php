@@ -33,7 +33,7 @@ abstract class Register {
 	protected function sanitize_labels( &$settings ): void {
 		$labels = Arr::get( $settings, 'labels', [] );
 		$labels = array_map( 'sanitize_text_field', $labels );
-		$labels = array_map( function ($text) {
+		$labels = array_map( function ( $text ) {
 			return str_replace( [ '&lt;', '&gt;' ], '', $text );
 		}, $labels );
 		Arr::set( $settings, 'labels', $labels );

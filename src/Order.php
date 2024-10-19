@@ -46,7 +46,7 @@ class Order {
 			$post_type
 		) );
 
-		if ( $result->total == 0 || $result->total == $result->max ) {
+		if ( $result->total == 0 || $result->total == $result->max ) { // phpcs:ignore WordPress.PHP.StrictComparisons.LooseComparison
 			return;
 		}
 
@@ -62,7 +62,7 @@ class Order {
 			) as pt2
 			ON pt.id = pt2.id
 			SET pt.menu_order = pt2.`rank`;",
-		$post_type
+			$post_type
 		) );
 	}
 
