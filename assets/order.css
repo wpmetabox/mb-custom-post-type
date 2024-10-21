@@ -1,8 +1,16 @@
 .wp-list-table .column-mbcpt_order {
-	width: 20px;
+	width: 22px;
 	padding-top: 10px;
 	padding-right: 0;
 	padding-left: 4px;
+}
+
+.column-mbcpt_order.spinner.is-active {
+	background-size: 18px 18px;
+	position: relative;
+	top: 10px;
+	left: 4px;
+	margin: 0;
 }
 
 .column-mbcpt_order svg {
@@ -15,6 +23,10 @@
 
 tr:hover .column-mbcpt_order svg {
 	display: inline-block;
+}
+
+tr:hover .column-mbcpt_order.spinner.is-active svg {
+	display: none;
 }
 
 .column-mbcpt_order+.check-column.check-column {

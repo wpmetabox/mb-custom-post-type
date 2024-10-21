@@ -6,7 +6,7 @@ use WP_Query;
 class Order {
 	public function __construct() {
 		add_action( 'load-edit.php', [ $this, 'setup_for_edit_screen' ] );
-		add_action( 'wp_ajax_mbcpt_update_menu_order', [ $this, 'update_menu_order' ] );
+		add_action( 'wp_ajax_mbcpt_update_order_items', [ $this, 'update_order_items' ] );
 		add_action( 'pre_get_posts', [ $this, 'set_orderby_menu_order' ] );
 		add_filter( 'get_previous_post_where', [ $this, 'order_previous_post_where' ] );
 		add_filter( 'get_previous_post_sort', [ $this, 'order_previous_post_sort' ] );
@@ -63,14 +63,35 @@ class Order {
 		);
 	}
 
-	public function update_menu_order(): void {
+	public function update_order_items(): void {
 		check_ajax_referer( 'order', 'security' );
-
 		global $wpdb;
 		parse_str( $_POST['order'], $data );
 		if ( ! is_array( $data ) ) {
-			return;
+			wp_send_json_error( __( 'Error: Invalid data!', 'mb-custom-post-type' ) );
 		}
+
+		$post_id = empty( $_POST['id'] ) ? false : (int) $_POST['id'];
+		$prev_id = empty( $_POST['prev_id'] ) ? false : (int) $_POST['prev_id'];
+		$next_id = empty( $_POST['next_id'] ) ? false : (int) $_POST['next_id'];
+		if ( ! $post_id ) {
+			wp_send_json_error( __( 'Missing mandatory parameters.', 'mb-custom-post-type' ) );
+		}
+		$parent_id        = wp_get_post_parent_id( $post_id );
+		$next_post_parent = $next_id ? wp_get_post_parent_id( $next_id ) : false;
+		if ( $prev_id === $next_post_parent ) {
+			$parent_id = $next_post_parent;
+		}
+		if ( $next_post_parent !== $parent_id ) {
+			$prev_post_parent = $prev_id ? wp_get_post_parent_id( $prev_id ) : false;
+			if ( $prev_post_parent !== $parent_id ) {
+				$parent_id = ( false !== $prev_post_parent ) ? $prev_post_parent : $next_post_parent;
+			}
+		}
+		wp_update_post([
+			'ID'          => $post_id,
+			'post_parent' => $parent_id,
+		]);
 
 		$id_arr = [];
 		foreach ( $data as $values ) {
@@ -98,6 +119,9 @@ class Order {
 				);
 			}
 		}
+
+		$ancestors = get_post_ancestors( $post_id );
+		wp_send_json_success( count( $ancestors ) );
 	}
 
 	public function set_orderby_menu_order( WP_Query $query ): void {
