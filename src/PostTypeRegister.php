@@ -349,7 +349,7 @@ class PostTypeRegister extends Register {
 	}
 
 	public function enqueue_font_awesome(): void {
-		wp_enqueue_style( 'font-awesome', MB_CPT_URL . 'assets/fontawesome/css/all.min.css', [], '6.2.1' );
+		wp_enqueue_style( 'font-awesome', MB_CPT_URL . 'assets/fontawesome/css/all.min.css', [], '6.6.0' );
 		wp_add_inline_style(
 			'font-awesome',
 			'.fa:before, fas, .fa-solid:before, .fab:before, .fa-brand:before, .far:before, .fa-regular:before {
