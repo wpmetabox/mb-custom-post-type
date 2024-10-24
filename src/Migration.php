@@ -25,7 +25,6 @@ class Migration {
 			'start'               => __( 'Start...', 'mb-custom-post-type' ),
 			'migratingPostTypes'  => __( 'Migrating post types...', 'mb-custom-post-type' ),
 			'migratingTaxonomies' => __( 'Migrating taxonomies...', 'mb-custom-post-type' ),
-			'deactivate'          => __( 'Deactivating plugin CPT UI...', 'mb-custom-post-type' ),
 			'done'                => __( 'Done!', 'mb-custom-post-type' ),
 		] );
 	}
