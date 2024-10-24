@@ -65,15 +65,14 @@ class Export {
 			$file_name = $post->post_name ?: sanitize_key( $post->post_title );
 		}
 
-		$data = wp_json_encode( $data, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT );
-
 		header( 'Content-Type: application/octet-stream' );
 		header( "Content-Disposition: attachment; filename=$file_name.json" );
 		header( 'Expires: 0' );
 		header( 'Cache-Control: must-revalidate' );
 		header( 'Pragma: public' );
 		header( 'Content-Length: ' . strlen( $data ) );
-		echo $data; // phpcs:ignore
+
+		echo wp_json_encode( $data, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT );
 		die;
 	}
 }
