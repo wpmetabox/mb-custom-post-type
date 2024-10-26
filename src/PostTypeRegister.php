@@ -268,8 +268,8 @@ class PostTypeRegister extends Register {
 			$settings = $this->get_post_type_settings( $post_type );
 			$slug     = Arr::get( $settings, 'slug' );
 
-			$singular = strtolower( Arr::get( $settings, 'labels.singular_name' ) );
-			$plural   = strtolower( Arr::get( $settings, 'labels.name' ) );
+			$singular = strtolower( Arr::get( $settings, 'labels.singular_name', '' ) );
+			$plural   = strtolower( Arr::get( $settings, 'labels.name', '' ) );
 
 			$bulk_messages[ $slug ] = [
 				// Translators: %1$s - number of items, %2$s - post type label in singular or plural forms.
