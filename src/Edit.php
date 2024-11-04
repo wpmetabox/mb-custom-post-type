@@ -29,16 +29,18 @@ class Edit {
 		wp_set_script_translations( $this->post_type, 'mb-custom-post-type' );
 	}
 
-	private function js_vars() {
+	private function js_vars(): array {
+		$post = get_post();
+
 		$vars = [
 			'icons'         => Data::get_dashicons(),
-			'settings'      => json_decode( get_post()->post_content, true ),
+			'settings'      => json_decode( $post->post_content, true ),
 			'reservedTerms' => $this->get_reserved_terms(),
 			'action'        => get_current_screen()->action,
 			'url'           => admin_url( 'edit.php?post_type=' . get_current_screen()->id ),
 			'add'           => admin_url( 'post-new.php?post_type=' . get_current_screen()->id ),
-			'status'        => get_post()->post_status,
-			'author'        => get_the_author_meta( 'display_name', get_post()->post_author ),
+			'status'        => $post->post_status,
+			'author'        => get_the_author_meta( 'display_name', (int) $post->post_author ),
 			'trash'         => get_delete_post_link(),
 			'published'     => get_the_date( 'F d, Y' ) . ' ' . get_the_time( 'g:i a' ),
 			'modifiedtime'  => get_post_modified_time( 'F d, Y g:i a', true, null, true ),
