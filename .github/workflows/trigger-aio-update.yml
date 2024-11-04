@@ -1,0 +1,23 @@
+name: Trigger update on Meta Box AIO
+
+on:
+  workflow_dispatch:
+    branch:
+      - master
+
+jobs:
+  trigger-aio-update:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Trigger update on Meta Box AIO
+        uses: actions/github-script@v6
+        with:
+          script: |
+            await github.rest.actions.createWorkflowDispatch({
+              owner: 'wpmetabox',
+              repo: 'meta-box-aio',
+              workflow_id: 'update-from-extensions.yml',
+              ref: 'master',
+            });
+        env:
+          GITHUB_TOKEN: ${{ secrets.ACCESS_TOKEN }}
