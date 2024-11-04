@@ -172,7 +172,7 @@ class PostTypeRegister extends Register {
 		$label            = ucfirst( $post_type_object->labels->singular_name );
 		$label_lower      = strtolower( $label );
 		$label            = ucfirst( $label_lower );
-		$revision         = filter_input( INPUT_GET, 'revision', FILTER_SANITIZE_NUMBER_INT );
+		$revision         = (int) filter_input( INPUT_GET, 'revision' );
 
 		$add_fields_link = '';
 		$settings        = json_decode( $post->post_content, true );
@@ -401,7 +401,7 @@ class PostTypeRegister extends Register {
 
 			// Avoid the same position by adding a small number.
 			// Same technique as in add_menu_page().
-			$collision_avoider = base_convert( substr( md5( serialize( $settings ) ), -4 ), 16, 10 ) * 0.00001; // phpcs:ignore
+			$collision_avoider = (int) base_convert( substr( md5( serialize( $settings ) ), -4 ), 16, 10 ) * 0.00001; // phpcs:ignore
 			$position          = (string) ( $settings['menu_position'] + $collision_avoider );
 
 			// Re-add the menu with new position.

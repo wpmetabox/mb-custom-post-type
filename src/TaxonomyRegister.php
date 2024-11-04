@@ -179,7 +179,7 @@ class TaxonomyRegister extends Register {
 
 	public function updated_message( $messages ) {
 		$post     = get_post();
-		$revision = filter_input( INPUT_GET, 'revision', FILTER_SANITIZE_NUMBER_INT );
+		$revision = (int) filter_input( INPUT_GET, 'revision' );
 
 		$add_fields_link = '';
 		$settings        = json_decode( $post->post_content, true );
