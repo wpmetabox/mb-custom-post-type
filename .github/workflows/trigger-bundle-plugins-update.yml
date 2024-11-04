@@ -1,0 +1,19 @@
+name: Trigger update on bundle plugins
+
+on:
+  push:
+    branch:
+      - master
+      - main
+  pull_request:
+    types:
+      - closed
+    branch:
+      - master
+      - main
+
+jobs:
+  call-workflow:
+    uses: wpmetabox/meta-box/.github/workflows/trigger-bundle-plugins-update.yml@master
+    secrets:
+      ACCESS_TOKEN: ${{ secrets.ACCESS_TOKEN }}
