@@ -11,7 +11,6 @@ assets/*.scss
 .gitignore
 *.json
 *.lock
-phpcs.xml
 pnpm-lock.yaml
 README.md
 webpack.config.js
