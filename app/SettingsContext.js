@@ -7,7 +7,7 @@ const removeHtml = text => text.replace( /<.*?>/g, '' ).replace( /(&lt;|&gt;)/g,
 export const SettingsProvider = ( { children, value } ) => {
 	const [ settings, setSettings ] = useState( value );
 	const updateSettings = data => {
-		const labels = data.labels;
+		let labels = data.labels;
 
 		// Fix labels is [] when empty.
 		if ( typeof labels !== 'object' || Array.isArray( labels ) || labels === null ) {
