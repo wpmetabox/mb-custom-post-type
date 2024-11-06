@@ -1,0 +1,11 @@
+name: Auto update extensions
+
+on:
+  workflow_dispatch:
+
+jobs:
+  call-workflow:
+    uses: wpmetabox/meta-box/.github/workflows/update-from-extensions.yml@master
+    secrets:
+      SSH_KEY: ${{ secrets.SSH_KEY }}
+      SSH_KNOWN_HOSTS: ${{ secrets.SSH_KNOWN_HOSTS }}
