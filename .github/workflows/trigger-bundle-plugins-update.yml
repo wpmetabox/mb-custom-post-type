@@ -2,16 +2,11 @@ name: Trigger update on bundle plugins
 
 on:
   workflow_dispatch:
-    branch:
+    branches:
       - master
   push:
-    branch:
-      - master
-  pull_request:
-    types:
-      - closed
-    branch:
-      - master
+    tags:
+      - "*"
 
 jobs:
   call-workflow:
