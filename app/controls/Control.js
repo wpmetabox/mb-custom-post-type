@@ -91,7 +91,7 @@ const Control = ( { field, autoFills = [] } ) => {
 		case 'textarea':
 			return <Textarea { ...field } value={ _value } update={ update } />;
 		case 'toggle':
-			return <Toggle { ...field } checked={ _value } update={ update } />;
+			return <Toggle { ...field } checked={ _value } update={ updateCheckbox } />;
 		case 'checkbox':
 			return <Checkbox { ...field } checked={ _value } update={ updateCheckbox } />;
 		case 'icon':
