@@ -7,15 +7,18 @@ const removeHtml = text => text.replace( /<.*?>/g, '' ).replace( /(&lt;|&gt;)/g,
 export const SettingsProvider = ( { children, value } ) => {
 	const [ settings, setSettings ] = useState( value );
 	const updateSettings = data => {
-		let labels = data.labels;
+		// Remove HTML for labels.
+		if ( data.hasOwnProperty( 'labels' ) ) {
+			let labels = data.labels;
 
-		// Fix labels is [] when empty.
-		if ( typeof labels !== 'object' || Array.isArray( labels ) || labels === null ) {
-			labels = {};
+			// Fix labels is [] when empty.
+			if ( typeof labels !== 'object' || Array.isArray( labels ) || labels === null ) {
+				labels = {};
+			}
+
+			Object.keys( labels ).forEach( key => labels[ key ] = removeHtml( labels[ key ] ) );
+			data.labels = labels;
 		}
-
-		Object.keys( labels ).forEach( key => labels[ key ] = removeHtml( labels[ key ] ) );
-		data.labels = labels;
 
 		setSettings( prev => ( { ...prev, ...data } ) );
 	};
