@@ -74,6 +74,13 @@ const Control = ( { field, autoFills = [] } ) => {
 		updateSettings( newSettings );
 	};
 
+	const updateCheckbox = ( name, value ) => {
+		let newSettings = { ...settings };
+		dotProp.set( newSettings, name, value );
+
+		updateSettings( newSettings );
+	};
+
 	const _value = dotProp.get( settings, field.name, field.default || '' );
 	if ( !isDisplay( field ) ) {
 		return '';
@@ -86,7 +93,7 @@ const Control = ( { field, autoFills = [] } ) => {
 		case 'toggle':
 			return <Toggle { ...field } checked={ _value } update={ update } />;
 		case 'checkbox':
-			return <Checkbox { ...field } checked={ _value } update={ update } />;
+			return <Checkbox { ...field } checked={ _value } update={ updateCheckbox } />;
 		case 'icon':
 			return <Icon { ...field } value={ _value } update={ update } />;
 		case 'fontawesome':

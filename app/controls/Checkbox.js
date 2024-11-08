@@ -1,6 +1,7 @@
+import { ToggleControl } from '@wordpress/components';
 import Tooltip from './Tooltip';
 
-const Checkbox = ( { label, name, description, update, checked, required = false, tooltip = '' } ) => (
+const Checkbox = ( { label, name, description = '', update, checked, required = false, tooltip = '' } ) => (
 	<div className="mb-cpt-field">
 		<label className="mb-cpt-label" htmlFor={ name }>
 			{ label }
@@ -8,12 +9,7 @@ const Checkbox = ( { label, name, description, update, checked, required = false
 			{ tooltip && <Tooltip id={ name } content={ tooltip } /> }
 		</label>
 		<div className="mb-cpt-input">
-			{
-				description
-					? <div className="mb-cpt-toggle"><label><input type="checkbox" id={ name } name={ name } checked={ checked } onChange={ update } /><div className="mb-cpt-toggle__switch"></div>{ description }</label>
-						</div>
-					: <div className="mb-cpt-toggle"><input type="checkbox" id={ name } name={ name } checked={ checked } onChange={ update } /><div className="mb-cpt-toggle__switch"></div></div>
-			}
+			<ToggleControl checked={ checked } label={ description } onChange={ value => update( name, value ) } />
 		</div>
 	</div>
 );
