@@ -342,3 +342,42 @@ export const AdvancedControls = [
 		tooltip: __( 'Whether terms in this taxonomy should be sorted', 'mb-custom-post-type' ),
 	},
 ];
+
+export const PermissionsControls = [
+	{
+		type: 'text',
+		name: 'capabilities.manage_terms',
+		placeholder: 'manage_categories',
+		label: __( 'Manage terms', 'mb-custom-post-type' ),
+		description: __( 'The capability required for managing terms.', 'mb-custom-post-type' ),
+		tooltip: __( 'The capability required for managing terms.', 'mb-custom-post-type' ),
+		datalist: MBCPT.allCapabilities,
+	},
+	{
+		type: 'text',
+		name: 'capabilities.edit_terms',
+		placeholder: 'manage_categories',
+		label: __( 'Edit terms', 'mb-custom-post-type' ),
+		description: __( 'The capability required for editing terms.', 'mb-custom-post-type' ),
+		tooltip: __( 'The capability required for editing terms.', 'mb-custom-post-type' ),
+		datalist: MBCPT.allCapabilities,
+	},
+	{
+		type: 'text',
+		name: 'capabilities.delete_terms',
+		placeholder: 'manage_categories',
+		label: __( 'Delete terms', 'mb-custom-post-type' ),
+		description: __( 'The capability required for deleting terms.', 'mb-custom-post-type' ),
+		tooltip: __( 'The capability required for deleting terms.', 'mb-custom-post-type' ),
+		datalist: MBCPT.allCapabilities,
+	},
+	{
+		type: 'text',
+		name: 'capabilities.assign_terms',
+		placeholder: 'edit_posts',
+		label: __( 'Assign terms', 'mb-custom-post-type' ),
+		description: __( 'The capability required for assigning terms.', 'mb-custom-post-type' ),
+		tooltip: __( 'The capability required for assigning terms.', 'mb-custom-post-type' ),
+		datalist: MBCPT.allCapabilities,
+	},
+];

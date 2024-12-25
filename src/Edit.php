@@ -46,6 +46,7 @@ class Edit {
 			'modifiedtime'  => get_post_modified_time( 'F d, Y g:i a', true, null, true ),
 			'saving'        => __( 'Saving...', 'mb-custom-post-type' ),
 			'upgrade'       => ! $this->is_premium_user(),
+			'allCapabilities' => $this->get_all_capabilities(),
 		];
 
 		if ( 'mb-post-type' === get_current_screen()->id ) {
@@ -239,5 +240,14 @@ class Edit {
 			'withoutcomments',
 			'year',
 		];
+	}
+
+	private function get_all_capabilities() {
+		global $wp_roles;
+		$capabilities = [];
+		foreach ( $wp_roles->roles as $role ) {
+			$capabilities = array_merge( $capabilities, array_keys( $role['capabilities'] ) );
+		}
+		return array_unique( $capabilities );
 	}
 }
