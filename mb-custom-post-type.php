@@ -33,8 +33,6 @@ if ( ! function_exists( 'mb_cpt_load' ) ) {
 			define( 'MB_CPT_URL', plugin_dir_url( __FILE__ ) );
 		}
 
-		load_plugin_textdomain( 'mb-custom-post-type' );
-
 		new MBCPT\PostTypeRegister();
 		new MBCPT\TaxonomyRegister();
 		new MBCPT\Order();
