@@ -87,7 +87,7 @@ class TaxonomyRegister extends Register {
 			],
 		];
 
-			register_post_type( 'mb-taxonomy', $args );
+		register_post_type( 'mb-taxonomy', $args );
 
 		// Get all registered custom taxonomies.
 		$taxonomies = $this->get_taxonomies();
@@ -96,6 +96,7 @@ class TaxonomyRegister extends Register {
 				unset( $args['meta_box_cb'] );
 			}
 			$types = empty( $args['types'] ) ? [] : $args['types'];
+
 			register_taxonomy( $slug, $types, $args );
 		}
 	}

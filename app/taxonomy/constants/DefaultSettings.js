@@ -49,6 +49,12 @@ const DefaultSettings = {
 	},
 	query_var         : true,
 	sort              : false,
+	capabilities: {
+		manage_terms: 'manage_categories',
+		edit_terms  : 'manage_categories',
+		delete_terms: 'manage_categories',
+		assign_terms: 'edit_posts',
+	}
 };
 
 export default DefaultSettings;
