@@ -31,6 +31,9 @@ class Edit {
 		if ( defined( 'META_BOX_LITE_DIR' ) ) {
 			$path = META_BOX_LITE_DIR . '/languages/mb-custom-post-type';
 		}
+		if ( defined( 'META_BOX_AIO_DIR' ) ) {
+			$path = META_BOX_AIO_DIR . '/languages/mb-custom-post-type';
+		}
 		wp_set_script_translations( $this->post_type, 'mb-custom-post-type', $path );
 	}
 
