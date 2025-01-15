@@ -46,7 +46,6 @@ if ( ! function_exists( 'mb_cpt_load' ) ) {
 
 		new MBCPT\Edit( 'mb-post-type' );
 		new MBCPT\Edit( 'mb-taxonomy' );
-		new MBCPT\About();
 		new MBCPT\Warning();
 		new MBCPT\Import();
 		new MBCPT\Export();
