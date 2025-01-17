@@ -381,7 +381,7 @@
 
 #screen-meta-links,
 .wrap h1.wp-heading-inline,
-.wrap .wp-heading-inline+.page-title-action {
+.wrap > .page-title-action {
 	display: none;
 }
 
