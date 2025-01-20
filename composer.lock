@@ -12,7 +12,7 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/wpmetabox/support.git",
-                "reference": "99607eb4d8c8c96a7c882fc5a7c69cf3534d95bd"
+                "reference": "2f482c905c05ed4fdfcefadd749b13a13ff4daac"
             },
             "default-branch": true,
             "type": "library",
@@ -26,7 +26,7 @@
             ],
             "description": "Helpers for Meta Box plugins",
             "homepage": "https://metabox.io",
-            "time": "2024-10-07T00:27:46+00:00"
+            "time": "2025-01-20T07:23:19+00:00"
         }
     ],
     "packages-dev": [],
@@ -37,7 +37,7 @@
     },
     "prefer-stable": false,
     "prefer-lowest": false,
-    "platform": [],
-    "platform-dev": [],
-    "plugin-api-version": "2.3.0"
+    "platform": {},
+    "platform-dev": {},
+    "plugin-api-version": "2.6.0"
 }
