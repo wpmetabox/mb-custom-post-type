@@ -1,5 +1,5 @@
 import { Button, Flex, TabPanel, Tooltip } from '@wordpress/components';
-import { useContext, useState } from "@wordpress/element";
+import { useContext, useReducer } from "@wordpress/element";
 import { __ } from '@wordpress/i18n';
 import { drawerRight } from '@wordpress/icons';
 import { SettingsContext } from '../SettingsContext';
@@ -63,7 +63,7 @@ const panels = {
 
 const MainTabs = () => {
 	const { settings } = useContext( SettingsContext );
-	const [ toggle, setToggle ] = useState( true );
+	const [ sidebarOpen, toggleSidebar ] = useReducer( open => !open, true );
 
 	return <>
 		<Flex className="mb-cpt-header">
@@ -96,13 +96,13 @@ const MainTabs = () => {
 					}
 				/>
 				<Button
-					onClick={ () => setToggle( !toggle ) }
+					onClick={ toggleSidebar }
 					className="is-compact"
 					icon={ drawerRight }
 					size="compact"
 					label={ __( 'Toggle sidebar', 'mb-custom-post-type' ) }
 					showTooltip={ true }
-					isPressed={ toggle }
+					isPressed={ sidebarOpen }
 				/>
 			</Flex>
 		</Flex>
@@ -118,7 +118,7 @@ const MainTabs = () => {
 					<Upgrade />
 				</div>
 			</div>
-			{ toggle && <Sidebar /> }
+			{ sidebarOpen && <Sidebar /> }
 		</Flex>
 		<input type="hidden" name="post_title" value={ settings.labels.singular_name } />
 		<input type="hidden" name="content" value={ JSON.stringify( settings ) } />
