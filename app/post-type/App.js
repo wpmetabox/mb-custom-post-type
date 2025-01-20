@@ -25,16 +25,6 @@ setTimeout( () => {
 	form.removeAttribute( 'novalidate' );
 }, 100 );
 
-// Prevent submit when press Enter.
-const preventSubmitWhenPressEnter = e => {
-	if ( e.target.tagName === 'INPUT' && e.keyCode == 13 ) {
-		e.preventDefault();
-	}
-};
-form.addEventListener( 'keypress', preventSubmitWhenPressEnter );
-form.addEventListener( 'keydown', preventSubmitWhenPressEnter );
-form.addEventListener( 'keyup', preventSubmitWhenPressEnter );
-
 // Set post status when clicking submit buttons.
 form.addEventListener( 'submit', e => {
 	const submitButton = e.submitter;
