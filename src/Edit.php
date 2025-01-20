@@ -20,6 +20,8 @@ class Edit {
 		wp_enqueue_style( 'font-awesome', MB_CPT_URL . 'assets/fontawesome/css/all.min.css', [], '6.6.0' );
 		wp_enqueue_style( 'wp-edit-post' );
 
+		wp_enqueue_script( 'mbcpt-edit', MB_CPT_URL . 'assets/edit.js', [], filemtime( MB_CPT_DIR . '/assets/edit.js' ), true );
+
 		$object = str_replace( 'mb-', '', $this->post_type );
 		wp_enqueue_code_editor( [ 'type' => 'application/x-httpd-php' ] );
 
