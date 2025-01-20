@@ -66,8 +66,8 @@ const MainTabs = () => {
 				<Tooltip text={ __( 'Back to all taxonomies', 'mb-custom-post-type' ) } position={ 'bottom right' }>
 					<a className="logo" href={ MBCPT.url }><Logo /></a>
 				</Tooltip>
-				<h1>{ ( MBCPT.action == 'add' ) ? __( 'Add Taxonomies', 'mb-custom-post-type' ) : __( 'Edit Taxonomies', 'mb-custom-post-type' ) }</h1>
-				{ !( MBCPT.action == 'add' ) && <a className="page-title-action" href={ MBCPT.add }>{ __( 'Add New', 'mb-custom-post-type' ) }</a> }
+				<h1>{ MBCPT.action === 'add' ? __( 'Add Taxonomies', 'mb-custom-post-type' ) : __( 'Edit Taxonomies', 'mb-custom-post-type' ) }</h1>
+				{ MBCPT.action !== 'add' && <a className="page-title-action" href={ MBCPT.add }>{ __( 'Add New', 'mb-custom-post-type' ) }</a> }
 			</Flex>
 			<Flex gap={ 3 } expanded={ false } className="mb-cpt-action">
 				<input
@@ -117,8 +117,8 @@ const MainTabs = () => {
 		</Flex>
 		<input type="hidden" name="post_title" value={ settings.labels.singular_name } />
 		<input type="hidden" name="content" value={ JSON.stringify( settings ) } />
-		<input type="hidden" className="post_status" name="post_status" value={ MBCPT.status || 'draft' } />
-		<input type="hidden" name="messages" className="mb-cpt-messages" value="" />
+		<input type="hidden" name="post_status" value={ MBCPT.status || 'draft' } />
+		<input type="hidden" name="messages" value="" />
 	</>;
 };
 
