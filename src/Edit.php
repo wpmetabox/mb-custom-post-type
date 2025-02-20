@@ -20,23 +20,13 @@ class Edit {
 		wp_enqueue_style( 'font-awesome', MB_CPT_URL . 'assets/fontawesome/css/all.min.css', [], '6.6.0' );
 		wp_enqueue_style( 'wp-edit-post' );
 
-		wp_enqueue_script( 'mbcpt-edit', MB_CPT_URL . 'assets/edit.js', [], filemtime( MB_CPT_DIR . '/assets/edit.js' ), true );
-
 		$object = str_replace( 'mb-', '', $this->post_type );
 		wp_enqueue_code_editor( [ 'type' => 'application/x-httpd-php' ] );
 
 		$asset = require MB_CPT_DIR . "/assets/build/$object.asset.php";
 		wp_enqueue_script( $this->post_type, MB_CPT_URL . "assets/build/$object.js", $asset['dependencies'], $asset['version'], true );
 		wp_localize_script( $this->post_type, 'MBCPT', $this->js_vars() );
-
-		$path = '';
-		if ( defined( 'META_BOX_LITE_DIR' ) ) {
-			$path = META_BOX_LITE_DIR . '/languages/mb-custom-post-type';
-		}
-		if ( defined( 'META_BOX_AIO_DIR' ) ) {
-			$path = META_BOX_AIO_DIR . '/languages/mb-custom-post-type';
-		}
-		wp_set_script_translations( $this->post_type, 'mb-custom-post-type', $path );
+		wp_set_script_translations( $this->post_type, 'mb-custom-post-type' );
 	}
 
 	private function js_vars(): array {
@@ -114,9 +104,10 @@ class Edit {
 		return $update_checker->has_extensions();
 	}
 
-	private function get_show_in_menu_options() {
+	private function get_show_in_menu_options(): array {
 		global $menu;
-		$options = [
+
+		$options = [ 
 			[
 				'value' => 'true',
 				'label' => esc_html__( 'Show as top-level menu', 'mb-custom-post-type' ),
@@ -138,9 +129,10 @@ class Edit {
 		return $options;
 	}
 
-	private function get_menu_position_options() {
+	private function get_menu_position_options(): array {
 		global $menu;
-		$positions = [
+
+		$positions = [ 
 			[
 				'value' => '',
 				'label' => __( 'Default', 'mb-custom-post-type' ),
@@ -154,15 +146,28 @@ class Edit {
 				];
 			}
 		}
+
 		return $positions;
 	}
 
-	private function strip_span( $html ) {
+	/**
+	 * Strip span tag from HTML.
+	 *
+	 * @param string $html HTML content.
+	 *
+	 * @return string
+	 */
+	private function strip_span( $html ): string {
 		return preg_replace( '@<span .*>.*</span>@si', '', $html );
 	}
 
-	private function get_reserved_terms() {
-		return [
+	/**
+	 * Get reserved terms.
+	 *
+	 * @return string[]
+	 */
+	private function get_reserved_terms(): array {
+		return [ 
 			'action',
 			'attachment',
 			'attachment_id',
@@ -252,12 +257,19 @@ class Edit {
 		];
 	}
 
-	private function get_all_capabilities() {
+	/**
+	 * Get all capabilities.
+	 *
+	 * @return string[]
+	 */
+	private function get_all_capabilities(): array {
 		global $wp_roles;
+
 		$capabilities = [];
 		foreach ( $wp_roles->roles as $role ) {
 			$capabilities = array_merge( $capabilities, array_keys( $role['capabilities'] ) );
 		}
-		return array_unique( $capabilities );
+
+		return array_values( array_unique( $capabilities ) );
 	}
 }
