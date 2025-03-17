@@ -15,18 +15,12 @@
   "homepage": "https://metabox.io/plugins/custom-post-type/",
   "license": "GPL-2.0",
   "minimum-stability": "stable",
-  "repositories": [
-		{
-			"type": "git",
-			"url": "https://github.com/wpmetabox/support.git"
-		}
-	],
   "config": {
 		"prepend-autoloader": false,
     "sort-packages": true
 	},
 	"require": {
-		"meta-box/support": "dev-master"
+		"wpmetabox/support": "dev-master"
 	},
   "authors": [
     {
