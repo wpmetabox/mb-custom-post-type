@@ -43,19 +43,19 @@ class Edit {
 		$post = get_post();
 
 		$vars = [
-			'icons'         => Data::get_dashicons(),
-			'settings'      => json_decode( $post->post_content, true ),
-			'reservedTerms' => $this->get_reserved_terms(),
-			'action'        => get_current_screen()->action,
-			'url'           => admin_url( 'edit.php?post_type=' . get_current_screen()->id ),
-			'add'           => admin_url( 'post-new.php?post_type=' . get_current_screen()->id ),
-			'status'        => $post->post_status,
-			'author'        => get_the_author_meta( 'display_name', (int) $post->post_author ),
-			'trash'         => get_delete_post_link(),
-			'published'     => get_the_date( 'F d, Y' ) . ' ' . get_the_time( 'g:i a' ),
-			'modifiedtime'  => get_post_modified_time( 'F d, Y g:i a', true, null, true ),
-			'saving'        => __( 'Saving...', 'mb-custom-post-type' ),
-			'upgrade'       => ! $this->is_premium_user(),
+			'icons'           => Data::get_dashicons(),
+			'settings'        => json_decode( $post->post_content, true ),
+			'reservedTerms'   => $this->get_reserved_terms(),
+			'action'          => get_current_screen()->action,
+			'url'             => admin_url( 'edit.php?post_type=' . get_current_screen()->id ),
+			'add'             => admin_url( 'post-new.php?post_type=' . get_current_screen()->id ),
+			'status'          => $post->post_status,
+			'author'          => get_the_author_meta( 'display_name', (int) $post->post_author ),
+			'trash'           => get_delete_post_link(),
+			'published'       => get_the_date( 'F d, Y' ) . ' ' . get_the_time( 'g:i a' ),
+			'modifiedtime'    => get_post_modified_time( 'F d, Y g:i a', true, null, true ),
+			'saving'          => __( 'Saving...', 'mb-custom-post-type' ),
+			'upgrade'         => ! $this->is_premium_user(),
 			'allCapabilities' => $this->get_all_capabilities(),
 		];
 
@@ -117,7 +117,7 @@ class Edit {
 	private function get_show_in_menu_options(): array {
 		global $menu;
 
-		$options = [ 
+		$options = [
 			[
 				'value' => 'true',
 				'label' => esc_html__( 'Show as top-level menu', 'mb-custom-post-type' ),
@@ -142,7 +142,7 @@ class Edit {
 	private function get_menu_position_options(): array {
 		global $menu;
 
-		$positions = [ 
+		$positions = [
 			[
 				'value' => '',
 				'label' => __( 'Default', 'mb-custom-post-type' ),
@@ -177,7 +177,7 @@ class Edit {
 	 * @return string[]
 	 */
 	private function get_reserved_terms(): array {
-		return [ 
+		return [
 			'action',
 			'attachment',
 			'attachment_id',

@@ -36,9 +36,8 @@
     }
   },
   "scripts": {
-    "format": [
-      "phpcbf src/",
-      "phpcbf src/ --standard=Generic --sniffs=Generic.Arrays.DisallowLongArraySyntax"
+    "phpcbf": [
+      "phpcbf src/ --standard=../meta-box-aio/phpcs.xml"
     ],
     "post-update-cmd": [
       "echo Deleting .git dirs...",
