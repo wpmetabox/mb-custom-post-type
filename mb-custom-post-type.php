@@ -48,6 +48,8 @@ if ( ! function_exists( 'mb_cpt_load' ) ) {
 			define( 'MB_CPT_URL', plugin_dir_url( __FILE__ ) );
 		}
 
+		new MBCPT\Integrations\WPML\Manager();
+
 		new MBCPT\PostTypeRegister();
 		new MBCPT\TaxonomyRegister();
 		new MBCPT\Order();

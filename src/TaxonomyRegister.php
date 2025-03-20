@@ -119,6 +119,9 @@ class TaxonomyRegister extends Register {
 				continue;
 			}
 
+			// Allow WPML to translate taxonomy labels.
+			$data = apply_filters( 'mbcpt_taxonomy', $data, $post );
+
 			$taxonomies[ $data['slug'] ] = $data;
 		}
 
@@ -230,5 +233,23 @@ class TaxonomyRegister extends Register {
 		];
 
 		return $bulk_messages;
+	}
+
+	/**
+	 * Get post by slug.
+	 *
+	 * @param string $slug Post slug.
+	 * @param string $post_type Post type.
+	 * @return WP_Post|null
+	 */
+	private function get_post_by_slug( $slug, $post_type ) {
+		$posts = get_posts( [
+			'name'        => $slug,
+			'post_type'   => $post_type,
+			'post_status' => 'publish',
+			'numberposts' => 1,
+		] );
+
+		return ! empty( $posts[0] ) ? $posts[0] : null;
 	}
 }

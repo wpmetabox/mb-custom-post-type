@@ -100,6 +100,9 @@ class PostTypeRegister extends Register {
 				continue;
 			}
 
+			// Allow WPML to translate post type labels.
+			$settings = apply_filters( 'mbcpt_post_type', $settings, $post );
+
 			$post_types[ $settings['slug'] ] = $settings;
 		}
 
