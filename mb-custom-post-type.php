@@ -49,6 +49,7 @@ if ( ! function_exists( 'mb_cpt_load' ) ) {
 		}
 
 		new MBCPT\Integrations\WPML\Manager();
+		new MBCPT\Integrations\Polylang\Manager();
 
 		new MBCPT\PostTypeRegister();
 		new MBCPT\TaxonomyRegister();
