@@ -3,7 +3,7 @@ namespace MBCPT\Integrations\Polylang;
 
 class Manager {
 	public function __construct() {
-		if ( ! defined( 'POLYLANG_VERSION' ) ) {
+		if ( ! function_exists( 'pll_register_string' ) ) {
 			return;
 		}
 
