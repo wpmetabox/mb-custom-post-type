@@ -64,7 +64,7 @@ class Order {
 		$posts      = array_map( function ($post) {
 			return [ 
 				'ID' => $post->ID,
-				'post_title' 	=> $post->post_title ?: __( '(no title)', 'advanced-page-ordering' ),
+				'post_title' 	=> $post->post_title ?: __( '(no title)', 'mb-custom-post-type' ),
 				'post_parent' 	=> $post->post_parent,
 				'post_status' 	=> $post->post_status,
 				'menu_order' 	=> $post->menu_order,
@@ -104,7 +104,7 @@ class Order {
 			'<a id="toggle-sortable-btn" class="toggle-sortable-btn %s" href="%s"><span class="dashicons dashicons-sort"></span> %s</a>',
 			$mode === 'sortable' ? 'current' : '',
 			$url,
-			esc_html__( 'Toggle Sortable', 'advanced-page-ordering' )
+			esc_html__( 'Toggle Sortable', 'mb-custom-post-type' )
 		);
 
 		return $views;
