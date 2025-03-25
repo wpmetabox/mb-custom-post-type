@@ -1,0 +1,6 @@
+<wpml-config>
+	<custom-types>
+		<custom-type translate="0">mb-post-type</custom-type>
+		<custom-type translate="0">mb-taxonomy</custom-type>
+	</custom-types>
+</wpml-config>
