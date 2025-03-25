@@ -4,175 +4,135 @@ namespace MBCPT;
 use WP_Query;
 
 class Order {
+
 	public function __construct() {
-		add_action( 'load-edit.php', [ $this, 'setup_for_edit_screen' ] );
-		add_action( 'wp_ajax_mbcpt_update_menu_order', [ $this, 'update_menu_order' ] );
-		add_action( 'pre_get_posts', [ $this, 'set_orderby_menu_order' ] );
-		add_filter( 'get_previous_post_where', [ $this, 'order_previous_post_where' ] );
-		add_filter( 'get_previous_post_sort', [ $this, 'order_previous_post_sort' ] );
-		add_filter( 'get_next_post_where', [ $this, 'order_next_post_where' ] );
-		add_filter( 'get_next_post_sort', [ $this, 'order_next_post_sort' ] );
+		add_action( 'admin_enqueue_scripts', [ $this, 'enqueue_scripts' ] );
+		add_action( 'wp_ajax_mb_cpt_save_order', [ $this, 'save_order' ] );
 	}
 
-	public function setup_for_edit_screen(): void {
-		$screen = get_current_screen();
-		if ( $screen->base !== 'edit' || ! $this->is_enabled_ordering( $screen->post_type ) ) {
+	public function enqueue_scripts( $hook ) {
+		if ( $hook !== 'edit.php' ) {
 			return;
 		}
 
-		// Add admin columns
-		add_filter( "manage_{$screen->post_type}_posts_columns", [ $this, 'add_admin_order_column' ] );
-		add_action( "manage_{$screen->post_type}_posts_custom_column", [ $this, 'show_admin_order_column' ] );
-
-		// Set initial orders
-		$this->set_initial_orders( $screen->post_type );
-
-		// Enqueue assets
-		wp_enqueue_style( 'order', MB_CPT_URL . 'assets/order.css', [], MB_CPT_VER );
-		wp_enqueue_script( 'order', MB_CPT_URL . 'assets/order.js', [ 'jquery-ui-sortable' ], MB_CPT_VER, true );
-		wp_localize_script( 'order', 'MBCPT', [ 'security' => wp_create_nonce( 'order' ) ] );
-	}
-
-	private function set_initial_orders( string $post_type ): void {
-		global $wpdb;
-
-		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- Error.
-		$result = $wpdb->get_row( $wpdb->prepare(
-			"
-			SELECT COUNT(*) AS total, MAX(menu_order) AS max
-			FROM $wpdb->posts
-			WHERE post_type = %s
-			",
-			$post_type
-		) );
-
-		if ( $result->total == 0 || $result->total == $result->max ) { // phpcs:ignore WordPress.PHP.StrictComparisons.LooseComparison
-			return;
-		}
-
-		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- Error.
-		$wpdb->query( 'SET @count = 0;' );
-		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- Error.
-		$wpdb->query( $wpdb->prepare(
-			"UPDATE $wpdb->posts as pt JOIN (
-				SELECT ID, (@count:=@count + 1) AS `rank`
-				FROM $wpdb->posts
-				WHERE post_type = %s
-				ORDER BY menu_order ASC
-			) as pt2
-			ON pt.id = pt2.id
-			SET pt.menu_order = pt2.`rank`;",
-			$post_type
-		) );
-	}
-
-	public function update_menu_order(): void {
-		check_ajax_referer( 'order', 'security' );
-
-		global $wpdb;
-
-		if ( empty( $_POST['order'] ) ) {
-			return;
-		}
-
-		parse_str( wp_unslash( $_POST['order'] ), $data );// phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
-		if ( ! is_array( $data ) ) {
-			return;
-		}
-
-		$id_arr = [];
-		foreach ( $data as $values ) {
-			foreach ( $values as $id ) {
-				$id_arr[] = (int) $id;
-			}
-		}
-
-		$menu_order_arr = [];
-		foreach ( $id_arr as $id ) {
-			$menu_order_arr[] = (int) $wpdb->get_var( $wpdb->prepare( "SELECT menu_order FROM $wpdb->posts WHERE ID = %d", $id ) ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- Error.
-		}
-
-		sort( $menu_order_arr );
-
-		foreach ( $data as $values ) {
-			foreach ( $values as $position => $id ) {
-				// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- Error.
-				$wpdb->update(
-					$wpdb->posts,
-					[ 'menu_order' => $menu_order_arr[ $position ] ],
-					[ 'ID' => $id ],
-					[ '%d' ],
-					[ '%d' ]
-				);
-			}
-		}
-	}
-
-	public function set_orderby_menu_order( WP_Query $query ): void {
-		$post_type = $query->get( 'post_type' );
-
-		if ( ! $post_type || ! is_string( $post_type ) || ! $this->is_enabled_ordering( $post_type ) ) {
-			return;
-		}
-
-		if ( $query->get( 'orderby' ) ) {
-			return;
-		}
-
-		$query->set( 'orderby', 'menu_order' );
-		if ( ! $query->get( 'order' ) ) {
-			$query->set( 'order', 'ASC' );
-		}
-	}
-
-	public function add_admin_order_column( array $columns ): array {
-		return [ 'mbcpt_order' => '' ] + $columns;
-	}
-
-	public function show_admin_order_column( string $name ): void {
-		if ( $name === 'mbcpt_order' ) {
-			echo '<svg viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M7.375 3.67c0-.645-.56-1.17-1.25-1.17s-1.25.525-1.25 1.17c0 .646.56 1.17 1.25 1.17s1.25-.524 1.25-1.17zm0 8.66c0-.646-.56-1.17-1.25-1.17s-1.25.524-1.25 1.17c0 .645.56 1.17 1.25 1.17s1.25-.525 1.25-1.17zm-1.25-5.5c.69 0 1.25.525 1.25 1.17 0 .645-.56 1.17-1.25 1.17S4.875 8.645 4.875 8c0-.645.56-1.17 1.25-1.17zm5-3.16c0-.645-.56-1.17-1.25-1.17s-1.25.525-1.25 1.17c0 .646.56 1.17 1.25 1.17s1.25-.524 1.25-1.17zm-1.25 7.49c.69 0 1.25.524 1.25 1.17 0 .645-.56 1.17-1.25 1.17s-1.25-.525-1.25-1.17c0-.646.56-1.17 1.25-1.17zM11.125 8c0-.645-.56-1.17-1.25-1.17s-1.25.525-1.25 1.17c0 .645.56 1.17 1.25 1.17s1.25-.525 1.25-1.17z"/></svg>';
-		}
-	}
-
-	public function order_previous_post_where( string $where ): string {
-		global $post;
-
-		if ( ! empty( $post->post_type ) && $this->is_enabled_ordering( $post->post_type ) ) {
-			$where = preg_replace( "/p.post_date < \'[0-9\-\s\:]+\'/i", "p.menu_order > '" . $post->menu_order . "'", $where );
-		}
-		return $where;
-	}
-
-	public function order_previous_post_sort( string $orderby ): string {
-		global $post;
-
-		if ( ! empty( $post->post_type ) && $this->is_enabled_ordering( $post->post_type ) ) {
-			$orderby = 'ORDER BY p.menu_order ASC LIMIT 1';
-		}
-		return $orderby;
-	}
-
-	public function order_next_post_where( string $where ): string {
-		global $post;
-
-		if ( ! empty( $post->post_type ) && $this->is_enabled_ordering( $post->post_type ) ) {
-			$where = preg_replace( "/p.post_date > \'[0-9\-\s\:]+\'/i", "p.menu_order < '" . $post->menu_order . "'", $where );
-		}
-		return $where;
-	}
-
-	public function order_next_post_sort( string $orderby ): string {
-		global $post;
-
-		if ( ! empty( $post->post_type ) && $this->is_enabled_ordering( $post->post_type ) ) {
-			$orderby = 'ORDER BY p.menu_order DESC LIMIT 1';
-		}
-		return $orderby;
-	}
-
-	private function is_enabled_ordering( string $post_type ): bool {
+		// Get current post type from screen
+		$screen    = get_current_screen();
+		$post_type = $screen->post_type;
 		$post_type_object = get_post_type_object( $post_type );
-		return ! empty( $post_type_object->order );
+		
+		if ( ! isset( $post_type_object->order ) || ! $post_type_object->order ) {
+			return;
+		}
+
+		$hierarchical = (bool) $post_type_object->hierarchical;
+
+		add_filter( "views_edit-{$post_type}", [ $this, 'add_toggle_sortable_button' ], 10, 1 );
+
+		// Enqueue SortableJS
+		wp_enqueue_script(
+			'sortablejs',
+			MB_CPT_URL . 'assets/lib/Sortable.min.js',
+			[],
+			'1.15.6',
+			true
+		);
+
+		// Enqueue our custom script
+		wp_enqueue_script(
+			'mb-cpt-order-script',
+			MB_CPT_URL . 'assets/order.js',
+			[ 'jquery', 'sortablejs' ],
+			time(),
+			true
+		);
+
+		// Use the global $wp_query to get the already-queried posts
+		global $wp_query;
+		$post_ids = wp_list_pluck( $wp_query->posts, 'ID' );
+
+		// Fetch full post data in one query using post__in
+		$args       = [ 
+			'post_type' => $post_type,
+			'post__in' => $post_ids,
+			'posts_per_page' => -1, // Ensure we get all matching posts
+			'orderby' => 'post__in', // Preserve the original order from $wp_query
+			'ignore_sticky_posts' => true,
+			'no_found_rows' => true,
+			'update_post_term_cache' => false,
+		];
+		$full_query = new WP_Query( $args );
+		$posts      = array_map( function ($post) {
+			return [ 
+				'ID' => $post->ID,
+				'post_title' 	=> $post->post_title ?: __( '(no title)', 'advanced-page-ordering' ),
+				'post_parent' 	=> $post->post_parent,
+				'post_status' 	=> $post->post_status,
+				'menu_order' 	=> $post->menu_order,
+			];
+		}, $full_query->posts );
+
+		// Localize script with the queried posts
+		wp_localize_script( 'mb-cpt-order-script', 'MB_CPT_ORDER', [ 
+			'posts' 	=> $posts,
+			'ajax_url' 	=> admin_url( 'admin-ajax.php' ),
+			'nonce' 	=> wp_create_nonce( 'mb_cpt_order_nonce' ),
+			'post_type' => $post_type,
+			'mode' 		=> $_GET['mode'] ?? 'default',
+			'hierarchical' => $hierarchical,
+		] );
+
+		// Enqueue styles
+		wp_enqueue_style(
+			'mb-cpt-order-style',
+			MB_CPT_URL . 'assets/order.css',
+			[],
+			time()
+		);
+	}
+
+	// Add toggle sortable link to views
+	public function add_toggle_sortable_button( $views ) {
+		$screen    = get_current_screen();
+		$post_type = $screen->post_type;
+		$mode      = $_GET['mode'] ?? 'default';
+		$url       = add_query_arg( [ 
+			'post_type' => $post_type,
+			'mode' => $mode === 'sortable' ? 'default' : 'sortable',
+		] );
+
+		$views['toggle_sortable'] = sprintf(
+			'<a id="toggle-sortable-btn" class="toggle-sortable-btn %s" href="%s"><span class="dashicons dashicons-sort"></span> %s</a>',
+			$mode === 'sortable' ? 'current' : '',
+			$url,
+			esc_html__( 'Toggle Sortable', 'advanced-page-ordering' )
+		);
+
+		return $views;
+	}
+
+	// AJAX handler for saving order
+	public function save_order() {
+		global $wpdb;
+
+		check_ajax_referer( 'mb_cpt_order_nonce', 'nonce' );
+
+		if ( ! current_user_can( 'edit_pages' ) ) {
+			wp_send_json_error( 'Insufficient permissions' );
+		}
+
+		$order_data = json_decode( stripslashes( $_POST['order_data'] ), true );
+
+		foreach ( $order_data as $item ) {
+			$wpdb->update(
+				$wpdb->posts,
+				[ 
+					'post_parent' => $item['parent_id'] ? $item['parent_id'] : 0,
+					'menu_order' => $item['order'],
+				],
+				[ 'ID' => $item['id'] ]
+			);
+		}
+
+		wp_send_json_success( 'Order updated' );
 	}
 }
