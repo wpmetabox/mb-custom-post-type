@@ -172,6 +172,16 @@ class Order {
 			wp_send_json_error( __( 'Insufficient permissions', 'mb-custom-post-type' ) );
 		}
 
+		// Because we are doing sortable on multiple pages, all posts with menu_order = 0 (default) 
+		// will be moved to the top of the list. 
+		// That means, when we order any items, their menu_order will be higher than 0, causing it to be moved to the end of the list, which is not what we want.
+		// So we need to set all posts with menu_order = 0 to a very high number (99999) before saving the new order
+		// This will ensure that the untouched items will keep their position
+		$post_type = sanitize_text_field( $_POST['post_type'] );
+		consolelog( $post_type );
+		$sql = "UPDATE $wpdb->posts SET menu_order = 99999 WHERE menu_order = 0 AND post_type = %s";
+		$wpdb->query( $wpdb->prepare( $sql, $post_type ) );
+
 		$order_data = json_decode( wp_unslash( $_POST['order_data'] ), true );
 
 		foreach ( $order_data as $item ) {

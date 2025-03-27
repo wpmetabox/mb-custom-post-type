@@ -87,8 +87,8 @@
 			let parentId = 0;
 			const current_page = MB_CPT_ORDER.current_page;
 			const per_page = MB_CPT_ORDER.per_page;
-			const order = ( current_page - 1 ) * per_page + index + 1;
-			
+			const order = ( current_page - 1 ) * per_page * 10 + index + 1;
+
 			// Only determine parent if hierarchical mode is enabled
 			if ( hierarchical ) {
 				const $parentLi = $this.parent().closest( 'li' );
@@ -108,6 +108,7 @@
 			data: {
 				action: 'mb_cpt_save_order',
 				nonce: MB_CPT_ORDER.nonce,
+				post_type: MB_CPT_ORDER.post_type,
 				order_data: JSON.stringify( orderData )
 			},
 			success: function ( response ) {
