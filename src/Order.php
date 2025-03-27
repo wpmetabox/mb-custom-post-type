@@ -19,7 +19,7 @@ class Order {
 		$screen    = get_current_screen();
 		$post_type = $screen->post_type;
 		$post_type_object = get_post_type_object( $post_type );
-		
+
 		if ( ! isset( $post_type_object->order ) || ! $post_type_object->order ) {
 			return;
 		}
@@ -51,7 +51,7 @@ class Order {
 		$post_ids = wp_list_pluck( $wp_query->posts, 'ID' );
 
 		// Fetch full post data in one query using post__in
-		$args       = [ 
+		$args       = [
 			'post_type' => $post_type,
 			'post__in' => $post_ids,
 			'posts_per_page' => -1, // Ensure we get all matching posts
@@ -62,7 +62,7 @@ class Order {
 		];
 		$full_query = new WP_Query( $args );
 		$posts      = array_map( function ($post) {
-			return [ 
+			return [
 				'ID' => $post->ID,
 				'post_title' 	=> $post->post_title ?: __( '(no title)', 'mb-custom-post-type' ),
 				'post_parent' 	=> $post->post_parent,
@@ -72,7 +72,7 @@ class Order {
 		}, $full_query->posts );
 
 		// Localize script with the queried posts
-		wp_localize_script( 'mb-cpt-order-script', 'MB_CPT_ORDER', [ 
+		wp_localize_script( 'mb-cpt-order-script', 'MB_CPT_ORDER', [
 			'posts' 	=> $posts,
 			'ajax_url' 	=> admin_url( 'admin-ajax.php' ),
 			'nonce' 	=> wp_create_nonce( 'mb_cpt_order_nonce' ),
@@ -95,16 +95,20 @@ class Order {
 		$screen    = get_current_screen();
 		$post_type = $screen->post_type;
 		$mode      = $_GET['mode'] ?? 'default';
-		$url       = add_query_arg( [ 
+		$url       = add_query_arg( [
 			'post_type' => $post_type,
 			'mode' => $mode === 'sortable' ? 'default' : 'sortable',
 		] );
 
+		// translators: %1$s: Current class, %2$s: URL, %3$s: Re-Order text
 		$views['toggle_sortable'] = sprintf(
-			'<a id="toggle-sortable-btn" class="toggle-sortable-btn %s" href="%s"><span class="dashicons dashicons-sort"></span> %s</a>',
+			'<a id="toggle-sortable-btn" class="toggle-sortable-btn %1$s" href="%2$s">
+				<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24"><path d="M7 20h2V8h3L8 4 4 8h3zm13-4h-3V4h-2v12h-3l4 4z"></path></svg>
+				%3$s
+			</a>',
 			$mode === 'sortable' ? 'current' : '',
 			$url,
-			esc_html__( 'Toggle Sortable', 'mb-custom-post-type' )
+			esc_html__( 'Re-Order', 'mb-custom-post-type' )
 		);
 
 		return $views;
@@ -125,7 +129,7 @@ class Order {
 		foreach ( $order_data as $item ) {
 			$wpdb->update(
 				$wpdb->posts,
-				[ 
+				[
 					'post_parent' => $item['parent_id'] ? $item['parent_id'] : 0,
 					'menu_order' => $item['order'],
 				],
