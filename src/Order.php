@@ -42,7 +42,7 @@ class Order {
 			'mb-cpt-order-script',
 			MB_CPT_URL . 'assets/order.js',
 			[ 'jquery', 'sortablejs' ],
-			time(),
+			MB_CPT_VER,
 			true
 		);
 
@@ -74,7 +74,6 @@ class Order {
 		// Localize script with the queried posts
 		wp_localize_script( 'mb-cpt-order-script', 'MB_CPT_ORDER', [
 			'posts' 	=> $posts,
-			'ajax_url' 	=> admin_url( 'admin-ajax.php' ),
 			'nonce' 	=> wp_create_nonce( 'mb_cpt_order_nonce' ),
 			'post_type' => $post_type,
 			'mode' 		=> $_GET['mode'] ?? 'default',
@@ -86,7 +85,7 @@ class Order {
 			'mb-cpt-order-style',
 			MB_CPT_URL . 'assets/order.css',
 			[],
-			time()
+			MB_CPT_VER
 		);
 	}
 
@@ -121,10 +120,10 @@ class Order {
 		check_ajax_referer( 'mb_cpt_order_nonce', 'nonce' );
 
 		if ( ! current_user_can( 'edit_pages' ) ) {
-			wp_send_json_error( 'Insufficient permissions' );
+			wp_send_json_error( __( 'Insufficient permissions', 'mb-custom-post-type' ) );
 		}
 
-		$order_data = json_decode( stripslashes( $_POST['order_data'] ), true );
+		$order_data = json_decode( wp_unslash( $_POST['order_data'] ), true );
 
 		foreach ( $order_data as $item ) {
 			$wpdb->update(
@@ -137,6 +136,6 @@ class Order {
 			);
 		}
 
-		wp_send_json_success( 'Order updated' );
+		wp_send_json_success( __( 'Order updated', 'mb-custom-post-type' ) );
 	}
 }
