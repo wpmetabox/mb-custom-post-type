@@ -1,7 +1,7 @@
 .mb-cpt-sortable {
     list-style: none;
     padding: 0;
-    margin: 0 0 0 20px;
+    margin: 0 0 0 24px;
 }
 
 .sortable-chosen {
@@ -21,10 +21,13 @@
     padding: 12px;
     background: #fff;
     border: 1px solid #ddd;
-    margin: 5px 0;
+    border-radius: 4px;
+    margin-block: 6px;
     display: flex;
     align-items: center;
+    gap: 4px;
     transition: background 0.2s;
+    cursor: grab;
 }
 
 .mb-cpt-page-item:hover {
@@ -32,9 +35,7 @@
 }
 
 .mb-cpt-handle {
-    cursor: move;
-    margin-right: 2px;
-    padding: 0 5px;
+    padding: 0 4px;
     color: #666;
 }
 
@@ -48,5 +49,5 @@
     font-weight: 400;
     font-style: italic;
     color: #666;
-    margin-left: 10px;
+    margin-left: 8px;
 }
