@@ -77,6 +77,7 @@ class Order {
 			// Recursively find all children
 			$post_ids_to_fetch = array_merge( $post_ids_to_fetch, $this->get_children( $parent_id, $all_post_map ) );
 		}
+
 		$post_ids_to_fetch = array_unique( $post_ids_to_fetch ); // Remove duplicates
 
 		// Fetch full post data for the current page + children
@@ -125,7 +126,7 @@ class Order {
 		foreach ( $post_map as $post ) {
 			if ( $post->post_parent == $parent_id ) {
 				$children[] = $post->ID;
-				$children   = array_merge( $children, get_children( $post->ID, $post_map ) );
+				$children   = array_merge( $children, $this->get_children( $post->ID, $post_map ) );
 			}
 		}
 
