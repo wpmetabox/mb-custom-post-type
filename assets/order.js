@@ -85,6 +85,10 @@
 		$( '.mb-cpt-sortable li' ).each( function ( index ) {
 			const $this = $( this );
 			let parentId = 0;
+			const current_page = MB_CPT_ORDER.current_page;
+			const per_page = MB_CPT_ORDER.per_page;
+			const order = ( current_page - 1 ) * per_page + index + 1;
+			
 			// Only determine parent if hierarchical mode is enabled
 			if ( hierarchical ) {
 				const $parentLi = $this.parent().closest( 'li' );
@@ -94,7 +98,7 @@
 			orderData.push( {
 				id: $this.data( 'id' ),
 				parent_id: parentId,
-				order: index
+				order
 			} );
 		} );
 

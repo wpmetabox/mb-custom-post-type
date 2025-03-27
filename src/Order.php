@@ -80,28 +80,31 @@ class Order {
 
 		$post_ids_to_fetch = array_unique( $post_ids_to_fetch ); // Remove duplicates
 
-		// Fetch full post data for the current page + children
-		$args       = [ 
-			'post_type'              => $post_type,
-			'post__in'               => $post_ids_to_fetch,
-			'posts_per_page'         => -1,                   // Get all matching posts (parents + children)
-			'orderby'                => 'post__in',           // Preserve the original order
-			'ignore_sticky_posts'    => true,
-			'update_post_term_cache' => false,
-			'update_post_meta_cache' => false,
-			'no_found_rows'          => false,
-		];
-
-		$full_query = new WP_Query( $args );
-		$posts      = array_map( function ($post) {
-			return [ 
-				'ID'          => $post->ID,
-				'post_title'  => $post->post_title ?: __( '(no title)', 'mb-custom-post-type' ),
-				'post_parent' => $post->post_parent,
-				'menu_order'  => $post->menu_order,
-				'post_status' => $post->post_status,
+		// Fetch full post data only if we have IDs to fetch
+		$posts = [];
+		if ( ! empty( $post_ids_to_fetch ) ) {
+			$args = [ 
+				'post_type'              => $post_type,
+				'post__in'               => $post_ids_to_fetch,
+				'posts_per_page'         => -1,                   // Get all matching posts (parents + children)
+				'orderby'                => 'post__in',           // Preserve the original order
+				'ignore_sticky_posts'    => true,
+				'update_post_term_cache' => false,
+				'update_post_meta_cache' => false,
+				'no_found_rows'          => false,
 			];
-		}, $full_query->posts );
+
+			$full_query = new WP_Query( $args );
+			$posts      = array_map( function ($post) {
+				return [ 
+					'ID'          => $post->ID,
+					'post_title'  => $post->post_title ?: __( '(no title)', 'mb-custom-post-type' ),
+					'post_parent' => $post->post_parent,
+					'menu_order'  => $post->menu_order,
+					'post_status' => $post->post_status,
+				];
+			}, $full_query->posts );
+		}
 
 		// Localize script with the queried posts
 		wp_localize_script( 'mb-cpt-order-script', 'MB_CPT_ORDER', [
@@ -110,6 +113,8 @@ class Order {
 			'post_type'    => $post_type,
 			'mode'         => $_GET['mode'] ?? 'default',
 			'hierarchical' => $hierarchical,
+			'current_page' => $current_page,
+			'per_page'     => $per_page,
 		] );
 
 		// Enqueue styles
