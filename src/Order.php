@@ -48,35 +48,66 @@ class Order {
 
 		// Use the global $wp_query to get the already-queried posts
 		global $wp_query;
-		$post_ids = wp_list_pluck( $wp_query->posts, 'ID' );
 
-		// Fetch full post data in one query using post__in
-		$args       = [
-			'post_type' => $post_type,
-			'post__in' => $post_ids,
-			'posts_per_page' => -1, // Ensure we get all matching posts
-			'orderby' => 'post__in', // Preserve the original order from $wp_query
-			'ignore_sticky_posts' => true,
-			'no_found_rows' => true,
+		// Use the global $wp_query to get the already-queried posts
+		global $wp_query;
+		$all_posts = $wp_query->posts;
+
+		// Get pagination info
+		$per_page = (int) get_user_option( 'edit_' . $post_type . '_per_page', get_current_user_id() );
+		if ( ! $per_page ) {
+			$per_page = 20; // Default value if not set in Screen Options
+		}
+		$current_page = isset( $_GET['paged'] ) ? max( 1, (int) $_GET['paged'] ) : 1;
+
+		// Filter top-level posts (post_parent = 0) for pagination
+		$top_level_posts = array_filter( $all_posts, function ($post) {
+			return $post->post_parent == 0;
+		} );
+		$top_level_ids   = wp_list_pluck( $top_level_posts, 'ID' );
+
+		// Split top-level IDs into chunks
+		$top_level_chunks      = array_chunk( $top_level_ids, $per_page );
+		$current_top_level_ids = $top_level_chunks[ $current_page - 1 ] ?? [];
+
+		// Build a list of IDs to fetch: current top-level IDs + all their descendants
+		$post_ids_to_fetch = $current_top_level_ids;
+		$all_post_map      = array_column( $all_posts, null, 'ID' ); // Map for quick lookup
+		foreach ( $current_top_level_ids as $parent_id ) {
+			// Recursively find all children
+			$post_ids_to_fetch = array_merge( $post_ids_to_fetch, $this->get_children( $parent_id, $all_post_map ) );
+		}
+		$post_ids_to_fetch = array_unique( $post_ids_to_fetch ); // Remove duplicates
+
+		// Fetch full post data for the current page + children
+		$args       = [ 
+			'post_type'              => $post_type,
+			'post__in'               => $post_ids_to_fetch,
+			'posts_per_page'         => -1,                   // Get all matching posts (parents + children)
+			'orderby'                => 'post__in',           // Preserve the original order
+			'ignore_sticky_posts'    => true,
 			'update_post_term_cache' => false,
+			'update_post_meta_cache' => false,
+			'no_found_rows'          => false,
 		];
+
 		$full_query = new WP_Query( $args );
 		$posts      = array_map( function ($post) {
-			return [
-				'ID' => $post->ID,
-				'post_title' 	=> $post->post_title ?: __( '(no title)', 'mb-custom-post-type' ),
-				'post_parent' 	=> $post->post_parent,
-				'post_status' 	=> $post->post_status,
-				'menu_order' 	=> $post->menu_order,
+			return [ 
+				'ID'          => $post->ID,
+				'post_title'  => $post->post_title ?: __( '(no title)', 'mb-custom-post-type' ),
+				'post_parent' => $post->post_parent,
+				'menu_order'  => $post->menu_order,
+				'post_status' => $post->post_status,
 			];
 		}, $full_query->posts );
 
 		// Localize script with the queried posts
 		wp_localize_script( 'mb-cpt-order-script', 'MB_CPT_ORDER', [
-			'posts' 	=> $posts,
-			'nonce' 	=> wp_create_nonce( 'mb_cpt_order_nonce' ),
-			'post_type' => $post_type,
-			'mode' 		=> $_GET['mode'] ?? 'default',
+			'posts'        => $posts,
+			'nonce'        => wp_create_nonce( 'mb_cpt_order_nonce' ),
+			'post_type'    => $post_type,
+			'mode'         => $_GET['mode'] ?? 'default',
 			'hierarchical' => $hierarchical,
 		] );
 
@@ -87,6 +118,18 @@ class Order {
 			[],
 			MB_CPT_VER
 		);
+	}
+
+	private function get_children( $parent_id, $post_map ) {
+		$children = [];
+		foreach ( $post_map as $post ) {
+			if ( $post->post_parent == $parent_id ) {
+				$children[] = $post->ID;
+				$children   = array_merge( $children, get_children( $post->ID, $post_map ) );
+			}
+		}
+
+		return $children;
 	}
 
 	// Add toggle sortable link to views
