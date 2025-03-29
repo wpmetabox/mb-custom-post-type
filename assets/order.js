@@ -51,7 +51,7 @@
 	function treeToHtml( tree, level = 0 ) {
 		let html = `<ul class="mb-cpt-sortable" data-level="${ level }">`;
 		tree.forEach( post => {
-			html += `<li data-id="${ post.ID }" data-parent="${ post.post_parent }">
+			html += `<li data-id="${ post.ID }" data-parent="${ post.post_parent }" data-order="${ post.menu_order }">
 				<div class="mb-cpt-page-item">
 					<div class="mb-cpt-handle">☰</div>
 					<div class="mb-cpt-title">
@@ -79,27 +79,42 @@
 	 * 
 	 * @returns void
 	 */
-	function updateOrder() {
+	function updateOrder( evt ) {
 		const orderData = [];
 
-		$( '.mb-cpt-sortable li' ).each( function ( index ) {
+		$( '.mb-cpt-sortable li' ).each( function () {
 			const $this = $( this );
 			let parentId = 0;
-			const current_page = MB_CPT_ORDER.current_page;
-			const per_page = MB_CPT_ORDER.per_page;
-			const order = ( current_page - 1 ) * per_page * 10 + index + 1;
+			const order = $this.attr( 'data-order' );
 
 			// Only determine parent if hierarchical mode is enabled
 			if ( hierarchical ) {
 				const $parentLi = $this.parent().closest( 'li' );
-				parentId = $parentLi.length ? $parentLi.data( 'id' ) : 0;
+				parentId = $parentLi.length ? $parentLi.attr( 'data-id' ) : 0;
 			}
 
 			orderData.push( {
-				id: $this.data( 'id' ),
+				id: $this.attr( 'data-id' ),
 				parent_id: parentId,
+				levelIndex: $this.index(),
 				order
 			} );
+		} );
+
+		const topLevelPosts = MB_CPT_ORDER.posts.filter( post => post.post_parent === 0 );
+
+		let i = 0;
+		const updatedOrder = orderData.map( ( item, index ) => {
+			if ( item.parent_id ) {
+				item.order = item.levelIndex;
+				return item;
+			}
+
+			let lastOrder = topLevelPosts.at( -1 ).menu_order + 1;
+			let relatedOrder = topLevelPosts.at( i )?.menu_order || lastOrder;
+			item.order = parseInt( relatedOrder );
+			i++;
+			return item;
 		} );
 
 		$.ajax( {
@@ -109,20 +124,7 @@
 				action: 'mb_cpt_save_order',
 				nonce: MB_CPT_ORDER.nonce,
 				post_type: MB_CPT_ORDER.post_type,
-				order_data: JSON.stringify( orderData )
-			},
-			success: function ( response ) {
-				if ( response.success ) {
-					MB_CPT_ORDER.posts = orderData.map( item => ( {
-						ID: item.id,
-						post_title: $( `li[data-id="${ item.id }"] .mb-cpt-title` ).text(),
-						post_parent: item.parent_id,
-						menu_order: item.order
-					} ) );
-				}
-			},
-			error: function ( xhr ) {
-				// eslint-disable-next-line no-console
+				order_data: JSON.stringify( updatedOrder )
 			}
 		} );
 	}
@@ -147,7 +149,7 @@
 			swapThreshold: 0.65,
 			forceFallback: true,
 			onEnd: ( evt ) => {
-				updateOrder();
+				updateOrder( evt );
 			}
 		} );
 	} );

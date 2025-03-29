@@ -6,8 +6,20 @@ use WP_Query;
 class Order {
 
 	public function __construct() {
+		add_action( 'load-edit.php', [ $this, 'setup_for_edit_screen' ] );
 		add_action( 'admin_enqueue_scripts', [ $this, 'enqueue_scripts' ] );
 		add_action( 'wp_ajax_mb_cpt_save_order', [ $this, 'save_order' ] );
+	}
+
+	public function setup_for_edit_screen(): void {
+		$screen = get_current_screen();
+		$mode      = $_GET['mode'] ?? 'default';
+		if ( $screen->base !== 'edit' || $mode !== 'sortable' ) {
+			return;
+		}
+
+		// Set initial orders
+		$this->set_initial_orders( $screen->post_type );
 	}
 
 	public function enqueue_scripts( $hook ) {
@@ -42,16 +54,20 @@ class Order {
 			'mb-cpt-order-script',
 			MB_CPT_URL . 'assets/order.js',
 			[ 'jquery', 'sortablejs' ],
-			MB_CPT_VER,
+			filemtime( MB_CPT_DIR . '/assets/order.js' ),
 			true
 		);
 
 		// Use the global $wp_query to get the already-queried posts
 		global $wp_query;
-
-		// Use the global $wp_query to get the already-queried posts
-		global $wp_query;
-		$all_posts = $wp_query->posts;
+		$queried_posts = $wp_query->posts;
+		
+		// Add menu_order to the posts array
+		$all_posts = [];
+		foreach ($queried_posts as $index => $post) {
+			$post->menu_order = $index + 1;
+			$all_posts[] = $post;
+		}
 
 		// Get pagination info
 		$per_page = (int) get_user_option( 'edit_' . $post_type . '_per_page', get_current_user_id() );
@@ -95,12 +111,12 @@ class Order {
 			];
 
 			$full_query = new WP_Query( $args );
-			$posts      = array_map( function ($post) {
+			$posts      = array_map( function ($post) use ( $all_post_map ) {
 				return [ 
 					'ID'          => $post->ID,
 					'post_title'  => $post->post_title ?: __( '(no title)', 'mb-custom-post-type' ),
 					'post_parent' => $post->post_parent,
-					'menu_order'  => $post->menu_order,
+					'menu_order'  => $post->menu_order == 0 ? $all_post_map[ $post->ID ]->menu_order : $post->menu_order,
 					'post_status' => $post->post_status,
 				];
 			}, $full_query->posts );
@@ -122,8 +138,41 @@ class Order {
 			'mb-cpt-order-style',
 			MB_CPT_URL . 'assets/order.css',
 			[],
-			MB_CPT_VER
+			filemtime( MB_CPT_DIR . '/assets/order.css' ),
 		);
+	}
+
+	private function set_initial_orders( string $post_type ): void {
+		global $wpdb;
+
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- Error.
+		$result = $wpdb->get_row( $wpdb->prepare(
+			"
+			SELECT COUNT(*) AS total, MAX(menu_order) AS max
+			FROM $wpdb->posts
+			WHERE post_type = %s
+			",
+			$post_type
+		) );
+
+		if ( $result->total == 0 || $result->total == $result->max ) { // phpcs:ignore WordPress.PHP.StrictComparisons.LooseComparison
+			return;
+		}
+
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- Error.
+		$wpdb->query( 'SET @count = 0;' );
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- Error.
+		$wpdb->query( $wpdb->prepare(
+			"UPDATE $wpdb->posts as pt JOIN (
+				SELECT ID, (@count:=@count + 1) AS `rank`
+				FROM $wpdb->posts
+				WHERE post_type = %s
+				ORDER BY menu_order ASC
+			) as pt2
+			ON pt.id = pt2.id
+			SET pt.menu_order = pt2.`rank`;",
+			$post_type
+		) );
 	}
 
 	private function get_children( $parent_id, $post_map ) {
@@ -172,24 +221,18 @@ class Order {
 			wp_send_json_error( __( 'Insufficient permissions', 'mb-custom-post-type' ) );
 		}
 
-		// Because we are doing sortable on multiple pages, all posts with menu_order = 0 (default) 
-		// will be moved to the top of the list. 
-		// That means, when we order any items, their menu_order will be higher than 0, causing it to be moved to the end of the list, which is not what we want.
-		// So we need to set all posts with menu_order = 0 to a very high number (99999) before saving the new order
-		// This will ensure that the untouched items will keep their position
-		$post_type = sanitize_text_field( $_POST['post_type'] );
-		consolelog( $post_type );
-		$sql = "UPDATE $wpdb->posts SET menu_order = 99999 WHERE menu_order = 0 AND post_type = %s";
-		$wpdb->query( $wpdb->prepare( $sql, $post_type ) );
-
 		$order_data = json_decode( wp_unslash( $_POST['order_data'] ), true );
+
+		if ( ! is_array( $order_data ) || empty( $order_data ) ) {
+			wp_send_json_error( __( 'Invalid order data', 'mb-custom-post-type' ) );
+		}
 
 		foreach ( $order_data as $item ) {
 			$wpdb->update(
 				$wpdb->posts,
 				[
 					'post_parent' => $item['parent_id'] ? $item['parent_id'] : 0,
-					'menu_order' => $item['order'],
+					'menu_order'  => $item['order'],
 				],
 				[ 'ID' => $item['id'] ]
 			);
