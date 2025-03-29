@@ -57,18 +57,6 @@ class Order {
 			filemtime( MB_CPT_DIR . '/assets/order.js' ),
 			true
 		);
-
-		// Use the global $wp_query to get the already-queried posts
-		global $wp_query;
-		$queried_posts = $wp_query->posts;
-		
-		// Add menu_order to the posts array
-		$all_posts = [];
-		foreach ($queried_posts as $index => $post) {
-			$post->menu_order = $index + 1;
-			$all_posts[] = $post;
-		}
-
 		// Get pagination info
 		$per_page = (int) get_user_option( 'edit_' . $post_type . '_per_page', get_current_user_id() );
 		if ( ! $per_page ) {
@@ -76,6 +64,62 @@ class Order {
 		}
 		$current_page = isset( $_GET['paged'] ) ? max( 1, (int) $_GET['paged'] ) : 1;
 
+		// Use the global $wp_query to get the already-queried posts
+		global $wp_query;
+		$queried_posts = $wp_query->posts;
+		// Add menu_order to the posts array
+		$all_posts = [];
+
+		// For hierarchical queries, we don't have menu_order so we use the index + 1 for the order
+		foreach ($queried_posts as $index => $post) {
+			$post->menu_order = $post->menu_order ?? $index + 1;
+			$all_posts[] = $post;
+		}
+		
+		// Order by menu_order, asc
+		usort( $all_posts, function ($a, $b) {
+			return $a->menu_order <=> $b->menu_order;
+		} );
+
+		$posts = $hierarchical ? $this->get_hierarchical_posts( $post_type, $all_posts, $current_page, $per_page ) : $all_posts;
+
+		// Localize script with the queried posts
+		wp_localize_script( 'mb-cpt-order-script', 'MB_CPT_ORDER', [
+			'posts'        => $posts,
+			'nonce'        => wp_create_nonce( 'mb_cpt_order_nonce' ),
+			'post_type'    => $post_type,
+			'mode'         => $_GET['mode'] ?? 'default',
+			'hierarchical' => $hierarchical,
+			'current_page' => $current_page,
+			'per_page'     => $per_page,
+		] );
+
+		// Enqueue styles
+		wp_enqueue_style(
+			'mb-cpt-order-style',
+			MB_CPT_URL . 'assets/order.css',
+			[],
+			filemtime( MB_CPT_DIR . '/assets/order.css' ),
+		);
+	}
+
+	/**
+	 * If we need to get hierarchical posts, WordPress will only return post id, not the full post object.
+	 * So we need to fetch the full post object for the current page.
+	 * 
+	 * We also need to make extra calculations to get the correct menu_order and post_parent.
+	 * and get all the children of the current page.
+	 * 
+	 * So for example, if per_page is 20, and we have about 3 children posts, total item is 23.
+	 * 
+	 * @param string $post_type
+	 * @param array $all_posts
+	 * @param int $current_page
+	 * @param int $per_page
+	 * 
+	 * @return array
+	 */
+	private function get_hierarchical_posts( $post_type, $all_posts, $current_page, $per_page ): array {
 		// Filter top-level posts (post_parent = 0) for pagination
 		$top_level_posts = array_filter( $all_posts, function ($post) {
 			return $post->post_parent == 0;
@@ -122,24 +166,7 @@ class Order {
 			}, $full_query->posts );
 		}
 
-		// Localize script with the queried posts
-		wp_localize_script( 'mb-cpt-order-script', 'MB_CPT_ORDER', [
-			'posts'        => $posts,
-			'nonce'        => wp_create_nonce( 'mb_cpt_order_nonce' ),
-			'post_type'    => $post_type,
-			'mode'         => $_GET['mode'] ?? 'default',
-			'hierarchical' => $hierarchical,
-			'current_page' => $current_page,
-			'per_page'     => $per_page,
-		] );
-
-		// Enqueue styles
-		wp_enqueue_style(
-			'mb-cpt-order-style',
-			MB_CPT_URL . 'assets/order.css',
-			[],
-			filemtime( MB_CPT_DIR . '/assets/order.css' ),
-		);
+		return $posts;
 	}
 
 	private function set_initial_orders( string $post_type ): void {
