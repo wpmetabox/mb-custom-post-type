@@ -4,15 +4,21 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "8bef73fb5bceb81325c4c39453e4860e",
+    "content-hash": "6458f3d68afc0fa87c7bd91a89176019",
     "packages": [
         {
-            "name": "meta-box/support",
+            "name": "wpmetabox/support",
             "version": "dev-master",
             "source": {
                 "type": "git",
                 "url": "https://github.com/wpmetabox/support.git",
-                "reference": "2f482c905c05ed4fdfcefadd749b13a13ff4daac"
+                "reference": "874318ec497ce7fb918eb0629dec825210155d97"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/wpmetabox/support/zipball/874318ec497ce7fb918eb0629dec825210155d97",
+                "reference": "874318ec497ce7fb918eb0629dec825210155d97",
+                "shasum": ""
             },
             "default-branch": true,
             "type": "library",
@@ -21,19 +27,24 @@
                     "MetaBox\\Support\\": ""
                 }
             },
+            "notification-url": "https://packagist.org/downloads/",
             "license": [
-                "GNU GPL-2.0"
+                "GPL-2.0-or-later"
             ],
             "description": "Helpers for Meta Box plugins",
             "homepage": "https://metabox.io",
-            "time": "2025-01-20T07:23:19+00:00"
+            "support": {
+                "issues": "https://github.com/wpmetabox/support/issues",
+                "source": "https://github.com/wpmetabox/support/tree/master"
+            },
+            "time": "2025-03-17T08:34:51+00:00"
         }
     ],
     "packages-dev": [],
     "aliases": [],
     "minimum-stability": "stable",
     "stability-flags": {
-        "meta-box/support": 20
+        "wpmetabox/support": 20
     },
     "prefer-stable": false,
     "prefer-lowest": false,
