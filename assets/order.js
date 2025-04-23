@@ -3,7 +3,7 @@
 
 	/**
 	 * Get the current mode, either 'default' or 'sortable'
-	 * 
+	 *
 	 * @returns {string} The current mode
 	 */
 	function getMode() {
@@ -12,7 +12,7 @@
 
 	/**
 	 * Build tree structure from flat list
-	 * @param {array} posts 
+	 * @param {array} posts
 	 * @returns array
 	 */
 	function buildPostTree( posts ) {
@@ -43,7 +43,7 @@
 
 	/**
 	 * Convert tree structure to HTML for sortable view
-	 * 
+	 *
 	 * @param {array} tree
 	 * @param {number} level
 	 * @returns {string}
@@ -76,7 +76,7 @@
 
 	/**
 	 * Send update order request through ajax for saving
-	 * 
+	 *
 	 * @returns void
 	 */
 	function updateOrder( evt ) {
@@ -96,24 +96,15 @@
 			orderData.push( {
 				id: $this.attr( 'data-id' ),
 				parent_id: parentId,
-				levelIndex: $this.index(),
 				order
 			} );
 		} );
 
-		const topLevelPosts = MB_CPT_ORDER.posts.filter( post => post.post_parent === 0 );
-
-		let i = 0;
+		let current = parseInt( MB_CPT_ORDER.current_page ) - 1,
+			i = current * parseInt( MB_CPT_ORDER.per_page );
 		const updatedOrder = orderData.map( ( item, index ) => {
-			if ( item.parent_id ) {
-				item.order = item.levelIndex;
-				return item;
-			}
-
-			let lastOrder = topLevelPosts.at( -1 ).menu_order + 1;
-			let relatedOrder = topLevelPosts.at( i )?.menu_order || lastOrder;
-			item.order = parseInt( relatedOrder );
 			i++;
+			item.order = i;
 			return item;
 		} );
 
