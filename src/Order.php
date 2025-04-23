@@ -9,6 +9,11 @@ class Order {
 		add_action( 'load-edit.php', [ $this, 'setup_for_edit_screen' ] );
 		add_action( 'admin_enqueue_scripts', [ $this, 'enqueue_scripts' ] );
 		add_action( 'wp_ajax_mb_cpt_save_order', [ $this, 'save_order' ] );
+		add_action( 'pre_get_posts', [ $this, 'set_orderby_menu_order' ] );
+		add_filter( 'get_previous_post_where', [ $this, 'order_previous_post_where' ] );
+		add_filter( 'get_previous_post_sort', [ $this, 'order_previous_post_sort' ] );
+		add_filter( 'get_next_post_where', [ $this, 'order_next_post_where' ] );
+		add_filter( 'get_next_post_sort', [ $this, 'order_next_post_sort' ] );
 	}
 
 	public function setup_for_edit_screen(): void {
@@ -75,7 +80,7 @@ class Order {
 			$post->menu_order = $post->menu_order ?? $index + 1;
 			$all_posts[] = $post;
 		}
-		
+
 		// Order by menu_order, asc
 		usort( $all_posts, function ($a, $b) {
 			return $a->menu_order <=> $b->menu_order;
@@ -106,17 +111,17 @@ class Order {
 	/**
 	 * If we need to get hierarchical posts, WordPress will only return post id, not the full post object.
 	 * So we need to fetch the full post object for the current page.
-	 * 
+	 *
 	 * We also need to make extra calculations to get the correct menu_order and post_parent.
 	 * and get all the children of the current page.
-	 * 
+	 *
 	 * So for example, if per_page is 20, and we have about 3 children posts, total item is 23.
-	 * 
+	 *
 	 * @param string $post_type
 	 * @param array $all_posts
 	 * @param int $current_page
 	 * @param int $per_page
-	 * 
+	 *
 	 * @return array
 	 */
 	private function get_hierarchical_posts( $post_type, $all_posts, $current_page, $per_page ): array {
@@ -143,7 +148,7 @@ class Order {
 		// Fetch full post data only if we have IDs to fetch
 		$posts = [];
 		if ( ! empty( $post_ids_to_fetch ) ) {
-			$args = [ 
+			$args = [
 				'post_type'              => $post_type,
 				'post__in'               => $post_ids_to_fetch,
 				'posts_per_page'         => -1,                   // Get all matching posts (parents + children)
@@ -156,7 +161,7 @@ class Order {
 
 			$full_query = new WP_Query( $args );
 			$posts      = array_map( function ($post) use ( $all_post_map ) {
-				return [ 
+				return [
 					'ID'          => $post->ID,
 					'post_title'  => $post->post_title ?: __( '(no title)', 'mb-custom-post-type' ),
 					'post_parent' => $post->post_parent,
@@ -266,5 +271,63 @@ class Order {
 		}
 
 		wp_send_json_success( __( 'Order updated', 'mb-custom-post-type' ) );
+	}
+
+	public function set_orderby_menu_order( WP_Query $query ): void {
+		$post_type = $query->get( 'post_type' );
+
+		if ( ! $post_type || ! is_string( $post_type ) || ! $this->is_enabled_ordering( $post_type ) ) {
+			return;
+		}
+
+		if ( $query->get( 'orderby' ) ) {
+			return;
+		}
+
+		$query->set( 'orderby', 'menu_order' );
+		if ( ! $query->get( 'order' ) ) {
+			$query->set( 'order', 'ASC' );
+		}
+	}
+
+	public function order_previous_post_where( string $where ): string {
+		global $post;
+
+		if ( ! empty( $post->post_type ) && $this->is_enabled_ordering( $post->post_type ) ) {
+			$where = preg_replace( "/p.post_date < \'[0-9\-\s\:]+\'/i", "p.menu_order > '" . $post->menu_order . "'", $where );
+		}
+		return $where;
+	}
+
+	public function order_previous_post_sort( string $orderby ): string {
+		global $post;
+
+		if ( ! empty( $post->post_type ) && $this->is_enabled_ordering( $post->post_type ) ) {
+			$orderby = 'ORDER BY p.menu_order ASC LIMIT 1';
+		}
+		return $orderby;
+	}
+
+	public function order_next_post_where( string $where ): string {
+		global $post;
+
+		if ( ! empty( $post->post_type ) && $this->is_enabled_ordering( $post->post_type ) ) {
+			$where = preg_replace( "/p.post_date > \'[0-9\-\s\:]+\'/i", "p.menu_order < '" . $post->menu_order . "'", $where );
+		}
+		return $where;
+	}
+
+	public function order_next_post_sort( string $orderby ): string {
+		global $post;
+
+		if ( ! empty( $post->post_type ) && $this->is_enabled_ordering( $post->post_type ) ) {
+			$orderby = 'ORDER BY p.menu_order DESC LIMIT 1';
+		}
+		return $orderby;
+	}
+
+	private function is_enabled_ordering( string $post_type ): bool {
+		$post_type_object = get_post_type_object( $post_type );
+		return ! empty( $post_type_object->order );
 	}
 }
