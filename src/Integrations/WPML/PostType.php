@@ -107,7 +107,7 @@ class PostType {
 	private function get_package( WP_Post $post ): array {
 		return [
 			'kind'      => 'Meta Box: Post Type',
-			'name'      => $post->post_name,
+			'name'      => $post->post_title,
 			'title'     => $post->post_title,
 			'edit_link' => get_edit_post_link( $post ),
 		];
