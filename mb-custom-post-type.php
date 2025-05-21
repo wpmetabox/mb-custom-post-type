@@ -3,7 +3,7 @@
  * Plugin Name: MB Custom Post Types & Custom Taxonomies
  * Plugin URI:  https://metabox.io/plugins/custom-post-type/
  * Description: Create custom post types and custom taxonomies with easy-to-use UI
- * Version:     2.8.1
+ * Version:     2.8.2
  * Author:      MetaBox.io
  * Author URI:  https://metabox.io
  * License:     GPL-2.0+
@@ -39,7 +39,7 @@ if ( ! function_exists( 'mb_cpt_load' ) ) {
 
 	function mb_cpt_load() {
 		define( 'MB_CPT_DIR', __DIR__ );
-		define( 'MB_CPT_VER', '2.8.1' );
+		define( 'MB_CPT_VER', '2.8.2' );
 
 		if ( class_exists( 'RWMB_Loader' ) ) {
 			list( , $url ) = RWMB_Loader::get_path( __DIR__ );
