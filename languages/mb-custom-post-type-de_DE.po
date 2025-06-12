@@ -1,0 +1,750 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: MB Custom Post Type\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2025-04-07 14:28+0000\n"
+"PO-Revision-Date: 2025-04-07 15:03+0000\n"
+"Last-Translator: \n"
+"Language-Team: Deutsch\n"
+"Language: de_DE\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Loco https://localise.biz/\n"
+"X-Loco-Version: 2.7.2-dev; wp-6.7.2\n"
+"X-Domain: mb-custom-post-type"
+
+#. %1$s - number of items, %2$s - post type label in singular or plural forms.
+#: vendor/meta-box/mb-custom-post-type/src/PostTypeRegister.php:285
+#, php-format
+msgid "%1$s %2$s moved to the Trash."
+msgstr "%1$s %2$s wurde in den Papierkorb verschoben."
+
+#. %1$s - number of items, %2$s - post type label in singular or plural forms.
+#: vendor/meta-box/mb-custom-post-type/src/PostTypeRegister.php:281
+#, php-format
+msgid "%1$s %2$s not updated, somebody is editing."
+msgstr "%1$s %2$s nicht aktualisiert, jemand bearbeitet es gerade."
+
+#. %1$s - number of items, %2$s - post type label in singular or plural forms.
+#: vendor/meta-box/mb-custom-post-type/src/PostTypeRegister.php:283
+#, php-format
+msgid "%1$s %2$s permanently deleted."
+msgstr "%1$s %2$s dauerhaft gelöscht."
+
+#. %1$s - number of items, %2$s - post type label in singular or plural forms.
+#: vendor/meta-box/mb-custom-post-type/src/PostTypeRegister.php:287
+#, php-format
+msgid "%1$s %2$s restored from the Trash."
+msgstr "%1$s %2$s aus dem Papierkorb wiederhergestellt."
+
+#. %1$s - number of items, %2$s - post type label in singular or plural forms.
+#: vendor/meta-box/mb-custom-post-type/src/PostTypeRegister.php:279
+#, php-format
+msgid "%1$s %2$s updated."
+msgstr "%1$s %2$s aktualisiert."
+
+#. %1$s - post type singular label, %2$s - add fields link.
+#: vendor/meta-box/mb-custom-post-type/src/PostTypeRegister.php:204
+#, php-format
+msgid "%1$s published. %2$s"
+msgstr "%1$s veröffentlicht. %2$s"
+
+#. %1$s: post type singular label, %2$s - revision title.
+#: vendor/meta-box/mb-custom-post-type/src/PostTypeRegister.php:202
+#, php-format
+msgid "%1$s restored to revision from %2$s."
+msgstr "%1$s hat die Revision von %2$s wiederhergestellt."
+
+#. %1$s: post type singular label, %2$s - revision title.
+#: vendor/meta-box/mb-custom-post-type/src/PostTypeRegister.php:210
+#, php-format
+msgid "%1$s scheduled for: <strong>%2$s</strong>."
+msgstr "%1$s geplant für: <strong>%2$s</strong>."
+
+#. %s - post type singular label.
+#: vendor/meta-box/mb-custom-post-type/src/PostTypeRegister.php:212
+#, php-format
+msgid "%s draft updated."
+msgstr "%s Entwurf aktualisiert."
+
+#. %s - post type singular label.
+#. %s - taxonomy singular label.
+#: vendor/meta-box/mb-custom-post-type/src/PostTypeRegister.php:186
+#: vendor/meta-box/mb-custom-post-type/src/TaxonomyRegister.php:194
+#, php-format
+msgid "%s Fields"
+msgstr "%s Felder"
+
+#. %s - post type singular label.
+#: vendor/meta-box/mb-custom-post-type/src/PostTypeRegister.php:206
+#, php-format
+msgid "%s saved."
+msgstr "%s gespeichert."
+
+#. %s - post type singular label.
+#: vendor/meta-box/mb-custom-post-type/src/PostTypeRegister.php:208
+#, php-format
+msgid "%s submitted."
+msgstr "%s eingereicht."
+
+#. %s - taxonomy label in singular and plural forms.
+#: vendor/meta-box/mb-custom-post-type/src/TaxonomyRegister.php:230
+#, php-format
+msgid "%s taxonomy moved to the Trash."
+msgid_plural "%s taxonomies moved to the Trash."
+msgstr[0] "die %s Taxonomie wurde in den Papierkorb verschoben."
+msgstr[1] "%s Taxonomien in den Papierkorb verschoben."
+
+#. %s - taxonomy label in singular and plural forms.
+#: vendor/meta-box/mb-custom-post-type/src/TaxonomyRegister.php:226
+#, php-format
+msgid "%s taxonomy not updated, somebody is editing."
+msgid_plural "%s taxonomies not updated, somebody is editing."
+msgstr[0] "%s Taxonomie nicht aktualisiert, jemand bearbeitet sie gerade."
+msgstr[1] "%s Taxonomien nicht aktualisiert, jemand bearbeitet sie gerade."
+
+#. %s - taxonomy label in singular and plural forms.
+#: vendor/meta-box/mb-custom-post-type/src/TaxonomyRegister.php:228
+#, php-format
+msgid "%s taxonomy permanently deleted."
+msgid_plural "%s taxonomies permanently deleted."
+msgstr[0] "%s Taxonomie dauerhaft gelöscht."
+msgstr[1] "%s Taxonomien dauerhaft gelöscht."
+
+#. %s - taxonomy label in singular and plural forms.
+#: vendor/meta-box/mb-custom-post-type/src/TaxonomyRegister.php:232
+#, php-format
+msgid "%s taxonomy restored from the Trash."
+msgid_plural "%s taxonomies restored from the Trash."
+msgstr[0] "%s Taxonomie aus dem Papierkorb wiederhergestellt."
+msgstr[1] "%s Taxonomien aus dem Papierkorb wiederhergestellt."
+
+#. %s - taxonomy label in singular and plural forms.
+#: vendor/meta-box/mb-custom-post-type/src/TaxonomyRegister.php:224
+#, php-format
+msgid "%s taxonomy updated."
+msgid_plural "%s taxonomies updated."
+msgstr[0] "%s taxonomy aktualisiert."
+msgstr[1] "%s Taxonomien aktualisiert."
+
+#. %s - post type singular label.
+#: vendor/meta-box/mb-custom-post-type/src/PostTypeRegister.php:196
+#: vendor/meta-box/mb-custom-post-type/src/PostTypeRegister.php:200
+#, php-format
+msgid "%s updated."
+msgstr "%s aktualisiert."
+
+#: vendor/meta-box/mb-custom-post-type/src/PostTypeRegister.php:190
+msgid "Add custom fields to this post type"
+msgstr "Benutzerdefinierte Felder zu diesem Beitragstyp hinzufügen"
+
+#: vendor/meta-box/mb-custom-post-type/src/TaxonomyRegister.php:198
+msgid "Add custom fields to this taxonomy"
+msgstr "Benutzerdefinierte Felder zu dieser Taxonomie hinzufügen"
+
+#: vendor/meta-box/mb-custom-post-type/src/Integrations/Polylang/PostType.php:11
+#: vendor/meta-box/mb-custom-post-type/src/Integrations/WPML/PostType.php:13
+msgid "Add new"
+msgstr "Neu hinzufügen"
+
+#: vendor/meta-box/mb-custom-post-type/src/Integrations/Polylang/Taxonomy.php:20
+#: vendor/meta-box/mb-custom-post-type/src/Integrations/Polylang/PostType.php:12
+#: vendor/meta-box/mb-custom-post-type/src/Integrations/WPML/Taxonomy.php:22
+#: vendor/meta-box/mb-custom-post-type/src/Integrations/WPML/PostType.php:14
+msgid "Add new item"
+msgstr "Neuen Artikel hinzufügen"
+
+#: vendor/meta-box/mb-custom-post-type/src/PostTypeRegister.php:19
+msgid "Add New Post Type"
+msgstr "Neuen Beitragstyp hinzufügen"
+
+#: vendor/meta-box/mb-custom-post-type/src/TaxonomyRegister.php:44
+msgid "Add New Taxonomy"
+msgstr "Neue Taxonomie hinzufügen"
+
+#: vendor/meta-box/mb-custom-post-type/src/Integrations/Polylang/Taxonomy.php:23
+#: vendor/meta-box/mb-custom-post-type/src/Integrations/WPML/Taxonomy.php:25
+msgid "Add or remove items"
+msgstr "Artikel hinzufügen oder entfernen"
+
+#: vendor/meta-box/mb-custom-post-type/src/Integrations/Polylang/PostType.php:40
+#: vendor/meta-box/mb-custom-post-type/src/Integrations/WPML/PostType.php:42
+msgid "Admin bar name"
+msgstr "Name der Admin-Bar"
+
+#: vendor/meta-box/mb-custom-post-type/src/Integrations/Polylang/Taxonomy.php:14
+#: vendor/meta-box/mb-custom-post-type/src/Integrations/Polylang/PostType.php:21
+#: vendor/meta-box/mb-custom-post-type/src/Integrations/WPML/Taxonomy.php:16
+#: vendor/meta-box/mb-custom-post-type/src/Integrations/WPML/PostType.php:23
+msgid "All items"
+msgstr "Alle Artikel"
+
+#: vendor/meta-box/mb-custom-post-type/src/Migration.php:41
+msgid ""
+"Always backup your database first as the plugin will remove/replace the "
+"existing CPT UI data. If you find any problem, restore the database and "
+"report us. We can't help you if you don't backup the database and there's "
+"something wrong."
+msgstr ""
+"Sichert immer zuerst eure Datenbank, da das Plugin die bestehenden CPT UI-"
+"Daten entfernt/ersetzt. Wenn du ein Problem feststellst, stelle die "
+"Datenbank wieder her und melde es uns. Wir können dir nicht helfen, wenn du "
+"die Datenbank nicht gesichert hast und etwas nicht stimmt."
+
+#: vendor/meta-box/mb-custom-post-type/src/Integrations/Polylang/PostType.php:22
+#: vendor/meta-box/mb-custom-post-type/src/Integrations/WPML/PostType.php:24
+msgid "Archives"
+msgstr "Archiv"
+
+#: vendor/meta-box/mb-custom-post-type/src/Integrations/Polylang/PostType.php:23
+#: vendor/meta-box/mb-custom-post-type/src/Integrations/WPML/PostType.php:25
+msgid "Attributes"
+msgstr "Attribute"
+
+#: vendor/meta-box/mb-custom-post-type/src/Integrations/Polylang/Taxonomy.php:31
+#: vendor/meta-box/mb-custom-post-type/src/Integrations/WPML/Taxonomy.php:33
+msgid "Back to items"
+msgstr "Zurück zu den Artikeln"
+
+#. %s - go back URL.
+#: vendor/meta-box/mb-custom-post-type/src/Import.php:88
+#, php-format
+msgid ""
+"Cannot import the post type <strong>%1$s</strong>. <a href=\"%2$s\">Go "
+"back</a>."
+msgstr ""
+"Der Beitragstyp <strong>%1$s</strong> kann nicht importiert werden. <a "
+"href=\"%2$s\">Zurückgehen</a>."
+
+#: vendor/meta-box/mb-custom-post-type/src/Import.php:37
+msgid "Choose an exported \".json\" file from your computer:"
+msgstr "Wähle eine exportierte \".json\"-Datei von deinem Computer:"
+
+#: vendor/meta-box/mb-custom-post-type/src/Integrations/Polylang/Taxonomy.php:24
+#: vendor/meta-box/mb-custom-post-type/src/Integrations/WPML/Taxonomy.php:26
+msgid "Choose from the most used items"
+msgstr "Wähle aus den meistgenutzten Artikeln"
+
+#: vendor/meta-box/mb-custom-post-type/src/Migration.php:13
+#: vendor/meta-box/mb-custom-post-type/src/Migration.php:14
+msgid "CPT UI Migration"
+msgstr "CPT UI Migration"
+
+#: vendor/meta-box/mb-custom-post-type/src/PostTypeRegister.php:198
+#: vendor/meta-box/mb-custom-post-type/src/TaxonomyRegister.php:205
+msgid "Custom field deleted."
+msgstr "Benutzerdefiniertes Feld gelöscht."
+
+#: vendor/meta-box/mb-custom-post-type/src/PostTypeRegister.php:197
+#: vendor/meta-box/mb-custom-post-type/src/TaxonomyRegister.php:204
+msgid "Custom field updated."
+msgstr "Benutzerdefiniertes Feld aktualisiert."
+
+#: vendor/meta-box/mb-custom-post-type/src/Edit.php:80
+msgid "Custom URL"
+msgstr "Benutzerdefinierte URL"
+
+#: vendor/meta-box/mb-custom-post-type/src/Edit.php:72
+msgid "Dashicons"
+msgstr "Dashicons"
+
+#: vendor/meta-box/mb-custom-post-type/src/Edit.php:148
+msgid "Default"
+msgstr "Standard"
+
+#: vendor/meta-box/mb-custom-post-type/src/Integrations/Polylang/Taxonomy.php:37
+#: vendor/meta-box/mb-custom-post-type/src/Integrations/WPML/Taxonomy.php:39
+msgid "Description field description"
+msgstr "Beschreibung Feldbeschreibung"
+
+#: vendor/meta-box/mb-custom-post-type/src/Edit.php:127
+msgid "Do not show in the admin menu"
+msgstr "Nicht im Admin-Menü anzeigen"
+
+#: vendor/meta-box/mb-custom-post-type/src/Migration.php:28
+msgid "Done!"
+msgstr "Erledigt!"
+
+#: vendor/meta-box/mb-custom-post-type/src/Integrations/Polylang/Taxonomy.php:17
+#: vendor/meta-box/mb-custom-post-type/src/Integrations/Polylang/PostType.php:13
+#: vendor/meta-box/mb-custom-post-type/src/Integrations/WPML/Taxonomy.php:19
+#: vendor/meta-box/mb-custom-post-type/src/Integrations/WPML/PostType.php:15
+msgid "Edit item"
+msgstr "Artikel bearbeiten"
+
+#: vendor/meta-box/mb-custom-post-type/src/PostTypeRegister.php:22
+msgid "Edit Post Type"
+msgstr "Beitragstyp bearbeiten"
+
+#: vendor/meta-box/mb-custom-post-type/src/TaxonomyRegister.php:47
+msgid "Edit Taxonomy"
+msgstr "Taxonomie bearbeiten"
+
+#: vendor/meta-box/mb-custom-post-type/src/Export.php:22
+#: vendor/meta-box/mb-custom-post-type/src/Import.php:21
+msgid "Export"
+msgstr "Exportieren"
+
+#: vendor/meta-box/mb-custom-post-type/src/Integrations/Polylang/PostType.php:26
+#: vendor/meta-box/mb-custom-post-type/src/Integrations/WPML/PostType.php:28
+msgid "Featured image"
+msgstr "Ausgewähltes Bild"
+
+#: vendor/meta-box/mb-custom-post-type/src/Integrations/Polylang/PostType.php:32
+#: vendor/meta-box/mb-custom-post-type/src/Integrations/WPML/PostType.php:34
+msgid "Filter by date"
+msgstr "Nach Datum filtern"
+
+#: vendor/meta-box/mb-custom-post-type/src/Integrations/Polylang/Taxonomy.php:27
+#: vendor/meta-box/mb-custom-post-type/src/Integrations/WPML/Taxonomy.php:29
+msgid "Filter by item"
+msgstr "Nach Artikel filtern"
+
+#: vendor/meta-box/mb-custom-post-type/src/Integrations/Polylang/PostType.php:31
+#: vendor/meta-box/mb-custom-post-type/src/Integrations/WPML/PostType.php:33
+msgid "Filter items list"
+msgstr "Artikelliste filtern"
+
+#: vendor/meta-box/mb-custom-post-type/src/Edit.php:84
+msgid "Font Awesome"
+msgstr "Font Awesome"
+
+#: vendor/meta-box/mb-custom-post-type/src/Integrations/Polylang/Taxonomy.php:9
+#: vendor/meta-box/mb-custom-post-type/src/Integrations/WPML/Taxonomy.php:11
+msgid "General name for the taxonomy, usually plural"
+msgstr "Allgemeiner Name für die Taxonomie, meist Plural"
+
+#: vendor/meta-box/mb-custom-post-type/src/Import.php:22
+#: vendor/meta-box/mb-custom-post-type/src/Import.php:42
+msgid "Import"
+msgstr "Importieren"
+
+#: vendor/meta-box/mb-custom-post-type/src/Integrations/Polylang/PostType.php:24
+#: vendor/meta-box/mb-custom-post-type/src/Integrations/WPML/PostType.php:26
+msgid "Insert into item"
+msgstr "In Artikel einfügen"
+
+#. %s - go back URL.
+#: vendor/meta-box/mb-custom-post-type/src/Import.php:62
+#, php-format
+msgid "Invalid file data. <a href=\"%s\">Go back</a>."
+msgstr "Ungültige Dateidaten. <a href=\"%s\">Zurückgehen</a>."
+
+#: vendor/meta-box/mb-custom-post-type/src/Integrations/Polylang/Taxonomy.php:32
+#: vendor/meta-box/mb-custom-post-type/src/Integrations/WPML/Taxonomy.php:34
+msgid "Item link"
+msgstr "Artikel Link"
+
+#: vendor/meta-box/mb-custom-post-type/src/Integrations/Polylang/Taxonomy.php:33
+#: vendor/meta-box/mb-custom-post-type/src/Integrations/WPML/Taxonomy.php:35
+msgid "Item link description"
+msgstr "Artikel Link Beschreibung"
+
+#: vendor/meta-box/mb-custom-post-type/src/Integrations/Polylang/PostType.php:35
+#: vendor/meta-box/mb-custom-post-type/src/Integrations/WPML/PostType.php:37
+msgid "Item published"
+msgstr "Artikel veröffentlicht"
+
+#: vendor/meta-box/mb-custom-post-type/src/Integrations/Polylang/PostType.php:36
+#: vendor/meta-box/mb-custom-post-type/src/Integrations/WPML/PostType.php:38
+msgid "Item published privately"
+msgstr "Artikel privat veröffentlicht"
+
+#: vendor/meta-box/mb-custom-post-type/src/Integrations/Polylang/PostType.php:37
+#: vendor/meta-box/mb-custom-post-type/src/Integrations/WPML/PostType.php:39
+msgid "Item reverted to draft"
+msgstr "Artikel wird zum Entwurf zurückgesetzt"
+
+#: vendor/meta-box/mb-custom-post-type/src/Integrations/Polylang/PostType.php:38
+#: vendor/meta-box/mb-custom-post-type/src/Integrations/WPML/PostType.php:40
+msgid "Item scheduled"
+msgstr "Artikel geplant"
+
+#: vendor/meta-box/mb-custom-post-type/src/Integrations/Polylang/PostType.php:39
+#: vendor/meta-box/mb-custom-post-type/src/Integrations/WPML/PostType.php:41
+msgid "Item updated"
+msgstr "Artikel aktualisiert"
+
+#: vendor/meta-box/mb-custom-post-type/src/Integrations/Polylang/Taxonomy.php:29
+#: vendor/meta-box/mb-custom-post-type/src/Integrations/Polylang/PostType.php:34
+#: vendor/meta-box/mb-custom-post-type/src/Integrations/WPML/Taxonomy.php:31
+#: vendor/meta-box/mb-custom-post-type/src/Integrations/WPML/PostType.php:36
+msgid "Items list"
+msgstr "Artikelliste"
+
+#: vendor/meta-box/mb-custom-post-type/src/Integrations/Polylang/Taxonomy.php:28
+#: vendor/meta-box/mb-custom-post-type/src/Integrations/Polylang/PostType.php:33
+#: vendor/meta-box/mb-custom-post-type/src/Integrations/WPML/Taxonomy.php:30
+#: vendor/meta-box/mb-custom-post-type/src/Integrations/WPML/PostType.php:35
+msgid "Items list navigation"
+msgstr "Navigation in der Artikelliste"
+
+#: vendor/meta-box/mb-custom-post-type/src/Integrations/Polylang/PostType.php:9
+#: vendor/meta-box/mb-custom-post-type/src/Integrations/WPML/PostType.php:11
+msgid "Label"
+msgstr "Etikett"
+
+#: vendor/meta-box/mb-custom-post-type/src/PostTypeRegister.php:210
+#: vendor/meta-box/mb-custom-post-type/src/TaxonomyRegister.php:214
+msgid "M j, Y @ G:i"
+msgstr "d.m.Y @ H:i"
+
+#: vendor/meta-box/mb-custom-post-type/src/Integrations/Polylang/Taxonomy.php:11
+#: vendor/meta-box/mb-custom-post-type/src/Integrations/Polylang/PostType.php:30
+#: vendor/meta-box/mb-custom-post-type/src/Integrations/WPML/Taxonomy.php:13
+#: vendor/meta-box/mb-custom-post-type/src/Integrations/WPML/PostType.php:32
+msgid "Menu name"
+msgstr "Menü-Name"
+
+#. %s is the name of the post type.
+#: vendor/meta-box/mb-custom-post-type/src/Integrations/Polylang/PostType.php:87
+#, php-format
+msgid "Meta Box Post Type: %s"
+msgstr "Meta Box Post Typ: %s"
+
+#. %s is the name of the taxonomy.
+#: vendor/meta-box/mb-custom-post-type/src/Integrations/Polylang/Taxonomy.php:84
+#, php-format
+msgid "Meta Box Taxonomy: %s"
+msgstr "Meta Box Taxonomie: %s"
+
+#: vendor/meta-box/mb-custom-post-type/src/Migration.php:37
+msgid "Migrate"
+msgstr "Migrieren"
+
+#: vendor/meta-box/mb-custom-post-type/src/Migration.php:26
+msgid "Migrating post types..."
+msgstr "Beitragstypen migrieren..."
+
+#: vendor/meta-box/mb-custom-post-type/src/Migration.php:27
+msgid "Migrating taxonomies..."
+msgstr "Die Migration von Taxonomien..."
+
+#: vendor/meta-box/mb-custom-post-type/src/Integrations/Polylang/Taxonomy.php:30
+#: vendor/meta-box/mb-custom-post-type/src/Integrations/WPML/Taxonomy.php:32
+msgid "Most used"
+msgstr "Meist verwendet"
+
+#: vendor/meta-box/mb-custom-post-type/src/Integrations/Polylang/Taxonomy.php:34
+#: vendor/meta-box/mb-custom-post-type/src/Integrations/WPML/Taxonomy.php:36
+msgid "Name field description"
+msgstr "Beschreibung des Namensfeldes"
+
+#: vendor/meta-box/mb-custom-post-type/src/Integrations/Polylang/Taxonomy.php:10
+#: vendor/meta-box/mb-custom-post-type/src/Integrations/WPML/Taxonomy.php:12
+msgid "Name for one object of this taxonomy"
+msgstr "Name für ein Objekt dieser Taxonomie"
+
+#: vendor/meta-box/mb-custom-post-type/src/Integrations/Polylang/PostType.php:14
+#: vendor/meta-box/mb-custom-post-type/src/Integrations/WPML/PostType.php:16
+msgid "New item"
+msgstr "Neuer Artikel"
+
+#: vendor/meta-box/mb-custom-post-type/src/Integrations/Polylang/Taxonomy.php:21
+#: vendor/meta-box/mb-custom-post-type/src/Integrations/WPML/Taxonomy.php:23
+msgid "New item name"
+msgstr "Neuer Artikelname"
+
+#: vendor/meta-box/mb-custom-post-type/src/PostTypeRegister.php:20
+#: vendor/meta-box/mb-custom-post-type/src/PostTypeRegister.php:21
+msgid "New Post Type"
+msgstr "Neuer Beitragstyp"
+
+#: vendor/meta-box/mb-custom-post-type/src/TaxonomyRegister.php:45
+#: vendor/meta-box/mb-custom-post-type/src/TaxonomyRegister.php:46
+msgid "New Taxonomy"
+msgstr "Neue Taxonomie"
+
+#: vendor/meta-box/mb-custom-post-type/src/Integrations/Polylang/Taxonomy.php:26
+#: vendor/meta-box/mb-custom-post-type/src/Integrations/WPML/Taxonomy.php:28
+msgid "No items"
+msgstr "Keine Artikel"
+
+#: vendor/meta-box/mb-custom-post-type/src/Integrations/Polylang/Taxonomy.php:25
+#: vendor/meta-box/mb-custom-post-type/src/Integrations/WPML/Taxonomy.php:27
+msgid "No items found"
+msgstr "Keine Artikel gefunden"
+
+#: vendor/meta-box/mb-custom-post-type/src/Migration.php:42
+msgid ""
+"Not all data types and settings in CPT UI have an equivalent in Meta Box CPT."
+" The plugin will try to migrate as much as it can."
+msgstr ""
+"Nicht alle Datentypen und Einstellungen in CPT UI haben eine Entsprechung in "
+"Meta Box CPT. Das Plugin wird versuchen, so viel wie möglich zu migrieren."
+
+#: vendor/meta-box/mb-custom-post-type/src/PostTypeRegister.php:26
+#: vendor/meta-box/mb-custom-post-type/src/TaxonomyRegister.php:51
+#: vendor/meta-box/mb-custom-post-type/src/Integrations/Polylang/PostType.php:18
+#: vendor/meta-box/mb-custom-post-type/src/Integrations/WPML/PostType.php:20
+msgid "Not found"
+msgstr "Nicht gefunden"
+
+#: vendor/meta-box/mb-custom-post-type/src/PostTypeRegister.php:27
+#: vendor/meta-box/mb-custom-post-type/src/TaxonomyRegister.php:52
+msgid "Not found in Trash"
+msgstr "Nicht im Papierkorb gefunden"
+
+#: vendor/meta-box/mb-custom-post-type/src/Integrations/Polylang/PostType.php:19
+#: vendor/meta-box/mb-custom-post-type/src/Integrations/WPML/PostType.php:21
+msgid "Not found in trash"
+msgstr "Nicht im Papierkorb gefunden"
+
+#: vendor/meta-box/mb-custom-post-type/src/Migration.php:39
+msgid "Notes:"
+msgstr "Anmerkungen:"
+
+#: vendor/meta-box/mb-custom-post-type/src/Integrations/Polylang/Taxonomy.php:36
+#: vendor/meta-box/mb-custom-post-type/src/Integrations/WPML/Taxonomy.php:38
+msgid "Parent field description"
+msgstr "Beschreibung des übergeordneten Feldes"
+
+#: vendor/meta-box/mb-custom-post-type/src/Integrations/Polylang/Taxonomy.php:15
+#: vendor/meta-box/mb-custom-post-type/src/Integrations/WPML/Taxonomy.php:17
+msgid "Parent item"
+msgstr "Übergeordneter Artikel"
+
+#: vendor/meta-box/mb-custom-post-type/src/Integrations/Polylang/Taxonomy.php:16
+#: vendor/meta-box/mb-custom-post-type/src/Integrations/Polylang/PostType.php:20
+#: vendor/meta-box/mb-custom-post-type/src/Integrations/WPML/Taxonomy.php:18
+#: vendor/meta-box/mb-custom-post-type/src/Integrations/WPML/PostType.php:22
+msgid "Parent item colon"
+msgstr "Übergeordneter Artikel Doppelpunkt"
+
+#: vendor/meta-box/mb-custom-post-type/src/PostTypeRegister.php:17
+msgid "Parent Post Type:"
+msgstr "Übergeordneter Beitragstype:"
+
+#: vendor/meta-box/mb-custom-post-type/src/TaxonomyRegister.php:42
+msgid "Parent Taxonomy:"
+msgstr "Übergeordnete Taxonomie:"
+
+#. %s - URl to permalink settings page
+#: vendor/meta-box/mb-custom-post-type/src/Warning.php:15
+#, php-format
+msgid ""
+"Permalink is not set. It's recommended to set permalink for custom post "
+"types. <a href=\"%s\">Set it here.</a>"
+msgstr ""
+"Der Permalink ist nicht gesetzt. Es wird empfohlen, den Permalink für "
+"benutzerdefinierte Beitragstypen zu setzen. <a href=\"%s\">Setzen Sie ihn "
+"hier.</a>"
+
+#: vendor/meta-box/mb-custom-post-type/src/Integrations/Polylang/Taxonomy.php:13
+#: vendor/meta-box/mb-custom-post-type/src/Integrations/WPML/Taxonomy.php:15
+msgid "Popular items"
+msgstr "Beliebte Artikel"
+
+#: vendor/meta-box/mb-custom-post-type/src/PostTypeRegister.php:16
+msgid "Post Type"
+msgstr "Beitragstyp"
+
+#: vendor/meta-box/mb-custom-post-type/src/PostTypeRegister.php:256
+msgid "post type"
+msgstr "Beitragstyp"
+
+#: vendor/meta-box/mb-custom-post-type/src/PostTypeRegister.php:13
+msgctxt "Post Type General Name"
+msgid "Post Types"
+msgstr "Beitragstypen"
+
+#: vendor/meta-box/mb-custom-post-type/src/PostTypeRegister.php:14
+msgctxt "Post Type Singular Name"
+msgid "Post Type"
+msgstr "Beitragstyp"
+
+#: vendor/meta-box/mb-custom-post-type/src/PostTypeRegister.php:15
+#: vendor/meta-box/mb-custom-post-type/src/PostTypeRegister.php:18
+#: vendor/meta-box/mb-custom-post-type/src/PostTypeRegister.php:30
+msgid "Post Types"
+msgstr "Beitragstypen"
+
+#: vendor/meta-box/mb-custom-post-type/src/PostTypeRegister.php:257
+msgid "post types"
+msgstr "Beitragstypen"
+
+#: vendor/meta-box/mb-custom-post-type/src/Import.php:32
+msgid "Post types have been imported successfully!"
+msgstr "Die Beitragstypen wurden erfolgreich importiert!"
+
+#. %s - post link, %s - preview post text, %s - post type label.
+#: vendor/meta-box/mb-custom-post-type/src/PostTypeRegister.php:244
+#, php-format
+msgid "Preview %s"
+msgstr "Vorschau %s"
+
+#: vendor/meta-box/mb-custom-post-type/src/Integrations/Polylang/PostType.php:28
+#: vendor/meta-box/mb-custom-post-type/src/Integrations/WPML/PostType.php:30
+msgid "Remove featured image"
+msgstr "Angezeigtes Bild entfernen"
+
+#: vendor/meta-box/mb-custom-post-type/src/Edit.php:57
+msgid "Saving..."
+msgstr "Speichern..."
+
+#: vendor/meta-box/mb-custom-post-type/src/Integrations/Polylang/Taxonomy.php:12
+#: vendor/meta-box/mb-custom-post-type/src/Integrations/Polylang/PostType.php:17
+#: vendor/meta-box/mb-custom-post-type/src/Integrations/WPML/Taxonomy.php:14
+#: vendor/meta-box/mb-custom-post-type/src/Integrations/WPML/PostType.php:19
+msgid "Search items"
+msgstr "Artikel suchen"
+
+#: vendor/meta-box/mb-custom-post-type/src/PostTypeRegister.php:25
+msgid "Search Post Type"
+msgstr "Beitragstyp suchen"
+
+#: vendor/meta-box/mb-custom-post-type/src/TaxonomyRegister.php:50
+msgid "Search Taxonomy"
+msgstr "Suche Taxonomie"
+
+#: vendor/meta-box/mb-custom-post-type/src/Integrations/Polylang/Taxonomy.php:22
+#: vendor/meta-box/mb-custom-post-type/src/Integrations/WPML/Taxonomy.php:24
+msgid "Separate items with commas"
+msgstr "Trenne Einträge mit Kommas"
+
+#: vendor/meta-box/mb-custom-post-type/src/Integrations/Polylang/PostType.php:27
+#: vendor/meta-box/mb-custom-post-type/src/Integrations/WPML/PostType.php:29
+msgid "Set featured image"
+msgstr "Ausgewähltes Bild festlegen"
+
+#. %s is the main menu label.
+#: vendor/meta-box/mb-custom-post-type/src/Edit.php:135
+#, php-format
+msgid "Show as sub-menu of %s"
+msgstr "Als Untermenü von %s anzeigen"
+
+#: vendor/meta-box/mb-custom-post-type/src/Edit.php:123
+msgid "Show as top-level menu"
+msgstr "Als Top-Level-Menü anzeigen"
+
+#: vendor/meta-box/mb-custom-post-type/src/Integrations/Polylang/PostType.php:10
+#: vendor/meta-box/mb-custom-post-type/src/Integrations/WPML/PostType.php:12
+msgid "Singular name"
+msgstr "Einzelner Name"
+
+#: vendor/meta-box/mb-custom-post-type/src/Integrations/Polylang/Taxonomy.php:35
+#: vendor/meta-box/mb-custom-post-type/src/Integrations/WPML/Taxonomy.php:37
+msgid "Slug field description"
+msgstr "Beschreibung des Slug-Feldes"
+
+#: vendor/meta-box/mb-custom-post-type/src/Migration.php:25
+msgid "Start..."
+msgstr "Start..."
+
+#: vendor/meta-box/mb-custom-post-type/src/Edit.php:76
+msgid "SVG"
+msgstr "SVG"
+
+#: vendor/meta-box/mb-custom-post-type/src/TaxonomyRegister.php:40
+#: vendor/meta-box/mb-custom-post-type/src/TaxonomyRegister.php:43
+#: vendor/meta-box/mb-custom-post-type/src/TaxonomyRegister.php:55
+msgid "Taxonomies"
+msgstr "Taxonomien"
+
+#: vendor/meta-box/mb-custom-post-type/src/TaxonomyRegister.php:41
+msgid "Taxonomy"
+msgstr "Taxonomie"
+
+#: vendor/meta-box/mb-custom-post-type/src/TaxonomyRegister.php:215
+msgid "Taxonomy draft updated."
+msgstr "Taxonomie-Entwurf aktualisiert."
+
+#: vendor/meta-box/mb-custom-post-type/src/TaxonomyRegister.php:38
+msgctxt "Taxonomy General Name"
+msgid "Taxonomies"
+msgstr "Taxonomien"
+
+#. %s - add fields link.
+#: vendor/meta-box/mb-custom-post-type/src/TaxonomyRegister.php:210
+#, php-format
+msgid "Taxonomy published. %s"
+msgstr "Taxonomie veröffentlicht. %s"
+
+#. %s - date and time of the revision.
+#: vendor/meta-box/mb-custom-post-type/src/TaxonomyRegister.php:208
+#, php-format
+msgid "Taxonomy restored to revision from %s."
+msgstr "Taxonomie in Revision von %s wiederhergestellt."
+
+#: vendor/meta-box/mb-custom-post-type/src/TaxonomyRegister.php:211
+msgid "Taxonomy saved."
+msgstr "Taxonomie gespeichert."
+
+#. %s - date and time of the revision.
+#: vendor/meta-box/mb-custom-post-type/src/TaxonomyRegister.php:214
+#, php-format
+msgid "Taxonomy scheduled for: <strong>%s</strong>."
+msgstr "Taxonomie geplant für: <strong>%s</strong>."
+
+#: vendor/meta-box/mb-custom-post-type/src/TaxonomyRegister.php:39
+msgctxt "Taxonomy Singular Name"
+msgid "Taxonomy"
+msgstr "Taxonomie"
+
+#: vendor/meta-box/mb-custom-post-type/src/TaxonomyRegister.php:212
+msgid "Taxonomy submitted."
+msgstr "Taxonomie eingereicht."
+
+#: vendor/meta-box/mb-custom-post-type/src/TaxonomyRegister.php:203
+#: vendor/meta-box/mb-custom-post-type/src/TaxonomyRegister.php:206
+msgid "Taxonomy updated."
+msgstr "Taxonomie aktualisiert."
+
+#: vendor/meta-box/mb-custom-post-type/src/Integrations/Polylang/Taxonomy.php:19
+#: vendor/meta-box/mb-custom-post-type/src/Integrations/WPML/Taxonomy.php:21
+msgid "Update item"
+msgstr "Artikel aktualisieren"
+
+#: vendor/meta-box/mb-custom-post-type/src/PostTypeRegister.php:23
+msgid "Update Post Type"
+msgstr "Beitragstyp aktualisieren"
+
+#: vendor/meta-box/mb-custom-post-type/src/TaxonomyRegister.php:48
+msgid "Update Taxonomy"
+msgstr "Taxonomie aktualisieren"
+
+#: vendor/meta-box/mb-custom-post-type/src/Integrations/Polylang/PostType.php:25
+#: vendor/meta-box/mb-custom-post-type/src/Integrations/WPML/PostType.php:27
+msgid "Uploaded to this item"
+msgstr "Zu diesem Artikel hochgeladen"
+
+#: vendor/meta-box/mb-custom-post-type/src/Integrations/Polylang/PostType.php:29
+#: vendor/meta-box/mb-custom-post-type/src/Integrations/WPML/PostType.php:31
+msgid "Use as featured image"
+msgstr "Als Titelbild verwenden"
+
+#. %s - post link, %s - view post text, %s - post type label.
+#: vendor/meta-box/mb-custom-post-type/src/PostTypeRegister.php:237
+#, php-format
+msgid "View %s"
+msgstr "Ansicht %s"
+
+#: vendor/meta-box/mb-custom-post-type/src/Integrations/Polylang/Taxonomy.php:18
+#: vendor/meta-box/mb-custom-post-type/src/Integrations/Polylang/PostType.php:15
+#: vendor/meta-box/mb-custom-post-type/src/Integrations/WPML/Taxonomy.php:20
+#: vendor/meta-box/mb-custom-post-type/src/Integrations/WPML/PostType.php:17
+msgid "View item"
+msgstr "Artikel ansehen"
+
+#: vendor/meta-box/mb-custom-post-type/src/Integrations/Polylang/PostType.php:16
+#: vendor/meta-box/mb-custom-post-type/src/Integrations/WPML/PostType.php:18
+msgid "View items"
+msgstr "Artikel ansehen"
+
+#: vendor/meta-box/mb-custom-post-type/src/PostTypeRegister.php:24
+msgid "View Post Type"
+msgstr "Beitragstyp anzeigen"
+
+#: vendor/meta-box/mb-custom-post-type/src/Migration.php:46
+msgid "View post types"
+msgstr "Beitragstypen anzeigen"
+
+#: vendor/meta-box/mb-custom-post-type/src/Migration.php:47
+msgid "View taxonomies"
+msgstr "Taxonomien anzeigen"
+
+#: vendor/meta-box/mb-custom-post-type/src/TaxonomyRegister.php:49
+msgid "View Taxonomy"
+msgstr "Taxonomie anzeigen"

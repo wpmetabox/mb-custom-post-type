@@ -8,6 +8,7 @@
  * Author URI:  https://metabox.io
  * License:     GPL-2.0+
  * Text Domain: mb-custom-post-type
+ * Domain Path: /languages/
  *
  * Copyright (C) 2010-2025 Tran Ngoc Tuan Anh. All rights reserved.
  *
@@ -73,5 +74,7 @@ if ( ! function_exists( 'mb_cpt_load' ) ) {
 			new MBCPT\Migration();
 			new MBCPT\Ajax();
 		}
+
+		load_plugin_textdomain( 'mb-blocks', false, plugin_basename( __DIR__ ) . '/languages/' );
 	}
 }
