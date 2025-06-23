@@ -1,31 +1,59 @@
-.wp-list-table .column-mbcpt_order {
-	width: 20px;
-	padding-top: 10px;
-	padding-right: 0;
-	padding-left: 4px;
+.mb-cpt-sortable {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 0 24px;
 }
 
-.column-mbcpt_order svg {
-	display: none;
-	width: 18px;
-	height: 18px;
-	cursor: grab;
-	fill: #aaa;
+.sortable-chosen {
+    background: #f5f5f5;
+    list-style: none;
 }
 
-tr:hover .column-mbcpt_order svg {
-	display: inline-block;
+.mb-cpt-sortable li {
+    list-style: none;
 }
 
-.column-mbcpt_order+.check-column.check-column {
-	padding-left: 0;
+.mb-cpt-sortable[data-level="0"] {
+    margin: 12px;
 }
 
-.column-mbcpt_order+.check-column>input[type="checkbox"] {
-	margin-left: 0;
+.mb-cpt-page-item {
+    padding: 12px;
+    background: #fff;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    margin-block: 6px;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    transition: background 0.2s;
+    cursor: grab;
 }
 
-.column-mbcpt_order+.check-column label:hover,
-.column-mbcpt_order+.check-column input:hover+label {
-	background: none;
+.mb-cpt-page-item:hover {
+    background: #f5f5f5;
+}
+
+.mb-cpt-handle {
+    padding: 0 4px;
+    color: #666;
+}
+
+.mb-cpt-title {
+    flex: 1;
+    font-weight: 600;
+}
+
+.mb-cpt-status {
+    font-size: 12px;
+    font-weight: 400;
+    font-style: italic;
+    color: #666;
+    margin-left: 8px;
+}
+
+.toggle-sortable-btn svg {
+    vertical-align: middle;
+    position: relative;
+    top: -2px;
 }
