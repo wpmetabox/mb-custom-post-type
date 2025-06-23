@@ -18,7 +18,7 @@ class Order {
 
 	public function setup_for_edit_screen(): void {
 		$screen = get_current_screen();
-		$mode      = $_GET['mode'] ?? 'default';
+		$mode   = $_GET['mode'] ?? 'default';
 		if ( $screen->base !== 'edit' || $mode !== 'sortable' ) {
 			return;
 		}
@@ -33,8 +33,8 @@ class Order {
 		}
 
 		// Get current post type from screen
-		$screen    = get_current_screen();
-		$post_type = $screen->post_type;
+		$screen           = get_current_screen();
+		$post_type        = $screen->post_type;
 		$post_type_object = get_post_type_object( $post_type );
 
 		if ( ! isset( $post_type_object->order ) || ! $post_type_object->order ) {
@@ -76,13 +76,13 @@ class Order {
 		$all_posts = [];
 
 		// For hierarchical queries, we don't have menu_order so we use the index + 1 for the order
-		foreach ($queried_posts as $index => $post) {
+		foreach ( $queried_posts as $index => $post ) {
 			$post->menu_order = $post->menu_order ?? $index + 1;
-			$all_posts[] = $post;
+			$all_posts[]      = $post;
 		}
 
 		// Order by menu_order, asc
-		usort( $all_posts, function ($a, $b) {
+		usort( $all_posts, function ( $a, $b ) {
 			return $a->menu_order <=> $b->menu_order;
 		} );
 
@@ -118,15 +118,15 @@ class Order {
 	 * So for example, if per_page is 20, and we have about 3 children posts, total item is 23.
 	 *
 	 * @param string $post_type
-	 * @param array $all_posts
-	 * @param int $current_page
-	 * @param int $per_page
+	 * @param array  $all_posts
+	 * @param int    $current_page
+	 * @param int    $per_page
 	 *
 	 * @return array
 	 */
 	private function get_hierarchical_posts( $post_type, $all_posts, $current_page, $per_page ): array {
 		// Filter top-level posts (post_parent = 0) for pagination
-		$top_level_posts = array_filter( $all_posts, function ($post) {
+		$top_level_posts = array_filter( $all_posts, function ( $post ) {
 			return $post->post_parent == 0;
 		} );
 		$top_level_ids   = wp_list_pluck( $top_level_posts, 'ID' );
@@ -160,7 +160,7 @@ class Order {
 			];
 
 			$full_query = new WP_Query( $args );
-			$posts      = array_map( function ($post) use ( $all_post_map ) {
+			$posts      = array_map( function ( $post ) use ( $all_post_map ) {
 				return [
 					'ID'          => $post->ID,
 					'post_title'  => $post->post_title ?: __( '(no title)', 'mb-custom-post-type' ),
@@ -226,7 +226,7 @@ class Order {
 		$mode      = $_GET['mode'] ?? 'default';
 		$url       = add_query_arg( [
 			'post_type' => $post_type,
-			'mode' => $mode === 'sortable' ? 'default' : 'sortable',
+			'mode'      => $mode === 'sortable' ? 'default' : 'sortable',
 		] );
 
 		// translators: %1$s: Current class, %2$s: URL, %3$s: Re-Order text
