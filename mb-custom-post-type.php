@@ -59,6 +59,11 @@ if ( ! function_exists( 'mb_cpt_load' ) ) {
 			return;
 		}
 
+		// Create Meta Box menu if Meta Box is not installed.
+		if ( ! defined( 'RWMB_VER' ) ) {
+			new MBCPT\Menu();
+		}
+
 		// Show Meta Box admin menu.
 		add_filter( 'rwmb_admin_menu', '__return_true' );
 

@@ -57,7 +57,7 @@ class TaxonomyRegister extends Register {
 			'supports'     => false,
 			'public'       => false,
 			'show_ui'      => true,
-			'show_in_menu' => defined( 'RWMB_VER' ) ? 'meta-box' : 'edit.php?post_type=mb-post-type',
+			'show_in_menu' => 'meta-box',
 			'menu_icon'    => 'dashicons-exerpt-view',
 			'can_export'   => true,
 			'rewrite'      => false,
