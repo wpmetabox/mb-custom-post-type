@@ -37,3 +37,11 @@ Install **MB Custom Post Types & Custom Taxonomies** extension
 - Go to **Plugins | Add New** and search for **MB Custom Post Types & Custom Taxonomies**
 - Click **Install Now** button to install the plugin
 - After installing, click **Activate Plugin** to activate the plugin
+
+## You might also like
+
+If you like this plugin, you might also like our other WordPress products:
+
+- [Slim SEO](https://wpslimseo.com) - A fast, lightweight and full-featured SEO plugin for WordPress with minimal configuration.
+- [GretaThemes](https://gretathemes.com) - Free and premium WordPress themes that clean, simple and just work.
+- [Auto Listings](https://wpautolistings.com) - A car sale and dealership plugin for WordPress.

@@ -12,12 +12,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/wpmetabox/support.git",
-                "reference": "874318ec497ce7fb918eb0629dec825210155d97"
+                "reference": "6c392347cdb77ed133b8a4227b5ee20db89a5717"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/wpmetabox/support/zipball/874318ec497ce7fb918eb0629dec825210155d97",
-                "reference": "874318ec497ce7fb918eb0629dec825210155d97",
+                "url": "https://api.github.com/repos/wpmetabox/support/zipball/6c392347cdb77ed133b8a4227b5ee20db89a5717",
+                "reference": "6c392347cdb77ed133b8a4227b5ee20db89a5717",
                 "shasum": ""
             },
             "default-branch": true,
@@ -37,7 +37,7 @@
                 "issues": "https://github.com/wpmetabox/support/issues",
                 "source": "https://github.com/wpmetabox/support/tree/master"
             },
-            "time": "2025-03-17T08:34:51+00:00"
+            "time": "2025-09-12T23:29:48+00:00"
         }
     ],
     "packages-dev": [],

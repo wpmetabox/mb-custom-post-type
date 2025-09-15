@@ -2,10 +2,10 @@
 Contributors: elightup, metabox, rilwis, duc88b, truongwp, barcavn2
 Donate link: https://metabox.io/pricing/
 Tags: custom post types, custom taxonomies, posts, taxonomies
-Requires at least: 5.9
+Requires at least: 6.5
 Tested up to: 6.8.2
 Requires PHP: 7.2
-Stable tag: 2.9.1
+Stable tag: 2.9.2
 License: GPLv2 or later
 
 Create and manage custom post types and custom taxonomies with an easy-to-use UI in WordPress.
@@ -42,8 +42,6 @@ This plugin is a free extension of [Meta Box](https://metabox.io) plugin, which 
 If you like this plugin, you might also like our other WordPress products:
 
 - [Slim SEO](https://wpslimseo.com) - A fast, lightweight and full-featured SEO plugin for WordPress with minimal configuration.
-- [Slim SEO Schema](https://wpslimseo.com/products/slim-seo-schema/) - An advanced, powerful and flexible plugin to add schemas to WordPress.
-- [Slim SEO Link Manager](https://wpslimseo.com/products/slim-seo-link-manager/) - Build internal link easier in WordPress with real-time reports.
 - [GretaThemes](https://gretathemes.com) - Free and premium WordPress themes that clean, simple and just work.
 - [Auto Listings](https://wpautolistings.com) - A car sale and dealership plugin for WordPress.
 
@@ -63,6 +61,10 @@ If you like this plugin, you might also like our other WordPress products:
 1. Edit custom post type - Taxonomies tab
 
 == Changelog ==
+
+= 2.9.2 - 2025-09-15 =
+
+Update dependencies
 
 = 2.9.1 - 2025-08-18 =
 
