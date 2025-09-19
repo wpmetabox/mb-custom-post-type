@@ -79,7 +79,7 @@ class Import {
 		}
 
 		foreach ( $posts as $post ) {
-			$post['post_content'] = json_encode( $post['settings'], JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES );
+			$post['post_content'] = wp_json_encode( $post['settings'], JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES );
 
 			$post_id = wp_insert_post( $post );
 			if ( ! $post_id ) {
