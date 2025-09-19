@@ -79,14 +79,14 @@ class Import {
 		}
 
 		foreach ( $posts as $post ) {
-			$post['post_content'] = wp_json_encode( $post['settings'] );
+			$post['post_content'] = wp_json_encode( $post['settings'], JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES );
 
 			$post_id = wp_insert_post( $post );
 			if ( ! $post_id ) {
 				wp_die( wp_kses_post( sprintf(
 					// Translators: %s - go back URL.
 					__( 'Cannot import the post type <strong>%1$s</strong>. <a href="%2$s">Go back</a>.', 'mb-custom-post-type' ),
-					$post['title'],
+					$post['post_title'],
 					admin_url( "edit.php?post_type={$post['post_type']}" )
 				) ) );
 			}
