@@ -39,7 +39,7 @@ const tabs = [
 	{
 		name: 'code',
 		title: __( 'Get PHP Code', 'mb-custom-post-type' ),
-		className: 'mb-cpt-code button button-small'
+		className: 'mb-cpt-code button button-primary btn-php'
 	}
 ];
 
@@ -66,12 +66,12 @@ const MainTabs = () => {
 	const [ sidebarOpen, toggleSidebar ] = useReducer( open => !open, true );
 
 	return <>
-		<Flex className="mb-cpt-header">
+		<Flex className="mb-cpt-header mb-header">
 			<Flex gap={ 2 } expanded={ false }>
 				<Tooltip text={ __( 'Back to all post types', 'mb-custom-post-type' ) } position={ 'bottom right' }>
-					<a className="logo" href={ MBCPT.url }><Logo /></a>
+					<a className="logo mb-header__left" href={ MBCPT.url }><Logo /></a>
 				</Tooltip>
-				<h1>{ MBCPT.action === 'add' ? __( 'Add Post Type', 'mb-custom-post-type' ) : __( 'Edit Post Type', 'mb-custom-post-type' ) }</h1>
+				<h1 className="mb-header__title">{ MBCPT.action === 'add' ? __( 'Add Post Type', 'mb-custom-post-type' ) : __( 'Edit Post Type', 'mb-custom-post-type' ) }</h1>
 				{ MBCPT.action !== 'add' && <a className="page-title-action" href={ MBCPT.add }>{ __( 'Add New', 'mb-custom-post-type' ) }</a> }
 			</Flex>
 			<Flex gap={ 3 } expanded={ false } className="mb-cpt-action">
@@ -88,7 +88,7 @@ const MainTabs = () => {
 				<input
 					type="submit"
 					data-status="publish"
-					className="mb-cpt-publish components-button is-primary"
+					className="mb-cpt-publish button button-primary btn-php"
 					value={
 						MBCPT.status === 'publish'
 							? __( 'Update', 'mb-custom-post-type' )
@@ -108,10 +108,10 @@ const MainTabs = () => {
 		</Flex>
 		<Flex gap={ 0 } align="flex-start" className="mb-cpt-body">
 			<div className="mb-cpt-content">
-				<div className="mb-cpt-tabs-wrapper">
+				<div className="mb-cpt-tabs-wrapper mb-main">
 					<div className="wp-header-end" />
 
-					<TabPanel className="mb-cpt-tabs" tabs={ tabs }>
+					<TabPanel className="mb-box" tabs={ tabs }>
 						{ tab => panels[ tab.name ] }
 					</TabPanel>
 
