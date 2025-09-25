@@ -1,7 +1,7 @@
-import { Button, Flex, TabPanel, Tooltip } from '@wordpress/components';
+import { Button, Flex, TabPanel, Tooltip, Icon } from '@wordpress/components';
 import { useContext, useReducer } from "@wordpress/element";
 import { __ } from '@wordpress/i18n';
-import { category, code, copy, external } from "@wordpress/icons";
+import { code, external } from "@wordpress/icons";
 import { SettingsContext } from '../SettingsContext';
 import CheckboxList from '../controls/CheckboxList';
 import Control from '../controls/Control';
@@ -36,8 +36,10 @@ const tabs = [
 	},
 	{
 		name: 'code',
-		title: __( 'Get PHP Code', 'mb-custom-post-type' ),
-		className: 'mb-cpt-code button button-primary btn-php'
+		title: <span title={ __( 'Get PHP Code', 'mb-custom-post-type' ) }>
+				<Icon icon={ code } />
+			</span>,
+		className: 'mb-cpt-code components-button is-small has-icon'
 	}
 ];
 
@@ -94,7 +96,6 @@ const MainTabs = () => {
 			<div className="mb-cpt-content">
 				<div className="mb-cpt-tabs-wrapper mb-main">
 					<div className="wp-header-end" />
-
 					<TabPanel className="mb-box" tabs={ tabs }>
 						{ tab => panels[ tab.name ] }
 					</TabPanel>
