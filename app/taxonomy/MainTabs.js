@@ -3,6 +3,7 @@ import { useContext, useReducer } from "@wordpress/element";
 import { __ } from '@wordpress/i18n';
 import { code, external } from "@wordpress/icons";
 import { SettingsContext } from '../SettingsContext';
+import Upgrade from '../components/Upgrade';
 import CheckboxList from '../controls/CheckboxList';
 import Control from '../controls/Control';
 import { ReactComponent as Logo } from '../controls/logo.svg';
@@ -66,24 +67,13 @@ const MainTabs = () => {
 					<a className="logo mb-header__left" href={ MBCPT.url }><Logo /></a>
 				</Tooltip>
 				<h1 className="mb-header__title">{ MBCPT.action === 'add' ? __( 'Add Taxonomies', 'mb-custom-post-type' ) : __( 'Edit Taxonomies', 'mb-custom-post-type' ) }</h1>
-				{ MBCPT.action !== 'add' && <a className="page-title-action" href={ MBCPT.add }>{ __( 'Add New', 'mb-custom-post-type' ) }</a> }
 			</Flex>
 			<Flex gap={ 3 } expanded={ false } className="mb-cpt-action">
-				<Tooltip delay={ 0 } text={ __( 'Get access to premium features like conditional logic, custom table, frontend forms, settings pages, and more.', 'meta-box-builder' ) }>
-					<Button
-						variant="link"
-						href="https://metabox.io/aio/?utm_source=header&utm_medium=link&utm_campaign=builder"
-						target="_blank"
-						icon={ external }
-						iconPosition="right"
-						iconSize={ 18 }
-						text={ __( 'Upgrade', 'meta-box-builder' ) }
-					/>
-				</Tooltip>
+				<Upgrade />
 				<input
 					type="submit"
 					data-status="publish"
-					className="mb-cpt-submit button button-primary btn-php"
+					className="mb-cpt-submit components-button is-primary"
 					value={ __( 'Save Changes', 'mb-custom-post-type' ) }
 				/>
 			</Flex>
