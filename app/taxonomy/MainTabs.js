@@ -1,9 +1,8 @@
 import { Button, Flex, TabPanel, Tooltip } from '@wordpress/components';
 import { useContext, useReducer } from "@wordpress/element";
 import { __ } from '@wordpress/i18n';
-import { drawerRight } from "@wordpress/icons";
+import { external } from "@wordpress/icons";
 import { SettingsContext } from '../SettingsContext';
-import Sidebar from '../components/Sidebar';
 import Upgrade from '../components/Upgrade';
 import CheckboxList from '../controls/CheckboxList';
 import Control from '../controls/Control';
@@ -58,7 +57,6 @@ const panels = {
 
 const MainTabs = () => {
 	const { settings } = useContext( SettingsContext );
-	const [ sidebarOpen, toggleSidebar ] = useReducer( open => !open, true );
 
 	return <>
 		<Flex className="mb-cpt-header mb-header">
@@ -70,34 +68,22 @@ const MainTabs = () => {
 				{ MBCPT.action !== 'add' && <a className="page-title-action" href={ MBCPT.add }>{ __( 'Add New', 'mb-custom-post-type' ) }</a> }
 			</Flex>
 			<Flex gap={ 3 } expanded={ false } className="mb-cpt-action">
-				<input
-					type="submit"
-					data-status="draft"
-					className="mb-cpt-draft components-button is-compact is-tertiary"
-					value={
-						MBCPT.status == 'publish'
-							? __( 'Switch to draft', 'mb-custom-post-type' )
-							: __( 'Save draft', 'mb-custom-post-type' )
-					}
-				/>
+				<Tooltip delay={ 0 } text={ __( 'Get access to premium features like conditional logic, custom table, frontend forms, settings pages, and more.', 'meta-box-builder' ) }>
+					<Button
+						variant="link"
+						href="https://metabox.io/aio/?utm_source=header&utm_medium=link&utm_campaign=builder"
+						target="_blank"
+						icon={ external }
+						iconPosition="right"
+						iconSize={ 18 }
+						text={ __( 'Upgrade', 'meta-box-builder' ) }
+					/>
+				</Tooltip>
 				<input
 					type="submit"
 					data-status="publish"
-					className="mb-cpt-publish button button-primary btn-php"
-					value={
-						MBCPT.status === 'publish'
-							? __( 'Update', 'mb-custom-post-type' )
-							: __( 'Publish', 'mb-custom-post-type' )
-					}
-				/>
-				<Button
-					onClick={ toggleSidebar }
-					className="is-compact"
-					icon={ drawerRight }
-					size="compact"
-					label={ __( 'Toggle sidebar', 'mb-custom-post-type' ) }
-					showTooltip={ true }
-					isPressed={ sidebarOpen }
+					className="mb-cpt-submit button button-primary btn-php"
+					value={ __( 'Save Changes', 'mb-custom-post-type' ) }
 				/>
 			</Flex>
 		</Flex>
@@ -113,11 +99,10 @@ const MainTabs = () => {
 					<Upgrade />
 				</div>
 			</div>
-			{ sidebarOpen && <Sidebar /> }
 		</Flex>
 		<input type="hidden" name="post_title" value={ settings.labels.singular_name } />
 		<input type="hidden" name="content" value={ JSON.stringify( settings ) } />
-		<input type="hidden" name="post_status" value={ MBCPT.status || 'draft' } />
+		<input type="hidden" name="post_status" value={ MBCPT.status } />
 		<input type="hidden" name="messages" value="" />
 	</>;
 };

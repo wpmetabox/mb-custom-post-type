@@ -23,8 +23,7 @@ const Slug = ( {
 			: '';
 
 	useEffect( () => {
-		document.querySelector( '.mb-cpt-publish' ).disabled = !!error;
-		document.querySelector( '.mb-cpt-draft' ).disabled = !!error;
+		document.querySelector( '.mb-cpt-submit' ).disabled = !!error;
 	}, [ value ] );
 
 	const setSlugChanged = () => {
