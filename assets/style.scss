@@ -8,10 +8,6 @@
 	max-width: 400px;
 }
 
-#mb-cpt-upgrade .dashicons {
-	color: #46b450;
-}
-
 #mb-cpt {
 	margin-top: 0;
 }
@@ -402,70 +398,6 @@
 	animation: fadein .5s;
 	font-weight: 600;
 	color: #00a32a;
-}
-
-.mb-cpt-upgrade {
-	margin-top: 64px;
-	background: linear-gradient(15deg, #202e3c, #1f3749, #1d4358, #1a5168, #156279, #0f788b, #08919e, #00b0b3);
-	color: #fff;
-	border-radius: 6px;
-	padding: 24px;
-	text-align: center;
-
-	h2 {
-		font-size: 24px;
-		color: #fff;
-		display: flex;
-		align-items: center;
-		gap: 8px;
-		justify-content: center;
-
-		svg {
-			fill: #fff449;
-			width: 24px;
-			height: 24px;
-		}
-	}
-
-	p {
-		font-size: 16px;
-	}
-
-	&__features {
-		display: flex;
-		justify-content: space-around;
-		text-align: left;
-		font-size: 14px;
-	}
-
-	li {
-		display: flex;
-		align-items: center;
-		gap: 4px;
-
-		svg {
-			background: #fff;
-			border-radius: 50%;
-		}
-	}
-
-	.components-button {
-		padding: 24px;
-		background: #fff;
-		color: #1a5168;
-		font-size: 14px;
-		position: relative;
-		transition: all .2s;
-
-		svg {
-			margin-left: 4px;
-		}
-
-		&:hover {
-			margin-top: -2px;
-			margin-bottom: 2px;
-		}
-	}
 }
 
 @media (max-width:767px) {

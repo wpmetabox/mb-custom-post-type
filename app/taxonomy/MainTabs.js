@@ -3,7 +3,6 @@ import { useContext, useReducer } from "@wordpress/element";
 import { __ } from '@wordpress/i18n';
 import { code, external } from "@wordpress/icons";
 import { SettingsContext } from '../SettingsContext';
-import Upgrade from '../components/Upgrade';
 import CheckboxList from '../controls/CheckboxList';
 import Control from '../controls/Control';
 import { ReactComponent as Logo } from '../controls/logo.svg';
@@ -97,8 +96,6 @@ const MainTabs = () => {
 					<TabPanel className="mb-box" tabs={ tabs }>
 						{ tab => panels[ tab.name ] }
 					</TabPanel>
-
-					<Upgrade />
 				</div>
 			</div>
 		</Flex>
