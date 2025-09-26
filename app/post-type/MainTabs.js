@@ -66,14 +66,14 @@ const MainTabs = () => {
 	const { settings } = useContext( SettingsContext );
 
 	return <>
-		<Flex className="mb-cpt-header mb-header">
+		<Flex className="mb-header">
 			<Flex gap={ 2 } expanded={ false }>
 				<Tooltip text={ __( 'Back to all post types', 'mb-custom-post-type' ) } position={ 'bottom right' }>
-					<a className="logo mb-header__left" href={ MBCPT.url }><Logo /></a>
+					<a className="mb-header__logo" href={ MBCPT.url }><Logo /></a>
 				</Tooltip>
-				<h1 className="mb-header__title">{ MBCPT.action === 'add' ? __( 'Add Post Type', 'mb-custom-post-type' ) : __( 'Edit Post Type', 'mb-custom-post-type' ) }</h1>
+				<h1>{ MBCPT.action === 'add' ? __( 'Add Post Type', 'mb-custom-post-type' ) : __( 'Edit Post Type', 'mb-custom-post-type' ) }</h1>
 			</Flex>
-			<Flex gap={ 3 } expanded={ false } className="mb-cpt-action">
+			<Flex gap={ 1 } expanded={ false }>
 				<Upgrade />
 				<input
 					type="submit"
@@ -83,16 +83,17 @@ const MainTabs = () => {
 				/>
 			</Flex>
 		</Flex>
-		<Flex gap={ 0 } align="flex-start" className="mb-cpt-body">
-			<div className="mb-cpt-content">
-				<div className="mb-cpt-tabs-wrapper mb-main">
+		<div className="mb-cpt-body mb-body">
+			<div className="mb-body__inner">
+				<div className="mb-main">
 					<div className="wp-header-end" />
+
 					<TabPanel className="mb-box" tabs={ tabs }>
 						{ tab => panels[ tab.name ] }
 					</TabPanel>
 				</div>
 			</div>
-		</Flex>
+		</div>
 		<input type="hidden" name="post_title" value={ settings.labels.singular_name } />
 		<input type="hidden" name="content" value={ JSON.stringify( settings ) } />
 		<input type="hidden" name="post_status" value={ MBCPT.status } />
