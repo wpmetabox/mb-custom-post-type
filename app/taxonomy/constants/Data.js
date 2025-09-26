@@ -381,3 +381,12 @@ export const PermissionsControls = [
 		datalist: MBCPT.allCapabilities,
 	},
 ];
+
+export const FeatureControls = [
+	{
+		type: 'toggle',
+		name: 'order',
+		label: __( 'Re-Order Terms', 'mb-custom-post-type' ),
+		description: __( 'Order terms of this taxonomy using a drag and drop interface.', 'mb-custom-post-type' ),
+	},
+];

@@ -3,7 +3,7 @@ namespace MBCPT;
 
 use WP_Query;
 
-class Order {
+class PostTypeOrder {
 
 	public function __construct() {
 		add_action( 'load-edit.php', [ $this, 'setup_for_edit_screen' ] );
@@ -57,9 +57,9 @@ class Order {
 		// Enqueue our custom script
 		wp_enqueue_script(
 			'mb-cpt-order-script',
-			MB_CPT_URL . 'assets/order.js',
+			MB_CPT_URL . 'assets/post-type-order.js',
 			[ 'jquery', 'sortablejs' ],
-			filemtime( MB_CPT_DIR . '/assets/order.js' ),
+			filemtime( MB_CPT_DIR . '/assets/post-type-order.js' ),
 			true
 		);
 		// Get pagination info

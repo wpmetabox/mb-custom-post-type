@@ -53,7 +53,8 @@ if ( ! function_exists( 'mb_cpt_load' ) ) {
 
 		new MBCPT\PostTypeRegister();
 		new MBCPT\TaxonomyRegister();
-		new MBCPT\Order();
+		new MBCPT\PostTypeOrder();
+		new MBCPT\TaxonomyOrder();
 
 		if ( ! is_admin() ) {
 			return;
