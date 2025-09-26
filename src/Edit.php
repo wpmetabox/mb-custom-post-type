@@ -17,7 +17,7 @@ class Edit {
 		}
 
 		wp_enqueue_style( $this->post_type, MB_CPT_URL . 'assets/style.css', [ 'wp-components' ], MB_CPT_VER );
-		wp_enqueue_style( 'font-awesome', MB_CPT_URL . 'assets/fontawesome/css/all.min.css', [], '6.6.0' );
+		wp_enqueue_style( 'font-awesome', 'https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.7.2/css/all.min.css', [], ' 6.7.2' );
 		wp_enqueue_style( 'wp-edit-post' );
 
 		wp_enqueue_script( 'mbcpt-edit', MB_CPT_URL . 'assets/edit.js', [], filemtime( MB_CPT_DIR . '/assets/edit.js' ), true );
