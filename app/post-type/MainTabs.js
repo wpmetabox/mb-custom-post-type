@@ -1,5 +1,5 @@
-import { Button, Flex, TabPanel, Tooltip, Icon } from '@wordpress/components';
-import { useContext, useReducer } from "@wordpress/element";
+import { Flex, Icon, TabPanel, Tooltip } from '@wordpress/components';
+import { useContext } from "@wordpress/element";
 import { __ } from '@wordpress/i18n';
 import { code } from "@wordpress/icons";
 import { SettingsContext } from '../SettingsContext';
@@ -37,9 +37,8 @@ const tabs = [
 	},
 	{
 		name: 'code',
-		title: <span title={ __( 'Get PHP Code', 'mb-custom-post-type' ) }>
-				<Icon icon={ code } />
-			</span>,
+		icon: <Icon icon={ code } />,
+		title: __( 'Get PHP Code', 'mb-custom-post-type' ),
 		className: 'mb-cpt-code components-button is-small has-icon'
 	}
 ];
