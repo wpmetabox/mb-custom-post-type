@@ -48,7 +48,7 @@ class Order {
 		// Enqueue SortableJS
 		wp_enqueue_script(
 			'sortablejs',
-			MB_CPT_URL . 'assets/lib/Sortable.min.js',
+			'https://cdn.jsdelivr.net/npm/sortablejs@1.15.6/Sortable.min.js',
 			[],
 			'1.15.6',
 			true
