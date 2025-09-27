@@ -16,6 +16,11 @@ class Edit {
 			return;
 		}
 
+		wp_enqueue_style( 'mbb-app',
+			'https://cdn.jsdelivr.net/gh/wpmetabox/meta-box-builder@5.1.0/assets/css/style.css',
+			[],
+			'5.1.0'
+		);
 		wp_enqueue_style( $this->post_type, MB_CPT_URL . 'assets/style.css', [ 'wp-components' ], MB_CPT_VER );
 		wp_enqueue_style( 'font-awesome', 'https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.7.2/css/all.min.css', [], ' 6.7.2' );
 		wp_enqueue_style( 'wp-edit-post' );

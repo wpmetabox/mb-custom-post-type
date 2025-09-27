@@ -1,9 +1,8 @@
-import { Button, Flex, TabPanel, Tooltip } from '@wordpress/components';
-import { useContext, useReducer } from "@wordpress/element";
+import { Flex, Icon, TabPanel, Tooltip } from '@wordpress/components';
+import { useContext } from "@wordpress/element";
 import { __ } from '@wordpress/i18n';
-import { drawerRight } from "@wordpress/icons";
+import { code } from "@wordpress/icons";
 import { SettingsContext } from '../SettingsContext';
-import Sidebar from '../components/Sidebar';
 import Upgrade from '../components/Upgrade';
 import CheckboxList from '../controls/CheckboxList';
 import Control from '../controls/Control';
@@ -34,8 +33,9 @@ const tabs = [
 	},
 	{
 		name: 'code',
+		icon: <Icon icon={ code } />,
 		title: __( 'Get PHP Code', 'mb-custom-post-type' ),
-		className: 'mb-cpt-code button button-small'
+		className: 'mb-cpt-code components-button is-small has-icon'
 	}
 ];
 
@@ -58,66 +58,39 @@ const panels = {
 
 const MainTabs = () => {
 	const { settings } = useContext( SettingsContext );
-	const [ sidebarOpen, toggleSidebar ] = useReducer( open => !open, true );
 
 	return <>
-		<Flex className="mb-cpt-header">
+		<Flex className="mb-header">
 			<Flex gap={ 2 } expanded={ false }>
 				<Tooltip text={ __( 'Back to all taxonomies', 'mb-custom-post-type' ) } position={ 'bottom right' }>
-					<a className="logo" href={ MBCPT.url }><Logo /></a>
+					<a className="mb-header__logo" href={ MBCPT.url }><Logo /></a>
 				</Tooltip>
 				<h1>{ MBCPT.action === 'add' ? __( 'Add Taxonomies', 'mb-custom-post-type' ) : __( 'Edit Taxonomies', 'mb-custom-post-type' ) }</h1>
-				{ MBCPT.action !== 'add' && <a className="page-title-action" href={ MBCPT.add }>{ __( 'Add New', 'mb-custom-post-type' ) }</a> }
 			</Flex>
-			<Flex gap={ 3 } expanded={ false } className="mb-cpt-action">
-				<input
-					type="submit"
-					data-status="draft"
-					className="mb-cpt-draft components-button is-compact is-tertiary"
-					value={
-						MBCPT.status == 'publish'
-							? __( 'Switch to draft', 'mb-custom-post-type' )
-							: __( 'Save draft', 'mb-custom-post-type' )
-					}
-				/>
+			<Flex gap={ 1 } expanded={ false }>
+				<Upgrade />
 				<input
 					type="submit"
 					data-status="publish"
-					className="mb-cpt-publish components-button is-primary"
-					value={
-						MBCPT.status === 'publish'
-							? __( 'Update', 'mb-custom-post-type' )
-							: __( 'Publish', 'mb-custom-post-type' )
-					}
-				/>
-				<Button
-					onClick={ toggleSidebar }
-					className="is-compact"
-					icon={ drawerRight }
-					size="compact"
-					label={ __( 'Toggle sidebar', 'mb-custom-post-type' ) }
-					showTooltip={ true }
-					isPressed={ sidebarOpen }
+					className="mb-cpt-submit components-button is-primary"
+					value={ __( 'Save Changes', 'mb-custom-post-type' ) }
 				/>
 			</Flex>
 		</Flex>
-		<Flex gap={ 0 } align="flex-start" className="mb-cpt-body">
-			<div className="mb-cpt-content">
-				<div className="mb-cpt-tabs-wrapper">
+		<div className="mb-cpt-body mb-body">
+			<div className="mb-body__inner">
+				<div className="mb-main">
 					<div className="wp-header-end" />
 
-					<TabPanel className="mb-cpt-tabs" tabs={ tabs }>
+					<TabPanel className="mb-box" tabs={ tabs }>
 						{ tab => panels[ tab.name ] }
 					</TabPanel>
-
-					<Upgrade />
 				</div>
 			</div>
-			{ sidebarOpen && <Sidebar /> }
-		</Flex>
+		</div>
 		<input type="hidden" name="post_title" value={ settings.labels.singular_name } />
 		<input type="hidden" name="content" value={ JSON.stringify( settings ) } />
-		<input type="hidden" name="post_status" value={ MBCPT.status || 'draft' } />
+		<input type="hidden" name="post_status" value={ MBCPT.status } />
 		<input type="hidden" name="messages" value="" />
 	</>;
 };
