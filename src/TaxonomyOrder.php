@@ -4,6 +4,9 @@ namespace MBCPT;
 class TaxonomyOrder {
 
 	public function __construct() {
+		if ( ! get_option( 'order_install' ) ) {
+			$this->order_install();
+		}
 		add_action( 'load-edit-tags.php', [ $this, 'setup_for_edit_screen' ] );
 		add_action( 'admin_enqueue_scripts', [ $this, 'enqueue_scripts' ] );
 		add_action( 'wp_ajax_mb_cpt_save_order_terms', [ $this, 'save_order' ] );
@@ -138,7 +141,7 @@ class TaxonomyOrder {
 			$terms      = array_map( function ( $term ) use ( $all_term_map ) {
 				return [
 					'term_id'    => $term->term_id,
-					'term_name'  => $term->name,
+					'name'       => $term->name,
 					'parent'     => $term->parent,
 					'term_order' => $term->term_order == 0 ? $all_term_map[ $term->ID ]->term_order : $term->term_order,
 				];
@@ -299,5 +302,15 @@ class TaxonomyOrder {
 	private function is_enabled_ordering( string $taxonomy ): bool {
 		$taxonomy_object = get_taxonomy( $taxonomy );
 		return ! empty( $taxonomy_object->order );
+	}
+
+	public function order_install():void {
+		global $wpdb;
+		$result = $wpdb->query( "DESCRIBE $wpdb->terms `term_order`" );
+		if ( ! $result ) {
+			$query  = "ALTER TABLE $wpdb->terms ADD `term_order` INT( 4 ) NULL DEFAULT '0'";
+			$wpdb->query( $query );
+		}
+		update_option( 'order_install', 1 );
 	}
 }

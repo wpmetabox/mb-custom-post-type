@@ -56,7 +56,7 @@
 				<div class="mb-cpt-page-item">
 					<div class="mb-cpt-handle">☰</div>
 					<div class="mb-cpt-title">
-						${ term.term_name }
+						${ term.name }
 					</div>
 				</div>`;
 			// Only include nested ul if hierarchical is enabled and there are children
