@@ -4,8 +4,8 @@ namespace MBCPT;
 class TaxonomyOrder {
 
 	public function __construct() {
-		if ( ! get_option( 'order_install' ) ) {
-			$this->order_install();
+		if ( ! get_option( 'add_term_order_column' ) ) {
+			$this->add_term_order_column();
 		}
 		add_action( 'load-edit-tags.php', [ $this, 'setup_for_edit_screen' ] );
 		add_action( 'admin_enqueue_scripts', [ $this, 'enqueue_scripts' ] );
@@ -25,7 +25,7 @@ class TaxonomyOrder {
 		$this->set_initial_orders( $screen->taxonomy );
 	}
 
-	public function enqueue_scripts( $hook ) {
+	public function enqueue_scripts( $hook ): void {
 		if ( $hook !== 'edit-tags.php' ) {
 			return;
 		}
@@ -33,21 +33,20 @@ class TaxonomyOrder {
 		// Get current post type from screen
 		$screen          = get_current_screen();
 		$taxonomy        = $screen->taxonomy;
-		$post_type       = $screen->post_type;
 		$taxonomy_object = get_taxonomy( $taxonomy );
 
-		if ( ! isset( $taxonomy_object->order ) || ! $taxonomy_object->order ) {
+		if ( empty( $taxonomy_object->order ) ) {
 			return;
 		}
 
 		$hierarchical = (bool) $taxonomy_object->hierarchical;
 
-		add_filter( "views_edit-{$taxonomy}", [ $this, 'add_toggle_sortable_button' ], 10, 1 );
+		add_filter( "views_edit-{$taxonomy}", [ $this, 'add_toggle_sortable_button' ] );
 
 		// Enqueue SortableJS
 		wp_enqueue_script(
 			'sortablejs',
-			MB_CPT_URL . 'assets/lib/Sortable.min.js',
+			'https://cdn.jsdelivr.net/npm/sortablejs@1.15.6/Sortable.min.js',
 			[],
 			'1.15.6',
 			true
@@ -182,11 +181,11 @@ class TaxonomyOrder {
 		);
 		$results = $wpdb->get_col( $query ); // Passage en requette préparée
 		foreach ( $results as $key => $result ) {
-			$wpdb->update( $wpdb->terms, array( 'term_order' => $key + 1 ), array( 'term_id' => $result ) );
+			$wpdb->update( $wpdb->terms, [ 'term_order' => $key + 1 ], [ 'term_id' => $result ] );
 		}
 	}
 
-	private function get_children( $parent_id, $term_map ) {
+	private function get_children( $parent_id, $term_map ): array {
 		$children = [];
 		foreach ( $term_map as $term ) {
 			if ( $term->parent == $parent_id ) {
@@ -199,7 +198,7 @@ class TaxonomyOrder {
 	}
 
 	// Add toggle sortable link to views
-	public function add_toggle_sortable_button( $views ) {
+	public function add_toggle_sortable_button( $views ): array {
 		$screen    = get_current_screen();
 		$post_type = $screen->post_type;
 		$taxonomy  = $screen->taxonomy;
@@ -225,7 +224,7 @@ class TaxonomyOrder {
 	}
 
 	// AJAX handler for saving order
-	public function save_order() {
+	public function save_order(): void {
 		global $wpdb;
 
 		check_ajax_referer( 'mb_cpt_order_terms_nonce', 'nonce' );
@@ -280,7 +279,7 @@ class TaxonomyOrder {
 		return $orderby;
 	}
 
-	public function order_get_object_terms( $terms ) {
+	public function order_get_object_terms( $terms ): array {
 
 		foreach ( $terms as  $term ) {
 			if ( is_object( $term ) && isset( $term->taxonomy ) ) {
@@ -304,13 +303,13 @@ class TaxonomyOrder {
 		return ! empty( $taxonomy_object->order );
 	}
 
-	public function order_install():void {
+	public function add_term_order_column(): void {
 		global $wpdb;
 		$result = $wpdb->query( "DESCRIBE $wpdb->terms `term_order`" );
 		if ( ! $result ) {
-			$query  = "ALTER TABLE $wpdb->terms ADD `term_order` INT( 4 ) NULL DEFAULT '0'";
+			$query = "ALTER TABLE $wpdb->terms ADD `term_order` INT( 4 ) NULL DEFAULT '0'";
 			$wpdb->query( $query );
 		}
-		update_option( 'order_install', 1 );
+		update_option( 'add_term_order_column', 1 );
 	}
 }
