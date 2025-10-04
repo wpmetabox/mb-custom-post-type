@@ -264,15 +264,10 @@ class TaxonomyOrder {
 		$taxonomy = $args['taxonomy'];
 
 		if ( is_array( $args['taxonomy'] ) ) {
-			$taxonomy = $args['taxonomy'][0] ?? false;
+			$taxonomy = reset( $args['taxonomy'] );
 		}
 
-		if ( ! $this->is_enabled_ordering( $taxonomy ) ) {
-			return $orderby;
-		}
-
-		$orderby = 't.term_order';
-		return $orderby;
+		return is_string( $taxonomy ) && $this->is_enabled_ordering( $taxonomy ) ? 't.term_order' : $orderby;
 	}
 
 	public function order_get_object_terms( $terms ) {
@@ -301,7 +296,7 @@ class TaxonomyOrder {
 
 	private function is_enabled_ordering( string $taxonomy ): bool {
 		$taxonomy_object = get_taxonomy( $taxonomy );
-		return ! empty( $taxonomy_object->order );
+		return $taxonomy_object && ! empty( $taxonomy_object->order );
 	}
 
 	public function add_term_order_column(): void {
