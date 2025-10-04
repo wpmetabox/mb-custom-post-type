@@ -6,16 +6,14 @@
 	 *
 	 * @returns {string} The current mode
 	 */
-	function getMode() {
-		return MB_CPT_ORDER.mode ?? 'default';
-	}
+	const getMode = () => MB_CPT_ORDER.mode ?? 'default';
 
 	/**
 	 * Build tree structure from flat list
 	 * @param {array} posts
 	 * @returns array
 	 */
-	function buildPostTree( posts ) {
+	function buildTree( posts ) {
 		const postMap = new Map();
 		const tree = [];
 
@@ -126,7 +124,7 @@
 	}
 
 	const $table = $( '.wp-list-table' );
-	const tree = buildPostTree( MB_CPT_ORDER.posts );
+	const tree = buildTree( MB_CPT_ORDER.posts );
 	const html = treeToHtml( tree );
 	$table.html( html );
 

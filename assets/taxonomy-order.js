@@ -6,16 +6,14 @@
 	 *
 	 * @returns {string} The current mode
 	 */
-	function getMode() {
-		return MB_CPT_ORDER_TERMS.mode ?? 'default';
-	}
+	const getMode = () => MB_CPT_ORDER_TERMS.mode ?? 'default';
 
 	/**
 	 * Build tree structure from flat list
 	 * @param {array} terms
 	 * @returns array
 	 */
-	function buildPostTree( terms ) {
+	function buildTree( terms ) {
 		const termMap = new Map();
 		const tree = [];
 
@@ -125,7 +123,7 @@
 	}
 
 	const $table = $( '.wp-list-table' );
-	const tree = buildPostTree( MB_CPT_ORDER_TERMS.terms );
+	const tree = buildTree( MB_CPT_ORDER_TERMS.terms );
 	const html = treeToHtml( tree );
 	$table.html( html );
 
