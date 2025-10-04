@@ -6,6 +6,7 @@ use MetaBox\Support\Arr;
 
 class PostTypeRegister extends Register {
 	private $menu_positions = [];
+	private $font_awesome_classes = [ 'fa', 'fa-classic', 'fa-sharp', 'fas', 'fa-solid', 'far', 'fa-regular', 'fab', 'fa-brands' ];
 
 	public function register() {
 		// Register main post type 'mb-post-type'.
@@ -351,11 +352,17 @@ class PostTypeRegister extends Register {
 	}
 
 	public function enqueue_font_awesome(): void {
-		wp_enqueue_style( 'font-awesome', MB_CPT_URL . 'assets/fontawesome/css/all.min.css', [], '6.6.0' );
+		wp_enqueue_style( 'font-awesome', 'https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.7.2/css/all.min.css', [], ' 6.7.2' );
+		$selectors = [];
+		foreach ( $this->font_awesome_classes as $class ) {
+			$selectors[] = ".$class:before";
+		}
+		$selectors = implode( ', ', $selectors );
 		wp_add_inline_style(
 			'font-awesome',
-			'.fa:before, fas, .fa-solid:before, .fab:before, .fa-brand:before, .far:before, .fa-regular:before {
+			$selectors . ' {
 				font-size: 16px;
+				line-height: 20px;
 				font-family: inherit;
 				font-weight: inherit;
 			}'
