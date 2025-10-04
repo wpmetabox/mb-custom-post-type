@@ -7,7 +7,7 @@ class TaxonomyOrder {
 		if ( ! get_option( 'add_term_order_column' ) ) {
 			$this->add_term_order_column();
 		}
-		add_action( 'load-edit-tags.php', [ $this, 'setup_for_edit_screen' ] );
+		add_action( 'admin_print_styles-edit-tags.php', [ $this, 'setup_for_edit_screen' ] );
 		add_action( 'admin_enqueue_scripts', [ $this, 'enqueue_scripts' ] );
 		add_action( 'wp_ajax_mb_cpt_save_order_terms', [ $this, 'save_order' ] );
 		add_filter( 'get_terms_orderby', [ $this, 'order_get_terms_orderby' ], 10, 3 );
@@ -25,11 +25,7 @@ class TaxonomyOrder {
 		$this->set_initial_orders( $screen->taxonomy );
 	}
 
-	public function enqueue_scripts( $hook ): void {
-		if ( $hook !== 'edit-tags.php' ) {
-			return;
-		}
-
+	public function enqueue_scripts(): void {
 		// Get current post type from screen
 		$screen          = get_current_screen();
 		$taxonomy        = $screen->taxonomy;
@@ -104,7 +100,7 @@ class TaxonomyOrder {
 		);
 	}
 
-	private function get_hierarchical_terms( $taxonomy, $all_terms, $current_page, $per_page ): array {
+	private function get_hierarchical_terms( string $taxonomy, array $all_terms, int $current_page, int $per_page ): array {
 		// Filter top-level terms (parent = 0) for pagination
 		$top_level_posts = array_filter( $all_terms, function ( $post ) {
 			return $post->parent == 0;
@@ -185,7 +181,7 @@ class TaxonomyOrder {
 		}
 	}
 
-	private function get_children( $parent_id, $term_map ): array {
+	private function get_children( int $parent_id, array $term_map ): array {
 		$children = [];
 		foreach ( $term_map as $term ) {
 			if ( $term->parent == $parent_id ) {
@@ -198,7 +194,7 @@ class TaxonomyOrder {
 	}
 
 	// Add toggle sortable link to views
-	public function add_toggle_sortable_button( $views ): array {
+	public function add_toggle_sortable_button( array $views ): array {
 		$screen    = get_current_screen();
 		$post_type = $screen->post_type;
 		$taxonomy  = $screen->taxonomy;
@@ -260,7 +256,7 @@ class TaxonomyOrder {
 		wp_send_json_success( __( 'Order updated', 'mb-custom-post-type' ) );
 	}
 
-	public function order_get_terms_orderby( $orderby, $args ): string {
+	public function order_get_terms_orderby( string $orderby, array $args ): string {
 		if ( ! isset( $args['taxonomy'] ) ) {
 			return $orderby;
 		}
@@ -279,22 +275,27 @@ class TaxonomyOrder {
 		return $orderby;
 	}
 
-	public function order_get_object_terms( $terms ): array {
+	public function order_get_object_terms( $terms ) {
+
+		if ( ! is_array( $terms ) ) {
+			return $terms;
+		}
 
 		foreach ( $terms as  $term ) {
-			if ( is_object( $term ) && isset( $term->taxonomy ) ) {
-				$taxonomy = $term->taxonomy;
-				if ( ! $this->is_enabled_ordering( $taxonomy ) ) {
-					return $terms;
-				}
+			if ( ! is_object( $term ) || ! isset( $term->taxonomy ) ) {
+				return $terms;
+			}
+
+			$taxonomy = $term->taxonomy;
+			if ( ! $this->is_enabled_ordering( $taxonomy ) ) {
+				return $terms;
 			}
 		}
 
-		if ( is_array( $terms ) ) {
-			usort( $terms, function ( $a, $b ) {
-				return $a->term_order <=> $b->term_order;
-			} );
-		}
+		usort( $terms, function ( $a, $b ) {
+			return $a->term_order <=> $b->term_order;
+		} );
+
 		return $terms;
 	}
 
