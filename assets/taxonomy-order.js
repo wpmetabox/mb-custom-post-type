@@ -1,41 +1,39 @@
 ( ( $ ) => {
-	const hierarchical = MB_CPT_ORDER.hierarchical === '1';
+	const hierarchical = MB_CPT_ORDER_TERMS.hierarchical === '1';
 
 	/**
 	 * Get the current mode, either 'default' or 'sortable'
 	 *
 	 * @returns {string} The current mode
 	 */
-	function getMode() {
-		return MB_CPT_ORDER.mode ?? 'default';
-	}
+	const getMode = () => MB_CPT_ORDER_TERMS.mode ?? 'default';
 
 	/**
 	 * Build tree structure from flat list
-	 * @param {array} posts
+	 * @param {array} terms
 	 * @returns array
 	 */
-	function buildPostTree( posts ) {
-		const postMap = new Map();
+	function buildTree( terms ) {
+		const termMap = new Map();
 		const tree = [];
 
-		posts.forEach( post => {
-			post.children = [];
-			postMap.set( post.ID, post );
+		terms.forEach( term => {
+			term.children = [];
+			termMap.set( term.term_id, term );
 		} );
 
 		// Only build hierarchy if hierarchical mode is enabled
 		if ( hierarchical ) {
-			posts.forEach( post => {
-				if ( post.post_parent && postMap.has( post.post_parent ) ) {
-					postMap.get( post.post_parent ).children.push( post );
+			terms.forEach( term => {
+				if ( term.parent && termMap.has( term.parent ) ) {
+					termMap.get( term.parent ).children.push( term );
 				} else {
-					tree.push( post );
+					tree.push( term );
 				}
 			} );
 		} else {
 			// Flat list if not hierarchical
-			tree.push( ...posts );
+			tree.push( ...terms );
 		}
 
 		return tree;
@@ -49,20 +47,20 @@
 	 * @returns {string}
 	 **/
 	function treeToHtml( tree, level = 0 ) {
-		let html = `<ul class="mb-cpt-sortable" data-level="${ level }">`;
-		tree.forEach( post => {
-			html += `<li data-id="${ post.ID }" data-parent="${ post.post_parent }" data-order="${ post.menu_order }">
+		let lists = $( "#the-list" ).attr( "data-wp-lists" ),
+			html = `<ul id="the-list" data-wp-lists="${ lists }" class="mb-cpt-sortable" data-level="${ level }">`;
+		tree.forEach( term => {
+			html += `<li data-id="${ term.term_id }" data-parent="${ term.parent }" data-order="${ term.term_order }">
 				<div class="mb-cpt-page-item">
 					<div class="mb-cpt-handle">☰</div>
 					<div class="mb-cpt-title">
-						${ post.post_title }
-						<span class="mb-cpt-status">${ post.post_status !== 'publish' ? post.post_status : '' }</span>
+						${ term.name }
 					</div>
 				</div>`;
 			// Only include nested ul if hierarchical is enabled and there are children
 			if ( hierarchical ) {
-				if ( post.children.length > 0 ) {
-					html += treeToHtml( post.children, level + 1 );
+				if ( term.children.length > 0 ) {
+					html += treeToHtml( term.children, level + 1 );
 				} else {
 					html += `<ul class="mb-cpt-sortable" data-level="${ level + 1 }"></ul>`;
 				}
@@ -100,8 +98,8 @@
 			} );
 		} );
 
-		let current = parseInt( MB_CPT_ORDER.current_page ) - 1,
-			i = current * parseInt( MB_CPT_ORDER.per_page );
+		let current = parseInt( MB_CPT_ORDER_TERMS.current_page ) - 1,
+			i = current * parseInt( MB_CPT_ORDER_TERMS.per_page );
 		const updatedOrder = orderData.map( ( item, index ) => {
 			i++;
 			item.order = i;
@@ -112,9 +110,8 @@
 			url: ajaxurl,
 			method: 'POST',
 			data: {
-				action: 'mb_cpt_save_order',
-				nonce: MB_CPT_ORDER.nonce,
-				post_type: MB_CPT_ORDER.post_type,
+				action: 'mb_cpt_save_order_terms',
+				nonce: MB_CPT_ORDER_TERMS.nonce,
 				order_data: JSON.stringify( updatedOrder )
 			}
 		} );
@@ -126,7 +123,7 @@
 	}
 
 	const $table = $( '.wp-list-table' );
-	const tree = buildPostTree( MB_CPT_ORDER.posts );
+	const tree = buildTree( MB_CPT_ORDER_TERMS.terms );
 	const html = treeToHtml( tree );
 	$table.html( html );
 

@@ -8,7 +8,7 @@ import CheckboxList from '../controls/CheckboxList';
 import Control from '../controls/Control';
 import { ReactComponent as Logo } from '../controls/logo.svg';
 import Result from './Result';
-import { AdvancedControls, BasicControls, CodeControls, LabelControls, PermissionsControls } from './constants/Data';
+import { AdvancedControls, BasicControls, CodeControls, LabelControls, PermissionsControls, FeatureControls } from './constants/Data';
 
 const tabs = [
 	{
@@ -32,6 +32,10 @@ const tabs = [
 		title: __( 'Permissions', 'mb-custom-post-type' ),
 	},
 	{
+		name: 'features',
+		title: __( 'Features', 'mb-custom-post-type' ),
+	},
+	{
 		name: 'code',
 		icon: <Icon icon={ code } />,
 		title: __( 'Get PHP Code', 'mb-custom-post-type' ),
@@ -47,6 +51,7 @@ const panels = {
 	labels: LabelControls.map( ( field, key ) => <Control key={ key } field={ field } /> ),
 	advanced: AdvancedControls.map( ( field, key ) => <Control key={ key } field={ field } /> ),
 	permissions: PermissionsControls.map( ( field, key ) => <Control key={ key } field={ field } /> ),
+	features: FeatureControls.map( ( field, key ) => <Control key={ key } field={ field } /> ),
 	types: <CheckboxList name="types" options={ MBCPT.types } description={ __( 'Post types for the taxonomy:', 'mb-custom-post-type' ) } />,
 	code: (
 		<>
