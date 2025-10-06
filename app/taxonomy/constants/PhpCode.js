@@ -10,7 +10,7 @@ const types = settings => {
 };
 
 const advanced = settings => {
-	const ignore = [ 'slug', 'types', 'function_name', 'text_domain', 'label', 'labels', 'description', 'rest_base', 'rewrite', 'meta_box_cb' ];
+	const ignore = [ 'slug', 'types', 'function_name', 'text_domain', 'label', 'labels', 'description', 'rest_base', 'rewrite', 'meta_box_cb', 'meta_box_sanitize_cb' ];
 
 	let keys = Object.keys( settings ).filter( key => !ignore.includes( key ) );
 	return keys.map( key => general( settings, key ) ).join( ",\n\t\t" );
@@ -36,8 +36,20 @@ const meta_box_cb = settings => {
 		value = settings.hierarchical ? `'post_categories_meta_box'` : `'post_tags_meta_box'`; ;
 	}
 
+	return value;
+};
 
-	return `'meta_box_cb'${ spaces( settings, 'meta_box_cb' ) } => ${ value }`;
+const meta_box_cb_code = settings => {
+	return `'meta_box_cb'${ spaces( settings, 'meta_box_cb' ) } => ${ meta_box_cb( settings ) }`;
+};
+
+const meta_box_sanitize_cb = settings => {
+	if ( settings.meta_box_sanitize_cb.length === 0 && ( 'false' !== settings.meta_box_cb ) ) {
+		return '';
+	}
+
+	let value = settings.meta_box_sanitize_cb ? `'${ settings.meta_box_sanitize_cb }'` : meta_box_cb( settings );
+	return `'meta_box_sanitize_cb'${ spaces( settings, 'meta_box_sanitize_cb' ) } => ${ value }`;
 };
 
 const PhpCode = settings => {
@@ -52,7 +64,8 @@ function ${ settings.function_name }() {
 		'labels'${ spaces( settings, 'labels' ) } => $labels,
 		${ text( settings, 'description' ) },
 		${ advanced( settings ) },
-		${ meta_box_cb( settings ) },
+		${ meta_box_cb_code( settings ) },
+		${ meta_box_sanitize_cb( settings ) }
 		${ text( settings, 'rest_base' ) },
 		${ rewrite( settings ) },
 	];
