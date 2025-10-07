@@ -22,7 +22,6 @@ const labels = settings => {
     const { labels } = settings;
 
     let keys = Object.keys( labels );
-    labels.text_domain = dotProp.get( settings, 'text_domain', 'your-textdomain' ); // Add text domain to run the `text` function above.
     // Create a temporary labels object with text_domain for translation purposes 
     const tempLabels = { ...labels };
     tempLabels.text_domain = dotProp.get( settings, 'text_domain', 'your-textdomain' );
