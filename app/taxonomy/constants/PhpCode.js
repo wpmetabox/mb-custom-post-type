@@ -30,26 +30,15 @@ const rewrite = settings => {
 };
 
 const meta_box_cb = settings => {
-	let value = settings.meta_box_cb ? `'${ settings.meta_box_cb }'` : settings.meta_box_cb;
-
-	if ( value ) {
-		value = settings.hierarchical ? `'post_categories_meta_box'` : `'post_tags_meta_box'`; ;
-	}
-
-	return value;
-};
-
-const meta_box_cb_code = settings => {
-	return `'meta_box_cb'${ spaces( settings, 'meta_box_cb' ) } => ${ meta_box_cb( settings ) }`;
+	return settings.meta_box_cb ? '' : `\n\t\t'meta_box_cb'${ spaces( settings, 'meta_box_cb' ) } => false,`;
 };
 
 const meta_box_sanitize_cb = settings => {
-	if ( settings.meta_box_sanitize_cb.length === 0 && ( 'false' !== settings.meta_box_cb ) ) {
+	if ( ! settings.meta_box_cb || ! settings.meta_box_sanitize_cb ) {
 		return '';
 	}
 
-	let value = settings.meta_box_sanitize_cb ? `'${ settings.meta_box_sanitize_cb }'` : meta_box_cb( settings );
-	return `'meta_box_sanitize_cb'${ spaces( settings, 'meta_box_sanitize_cb' ) } => ${ value }`;
+	return `\n\t\t'meta_box_sanitize_cb'${ spaces( settings, 'meta_box_sanitize_cb' ) } => '${ settings.meta_box_sanitize_cb }',`;
 };
 
 const PhpCode = settings => {
@@ -63,9 +52,7 @@ function ${ settings.function_name }() {
 		${ translatableText( settings, 'label' ) },
 		'labels'${ spaces( settings, 'labels' ) } => $labels,
 		${ text( settings, 'description' ) },
-		${ advanced( settings ) },
-		${ meta_box_cb_code( settings ) },
-		${ meta_box_sanitize_cb( settings ) }
+		${ advanced( settings ) },${ meta_box_cb( settings ) }${ meta_box_sanitize_cb( settings ) }
 		${ text( settings, 'rest_base' ) },
 		${ rewrite( settings ) },
 	];
