@@ -18,6 +18,19 @@ const general = ( settings, key ) => {
     return `'${ key }'${ spaces( settings, key ) } => ${ value }`;
 };
 
+const arrayValues = ( settings, key ) => {
+    let value = dotProp.get( settings, key );
+    if ( [ '', undefined ].includes( value ) ) {
+        return '';
+    }
+
+    const entries = Object.entries( value ).map(
+        ( [ key, value ] ) => `'${key}' => '${value}'`
+    );
+
+    return `'${ key }'${ spaces( settings, key ) } => [ ${ entries.join( "," ) } ]`;
+};
+
 const labels = settings => {
     const { labels } = settings;
 
@@ -27,4 +40,4 @@ const labels = settings => {
     return keys.map( key => translatableText( labels, key ) ).join( ",\n\t\t" );
 };
 
-export { spaces, text, translatableText, checkboxList, general, labels };
+export { spaces, text, translatableText, checkboxList, general, labels, arrayValues };
