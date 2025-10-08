@@ -9,6 +9,7 @@ class Edit {
 	public function __construct( $post_type ) {
 		$this->post_type = $post_type;
 		add_action( 'admin_enqueue_scripts', [ $this, 'enqueue_scripts' ] );
+		add_action( 'admin_init', [ $this, 'cpt_toggle_status_column' ] );
 	}
 
 	public function enqueue_scripts() {
@@ -62,6 +63,7 @@ class Edit {
 			'saving'          => __( 'Saving...', 'mb-custom-post-type' ),
 			'upgrade'         => ! $this->is_premium_user(),
 			'allCapabilities' => $this->get_all_capabilities(),
+			'mbb'             => defined( 'MBB_VER' ) ? true : false,
 		];
 
 		if ( 'mb-post-type' === get_current_screen()->id ) {
@@ -286,5 +288,22 @@ class Edit {
 		}
 
 		return array_values( array_unique( $capabilities ) );
+	}
+
+	public function cpt_toggle_status_column(): void {
+		if ( ! defined( 'MBB_VER' ) ) {
+			return;
+		}
+		add_filter( 'mbb_toggle_status_post_types', [ $this, 'add_toggle_status_column' ] );
+	}
+
+	public function add_toggle_status_column( array $post_types ): array {
+		$all_post_types = Data::get_post_types();
+		foreach ( $all_post_types as $slug => $post_type ) {
+			if ( ! empty( $post_type->status_column ) ) {
+				$post_types[] = $slug;
+			}
+		}
+		return $post_types;
 	}
 }
