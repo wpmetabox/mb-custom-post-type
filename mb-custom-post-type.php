@@ -74,6 +74,7 @@ if ( ! function_exists( 'mb_cpt_load' ) ) {
 		new MBCPT\Import();
 		new MBCPT\Export();
 		new MBCPT\PostListTable();
+		new MBCPT\ToggleStatusColumn();
 
 		if ( defined( 'CPTUI_VERSION' ) ) {
 			new MBCPT\Migration();
