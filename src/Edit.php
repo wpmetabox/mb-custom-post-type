@@ -62,6 +62,7 @@ class Edit {
 			'saving'          => __( 'Saving...', 'mb-custom-post-type' ),
 			'upgrade'         => ! $this->is_premium_user(),
 			'allCapabilities' => $this->get_all_capabilities(),
+			'mbb'             => defined( 'MBB_VER' ) ? true : false,
 		];
 
 		if ( 'mb-post-type' === get_current_screen()->id ) {
@@ -287,4 +288,5 @@ class Edit {
 
 		return array_values( array_unique( $capabilities ) );
 	}
+
 }

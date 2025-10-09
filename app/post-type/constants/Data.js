@@ -477,11 +477,22 @@ export const AdvancedControls = [
 	},
 ];
 
-export const FeatureControls = [
+const FeatureControls = [
 	{
 		type: 'toggle',
 		name: 'order',
 		label: __( 'Re-Order Posts', 'mb-custom-post-type' ),
 		description: __( 'Order posts of this post type using a drag and drop interface.', 'mb-custom-post-type' ),
-	},
+	}
 ];
+
+if ( MBCPT.mbb ) {
+	FeatureControls.push( {
+		type: 'toggle',
+		name: 'status_column',
+		label: __( 'Add toggle status column', 'mb-custom-post-type' ),
+		description: __( 'Add a column to quickly toggle post status between published and draft.', 'mb-custom-post-type' ),
+	} );
+};
+
+export { FeatureControls };
