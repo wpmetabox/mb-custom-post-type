@@ -70,7 +70,7 @@ class Taxonomy {
 				'label_' . $key,
 				$package,
 				sprintf( '%s: %s', $post->post_title, $label ),
-				LINE
+				'LINE'
 			);
 		}
 
@@ -81,7 +81,7 @@ class Taxonomy {
 			'description',
 			$package,
 			sprintf( '%s: Description', $post->post_title ),
-			LINE
+			'LINE'
 		);
 	}
 

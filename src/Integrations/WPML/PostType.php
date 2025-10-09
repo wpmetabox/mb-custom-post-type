@@ -71,7 +71,7 @@ class PostType {
 				'label_' . $key,
 				$package,
 				sprintf( '%s: %s', $post->post_title, $label ),
-				LINE
+				'LINE'
 			);
 		}
 
@@ -82,7 +82,7 @@ class PostType {
 			'description',
 			$package,
 			sprintf( '%s: Description', $post->post_title ),
-			LINE
+			'LINE'
 		);
 	}
 
