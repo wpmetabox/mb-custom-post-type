@@ -36,17 +36,22 @@ const rewrite = settings => {
 
 const meta_box_cb = settings => {
 	// If true, leave setting logic for wp
-	if ( settings.meta_box_cb === true ) {
+	if ( settings.meta_box_cb && typeof settings.meta_box_cb !== 'string' ) {
 		return '';
 	}
 
-	let value = settings.meta_box_cb ? `'${ settings.meta_box_cb }'` : false;
+	// If default callbacks, leave setting logic for wp
+	if ( [ 'post_tags_meta_box', 'post_categories_meta_box' ].includes( settings.meta_box_cb ) ) {
+		return '';
+	}
+
+	const value = settings.meta_box_cb ? `'${ settings.meta_box_cb }'` : false;
 	return `\r\t\t'meta_box_cb'${ spaces( settings, 'meta_box_cb' ) } => ${ value },`;
 };
 
 const meta_box_sanitize_cb = settings => {
 	// If meta_box is inactive don't show it
-	if( ! settings.meta_box_cb || ! settings.meta_box_sanitize_cb ) {
+	if ( !settings.meta_box_cb || !settings.meta_box_sanitize_cb ) {
 		return '';
 	}
 
@@ -56,7 +61,7 @@ const meta_box_sanitize_cb = settings => {
 const PhpCode = settings => {
 	return `<?php
 add_action( 'init', '${ settings.function_name ?? DefaultSettings.function_name }' );
-function ${ settings.function_name ?? DefaultSettings.function_name  }() {
+function ${ settings.function_name ?? DefaultSettings.function_name }() {
 	$labels = [
 		${ labels( settings ) },
 	];
@@ -69,7 +74,7 @@ function ${ settings.function_name ?? DefaultSettings.function_name  }() {
 		${ text( settings, 'rest_base' ) },
 		${ rewrite( settings ) },
 	];
-	register_taxonomy( '${ settings.slug.replace(/\\/g, '\\\\').replace(/\'/g, '\\\'') }', ${ types( settings, 'types' ) }, $args );
+	register_taxonomy( '${ settings.slug.replace( /\\/g, '\\\\' ).replace( /\'/g, '\\\'' ) }', ${ types( settings, 'types' ) }, $args );
 }`;
 };
 
