@@ -1,5 +1,5 @@
 import dotProp from 'dot-prop';
-import { general, labels, spaces, text, translatableText, arrayValues } from '../../code';
+import { general, labels, outputSettingObject, spaces, text, translatableText } from '../../code';
 import DefaultSettings from './DefaultSettings';
 
 const types = settings => {
@@ -23,7 +23,7 @@ const special = settings => {
 	return list.map( key => {
 		if ( 'default_term' === key ) {
 			if ( ! settings.default_term || settings.default_term.default_term_enabled !== '1' ) {
-				return '';
+			return '';
 			}
 
 			let defaultTerm = dotProp.get( settings, key );
@@ -40,10 +40,7 @@ const special = settings => {
 			return `\r\t\t'${ key }'${ spaces( settings, key ) } => [ ${ entries.join( "," ) } ],`;
 		}
 		if ( 'capabilities' === key ) {
-			if ( ! settings.capabilities ) {
-				return '';
-			}
-			return arrayValues( settings, key );
+			return outputSettingObject( settings, key, 3 );
 		}
 	} );
 };
