@@ -18,31 +18,7 @@ const advanced = settings => {
 };
 
 const special = settings => {
-	const list = [ 'capabilities', 'default_term' ];
-
-	return list.map( key => {
-		if ( 'default_term' === key ) {
-			if ( ! settings.default_term || settings.default_term.default_term_enabled !== '1' ) {
-			return '';
-			}
-
-			let defaultTerm = dotProp.get( settings, key );
-			const newTerm   = {
-				'name': settings.default_term.default_term_name,
-				'slug': settings.default_term.default_term_slug,
-				'description': settings.default_term.default_term_description,
-			};
-
-			const entries   = Object.entries( newTerm ).map(
-				( [ key, value ] ) => `'${key}' => '${value}'`
-			);
-
-			return `\r\t\t'${ key }'${ spaces( settings, key ) } => [ ${ entries.join( "," ) } ],`;
-		}
-		if ( 'capabilities' === key ) {
-			return outputSettingObject( settings, key, 3 );
-		}
-	} );
+	return outputSettingObject( settings, 'capabilities', 3 );
 };
 
 const rewrite = settings => {
