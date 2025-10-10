@@ -8,7 +8,7 @@ const checkText = ( settings, key ) => {
 	return value;
 };
 const text = ( settings, key ) => `'${ key }'${ spaces( settings, key ) } => '${ checkText( settings, key ) }'`;
-const translatableText = ( settings, key ) => `'${ key }'${ spaces( settings, key ) } => esc_html__( '${ checkText( settings, key ) }', '${ settings.text_domain }' )`;
+const translatableText = ( settings, key ) => `'${ key }'${ spaces( settings, key ) } => esc_html__( '${ checkText( settings, key ) }', '${ settings.text_domain || 'your-textdomain' }' )`;
 const checkboxList = ( settings, key, defaultValue ) => `'${ key }'${ spaces( settings, key ) } => ${ dotProp.get( settings, key, [] ).length ? `['${ dotProp.get( settings, key, [] ).join( "', '" ) }']` : defaultValue }`;
 const general = ( settings, key ) => {
 	let value = dotProp.get( settings, key );
@@ -17,6 +17,25 @@ const general = ( settings, key ) => {
 	}
 	return `'${ key }'${ spaces( settings, key ) } => ${ value }`;
 };
+
+const outputSettingObject = ( settings, key, indent = 1 ) => {
+	const setting = dotProp.get( settings, key );
+	if ( !isPlainObjectWithKeys( setting ) ) {
+		return '';
+	}
+
+	return `'${ key }'${ spaces( settings, key ) } => ${ outputObject( setting, indent ) }`;
+};
+
+const outputObject = ( obj, indent = 1 ) => {
+	const indentString = "\t".repeat( indent );
+	const bracketIndentString = "\t".repeat( indent - 1 );
+	const entries = Object.entries( obj ).map( ( [ k, v ] ) => `${ indentString }'${ k }'${ spaces( obj, k ) } => '${ v }',` );
+
+	return `[\n${ entries.join( "\n" ) }\n${ bracketIndentString }]`;
+};
+
+const isPlainObjectWithKeys = obj => Object.prototype.toString.call( obj ) === '[object Object]' && Object.keys( obj ).length > 0;
 
 const labels = settings => {
 	const { labels } = settings;
@@ -29,5 +48,4 @@ const labels = settings => {
 	return keys.map( key => translatableText( tempLabels, key ) ).join( ",\n\t\t" );
 };
 
-export { checkboxList, general, labels, spaces, text, translatableText };
-
+export { checkboxList, general, labels, outputSettingObject, spaces, text, translatableText };
