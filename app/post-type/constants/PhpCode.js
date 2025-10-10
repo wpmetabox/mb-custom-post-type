@@ -54,8 +54,8 @@ const rewrite = settings => {
 
 const PhpCode = settings => {
 	return `<?php
-add_action( 'init', '${ settings.function_name }' );
-function ${ settings.function_name }() {
+add_action( 'init', '${ settings.function_name || DefaultSettings.function_name }' );
+function ${ settings.function_name || DefaultSettings.function_name }() {
 	$labels = [
 		${ labels( settings ) },
 	];
@@ -74,7 +74,7 @@ function ${ settings.function_name }() {
 		${ rewrite( settings ) },
 	];
 
-	register_post_type( '${ settings.slug.replace(/\\/g, '\\\\').replace(/\'/g, '\\\'') }', $args );
+	register_post_type( '${ settings.slug.replace( /\\/g, '\\\\' ).replace( /\'/g, '\\\'' ) }', $args );
 }`;
 };
 

@@ -60,8 +60,8 @@ const meta_box_sanitize_cb = settings => {
 
 const PhpCode = settings => {
 	return `<?php
-add_action( 'init', '${ settings.function_name ?? DefaultSettings.function_name }' );
-function ${ settings.function_name ?? DefaultSettings.function_name }() {
+add_action( 'init', '${ settings.function_name || DefaultSettings.function_name }' );
+function ${ settings.function_name || DefaultSettings.function_name }() {
 	$labels = [
 		${ labels( settings ) },
 	];

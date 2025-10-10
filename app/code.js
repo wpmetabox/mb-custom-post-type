@@ -8,7 +8,7 @@ const checkText = ( settings, key ) => {
 	return value;
 };
 const text = ( settings, key ) => `'${ key }'${ spaces( settings, key ) } => '${ checkText( settings, key ) }'`;
-const translatableText = ( settings, key ) => `'${ key }'${ spaces( settings, key ) } => esc_html__( '${ checkText( settings, key ) }', '${ settings.text_domain }' )`;
+const translatableText = ( settings, key ) => `'${ key }'${ spaces( settings, key ) } => esc_html__( '${ checkText( settings, key ) }', '${ settings.text_domain || 'your-textdomain' }' )`;
 const checkboxList = ( settings, key, defaultValue ) => `'${ key }'${ spaces( settings, key ) } => ${ dotProp.get( settings, key, [] ).length ? `['${ dotProp.get( settings, key, [] ).join( "', '" ) }']` : defaultValue }`;
 const general = ( settings, key ) => {
 	let value = dotProp.get( settings, key );
