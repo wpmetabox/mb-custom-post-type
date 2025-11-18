@@ -25,5 +25,4 @@ class ToggleStatusColumn {
 		}
 		return $post_types;
 	}
-
 }

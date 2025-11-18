@@ -3,7 +3,7 @@ namespace MBCPT;
 
 use WP_Query;
 
-class PostTypeOrder {
+class PostTypeReorder {
 
 	public function __construct() {
 		add_action( 'load-edit.php', [ $this, 'setup_for_edit_screen' ] );
@@ -27,7 +27,7 @@ class PostTypeOrder {
 		$this->set_initial_orders( $screen->post_type );
 	}
 
-	public function enqueue_scripts( $hook ) {
+	public function enqueue_scripts( string $hook ): void {
 		if ( $hook !== 'edit.php' ) {
 			return;
 		}
@@ -37,7 +37,7 @@ class PostTypeOrder {
 		$post_type        = $screen->post_type;
 		$post_type_object = get_post_type_object( $post_type );
 
-		if ( ! isset( $post_type_object->order ) || ! $post_type_object->order ) {
+		if ( ! $this->reorderable( $post_type ) ) {
 			return;
 		}
 
@@ -276,7 +276,7 @@ class PostTypeOrder {
 	public function set_orderby_menu_order( WP_Query $query ): void {
 		$post_type = $query->get( 'post_type' );
 
-		if ( ! $post_type || ! is_string( $post_type ) || ! $this->is_enabled_ordering( $post_type ) ) {
+		if ( ! $post_type || ! is_string( $post_type ) || ! $this->reorderable( $post_type ) ) {
 			return;
 		}
 
@@ -293,7 +293,7 @@ class PostTypeOrder {
 	public function order_previous_post_where( string $where ): string {
 		global $post;
 
-		if ( ! empty( $post->post_type ) && $this->is_enabled_ordering( $post->post_type ) ) {
+		if ( ! empty( $post->post_type ) && $this->reorderable( $post->post_type ) ) {
 			$where = preg_replace( "/p.post_date < \'[0-9\-\s\:]+\'/i", "p.menu_order > '" . $post->menu_order . "'", $where );
 		}
 		return $where;
@@ -302,7 +302,7 @@ class PostTypeOrder {
 	public function order_previous_post_sort( string $orderby ): string {
 		global $post;
 
-		if ( ! empty( $post->post_type ) && $this->is_enabled_ordering( $post->post_type ) ) {
+		if ( ! empty( $post->post_type ) && $this->reorderable( $post->post_type ) ) {
 			$orderby = 'ORDER BY p.menu_order ASC LIMIT 1';
 		}
 		return $orderby;
@@ -311,7 +311,7 @@ class PostTypeOrder {
 	public function order_next_post_where( string $where ): string {
 		global $post;
 
-		if ( ! empty( $post->post_type ) && $this->is_enabled_ordering( $post->post_type ) ) {
+		if ( ! empty( $post->post_type ) && $this->reorderable( $post->post_type ) ) {
 			$where = preg_replace( "/p.post_date > \'[0-9\-\s\:]+\'/i", "p.menu_order < '" . $post->menu_order . "'", $where );
 		}
 		return $where;
@@ -320,14 +320,15 @@ class PostTypeOrder {
 	public function order_next_post_sort( string $orderby ): string {
 		global $post;
 
-		if ( ! empty( $post->post_type ) && $this->is_enabled_ordering( $post->post_type ) ) {
+		if ( ! empty( $post->post_type ) && $this->reorderable( $post->post_type ) ) {
 			$orderby = 'ORDER BY p.menu_order DESC LIMIT 1';
 		}
 		return $orderby;
 	}
 
-	private function is_enabled_ordering( string $post_type ): bool {
+	private function reorderable( string $post_type ): bool {
 		$post_type_object = get_post_type_object( $post_type );
-		return ! empty( $post_type_object->order );
+		$enabled          = $post_type_object && ! empty( $post_type_object->order );
+		return apply_filters( 'mbcpt_post_type_reorderable', $enabled, $post_type );
 	}
 }

@@ -5,7 +5,7 @@ use WP_Post;
 use MetaBox\Support\Arr;
 
 class PostTypeRegister extends Register {
-	private $menu_positions = [];
+	private $menu_positions       = [];
 	private $font_awesome_classes = [ 'fa', 'fa-classic', 'fa-sharp', 'fas', 'fa-solid', 'far', 'fa-regular', 'fab', 'fa-brands' ];
 
 	public function register() {
