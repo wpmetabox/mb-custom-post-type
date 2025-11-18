@@ -1,7 +1,7 @@
 <?php
 namespace MBCPT;
 
-class TaxonomyOrder {
+class TaxonomyReorder {
 
 	public function __construct() {
 		if ( ! get_option( 'add_term_order_column' ) ) {
@@ -31,7 +31,7 @@ class TaxonomyOrder {
 		$taxonomy        = $screen->taxonomy;
 		$taxonomy_object = get_taxonomy( $taxonomy );
 
-		if ( ! $this->is_enabled_ordering( $taxonomy ) ) {
+		if ( ! $this->reorderable( $taxonomy ) ) {
 			return;
 		}
 
@@ -267,7 +267,7 @@ class TaxonomyOrder {
 			$taxonomy = reset( $args['taxonomy'] );
 		}
 
-		return is_string( $taxonomy ) && $this->is_enabled_ordering( $taxonomy ) ? 't.term_order' : $orderby;
+		return is_string( $taxonomy ) && $this->reorderable( $taxonomy ) ? 't.term_order' : $orderby;
 	}
 
 	public function order_get_object_terms( $terms ) {
@@ -282,7 +282,7 @@ class TaxonomyOrder {
 			}
 
 			$taxonomy = $term->taxonomy;
-			if ( ! $this->is_enabled_ordering( $taxonomy ) ) {
+			if ( ! $this->reorderable( $taxonomy ) ) {
 				return $terms;
 			}
 		}
@@ -294,10 +294,10 @@ class TaxonomyOrder {
 		return $terms;
 	}
 
-	private function is_enabled_ordering( string $taxonomy ): bool {
+	private function reorderable( string $taxonomy ): bool {
 		$taxonomy_object = get_taxonomy( $taxonomy );
 		$enabled         = $taxonomy_object && ! empty( $taxonomy_object->order );
-		return apply_filters( 'mbcpt_taxonomy_enabled_ordering', $enabled, $taxonomy );
+		return apply_filters( 'mbcpt_taxonomy_reorderable', $enabled, $taxonomy );
 	}
 
 	public function add_term_order_column(): void {
