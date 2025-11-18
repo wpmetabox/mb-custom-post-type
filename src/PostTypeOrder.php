@@ -328,7 +328,7 @@ class PostTypeOrder {
 
 	private function is_enabled_ordering( string $post_type ): bool {
 		$post_type_object = get_post_type_object( $post_type );
-		$enabled = $post_type_object && ! empty( $post_type_object->order );
+		$enabled          = $post_type_object && ! empty( $post_type_object->order );
 		return apply_filters( 'mbcpt_post_type_enabled_ordering', $enabled, $post_type );
 	}
 }

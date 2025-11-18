@@ -288,5 +288,4 @@ class Edit {
 
 		return array_values( array_unique( $capabilities ) );
 	}
-
 }
