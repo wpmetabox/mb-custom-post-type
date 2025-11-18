@@ -27,7 +27,7 @@ class PostTypeOrder {
 		$this->set_initial_orders( $screen->post_type );
 	}
 
-	public function enqueue_scripts( $hook ) {
+	public function enqueue_scripts( string $hook ): void {
 		if ( $hook !== 'edit.php' ) {
 			return;
 		}
@@ -37,7 +37,7 @@ class PostTypeOrder {
 		$post_type        = $screen->post_type;
 		$post_type_object = get_post_type_object( $post_type );
 
-		if ( ! isset( $post_type_object->order ) || ! $post_type_object->order ) {
+		if ( ! $this->is_enabled_ordering( $post_type ) ) {
 			return;
 		}
 
@@ -328,6 +328,7 @@ class PostTypeOrder {
 
 	private function is_enabled_ordering( string $post_type ): bool {
 		$post_type_object = get_post_type_object( $post_type );
-		return ! empty( $post_type_object->order );
+		$enabled = $post_type_object && ! empty( $post_type_object->order );
+		return apply_filters( 'mbcpt_post_type_enable_ordering', $enabled, $post_type );
 	}
 }

@@ -31,7 +31,7 @@ class TaxonomyOrder {
 		$taxonomy        = $screen->taxonomy;
 		$taxonomy_object = get_taxonomy( $taxonomy );
 
-		if ( empty( $taxonomy_object->order ) ) {
+		if ( ! $this->is_enabled_ordering( $taxonomy ) ) {
 			return;
 		}
 
@@ -296,7 +296,8 @@ class TaxonomyOrder {
 
 	private function is_enabled_ordering( string $taxonomy ): bool {
 		$taxonomy_object = get_taxonomy( $taxonomy );
-		return $taxonomy_object && ! empty( $taxonomy_object->order );
+		$enabled = $taxonomy_object && ! empty( $taxonomy_object->order );
+		return apply_filters( 'mbcpt_taxonomy_enabled_ordering', $enabled, $taxonomy );
 	}
 
 	public function add_term_order_column(): void {
