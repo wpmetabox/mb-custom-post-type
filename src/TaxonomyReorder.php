@@ -138,7 +138,7 @@ class TaxonomyReorder {
 					'term_id'    => $term->term_id,
 					'name'       => $term->name,
 					'parent'     => $term->parent,
-					'term_order' => $term->term_order == 0 ? $all_term_map[ $term->ID ]->term_order : $term->term_order,
+					'term_order' => $term->term_order == 0 ? $all_term_map[ $term->term_id ]->term_order : $term->term_order,
 				];
 			}, $full_query);
 		}
