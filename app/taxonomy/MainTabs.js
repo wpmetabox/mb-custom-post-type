@@ -47,7 +47,7 @@ const panels = {
 	general: [
 		...BasicControls.map( ( field, key ) => <Control key={ key } field={ field } autoFills={ autoFills.filter( f => f.updateFrom === field.name ) } /> ),
 		<TokenFieldSelect
-			label={ __( 'Taxonomies', 'mb-custom-post-type' ) }
+			label={ __( 'Post Types', 'mb-custom-post-type' ) }
 			labelField={ __( 'Post types for the taxonomy:', 'mb-custom-post-type' ) }
 			validateTokens={ ( token ) => Object.keys( MBCPT.types ).includes( token ) }
 			name="types"
