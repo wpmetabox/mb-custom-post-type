@@ -1,4 +1,4 @@
-import { Flex, Icon, TabPanel, Tooltip } from '@wordpress/components';
+import { Flex, Icon, TabPanel, Tooltip, FormTokenField } from '@wordpress/components';
 import { useContext } from "@wordpress/element";
 import { __ } from '@wordpress/i18n';
 import { code } from "@wordpress/icons";
@@ -6,6 +6,7 @@ import { SettingsContext } from '../SettingsContext';
 import Upgrade from '../components/Upgrade';
 import CheckboxList from '../controls/CheckboxList';
 import Control from '../controls/Control';
+import TokenFieldSelect from '../controls/TokenFieldSelect';
 import { ReactComponent as Logo } from '../controls/logo.svg';
 import Result from './Result';
 import { AdvancedControls, BasicControls, CodeControls, FeatureControls, LabelControls, SupportControls } from './constants/Data';
@@ -28,10 +29,6 @@ const tabs = [
 		title: __( 'Supports', 'mb-custom-post-type' ),
 	},
 	{
-		name: 'taxonomies',
-		title: __( 'Taxonomies', 'mb-custom-post-type' ),
-	},
-	{
 		name: 'features',
 		title: __( 'Features', 'mb-custom-post-type' ),
 	},
@@ -46,12 +43,22 @@ const tabs = [
 let autoFills = [ ...LabelControls, ...BasicControls ];
 autoFills.push( { name: 'label', default: '%name%', updateFrom: 'labels.name' } );
 
+// Panels
 const panels = {
-	general: BasicControls.map( ( field, key ) => <Control key={ key } field={ field } autoFills={ autoFills.filter( f => f.updateFrom === field.name ) } /> ),
+	general: [
+		...BasicControls.map( ( field, key ) => <Control key={ key } field={ field } autoFills={ autoFills.filter( f => f.updateFrom === field.name ) } /> ),
+		<TokenFieldSelect
+			label={ __( 'Taxonomies', 'mb-custom-post-type' ) }
+			labelField={ __( 'Taxonomies that will be registered for the post type:', 'mb-custom-post-type' ) }
+			validateTokens={ ( token ) => Object.keys( MBCPT.taxonomies ).includes( token ) }
+			name="taxonomies"
+			suggestions={ Object.keys( MBCPT.taxonomies ) }
+			placeholder={ __( 'Select taxonomies', 'mb-custom-post-type' ) }
+		/>
+	],
 	labels: LabelControls.map( ( field, key ) => <Control key={ key } field={ field } /> ),
 	advanced: AdvancedControls.map( ( field, key ) => <Control key={ key } field={ field } /> ),
 	supports: <CheckboxList name="supports" options={ SupportControls } description={ __( 'Core features the post type supports:', 'mb-custom-post-type' ) } />,
-	taxonomies: <CheckboxList name="taxonomies" options={ MBCPT.taxonomies } description={ __( 'Taxonomies that will be registered for the post type:', 'mb-custom-post-type' ) } />,
 	features: FeatureControls.map( ( field, key ) => <Control key={ key } field={ field } /> ),
 	code: (
 		<>
