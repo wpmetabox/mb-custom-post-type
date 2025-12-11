@@ -1,11 +1,11 @@
 import { ToggleControl } from '@wordpress/components';
 import { useContext } from '@wordpress/element';
-import dotProp from 'dot-prop';
+import { getProperty } from 'dot-prop';
 import { SettingsContext } from '../SettingsContext';
 
 const CheckboxList = ( { name, options, description } ) => {
 	const { settings, updateSettings } = useContext( SettingsContext );
-	const saved = dotProp.get( settings, name, [] );
+	const saved = getProperty( settings, name, [] );
 
 	const update = ( value, checked ) => {
 		let newSaved = [ ...saved ];

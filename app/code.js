@@ -1,17 +1,17 @@
-import dotProp from 'dot-prop';
+import { getProperty } from 'dot-prop';
 
 const maxKeyLength = object => Math.max.apply( null, Object.keys( object ).map( key => key.length ) );
 const spaces = ( settings, key ) => ' '.repeat( maxKeyLength( settings ) - key.length );
 const checkText = ( settings, key ) => {
-	let value = dotProp.get( settings, key, '' ).replace( /\\/g, '\\\\' );
+	let value = getProperty( settings, key, '' ).replace( /\\/g, '\\\\' );
 	value = value.replace( /\'/g, '\\\'' );
 	return value;
 };
 const text = ( settings, key ) => `'${ key }'${ spaces( settings, key ) } => '${ checkText( settings, key ) }'`;
 const translatableText = ( settings, key ) => `'${ key }'${ spaces( settings, key ) } => esc_html__( '${ checkText( settings, key ) }', '${ settings.text_domain || 'your-textdomain' }' )`;
-const checkboxList = ( settings, key, defaultValue ) => `'${ key }'${ spaces( settings, key ) } => ${ dotProp.get( settings, key, [] ).length ? `['${ dotProp.get( settings, key, [] ).join( "', '" ) }']` : defaultValue }`;
+const checkboxList = ( settings, key, defaultValue ) => `'${ key }'${ spaces( settings, key ) } => ${ getProperty( settings, key, [] ).length ? `['${ getProperty( settings, key, [] ).join( "', '" ) }']` : defaultValue }`;
 const general = ( settings, key ) => {
-	let value = dotProp.get( settings, key );
+	let value = getProperty( settings, key );
 	if ( [ '', undefined ].includes( value ) ) {
 		value = "''";
 	}
@@ -19,7 +19,7 @@ const general = ( settings, key ) => {
 };
 
 const outputSettingObject = ( settings, key, indent = 1 ) => {
-	const setting = dotProp.get( settings, key );
+	const setting = getProperty( settings, key );
 	if ( !isPlainObjectWithKeys( setting ) ) {
 		return '';
 	}
@@ -43,7 +43,7 @@ const labels = settings => {
 	let keys = Object.keys( labels );
 	// Create a temporary labels object with text_domain for translation purposes
 	const tempLabels = { ...labels };
-	tempLabels.text_domain = dotProp.get( settings, 'text_domain', 'your-textdomain' );
+	tempLabels.text_domain = getProperty( settings, 'text_domain', 'your-textdomain' );
 
 	return keys.map( key => translatableText( tempLabels, key ) ).join( ",\n\t\t" );
 };
