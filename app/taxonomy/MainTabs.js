@@ -46,6 +46,7 @@ const panels = {
 	general: [
 		...BasicControls.map( ( field, key ) => <Control key={ key } field={ field } autoFills={ autoFills.filter( f => f.updateFrom === field.name ) } /> ),
 		<TokenFieldSelect
+			key="types"
 			label={ __( 'Associated post types', 'mb-custom-post-type' ) }
 			name="types"
 			suggestions={ Object.keys( MBCPT.types ) }
