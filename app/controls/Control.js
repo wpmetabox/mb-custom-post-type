@@ -1,5 +1,5 @@
 import { useContext } from '@wordpress/element';
-import dotProp from 'dot-prop';
+import { getProperty, setProperty } from 'dot-prop';
 import slugify from 'slugify';
 import { SettingsContext } from '../SettingsContext';
 import Checkbox from './Checkbox';
@@ -39,7 +39,7 @@ const Control = ( { field, autoFills = [] } ) => {
 			}
 			const depName = match[ 1 ];
 			const depValue = normalizeBool( match[ 2 ] );
-			const currentValue = dotProp.get( settings, depName );
+			const currentValue = getProperty( settings, depName );
 
 			if ( currentValue !== depValue ) {
 				return false;
@@ -67,7 +67,7 @@ const Control = ( { field, autoFills = [] } ) => {
 				);
 			}
 
-			dotProp.set( newSettings, f.name, newValue );
+			setProperty( newSettings, f.name, newValue );
 		} );
 
 		return newSettings;
@@ -75,12 +75,12 @@ const Control = ( { field, autoFills = [] } ) => {
 
 	const update = e => {
 		const name = e.target.name;
-		let value = 'checkbox' === e.target.type ? dotProp.get( e.target, 'checked', false ) : e.target.value;
+		let value = 'checkbox' === e.target.type ? getProperty( e.target, 'checked', false ) : e.target.value;
 		value = normalizeBool( value );
 		value = name === 'menu_position' ? parseFloat( value ) || '' : value;
 
 		let newSettings = { ...settings };
-		dotProp.set( newSettings, name, value );
+		setProperty( newSettings, name, value );
 		autofill( newSettings, name, value );
 
 		updateSettings( newSettings );
@@ -88,12 +88,12 @@ const Control = ( { field, autoFills = [] } ) => {
 
 	const updateCheckbox = ( name, value ) => {
 		let newSettings = { ...settings };
-		dotProp.set( newSettings, name, value );
+		setProperty( newSettings, name, value );
 
 		updateSettings( newSettings );
 	};
 
-	const _value = dotProp.get( settings, field.name, field.default || '' );
+	const _value = getProperty( settings, field.name, field.default || '' );
 	if ( !isDisplay( field ) ) {
 		return '';
 	}

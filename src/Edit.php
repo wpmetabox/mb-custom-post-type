@@ -9,6 +9,12 @@ class Edit {
 	public function __construct( $post_type ) {
 		$this->post_type = $post_type;
 		add_action( 'admin_enqueue_scripts', [ $this, 'enqueue_scripts' ] );
+
+		add_action( 'add_meta_boxes', [ $this, 'remove_submitdiv_meta_box' ] );
+	}
+
+	public function remove_submitdiv_meta_box(): void {
+		remove_meta_box( 'submitdiv', $this->post_type, 'side' );
 	}
 
 	public function enqueue_scripts() {

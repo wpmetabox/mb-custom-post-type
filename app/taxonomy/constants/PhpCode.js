@@ -1,9 +1,9 @@
-import dotProp from 'dot-prop';
+import { getProperty } from 'dot-prop';
 import { general, labels, outputSettingObject, spaces, text, translatableText } from '../../code';
 import DefaultSettings from './DefaultSettings';
 
 const types = settings => {
-	let values = dotProp.get( settings, 'types', [] );
+	let values = getProperty( settings, 'types', [] );
 	if ( !Array.isArray( values ) ) {
 		values = [ values ];
 	}
