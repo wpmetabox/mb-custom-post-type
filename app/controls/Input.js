@@ -9,16 +9,16 @@ const Input = ( { label, name, value, update, tooltip = '', description = '', re
 			{ tooltip && <Tooltip id={ name } content={ tooltip } /> }
 		</label>
 		<div className="mb-cpt-input">
-			<input type="text" 
+			<input type="text"
 				required={ required }
 				id={ name }
 				name={ name }
-				value={ value }
-				onChange={ update }  
+				value={ value || '' }
+				onChange={ update }
 				placeholder={ placeholder }
 				list={ `${ name }-list` }
 			/>
-			
+
 			{ description && <div className="mb-cpt-description"><RawHTML>{ description }</RawHTML></div> }
 			{ datalist.length > 0 && <datalist id={ `${ name }-list` }>
 				{ datalist.map( item => <option key={ item } value={ item } /> ) }
