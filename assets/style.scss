@@ -1,5 +1,6 @@
-// Do not show update nag.
-.update-nag {
+// Do not show update nag and meta boxes (to avoid layout shift when rendering the app).
+.update-nag,
+.metabox-holder {
 	display: none;
 }
 
