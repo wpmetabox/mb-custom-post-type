@@ -46,6 +46,7 @@ const tabs = [
 let autoFills = [ ...LabelControls, ...BasicControls ];
 autoFills.push( { name: 'label', default: '%name%', updateFrom: 'labels.name' } );
 
+// Panels
 const panels = {
 	general: BasicControls.map( ( field, key ) => <Control key={ key } field={ field } autoFills={ autoFills.filter( f => f.updateFrom === field.name ) } /> ),
 	labels: LabelControls.map( ( field, key ) => <Control key={ key } field={ field } /> ),

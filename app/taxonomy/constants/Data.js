@@ -24,6 +24,18 @@ export const BasicControls = [
 		tooltip: __( 'Taxonomy key, must not exceed 32 characters and may only contain lowercase alphanumeric characters, dashes, and underscores', 'mb-custom-post-type' ),
 		limit: 32,
 	},
+	{
+		type: 'checkbox',
+		name: 'public',
+		label: __( 'Public', 'mb-custom-post-type' ),
+		description: __( 'Whether a taxonomy is intended for use publicly either via the admin interface or by front-end users.', 'mb-custom-post-type' ),
+	},
+	{
+		type: 'checkbox',
+		name: 'hierarchical',
+		label: __( 'Hierarchical', 'mb-custom-post-type' ),
+		description: __( 'Whether the taxonomy is hierarchical (e.g. like category).', 'mb-custom-post-type' ),
+	},
 ];
 
 export const CodeControls = [
@@ -224,24 +236,10 @@ export const AdvancedControls = [
 	},
 	{
 		type: 'checkbox',
-		name: 'public',
-		label: __( 'Public', 'mb-custom-post-type' ),
-		description: __( 'Whether a taxonomy is intended for use publicly either via the admin interface or by front-end users.', 'mb-custom-post-type' ),
-		tooltip: __( 'Whether a taxonomy is intended for use publicly either via the admin interface or by front-end users', 'mb-custom-post-type' ),
-	},
-	{
-		type: 'checkbox',
 		name: 'publicly_queryable',
 		label: __( 'Public queryable', 'mb-custom-post-type' ),
 		description: __( 'Whether the taxonomy is publicly queryable.', 'mb-custom-post-type' ),
 		tooltip: __( 'Whether the taxonomy is publicly queryable', 'mb-custom-post-type' ),
-	},
-	{
-		type: 'checkbox',
-		name: 'hierarchical',
-		label: __( 'Hierarchical', 'mb-custom-post-type' ),
-		description: __( 'Whether the taxonomy is hierarchical.', 'mb-custom-post-type' ),
-		tooltip: __( 'Whether the taxonomy is hierarchical', 'mb-custom-post-type' ),
 	},
 	{
 		type: 'checkbox',
@@ -297,14 +295,12 @@ export const AdvancedControls = [
 		name: 'show_in_quick_edit',
 		label: __( 'Show in quick edit', 'mb-custom-post-type' ),
 		description: __( 'Whether to show the taxonomy in the quick/bulk edit panel.', 'mb-custom-post-type' ),
-		tooltip: __( 'Whether to show the taxonomy in the quick/bulk edit panel', 'mb-custom-post-type' ),
 	},
 	{
 		type: 'checkbox',
 		name: 'show_admin_column',
 		label: __( 'Show admin column', 'mb-custom-post-type' ),
 		description: __( 'Whether to display a column for the taxonomy on its post type listing screens.', 'mb-custom-post-type' ),
-		tooltip: __( 'Whether to display a column for the taxonomy on its post type listing screens', 'mb-custom-post-type' ),
 	},
 	{
 		type: 'text',

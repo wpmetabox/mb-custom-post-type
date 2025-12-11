@@ -4,11 +4,11 @@ import { __ } from '@wordpress/i18n';
 import { code } from "@wordpress/icons";
 import { SettingsContext } from '../SettingsContext';
 import Upgrade from '../components/Upgrade';
-import CheckboxList from '../controls/CheckboxList';
 import Control from '../controls/Control';
+import TokenFieldSelect from '../controls/TokenFieldSelect';
 import { ReactComponent as Logo } from '../controls/logo.svg';
 import Result from './Result';
-import { AdvancedControls, BasicControls, CodeControls, LabelControls, PermissionsControls, FeatureControls } from './constants/Data';
+import { AdvancedControls, BasicControls, CodeControls, FeatureControls, LabelControls, PermissionsControls } from './constants/Data';
 
 const tabs = [
 	{
@@ -22,10 +22,6 @@ const tabs = [
 	{
 		name: 'advanced',
 		title: __( 'Advanced', 'mb-custom-post-type' ),
-	},
-	{
-		name: 'types',
-		title: __( 'Post Types', 'mb-custom-post-type' ),
 	},
 	{
 		name: 'permissions',
@@ -47,12 +43,20 @@ let autoFills = [ ...LabelControls, ...BasicControls ];
 autoFills.push( { name: 'label', default: '%name%', updateFrom: 'labels.name' } );
 
 const panels = {
-	general: BasicControls.map( ( field, key ) => <Control key={ key } field={ field } autoFills={ autoFills.filter( f => f.updateFrom === field.name ) } /> ),
+	general: [
+		...BasicControls.map( ( field, key ) => <Control key={ key } field={ field } autoFills={ autoFills.filter( f => f.updateFrom === field.name ) } /> ),
+		<TokenFieldSelect
+			label={ __( 'Associated post types', 'mb-custom-post-type' ) }
+			validateTokens={ token => Object.keys( MBCPT.types ).includes( token ) }
+			name="types"
+			suggestions={ Object.keys( MBCPT.types ) }
+			placeholder={ __( 'Select post types', 'mb-custom-post-type' ) }
+		/>
+	],
 	labels: LabelControls.map( ( field, key ) => <Control key={ key } field={ field } /> ),
 	advanced: AdvancedControls.map( ( field, key ) => <Control key={ key } field={ field } /> ),
 	permissions: PermissionsControls.map( ( field, key ) => <Control key={ key } field={ field } /> ),
 	features: FeatureControls.map( ( field, key ) => <Control key={ key } field={ field } /> ),
-	types: <CheckboxList name="types" options={ MBCPT.types } description={ __( 'Post types for the taxonomy:', 'mb-custom-post-type' ) } />,
 	code: (
 		<>
 			{ CodeControls.map( ( field, key ) => <Control key={ key } field={ field } /> ) }

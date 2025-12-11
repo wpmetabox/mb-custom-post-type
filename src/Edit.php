@@ -151,7 +151,7 @@ class Edit {
 		$positions = [
 			[
 				'value' => '',
-				'label' => __( 'Default', 'mb-custom-post-type' ),
+				'label' => __( 'Let WordPress decide automatically', 'mb-custom-post-type' ),
 			],
 		];
 		foreach ( $menu as $position => $params ) {
