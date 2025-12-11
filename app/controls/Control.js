@@ -29,12 +29,24 @@ const Control = ( { field, autoFills = [] } ) => {
 		if ( !dependency ) {
 			return true;
 		}
-		const dep = dependency.match( /([^:]+):([^:\s]+)/ );
-		const depName = dep[ 1 ];
-		const depValue = normalizeBool( dep[ 2 ] );
-		const currentDepValue = dotProp.get( settings, depName );
 
-		return depValue === currentDepValue;
+		const conditions = dependency.split( '&&' ).map( c => c.trim() );
+
+		for ( let condition of conditions ) {
+			const match = condition.match( /([^:]+):([^:\s]+)/ );
+			if ( !match ) {
+				continue;
+			}
+			const depName = match[ 1 ];
+			const depValue = normalizeBool( match[ 2 ] );
+			const currentValue = dotProp.get( settings, depName );
+
+			if ( currentValue !== depValue ) {
+				return false;
+			}
+		}
+
+		return true;
 	};
 
 	const autofill = ( newSettings, name, value ) => {

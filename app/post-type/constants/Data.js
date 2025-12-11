@@ -40,7 +40,7 @@ export const BasicControls = [
 	{
 		type: 'checkbox',
 		name: 'show_in_rest',
-		label: __( 'Show in REST', 'mb-custom-post-type' ),
+		label: __( 'Enable block editor?', 'mb-custom-post-type' ),
 		description: __( 'Whether to expose this post type in the REST API. Must be true to enable the Gutenberg editor.', 'mb-custom-post-type' ),
 		tooltip: __( 'Whether to include the post type in the REST API. Set this to true for the post type to be available in the block editor', 'mb-custom-post-type' ),
 	},
@@ -71,21 +71,21 @@ export const BasicControls = [
 		type: 'icon',
 		name: 'icon',
 		label: __( 'Icon', 'mb-custom-post-type' ),
-		dependency: 'icon_type:dashicons',
+		dependency: 'show_in_menu:true && icon_type:dashicons',
 		tooltip: __( 'The icon to be used for the admin menu (Dashicons)', 'mb-custom-post-type' ),
 	},
 	{
 		type: 'text',
 		name: 'icon_svg',
 		label: __( 'Icon SVG', 'mb-custom-post-type' ),
-		dependency: 'icon_type:svg',
+		dependency: 'show_in_menu:true && icon_type:svg',
 		description: __( 'Must be in base64 encoded format.', 'mb-custom-post-type' ),
 	},
 	{
 		type: 'text',
 		name: 'icon_custom',
 		label: __( 'Icon URL', 'mb-custom-post-type' ),
-		dependency: 'icon_type:custom',
+		dependency: 'show_in_menu:true && icon_type:custom',
 	},
 	{
 		type: 'fontawesome',
@@ -93,7 +93,7 @@ export const BasicControls = [
 		label: __( 'Icon', 'mb-custom-post-type' ),
 		tooltip: __( 'The icon to be used for the admin menu (FontAwesome)', 'mb-custom-post-type' ),
 		description: __( 'Enter <a href="https://fontawesome.com/search?o=r&m=free">FontAwesome</a> icon class here. Supports FontAwesome free version only.', 'mb-custom-post-type' ),
-		dependency: 'icon_type:font_awesome',
+		dependency: 'show_in_menu:true && icon_type:font_awesome',
 	},
 ];
 
