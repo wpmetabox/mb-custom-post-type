@@ -2,7 +2,7 @@ import { useContext } from '@wordpress/element';
 import { FormTokenField } from '@wordpress/components';
 import { SettingsContext } from '../SettingsContext';
 
-const TokenFieldSelect = ( { label, labelField, name, validateTokens, suggestions, placeholder } ) => {
+const TokenFieldSelect = ( { label, name, validateTokens, suggestions, placeholder } ) => {
 	const { settings, updateSettings } = useContext( SettingsContext );
 
 	const value = settings[ name ] || [];
@@ -22,7 +22,7 @@ const TokenFieldSelect = ( { label, labelField, name, validateTokens, suggestion
 					__experimentalExpandOnFocus
 					__experimentalValidateInput={ validateTokens }
 					__next40pxDefaultSize
-					label={ labelField }
+					label=""
 					value={ value }
 					suggestions={ suggestions }
 					onChange={ handleChange }
