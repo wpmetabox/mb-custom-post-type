@@ -2,7 +2,7 @@ import { useContext } from '@wordpress/element';
 import { FormTokenField } from '@wordpress/components';
 import { SettingsContext } from '../SettingsContext';
 
-const TokenFieldSelect = ( { label, name, validateTokens, suggestions, placeholder } ) => {
+const TokenFieldSelect = ( { label, name, suggestions, placeholder } ) => {
 	const { settings, updateSettings } = useContext( SettingsContext );
 
 	const value = settings[ name ] || [];
@@ -20,8 +20,6 @@ const TokenFieldSelect = ( { label, name, validateTokens, suggestions, placehold
 			<div className="mb-cpt-input">
 				<FormTokenField
 					__experimentalExpandOnFocus
-					__experimentalValidateInput={ validateTokens }
-					__next40pxDefaultSize
 					label=""
 					value={ value }
 					suggestions={ suggestions }
