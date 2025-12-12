@@ -7,7 +7,7 @@ class PostTypeReorder {
 
 	public function __construct() {
 		add_action( 'load-edit.php', [ $this, 'setup_for_edit_screen' ] );
-		add_action( 'admin_enqueue_scripts', [ $this, 'enqueue_scripts' ] );
+		add_action( 'admin_print_styles-edit.php', [ $this, 'enqueue_scripts' ] );
 		add_action( 'wp_ajax_mb_cpt_save_order', [ $this, 'save_order' ] );
 		add_action( 'pre_get_posts', [ $this, 'set_orderby_menu_order' ] );
 		add_filter( 'get_previous_post_where', [ $this, 'order_previous_post_where' ] );
@@ -27,11 +27,7 @@ class PostTypeReorder {
 		$this->set_initial_orders( $screen->post_type );
 	}
 
-	public function enqueue_scripts( string $hook ): void {
-		if ( $hook !== 'edit.php' ) {
-			return;
-		}
-
+	public function enqueue_scripts(): void {
 		// Get current post type from screen
 		$screen           = get_current_screen();
 		$post_type        = $screen->post_type;

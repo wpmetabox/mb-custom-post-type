@@ -8,7 +8,7 @@ class TaxonomyReorder {
 			$this->add_term_order_column();
 		}
 		add_action( 'admin_print_styles-edit-tags.php', [ $this, 'setup_for_edit_screen' ] );
-		add_action( 'admin_enqueue_scripts', [ $this, 'enqueue_scripts' ] );
+		add_action( 'admin_print_styles-edit-tags.php', [ $this, 'enqueue_scripts' ] );
 		add_action( 'wp_ajax_mb_cpt_save_order_terms', [ $this, 'save_order' ] );
 		add_filter( 'get_terms_orderby', [ $this, 'order_get_terms_orderby' ], 10, 3 );
 		add_filter( 'wp_get_object_terms', [ $this, 'order_get_object_terms' ], 10, 3 );
@@ -18,7 +18,7 @@ class TaxonomyReorder {
 	public function setup_for_edit_screen(): void {
 		$screen = get_current_screen();
 		$mode   = $_GET['mode'] ?? 'default';
-		if ( $screen->base !== 'edit-tags' || $mode !== 'sortable' ) {
+		if ( $mode !== 'sortable' ) {
 			return;
 		}
 		// Set initial orders
