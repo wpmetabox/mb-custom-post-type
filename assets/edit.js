@@ -1,4 +1,8 @@
 {
+	// Empty container for React.
+	// Must empty to avoid problems of detecting #submitdiv in wp-admin/js/post.js:701 that prevents submitting the form.
+	document.querySelector( '#poststuff' ).innerHTML = '';
+
 	// Remove header elements to properly show notices.
 	document.querySelector( 'h1' ).remove();
 	document.querySelector( '.page-title-action' ).remove();
