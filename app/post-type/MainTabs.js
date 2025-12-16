@@ -77,7 +77,6 @@ const MainTabs = () => {
 				<Upgrade />
 				<input
 					type="submit"
-					data-status="publish"
 					className="mb-cpt-submit components-button is-primary"
 					value={ __( 'Save Changes', 'mb-custom-post-type' ) }
 				/>
