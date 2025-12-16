@@ -60,7 +60,7 @@ class Edit {
 			'action'          => get_current_screen()->action,
 			'url'             => admin_url( 'edit.php?post_type=' . get_current_screen()->id ),
 			'add'             => admin_url( 'post-new.php?post_type=' . get_current_screen()->id ),
-			'status'          => $post->post_status,
+			'status'          => $post->post_status === 'auto-draft' ? 'publish' : $post->post_status,
 			'author'          => get_the_author_meta( 'display_name', (int) $post->post_author ),
 			'trash'           => get_delete_post_link(),
 			'published'       => get_the_date( 'F d, Y' ) . ' ' . get_the_time( 'g:i a' ),
