@@ -1,12 +1,14 @@
 {
-	// Empty container for React.
-	// Must empty to avoid problems of detecting #submitdiv in wp-admin/js/post.js:701 that prevents submitting the form.
-	document.querySelector( '#poststuff' ).innerHTML = '';
-
 	// Remove header elements to properly show notices.
-	document.querySelector( 'h1' ).remove();
-	document.querySelector( '.page-title-action' ).remove();
-	document.querySelector( '.wp-header-end' ).remove();
+	if ( document.querySelector( 'h1' ) ) {
+		document.querySelector( 'h1' ).remove();
+	}
+	if ( document.querySelector( '.page-title-action' ) ) {
+		document.querySelector( '.page-title-action' ).remove();
+	}
+	if ( document.querySelector( '.wp-header-end' ) ) {
+		document.querySelector( '.wp-header-end' ).remove();
+	}
 
 	const form = document.querySelector( '#post' );
 
@@ -32,5 +34,4 @@
 		submitButton.setAttribute( 'value', MBCPT.saving );
 		form.querySelector( '[name="post_status"]' ).setAttribute( 'value', status );
 	} );
-
 }
