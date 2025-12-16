@@ -1,3 +1,9 @@
+### 2.11.2 - 2025-12-16
+
+- Rearrange settings for a better UX
+- Fix fatal error in on post list screen
+- Use React 18 and update all packages to the latest versions
+
 ### 2.11.1 - 2025-11-24
 
 - Add filters for reordering post types and taxonomies, allowing built-in or other post types/taxonomies can be reordered. See [docs for usage](https://docs.metabox.io/reorder-posts-terms/).
