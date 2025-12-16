@@ -1,9 +1,4 @@
 {
-  "name": "mb-cpt",
-  "version": "2.1.0",
-  "description": "",
-  "main": "index.js",
-  "license": "GPL-2.0-or-later",
   "scripts": {
     "watch:css": "sass --no-source-map --style=compressed --watch assets/style.scss assets/style.css",
     "build:css": "sass --no-source-map --style=compressed assets/style.scss assets/style.css",
