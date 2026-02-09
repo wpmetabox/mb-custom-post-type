@@ -225,6 +225,10 @@ class PostTypeRegister extends Register {
 			$settings = $this->get_post_type_settings( $post_type );
 			$slug     = Arr::get( $settings, 'slug' );
 
+			if ( empty( $slug ) ) {
+				continue;
+			}
+
 			$messages[ $slug ] = $message;
 
 			if ( ! Arr::get( $settings, 'publicly_queryable' ) ) {
