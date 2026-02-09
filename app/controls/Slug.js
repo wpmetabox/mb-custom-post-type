@@ -1,5 +1,5 @@
 import { RawHTML, useEffect } from '@wordpress/element';
-import { __ } from '@wordpress/i18n';
+import { __, sprintf } from '@wordpress/i18n';
 import Tooltip from './Tooltip';
 
 const Slug = ( {
