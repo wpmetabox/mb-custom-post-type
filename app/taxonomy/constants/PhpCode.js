@@ -18,7 +18,8 @@ const advanced = settings => {
 };
 
 const special = settings => {
-	return outputSettingObject( settings, 'capabilities', 3 );
+	const output = outputSettingObject( settings, 'capabilities', 3 );
+	return output ? output + ',' : '';
 };
 
 const rewrite = settings => {
