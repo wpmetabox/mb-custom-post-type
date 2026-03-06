@@ -1,3 +1,8 @@
+### 2.11.3 - 2026-03-06
+
+- Add missing comma after capabilities in taxonomy PHP code output
+- Fix warning when slug too long
+
 ### 2.11.2 - 2025-12-16
 
 - Rearrange settings for a better UX
