@@ -13,9 +13,9 @@
   },
   "devDependencies": {
     "@svgr/webpack": "^8.1.0",
-    "@wordpress/icons": "^11.3.0",
-    "@wordpress/scripts": "^31.1.0",
-    "sass": "^1.96.0",
+    "@wordpress/icons": "^11.8.0",
+    "@wordpress/scripts": "^31.6.0",
+    "sass": "^1.97.3",
     "url-loader": "^4.1.1"
   }
 }
