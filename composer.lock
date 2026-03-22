@@ -4,11 +4,11 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "6458f3d68afc0fa87c7bd91a89176019",
+    "content-hash": "5ba42358d8c4d87e37fb33ae33a52eac",
     "packages": [
         {
             "name": "wpmetabox/support",
-            "version": "dev-master",
+            "version": "1.0.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/wpmetabox/support.git",
@@ -20,7 +20,6 @@
                 "reference": "6c392347cdb77ed133b8a4227b5ee20db89a5717",
                 "shasum": ""
             },
-            "default-branch": true,
             "type": "library",
             "autoload": {
                 "psr-4": {
@@ -35,7 +34,7 @@
             "homepage": "https://metabox.io",
             "support": {
                 "issues": "https://github.com/wpmetabox/support/issues",
-                "source": "https://github.com/wpmetabox/support/tree/master"
+                "source": "https://github.com/wpmetabox/support/tree/1.0.0"
             },
             "time": "2025-09-12T23:29:48+00:00"
         }
@@ -43,12 +42,10 @@
     "packages-dev": [],
     "aliases": [],
     "minimum-stability": "stable",
-    "stability-flags": {
-        "wpmetabox/support": 20
-    },
+    "stability-flags": {},
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {},
     "platform-dev": {},
-    "plugin-api-version": "2.6.0"
+    "plugin-api-version": "2.9.0"
 }

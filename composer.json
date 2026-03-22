@@ -3,30 +3,25 @@
   "type": "wordpress-plugin",
   "keywords": [
     "wordpress",
-    "ui",
-    "select2",
-    "wp-admin",
-    "meta-box",
     "wordpress-plugin",
-    "custom-field",
-    "custom-post-type"
+    "custom-post-type",
+    "custom-taxonomy"
   ],
   "description": "Create and manage custom post types and custom taxonomies with an easy-to-use interface in WordPress.",
   "homepage": "https://metabox.io/plugins/custom-post-type/",
   "license": "GPL-2.0",
-  "minimum-stability": "stable",
   "config": {
-		"prepend-autoloader": false,
+    "prepend-autoloader": false,
     "sort-packages": true
-	},
-	"require": {
-		"wpmetabox/support": "dev-master"
-	},
+  },
+  "require": {
+    "wpmetabox/support": "^1.0"
+  },
   "authors": [
     {
       "name": "Tran Ngoc Tuan Anh",
       "email": "anhtnt@elightup.com",
-      "homepage": "https://metabox.io",
+      "homepage": "https://deluxeblogtips.com",
       "role": "Developer"
     }
   ],
@@ -37,7 +32,7 @@
   },
   "scripts": {
     "phpcbf": "phpcbf src/ --standard=../meta-box-aio/phpcs.xml",
-    "phpcs": "phpcs src/ --standard=../meta-box-aio/phpcs.xml"
+    "phpcs": "phpcs src/ --standard=../meta-box-aio/phpcs.xml",
     "post-update-cmd": [
       "echo Deleting .git dirs...",
       "rm -rf vendor/**/**/.git"
