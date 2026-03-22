@@ -12,6 +12,6 @@ assets/*.scss
 *.json
 *.lock
 pnpm-lock.yaml
-README.md
+*.md
 webpack.config.js
 vendor/meta-box/support/.git

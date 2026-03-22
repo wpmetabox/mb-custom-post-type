@@ -36,9 +36,8 @@
     }
   },
   "scripts": {
-    "phpcbf": [
-      "phpcbf src/ --standard=../meta-box-aio/phpcs.xml"
-    ],
+    "phpcbf": "phpcbf src/ --standard=../meta-box-aio/phpcs.xml",
+    "phpcs": "phpcs src/ --standard=../meta-box-aio/phpcs.xml"
     "post-update-cmd": [
       "echo Deleting .git dirs...",
       "rm -rf vendor/**/**/.git"
