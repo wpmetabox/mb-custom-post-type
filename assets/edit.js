@@ -28,4 +28,15 @@
 		const messages = originalStatus === 'auto-draft' ? 'publish' : 'save';
 		form.querySelector( '[name="messages"]' ).setAttribute( 'name', messages );
 	} );
+
+	// Add Ctrl+S / Cmd+S keyboard shortcut to save.
+	document.addEventListener( 'keydown', e => {
+		if ( ( e.ctrlKey || e.metaKey ) && 's' === e.key ) {
+			e.preventDefault();
+			const button = form.querySelector( '.mb-cpt-submit' );
+			if ( button && ! button.disabled ) {
+				button.click();
+			}
+		}
+	} );
 }
