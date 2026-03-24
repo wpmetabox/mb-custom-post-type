@@ -1,3 +1,7 @@
+### 2.11.4 - 2026-03-24
+
+- Add Ctrl+S (Cmd+S on Mac) keyboard shortcut to save post types/taxonomies
+
 ### 2.11.3 - 2026-03-06
 
 - Add missing comma after capabilities in taxonomy PHP code output
