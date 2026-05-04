@@ -266,6 +266,10 @@ class PostTypeReorder {
 			);
 		}
 
+		if ( wp_cache_supports( 'flush_group' ) ) {
+			wp_cache_flush_group( 'posts' );
+		}
+
 		wp_send_json_success( __( 'Order updated', 'mb-custom-post-type' ) );
 	}
 
