@@ -4,8 +4,8 @@ Donate link: https://metabox.io/pricing/
 Tags: custom post types, custom taxonomies, posts, taxonomies
 Requires at least: 6.5
 Tested up to: 6.9.4
-Requires PHP: 7.2
-Stable tag: 2.11.4
+Requires PHP: 7.4
+Stable tag: 2.11.5
 License: GPLv2 or later
 
 Create and manage custom post types and custom taxonomies with an easy-to-use UI in WordPress.
@@ -61,6 +61,10 @@ If you like this plugin, you might also like our other WordPress products:
 1. Edit custom post type - Taxonomies tab
 
 == Changelog ==
+
+= 2.11.5 - 2026-05-13 =
+
+- Fix reorder posts not clearing object cache
 
 = 2.11.4 - 2026-03-24 =
 

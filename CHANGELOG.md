@@ -1,3 +1,7 @@
+### 2.11.5 - 2026-05-13
+
+- Fix reorder posts not clearing object cache
+
 ### 2.11.4 - 2026-03-24
 
 - Add Ctrl+S (Cmd+S on Mac) keyboard shortcut to save post types/taxonomies
