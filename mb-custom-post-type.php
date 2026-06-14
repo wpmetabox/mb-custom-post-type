@@ -55,6 +55,7 @@ if ( ! function_exists( 'mb_cpt_load' ) ) {
 		new MBCPT\TaxonomyRegister();
 		new MBCPT\PostTypeReorder();
 		new MBCPT\TaxonomyReorder();
+		new MBCPT\Abilities();
 
 		if ( ! is_admin() ) {
 			return;

@@ -1,5 +1,6 @@
 .svn
 assets/build/*.map
+assets/*.map
 node_modules
 vendor
 *.LICENSE.txt

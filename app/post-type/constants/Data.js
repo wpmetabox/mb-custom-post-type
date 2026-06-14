@@ -487,4 +487,13 @@ if ( MBCPT.mbb ) {
 	} );
 };
 
+if ( MBCPT.abilities ) {
+	FeatureControls.push( {
+		type: 'toggle',
+		name: 'abilities',
+		label: __( 'Enable abilities', 'mb-custom-post-type' ),
+		description: __( 'Allow AI agents to get, edit, create or delete posts of this post type via the Abilities API.', 'mb-custom-post-type' ),
+	} );
+};
+
 export { FeatureControls };
