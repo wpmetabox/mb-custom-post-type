@@ -1,7 +1,6 @@
 <?php
 namespace MBCPT;
 
-use MetaBox\Support\Data;
 use WP_Post_Type;
 
 class Abilities {
@@ -30,13 +29,26 @@ class Abilities {
 	}
 
 	public function register_abilities(): void {
-		$post_types = Data::get_post_types();
+		$posts = get_posts( [
+			'posts_per_page'         => -1,
+			'post_status'            => 'publish',
+			'post_type'              => 'mb-post-type',
+			'no_found_rows'          => true,
+			'update_post_meta_cache' => false,
+			'update_post_term_cache' => false,
+		] );
 
-		foreach ( $post_types as $slug => $post_type ) {
-			if ( empty( $post_type->abilities ) ) {
+		foreach ( $posts as $post ) {
+			$settings = json_decode( $post->post_content, true );
+
+			if ( empty( $settings['slug'] ) || empty( $settings['abilities'] ) ) {
 				continue;
 			}
-			$this->register_post_type_abilities( $slug, $post_type );
+
+			$post_type = get_post_type_object( $settings['slug'] );
+			if ( $post_type ) {
+				$this->register_post_type_abilities( $settings['slug'], $post_type );
+			}
 		}
 	}
 
