@@ -26,7 +26,7 @@ class PostTypeAbilities {
 				'description'         => sprintf( __( 'Search and list %s.', 'mb-custom-post-type' ), strtolower( $label ) ),
 				'category'            => 'meta-box',
 				'permission_callback' => function () use ( $post_type_object ) {
-					return current_user_can( $post_type_object->cap->read_post );
+					return current_user_can( $post_type_object->cap->read );
 				},
 				'input_schema'        => [
 					'type'       => 'object',
@@ -92,7 +92,7 @@ class PostTypeAbilities {
 				'description'         => sprintf( __( 'Get %s post type data.', 'mb-custom-post-type' ), strtolower( $singular ) ),
 				'category'            => 'meta-box',
 				'permission_callback' => function () use ( $post_type_object ) {
-					return current_user_can( $post_type_object->cap->read_post );
+					return current_user_can( $post_type_object->cap->read );
 				},
 				'input_schema'        => [
 					'type'       => 'object',
@@ -479,10 +479,8 @@ class PostTypeAbilities {
 				'publicly_queryable'  => [ 'type' => 'boolean' ],
 				'embeddable'          => [ 'type' => 'boolean' ],
 				'show_ui'             => [ 'type' => 'boolean' ],
-				'show_in_menu'        => [ 'type' => [ 'boolean', 'string' ] ],
 				'show_in_nav_menus'   => [ 'type' => 'boolean' ],
 				'show_in_admin_bar'   => [ 'type' => 'boolean' ],
-				'menu_position'       => [ 'type' => 'integer' ],
 				'menu_icon'           => [ 'type' => 'string' ],
 				'capability_type'     => [ 'type' => 'string' ],
 				'capabilities'        => [ 'type' => 'object' ],
@@ -495,15 +493,11 @@ class PostTypeAbilities {
 					'type'  => 'array',
 					'items' => [ 'type' => 'string' ],
 				],
-				'has_archive'         => [ 'type' => [ 'boolean', 'string' ] ],
-				'rewrite'             => [ 'type' => [ 'boolean', 'object' ] ],
-				'query_var'           => [ 'type' => [ 'boolean', 'string' ] ],
 				'can_export'          => [ 'type' => 'boolean' ],
 				'delete_with_user'    => [ 'type' => 'boolean' ],
 				'show_in_rest'        => [ 'type' => 'boolean' ],
-				'rest_base'           => [ 'type' => [ 'boolean', 'string' ] ],
+				'rest_base'           => [ 'type' => 'string' ],
 				'template'            => [ 'type' => 'array' ],
-				'template_lock'       => [ 'type' => [ 'boolean', 'string' ] ],
 			],
 		];
 	}

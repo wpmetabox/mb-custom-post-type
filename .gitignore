@@ -4,3 +4,4 @@ assets/*.map
 node_modules
 vendor
 *.LICENSE.txt
+.mcp.json
