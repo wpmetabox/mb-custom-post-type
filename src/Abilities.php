@@ -16,11 +16,15 @@ class Abilities {
 	}
 
 	public function register_category(): void {
+		if ( wp_has_ability_category( 'meta-box' ) ) {
+			return;
+		}
+
 		wp_register_ability_category(
 			'meta-box',
 			[
 				'label'       => __( 'Meta Box', 'mb-custom-post-type' ),
-				'description' => __( 'Abilities for Meta Box custom post types.', 'mb-custom-post-type' ),
+				'description' => __( 'Abilities for Meta Box data (post types, taxonomies, fields, etc.).', 'mb-custom-post-type' ),
 			]
 		);
 	}
