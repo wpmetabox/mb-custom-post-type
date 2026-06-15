@@ -48,6 +48,7 @@ class Abilities {
 		$this->register_create_ability( $slug, $singular );
 		$this->register_update_ability( $slug, $singular );
 		$this->register_delete_ability( $slug, $singular );
+		$this->register_get_post_type_ability( $slug, $singular );
 	}
 
 	private function register_get_ability( string $slug, string $singular, string $label ): void {
@@ -101,6 +102,37 @@ class Abilities {
 				},
 				'execute_callback'    => function ( $input = [] ) use ( $slug ) {
 					return $this->execute_get( $slug, $input );
+				},
+				'meta'                => [
+					'mcp'          => [ 'public' => true ],
+					'show_in_rest' => true,
+					'annotations'  => [
+						'readOnlyHint'    => true,
+						'destructiveHint' => false,
+						'idempotentHint'  => true,
+					],
+				],
+			]
+		);
+	}
+
+	private function register_get_post_type_ability( string $slug, string $singular ): void {
+		wp_register_ability(
+			"meta-box/get-post-type-{$slug}",
+			[
+				'label'               => sprintf( __( 'Get %s post type', 'mb-custom-post-type' ), $singular ),
+				'description'         => sprintf( __( 'Get %s post type data.', 'mb-custom-post-type' ), strtolower( $singular ) ),
+				'category'            => 'meta-box',
+				'input_schema'        => [
+					'type'       => 'object',
+					'properties' => [],
+				],
+				'output_schema'       => $this->post_type_output_schema(),
+				'permission_callback' => static function () {
+					return current_user_can( 'read' );
+				},
+				'execute_callback'    => function () use ( $slug ) {
+					return $this->execute_get_post_type( $slug );
 				},
 				'meta'                => [
 					'mcp'          => [ 'public' => true ],
@@ -316,6 +348,31 @@ class Abilities {
 		return $posts;
 	}
 
+	public function execute_get_post_type( string $slug ): array|\WP_Error {
+		$post_type = get_post_type_object( $slug );
+
+		if ( ! $post_type ) {
+			return new \WP_Error( 'post_type_not_found', __( 'Post type not found.', 'mb-custom-post-type' ) );
+		}
+
+		return [
+			'slug'       => $post_type->name,
+			'label'      => $post_type->label,
+			'labels'     => (array) $post_type->labels,
+			'description' => $post_type->description,
+			'public'     => $post_type->public,
+			'hierarchical' => $post_type->hierarchical,
+			'supports'   => array_values( get_all_post_type_supports( $slug ) ),
+			'capabilities' => (array) $post_type->cap,
+			'menu_icon'  => $post_type->menu_icon ?? null,
+			'rewrite'    => (array) $post_type->rewrite,
+			'has_archive' => $post_type->has_archive,
+			'show_in_rest' => $post_type->show_in_rest,
+			'rest_base'  => $post_type->rest_base,
+			'taxonomies' => get_object_taxonomies( $slug ),
+		];
+	}
+
 	public function execute_create( string $slug, array $input ): \WP_Error|array {
 		$post_id = wp_insert_post( [
 			'post_type'    => $slug,
@@ -422,6 +479,28 @@ class Abilities {
 				'modified'  => [ 'type' => 'string' ],
 				'link'      => [ 'type' => 'string' ],
 				'edit_link' => [ 'type' => 'string' ],
+			],
+		];
+	}
+
+	private function post_type_output_schema(): array {
+		return [
+			'type'       => 'object',
+			'properties' => [
+				'slug'         => [ 'type' => 'string' ],
+				'label'        => [ 'type' => 'string' ],
+				'labels'       => [ 'type' => 'object' ],
+				'description'  => [ 'type' => 'string' ],
+				'public'       => [ 'type' => 'boolean' ],
+				'hierarchical' => [ 'type' => 'boolean' ],
+				'supports'     => [ 'type' => 'array', 'items' => [ 'type' => 'string' ] ],
+				'capabilities' => [ 'type' => 'object' ],
+				'menu_icon'    => [ 'type' => 'string' ],
+				'rewrite'      => [ 'type' => 'object' ],
+				'has_archive'  => [ 'type' => 'boolean' ],
+				'show_in_rest' => [ 'type' => 'boolean' ],
+				'rest_base'    => [ 'type' => 'string' ],
+				'taxonomies'   => [ 'type' => 'array', 'items' => [ 'type' => 'string' ] ],
 			],
 		];
 	}
