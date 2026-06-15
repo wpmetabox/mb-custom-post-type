@@ -55,8 +55,8 @@ class Abilities {
 		wp_register_ability(
 			"meta-box/get-post-{$slug}",
 			[
-				'label'               => sprintf( __( 'Get %s', 'mb-custom-post-type' ), $singular ),
-				'description'         => sprintf( __( 'Search and list %s.', 'mb-custom-post-type' ), $label ),
+				'label'               => sprintf( __( 'Get %s', 'mb-custom-post-type' ), strtolower( $singular ) ),
+				'description'         => sprintf( __( 'Search and list %s.', 'mb-custom-post-type' ), strtolower( $label ) ),
 				'category'            => 'meta-box',
 				'input_schema'        => [
 					'type'       => 'object',
@@ -120,7 +120,7 @@ class Abilities {
 		wp_register_ability(
 			"meta-box/get-post-type-{$slug}",
 			[
-				'label'               => sprintf( __( 'Get %s post type', 'mb-custom-post-type' ), $singular ),
+				'label'               => sprintf( __( 'Get %s post type', 'mb-custom-post-type' ), strtolower( $singular ) ),
 				'description'         => sprintf( __( 'Get %s post type data.', 'mb-custom-post-type' ), strtolower( $singular ) ),
 				'category'            => 'meta-box',
 				'input_schema'        => [
@@ -151,7 +151,7 @@ class Abilities {
 		wp_register_ability(
 			"meta-box/create-post-{$slug}",
 			[
-				'label'               => sprintf( __( 'Create %s', 'mb-custom-post-type' ), $singular ),
+				'label'               => sprintf( __( 'Create %s', 'mb-custom-post-type' ), strtolower( $singular ) ),
 				'description'         => sprintf( __( 'Create a new %s.', 'mb-custom-post-type' ), strtolower( $singular ) ),
 				'category'            => 'meta-box',
 				'input_schema'        => [
@@ -205,7 +205,7 @@ class Abilities {
 		wp_register_ability(
 			"meta-box/update-post-{$slug}",
 			[
-				'label'               => sprintf( __( 'Update %s', 'mb-custom-post-type' ), $singular ),
+				'label'               => sprintf( __( 'Update %s', 'mb-custom-post-type' ), strtolower( $singular ) ),
 				'description'         => sprintf( __( 'Update an existing %s. Only provided fields are modified.', 'mb-custom-post-type' ), strtolower( $singular ) ),
 				'category'            => 'meta-box',
 				'input_schema'        => [
@@ -260,7 +260,7 @@ class Abilities {
 		wp_register_ability(
 			"meta-box/delete-post-{$slug}",
 			[
-				'label'               => sprintf( __( 'Delete %s', 'mb-custom-post-type' ), $singular ),
+				'label'               => sprintf( __( 'Delete %s', 'mb-custom-post-type' ), strtolower( $singular ) ),
 				'description'         => sprintf( __( 'Delete a %s.', 'mb-custom-post-type' ), strtolower( $singular ) ),
 				'category'            => 'meta-box',
 				'input_schema'        => [
