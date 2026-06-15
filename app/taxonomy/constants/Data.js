@@ -386,3 +386,12 @@ export const FeatureControls = [
 		description: __( 'Order terms of this taxonomy using a drag and drop interface.', 'mb-custom-post-type' ),
 	},
 ];
+
+if ( MBCPT.abilities ) {
+	FeatureControls.push( {
+		type: 'toggle',
+		name: 'abilities',
+		label: __( 'Enable abilities', 'mb-custom-post-type' ),
+		description: __( 'Allow AI agents to get, edit, create or delete terms of this taxonomy via the Abilities API.', 'mb-custom-post-type' ),
+	} );
+}
