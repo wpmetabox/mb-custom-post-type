@@ -61,21 +61,21 @@ class Abilities {
 				'input_schema'        => [
 					'type'       => 'object',
 					'properties' => [
-						'id' => [
+						'id'      => [
 							'type'        => 'integer',
 							'description' => __( 'Post ID to retrieve.', 'mb-custom-post-type' ),
 						],
-						'search' => [
+						'search'  => [
 							'type'        => 'string',
 							'description' => __( 'Search keyword.', 'mb-custom-post-type' ),
 						],
-						'status' => [
+						'status'  => [
 							'type'        => 'string',
 							'description' => __( 'Post status to filter by.', 'mb-custom-post-type' ),
 							'enum'        => [ 'publish', 'draft', 'pending', 'private' ],
 							'default'     => 'publish',
 						],
-						'limit' => [
+						'limit'   => [
 							'type'        => 'integer',
 							'description' => __( 'Maximum number of posts to return (1-100).', 'mb-custom-post-type' ),
 							'default'     => 10,
@@ -88,7 +88,7 @@ class Abilities {
 							'enum'        => [ 'date', 'title', 'modified', 'ID' ],
 							'default'     => 'date',
 						],
-						'order' => [
+						'order'   => [
 							'type'        => 'string',
 							'description' => __( 'Sort direction.', 'mb-custom-post-type' ),
 							'enum'        => [ 'DESC', 'ASC' ],
@@ -158,7 +158,7 @@ class Abilities {
 					'type'       => 'object',
 					'required'   => [ 'title' ],
 					'properties' => [
-						'title' => [
+						'title'   => [
 							'type'        => 'string',
 							'description' => __( 'Post title.', 'mb-custom-post-type' ),
 						],
@@ -172,7 +172,7 @@ class Abilities {
 							'description' => __( 'Post excerpt.', 'mb-custom-post-type' ),
 							'default'     => '',
 						],
-						'status' => [
+						'status'  => [
 							'type'        => 'string',
 							'description' => __( 'Post status.', 'mb-custom-post-type' ),
 							'enum'        => [ 'draft', 'publish', 'pending', 'private' ],
@@ -212,11 +212,11 @@ class Abilities {
 					'type'       => 'object',
 					'required'   => [ 'id' ],
 					'properties' => [
-						'id' => [
+						'id'      => [
 							'type'        => 'integer',
 							'description' => __( 'Post ID to update.', 'mb-custom-post-type' ),
 						],
-						'title' => [
+						'title'   => [
 							'type'        => 'string',
 							'description' => __( 'New post title.', 'mb-custom-post-type' ),
 						],
@@ -228,7 +228,7 @@ class Abilities {
 							'type'        => 'string',
 							'description' => __( 'New post excerpt.', 'mb-custom-post-type' ),
 						],
-						'status' => [
+						'status'  => [
 							'type'        => 'string',
 							'description' => __( 'New post status.', 'mb-custom-post-type' ),
 							'enum'        => [ 'draft', 'publish', 'pending', 'private' ],
@@ -267,7 +267,7 @@ class Abilities {
 					'type'       => 'object',
 					'required'   => [ 'id' ],
 					'properties' => [
-						'id' => [
+						'id'    => [
 							'type'        => 'integer',
 							'description' => __( 'Post ID to delete.', 'mb-custom-post-type' ),
 						],
@@ -281,7 +281,7 @@ class Abilities {
 				'output_schema'       => [
 					'type'       => 'object',
 					'properties' => [
-						'deleted' => [ 'type' => 'boolean' ],
+						'deleted'  => [ 'type' => 'boolean' ],
 						'previous' => [
 							'type'       => 'object',
 							'properties' => [
@@ -356,20 +356,35 @@ class Abilities {
 		}
 
 		return [
-			'slug'       => $post_type->name,
-			'label'      => $post_type->label,
-			'labels'     => (array) $post_type->labels,
-			'description' => $post_type->description,
-			'public'     => $post_type->public,
-			'hierarchical' => $post_type->hierarchical,
-			'supports'   => array_values( get_all_post_type_supports( $slug ) ),
-			'capabilities' => (array) $post_type->cap,
-			'menu_icon'  => $post_type->menu_icon ?? null,
-			'rewrite'    => (array) $post_type->rewrite,
-			'has_archive' => $post_type->has_archive,
-			'show_in_rest' => $post_type->show_in_rest,
-			'rest_base'  => $post_type->rest_base,
-			'taxonomies' => get_object_taxonomies( $slug ),
+			'name'                => $post_type->name,
+			'label'               => $post_type->label,
+			'labels'              => (array) $post_type->labels,
+			'description'         => $post_type->description,
+			'public'              => $post_type->public,
+			'hierarchical'        => $post_type->hierarchical,
+			'exclude_from_search' => $post_type->exclude_from_search,
+			'publicly_queryable'  => $post_type->publicly_queryable,
+			'embeddable'          => $post_type->embeddable,
+			'show_ui'             => $post_type->show_ui,
+			'show_in_menu'        => $post_type->show_in_menu,
+			'show_in_nav_menus'   => $post_type->show_in_nav_menus,
+			'show_in_admin_bar'   => $post_type->show_in_admin_bar,
+			'menu_position'       => $post_type->menu_position,
+			'menu_icon'           => $post_type->menu_icon ?? null,
+			'capability_type'     => $post_type->capability_type,
+			'capabilities'        => (array) $post_type->cap,
+			'map_meta_cap'        => $post_type->map_meta_cap,
+			'supports'            => array_keys( get_all_post_type_supports( $slug ) ),
+			'taxonomies'          => get_object_taxonomies( $slug ),
+			'has_archive'         => $post_type->has_archive,
+			'rewrite'             => (array) $post_type->rewrite,
+			'query_var'           => $post_type->query_var,
+			'can_export'          => $post_type->can_export,
+			'delete_with_user'    => $post_type->delete_with_user,
+			'show_in_rest'        => $post_type->show_in_rest,
+			'rest_base'           => $post_type->rest_base,
+			'template'            => $post_type->template,
+			'template_lock'       => $post_type->template_lock,
 		];
 	}
 
@@ -487,20 +502,41 @@ class Abilities {
 		return [
 			'type'       => 'object',
 			'properties' => [
-				'slug'         => [ 'type' => 'string' ],
-				'label'        => [ 'type' => 'string' ],
-				'labels'       => [ 'type' => 'object' ],
-				'description'  => [ 'type' => 'string' ],
-				'public'       => [ 'type' => 'boolean' ],
-				'hierarchical' => [ 'type' => 'boolean' ],
-				'supports'     => [ 'type' => 'array', 'items' => [ 'type' => 'string' ] ],
-				'capabilities' => [ 'type' => 'object' ],
-				'menu_icon'    => [ 'type' => 'string' ],
-				'rewrite'      => [ 'type' => 'object' ],
-				'has_archive'  => [ 'type' => 'boolean' ],
-				'show_in_rest' => [ 'type' => 'boolean' ],
-				'rest_base'    => [ 'type' => 'string' ],
-				'taxonomies'   => [ 'type' => 'array', 'items' => [ 'type' => 'string' ] ],
+				'name'                => [ 'type' => 'string' ],
+				'label'               => [ 'type' => 'string' ],
+				'labels'              => [ 'type' => 'object' ],
+				'description'         => [ 'type' => 'string' ],
+				'public'              => [ 'type' => 'boolean' ],
+				'hierarchical'        => [ 'type' => 'boolean' ],
+				'exclude_from_search' => [ 'type' => 'boolean' ],
+				'publicly_queryable'  => [ 'type' => 'boolean' ],
+				'embeddable'          => [ 'type' => 'boolean' ],
+				'show_ui'             => [ 'type' => 'boolean' ],
+				'show_in_menu'        => [ 'type' => [ 'boolean', 'string' ] ],
+				'show_in_nav_menus'   => [ 'type' => 'boolean' ],
+				'show_in_admin_bar'   => [ 'type' => 'boolean' ],
+				'menu_position'       => [ 'type' => 'integer' ],
+				'menu_icon'           => [ 'type' => 'string' ],
+				'capability_type'     => [ 'type' => 'string' ],
+				'capabilities'        => [ 'type' => 'object' ],
+				'map_meta_cap'        => [ 'type' => 'boolean' ],
+				'supports'            => [
+					'type'  => 'array',
+					'items' => [ 'type' => 'string' ],
+				],
+				'taxonomies'          => [
+					'type'  => 'array',
+					'items' => [ 'type' => 'string' ],
+				],
+				'has_archive'         => [ 'type' => [ 'boolean', 'string' ] ],
+				'rewrite'             => [ 'type' => [ 'boolean', 'object' ] ],
+				'query_var'           => [ 'type' => [ 'boolean', 'string' ] ],
+				'can_export'          => [ 'type' => 'boolean' ],
+				'delete_with_user'    => [ 'type' => 'boolean' ],
+				'show_in_rest'        => [ 'type' => 'boolean' ],
+				'rest_base'           => [ 'type' => [ 'boolean', 'string' ] ],
+				'template'            => [ 'type' => 'array' ],
+				'template_lock'       => [ 'type' => [ 'boolean', 'string' ] ],
 			],
 		];
 	}
