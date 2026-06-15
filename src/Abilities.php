@@ -6,16 +6,10 @@ use MBCPT\Abilities\TaxonomyAbilities;
 
 class Abilities {
 
-	private $post_type_abilities;
-	private $taxonomy_abilities;
-
 	public function __construct() {
 		if ( ! class_exists( 'WP_Ability' ) ) {
 			return;
 		}
-
-		$this->post_type_abilities = new PostTypeAbilities();
-		$this->taxonomy_abilities  = new TaxonomyAbilities();
 
 		add_action( 'wp_abilities_api_categories_init', [ $this, 'register_category' ] );
 		add_action( 'wp_abilities_api_init', [ $this, 'register_abilities' ] );
@@ -59,7 +53,7 @@ class Abilities {
 
 			$post_type = get_post_type_object( $settings['slug'] );
 			if ( $post_type ) {
-				$this->post_type_abilities->register( $settings['slug'], $post_type, $settings );
+				( new PostTypeAbilities( $settings['slug'], $post_type, $settings ) )->register();
 			}
 		}
 	}
@@ -83,7 +77,7 @@ class Abilities {
 
 			$taxonomy = get_taxonomy( $settings['slug'] );
 			if ( $taxonomy ) {
-				$this->taxonomy_abilities->register( $settings['slug'], $taxonomy, $settings );
+				( new TaxonomyAbilities( $settings['slug'], $taxonomy, $settings ) )->register();
 			}
 		}
 	}

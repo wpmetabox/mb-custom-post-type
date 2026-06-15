@@ -9,26 +9,30 @@ class PostTypeAbilities {
 	private string $singular;
 	private string $label;
 	private WP_Post_Type $post_type;
+	private array $settings;
 
-	public function register( string $slug, WP_Post_Type $post_type, array $settings ): void {
+	public function __construct( string $slug, WP_Post_Type $post_type, array $settings ) {
 		$this->slug      = $slug;
 		$this->post_type = $post_type;
 		$this->singular  = $post_type->labels->singular_name ?? $slug;
 		$this->label     = $post_type->labels->name ?? $slug;
+		$this->settings  = $settings;
+	}
 
-		if ( ! empty( $settings['abilities_get_data'] ) ) {
+	public function register(): void {
+		if ( ! empty( $this->settings['abilities_get_data'] ) ) {
 			$this->register_get_post_type_ability();
 		}
-		if ( ! empty( $settings['abilities_get'] ) ) {
+		if ( ! empty( $this->settings['abilities_get'] ) ) {
 			$this->register_get_ability();
 		}
-		if ( ! empty( $settings['abilities_create'] ) ) {
+		if ( ! empty( $this->settings['abilities_create'] ) ) {
 			$this->register_create_ability();
 		}
-		if ( ! empty( $settings['abilities_update'] ) ) {
+		if ( ! empty( $this->settings['abilities_update'] ) ) {
 			$this->register_update_ability();
 		}
-		if ( ! empty( $settings['abilities_delete'] ) ) {
+		if ( ! empty( $this->settings['abilities_delete'] ) ) {
 			$this->register_delete_ability();
 		}
 	}

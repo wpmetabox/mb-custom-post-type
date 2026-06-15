@@ -7,26 +7,30 @@ class TaxonomyAbilities {
 	private string $singular;
 	private string $label;
 	private $taxonomy;
+	private array $settings;
 
-	public function register( string $slug, $taxonomy, array $settings ): void {
+	public function __construct( string $slug, $taxonomy, array $settings ) {
 		$this->slug     = $slug;
 		$this->taxonomy = $taxonomy;
 		$this->singular = $taxonomy->labels->singular_name ?? $slug;
 		$this->label    = $taxonomy->labels->name ?? $slug;
+		$this->settings = $settings;
+	}
 
-		if ( ! empty( $settings['abilities_get_data'] ) ) {
+	public function register(): void {
+		if ( ! empty( $this->settings['abilities_get_data'] ) ) {
 			$this->register_get_taxonomy_ability();
 		}
-		if ( ! empty( $settings['abilities_get'] ) ) {
+		if ( ! empty( $this->settings['abilities_get'] ) ) {
 			$this->register_get_term_ability();
 		}
-		if ( ! empty( $settings['abilities_create'] ) ) {
+		if ( ! empty( $this->settings['abilities_create'] ) ) {
 			$this->register_create_term_ability();
 		}
-		if ( ! empty( $settings['abilities_update'] ) ) {
+		if ( ! empty( $this->settings['abilities_update'] ) ) {
 			$this->register_update_term_ability();
 		}
-		if ( ! empty( $settings['abilities_delete'] ) ) {
+		if ( ! empty( $this->settings['abilities_delete'] ) ) {
 			$this->register_delete_term_ability();
 		}
 	}
