@@ -5,38 +5,43 @@ use WP_Post_Type;
 
 class PostTypeAbilities {
 
+	private string $slug;
+	private string $singular;
+	private string $label;
+	private WP_Post_Type $post_type;
+
 	public function register( string $slug, WP_Post_Type $post_type, array $settings ): void {
-		$singular = $post_type->labels->singular_name ?? $slug;
-		$label    = $post_type->labels->name ?? $slug;
+		$this->slug      = $slug;
+		$this->post_type = $post_type;
+		$this->singular  = $post_type->labels->singular_name ?? $slug;
+		$this->label     = $post_type->labels->name ?? $slug;
 
 		if ( ! empty( $settings['abilities_get_data'] ) ) {
-			$this->register_get_post_type_ability( $slug, $singular );
+			$this->register_get_post_type_ability();
 		}
 		if ( ! empty( $settings['abilities_get'] ) ) {
-			$this->register_get_ability( $slug, $singular, $label );
+			$this->register_get_ability();
 		}
 		if ( ! empty( $settings['abilities_create'] ) ) {
-			$this->register_create_ability( $slug, $singular );
+			$this->register_create_ability();
 		}
 		if ( ! empty( $settings['abilities_update'] ) ) {
-			$this->register_update_ability( $slug, $singular );
+			$this->register_update_ability();
 		}
 		if ( ! empty( $settings['abilities_delete'] ) ) {
-			$this->register_delete_ability( $slug, $singular );
+			$this->register_delete_ability();
 		}
 	}
 
-	private function register_get_ability( string $slug, string $singular, string $label ): void {
-		$post_type_object = get_post_type_object( $slug );
-
+	private function register_get_ability(): void {
 		wp_register_ability(
-			"meta-box/get-post-{$slug}",
+			"meta-box/get-post-{$this->slug}",
 			[
-				'label'               => sprintf( __( 'Get %s', 'mb-custom-post-type' ), strtolower( $singular ) ),
-				'description'         => sprintf( __( 'Search and list %s.', 'mb-custom-post-type' ), strtolower( $label ) ),
+				'label'               => sprintf( __( 'Get %s', 'mb-custom-post-type' ), strtolower( $this->singular ) ),
+				'description'         => sprintf( __( 'Search and list %s.', 'mb-custom-post-type' ), strtolower( $this->label ) ),
 				'category'            => 'meta-box',
-				'permission_callback' => function () use ( $post_type_object ) {
-					return current_user_can( $post_type_object->cap->read );
+				'permission_callback' => function () {
+					return current_user_can( $this->post_type->cap->read );
 				},
 				'input_schema'        => [
 					'type'       => 'object',
@@ -85,24 +90,22 @@ class PostTypeAbilities {
 						'public' => true,
 					],
 				],
-				'execute_callback'    => function ( array $input ) use ( $slug ): array {
-					return $this->execute_get( $slug, $input );
+				'execute_callback'    => function ( array $input ): array {
+					return $this->execute_get( $input );
 				},
 			]
 		);
 	}
 
-	private function register_get_post_type_ability( string $slug, string $singular ): void {
-		$post_type_object = get_post_type_object( $slug );
-
+	private function register_get_post_type_ability(): void {
 		wp_register_ability(
-			"meta-box/get-post-type-{$slug}",
+			"meta-box/get-post-type-{$this->slug}",
 			[
-				'label'               => sprintf( __( 'Get %s post type', 'mb-custom-post-type' ), strtolower( $singular ) ),
-				'description'         => sprintf( __( 'Get %s post type data.', 'mb-custom-post-type' ), strtolower( $singular ) ),
+				'label'               => sprintf( __( 'Get %s post type', 'mb-custom-post-type' ), strtolower( $this->singular ) ),
+				'description'         => sprintf( __( 'Get %s post type data.', 'mb-custom-post-type' ), strtolower( $this->singular ) ),
 				'category'            => 'meta-box',
-				'permission_callback' => function () use ( $post_type_object ) {
-					return current_user_can( $post_type_object->cap->read );
+				'permission_callback' => function () {
+					return current_user_can( $this->post_type->cap->read );
 				},
 				'input_schema'        => [
 					'type'       => 'object',
@@ -125,24 +128,22 @@ class PostTypeAbilities {
 						'public' => true,
 					],
 				],
-				'execute_callback'    => function () use ( $slug ): array {
-					return $this->execute_get_post_type( $slug );
+				'execute_callback'    => function (): array {
+					return $this->execute_get_post_type();
 				},
 			]
 		);
 	}
 
-	private function register_create_ability( string $slug, string $singular ): void {
-		$post_type_object = get_post_type_object( $slug );
-
+	private function register_create_ability(): void {
 		wp_register_ability(
-			"meta-box/create-post-{$slug}",
+			"meta-box/create-post-{$this->slug}",
 			[
-				'label'               => sprintf( __( 'Create %s', 'mb-custom-post-type' ), strtolower( $singular ) ),
-				'description'         => sprintf( __( 'Create a new %s.', 'mb-custom-post-type' ), strtolower( $singular ) ),
+				'label'               => sprintf( __( 'Create %s', 'mb-custom-post-type' ), strtolower( $this->singular ) ),
+				'description'         => sprintf( __( 'Create a new %s.', 'mb-custom-post-type' ), strtolower( $this->singular ) ),
 				'category'            => 'meta-box',
-				'permission_callback' => function () use ( $post_type_object ) {
-					return current_user_can( $post_type_object->cap->create_posts );
+				'permission_callback' => function () {
+					return current_user_can( $this->post_type->cap->create_posts );
 				},
 				'input_schema'        => [
 					'type'       => 'object',
@@ -181,24 +182,22 @@ class PostTypeAbilities {
 						'public' => true,
 					],
 				],
-				'execute_callback'    => function ( array $input ) use ( $slug ): array {
-					return $this->execute_create( $slug, $input );
+				'execute_callback'    => function ( array $input ): array {
+					return $this->execute_create( $input );
 				},
 			]
 		);
 	}
 
-	private function register_update_ability( string $slug, string $singular ): void {
-		$post_type_object = get_post_type_object( $slug );
-
+	private function register_update_ability(): void {
 		wp_register_ability(
-			"meta-box/update-post-{$slug}",
+			"meta-box/update-post-{$this->slug}",
 			[
-				'label'               => sprintf( __( 'Update %s', 'mb-custom-post-type' ), strtolower( $singular ) ),
-				'description'         => sprintf( __( 'Update an existing %s. Only provided fields are modified.', 'mb-custom-post-type' ), strtolower( $singular ) ),
+				'label'               => sprintf( __( 'Update %s', 'mb-custom-post-type' ), strtolower( $this->singular ) ),
+				'description'         => sprintf( __( 'Update an existing %s. Only provided fields are modified.', 'mb-custom-post-type' ), strtolower( $this->singular ) ),
 				'category'            => 'meta-box',
-				'permission_callback' => function () use ( $post_type_object ) {
-					return current_user_can( $post_type_object->cap->edit_post );
+				'permission_callback' => function () {
+					return current_user_can( $this->post_type->cap->edit_post );
 				},
 				'input_schema'        => [
 					'type'       => 'object',
@@ -245,17 +244,15 @@ class PostTypeAbilities {
 		);
 	}
 
-	private function register_delete_ability( string $slug, string $singular ): void {
-		$post_type_object = get_post_type_object( $slug );
-
+	private function register_delete_ability(): void {
 		wp_register_ability(
-			"meta-box/delete-post-{$slug}",
+			"meta-box/delete-post-{$this->slug}",
 			[
-				'label'               => sprintf( __( 'Delete %s', 'mb-custom-post-type' ), strtolower( $singular ) ),
-				'description'         => sprintf( __( 'Delete a %s.', 'mb-custom-post-type' ), strtolower( $singular ) ),
+				'label'               => sprintf( __( 'Delete %s', 'mb-custom-post-type' ), strtolower( $this->singular ) ),
+				'description'         => sprintf( __( 'Delete a %s.', 'mb-custom-post-type' ), strtolower( $this->singular ) ),
 				'category'            => 'meta-box',
-				'permission_callback' => function () use ( $post_type_object ) {
-					return current_user_can( $post_type_object->cap->delete_post );
+				'permission_callback' => function () {
+					return current_user_can( $this->post_type->cap->delete_post );
 				},
 				'input_schema'        => [
 					'type'       => 'object',
@@ -302,9 +299,9 @@ class PostTypeAbilities {
 		);
 	}
 
-	public function execute_get( string $slug, array $input ): array {
+	private function execute_get( array $input ): array {
 		$args = [
-			'post_type'   => $slug,
+			'post_type'   => $this->slug,
 			'post_status' => $input['status'] ?? 'publish',
 			'numberposts' => min( $input['limit'] ?? 10, 100 ),
 			'orderby'     => $input['orderby'] ?? 'date',
@@ -313,7 +310,7 @@ class PostTypeAbilities {
 
 		if ( ! empty( $input['id'] ) ) {
 			$post = get_post( (int) $input['id'] );
-			return $post && $post->post_type === $slug ? [ $this->format_post( $post ) ] : [];
+			return $post && $post->post_type === $this->slug ? [ $this->format_post( $post ) ] : [];
 		}
 
 		if ( ! empty( $input['search'] ) ) {
@@ -325,8 +322,8 @@ class PostTypeAbilities {
 		return array_map( [ $this, 'format_post' ], $posts );
 	}
 
-	public function execute_get_post_type( string $slug ): array {
-		$post_type = get_post_type_object( $slug );
+	private function execute_get_post_type(): array {
+		$post_type = get_post_type_object( $this->slug );
 
 		if ( ! $post_type ) {
 			return [];
@@ -351,8 +348,8 @@ class PostTypeAbilities {
 			'capability_type'    => $post_type->capability_type,
 			'capabilities'       => (array) $post_type->cap,
 			'map_meta_cap'       => $post_type->map_meta_cap,
-			'supports'           => array_keys( get_all_post_type_supports( $slug ) ),
-			'taxonomies'         => get_object_taxonomies( $slug ),
+			'supports'           => array_keys( get_all_post_type_supports( $this->slug ) ),
+			'taxonomies'         => get_object_taxonomies( $this->slug ),
 			'has_archive'        => $post_type->has_archive,
 			'rewrite'            => (array) $post_type->rewrite,
 			'query_var'          => $post_type->query_var,
@@ -365,13 +362,13 @@ class PostTypeAbilities {
 		];
 	}
 
-	public function execute_create( string $slug, array $input ): array {
+	private function execute_create( array $input ): array {
 		$args = [
 			'post_title'   => sanitize_text_field( $input['title'] ),
 			'post_content' => wp_kses_post( $input['content'] ?? '' ),
 			'post_excerpt' => sanitize_textarea_field( $input['excerpt'] ?? '' ),
 			'post_status'  => $input['status'] ?? 'draft',
-			'post_type'    => $slug,
+			'post_type'    => $this->slug,
 		];
 
 		$post_id = wp_insert_post( $args, true );
@@ -384,7 +381,7 @@ class PostTypeAbilities {
 		return $this->format_post( $post );
 	}
 
-	public function execute_update( array $input ): array {
+	private function execute_update( array $input ): array {
 		$post_id = (int) $input['id'];
 		$post    = get_post( $post_id );
 
@@ -416,7 +413,7 @@ class PostTypeAbilities {
 		return $this->format_post( $post );
 	}
 
-	public function execute_delete( array $input ): array {
+	private function execute_delete( array $input ): array {
 		$post_id = (int) $input['id'];
 		$post    = get_post( $post_id );
 

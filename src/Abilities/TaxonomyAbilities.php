@@ -3,38 +3,43 @@ namespace MBCPT\Abilities;
 
 class TaxonomyAbilities {
 
+	private string $slug;
+	private string $singular;
+	private string $label;
+	private $taxonomy;
+
 	public function register( string $slug, $taxonomy, array $settings ): void {
-		$singular = $taxonomy->labels->singular_name ?? $slug;
-		$label    = $taxonomy->labels->name ?? $slug;
+		$this->slug     = $slug;
+		$this->taxonomy = $taxonomy;
+		$this->singular = $taxonomy->labels->singular_name ?? $slug;
+		$this->label    = $taxonomy->labels->name ?? $slug;
 
 		if ( ! empty( $settings['abilities_get_data'] ) ) {
-			$this->register_get_taxonomy_ability( $slug, $singular );
+			$this->register_get_taxonomy_ability();
 		}
 		if ( ! empty( $settings['abilities_get'] ) ) {
-			$this->register_get_term_ability( $slug, $singular, $label );
+			$this->register_get_term_ability();
 		}
 		if ( ! empty( $settings['abilities_create'] ) ) {
-			$this->register_create_term_ability( $slug, $singular );
+			$this->register_create_term_ability();
 		}
 		if ( ! empty( $settings['abilities_update'] ) ) {
-			$this->register_update_term_ability( $slug, $singular );
+			$this->register_update_term_ability();
 		}
 		if ( ! empty( $settings['abilities_delete'] ) ) {
-			$this->register_delete_term_ability( $slug, $singular );
+			$this->register_delete_term_ability();
 		}
 	}
 
-	private function register_get_term_ability( string $slug, string $singular, string $label ): void {
-		$taxonomy = get_taxonomy( $slug );
-
+	private function register_get_term_ability(): void {
 		wp_register_ability(
-			"meta-box/get-term-{$slug}",
+			"meta-box/get-term-{$this->slug}",
 			[
-				'label'               => sprintf( __( 'Get %s', 'mb-custom-post-type' ), strtolower( $singular ) ),
-				'description'         => sprintf( __( 'Search and list %s.', 'mb-custom-post-type' ), strtolower( $label ) ),
+				'label'               => sprintf( __( 'Get %s', 'mb-custom-post-type' ), strtolower( $this->singular ) ),
+				'description'         => sprintf( __( 'Search and list %s.', 'mb-custom-post-type' ), strtolower( $this->label ) ),
 				'category'            => 'meta-box',
-				'permission_callback' => function () use ( $taxonomy ) {
-					return current_user_can( $taxonomy->cap->assign_terms );
+				'permission_callback' => function () {
+					return current_user_can( $this->taxonomy->cap->assign_terms );
 				},
 				'input_schema'        => [
 					'type'       => 'object',
@@ -87,24 +92,22 @@ class TaxonomyAbilities {
 						'public' => true,
 					],
 				],
-				'execute_callback'    => function ( array $input ) use ( $slug ): array {
-					return $this->execute_get_terms( $slug, $input );
+				'execute_callback'    => function ( array $input ): array {
+					return $this->execute_get_terms( $input );
 				},
 			]
 		);
 	}
 
-	private function register_create_term_ability( string $slug, string $singular ): void {
-		$taxonomy = get_taxonomy( $slug );
-
+	private function register_create_term_ability(): void {
 		wp_register_ability(
-			"meta-box/create-term-{$slug}",
+			"meta-box/create-term-{$this->slug}",
 			[
-				'label'               => sprintf( __( 'Create %s', 'mb-custom-post-type' ), strtolower( $singular ) ),
-				'description'         => sprintf( __( 'Create a new %s.', 'mb-custom-post-type' ), strtolower( $singular ) ),
+				'label'               => sprintf( __( 'Create %s', 'mb-custom-post-type' ), strtolower( $this->singular ) ),
+				'description'         => sprintf( __( 'Create a new %s.', 'mb-custom-post-type' ), strtolower( $this->singular ) ),
 				'category'            => 'meta-box',
-				'permission_callback' => function () use ( $taxonomy ) {
-					return current_user_can( $taxonomy->cap->manage_terms );
+				'permission_callback' => function () {
+					return current_user_can( $this->taxonomy->cap->manage_terms );
 				},
 				'input_schema'        => [
 					'type'       => 'object',
@@ -142,24 +145,22 @@ class TaxonomyAbilities {
 						'public' => true,
 					],
 				],
-				'execute_callback'    => function ( array $input ) use ( $slug ): array {
-					return $this->execute_create_term( $slug, $input );
+				'execute_callback'    => function ( array $input ): array {
+					return $this->execute_create_term( $input );
 				},
 			]
 		);
 	}
 
-	private function register_update_term_ability( string $slug, string $singular ): void {
-		$taxonomy = get_taxonomy( $slug );
-
+	private function register_update_term_ability(): void {
 		wp_register_ability(
-			"meta-box/update-term-{$slug}",
+			"meta-box/update-term-{$this->slug}",
 			[
-				'label'               => sprintf( __( 'Update %s', 'mb-custom-post-type' ), strtolower( $singular ) ),
-				'description'         => sprintf( __( 'Update an existing %s. Only provided fields are modified.', 'mb-custom-post-type' ), strtolower( $singular ) ),
+				'label'               => sprintf( __( 'Update %s', 'mb-custom-post-type' ), strtolower( $this->singular ) ),
+				'description'         => sprintf( __( 'Update an existing %s. Only provided fields are modified.', 'mb-custom-post-type' ), strtolower( $this->singular ) ),
 				'category'            => 'meta-box',
-				'permission_callback' => function () use ( $taxonomy ) {
-					return current_user_can( $taxonomy->cap->edit_terms );
+				'permission_callback' => function () {
+					return current_user_can( $this->taxonomy->cap->edit_terms );
 				},
 				'input_schema'        => [
 					'type'       => 'object',
@@ -198,24 +199,22 @@ class TaxonomyAbilities {
 						'public' => true,
 					],
 				],
-				'execute_callback'    => function ( array $input ) use ( $slug ): array {
-					return $this->execute_update_term( $slug, $input );
+				'execute_callback'    => function ( array $input ): array {
+					return $this->execute_update_term( $input );
 				},
 			]
 		);
 	}
 
-	private function register_delete_term_ability( string $slug, string $singular ): void {
-		$taxonomy = get_taxonomy( $slug );
-
+	private function register_delete_term_ability(): void {
 		wp_register_ability(
-			"meta-box/delete-term-{$slug}",
+			"meta-box/delete-term-{$this->slug}",
 			[
-				'label'               => sprintf( __( 'Delete %s', 'mb-custom-post-type' ), strtolower( $singular ) ),
-				'description'         => sprintf( __( 'Delete a %s.', 'mb-custom-post-type' ), strtolower( $singular ) ),
+				'label'               => sprintf( __( 'Delete %s', 'mb-custom-post-type' ), strtolower( $this->singular ) ),
+				'description'         => sprintf( __( 'Delete a %s.', 'mb-custom-post-type' ), strtolower( $this->singular ) ),
 				'category'            => 'meta-box',
-				'permission_callback' => function () use ( $taxonomy ) {
-					return current_user_can( $taxonomy->cap->delete_terms );
+				'permission_callback' => function () {
+					return current_user_can( $this->taxonomy->cap->delete_terms );
 				},
 				'input_schema'        => [
 					'type'       => 'object',
@@ -250,24 +249,22 @@ class TaxonomyAbilities {
 						'public' => true,
 					],
 				],
-				'execute_callback'    => function ( array $input ) use ( $slug ): array {
-					return $this->execute_delete_term( $slug, $input );
+				'execute_callback'    => function ( array $input ): array {
+					return $this->execute_delete_term( $input );
 				},
 			]
 		);
 	}
 
-	private function register_get_taxonomy_ability( string $slug, string $singular ): void {
-		$taxonomy = get_taxonomy( $slug );
-
+	private function register_get_taxonomy_ability(): void {
 		wp_register_ability(
-			"meta-box/get-taxonomy-{$slug}",
+			"meta-box/get-taxonomy-{$this->slug}",
 			[
-				'label'               => sprintf( __( 'Get %s taxonomy', 'mb-custom-post-type' ), strtolower( $singular ) ),
-				'description'         => sprintf( __( 'Get %s taxonomy data.', 'mb-custom-post-type' ), strtolower( $singular ) ),
+				'label'               => sprintf( __( 'Get %s taxonomy', 'mb-custom-post-type' ), strtolower( $this->singular ) ),
+				'description'         => sprintf( __( 'Get %s taxonomy data.', 'mb-custom-post-type' ), strtolower( $this->singular ) ),
 				'category'            => 'meta-box',
-				'permission_callback' => function () use ( $taxonomy ) {
-					return current_user_can( $taxonomy->cap->assign_terms );
+				'permission_callback' => function () {
+					return current_user_can( $this->taxonomy->cap->assign_terms );
 				},
 				'input_schema'        => [
 					'type'       => 'object',
@@ -290,16 +287,16 @@ class TaxonomyAbilities {
 						'public' => true,
 					],
 				],
-				'execute_callback'    => function () use ( $slug ): array {
-					return $this->execute_get_taxonomy( $slug );
+				'execute_callback'    => function (): array {
+					return $this->execute_get_taxonomy();
 				},
 			]
 		);
 	}
 
-	public function execute_get_terms( string $slug, array $input ): array {
+	private function execute_get_terms( array $input ): array {
 		$args = [
-			'taxonomy'   => $slug,
+			'taxonomy'   => $this->slug,
 			'hide_empty' => $input['hide_empty'] ?? false,
 			'number'     => min( $input['limit'] ?? 10, 100 ),
 			'orderby'    => $input['orderby'] ?? 'name',
@@ -307,7 +304,7 @@ class TaxonomyAbilities {
 		];
 
 		if ( ! empty( $input['id'] ) ) {
-			$term = get_term( (int) $input['id'], $slug );
+			$term = get_term( (int) $input['id'], $this->slug );
 			return $term && ! is_wp_error( $term ) ? [ $this->format_term( $term ) ] : [];
 		}
 
@@ -328,7 +325,7 @@ class TaxonomyAbilities {
 		return array_map( [ $this, 'format_term' ], $terms );
 	}
 
-	public function execute_create_term( string $slug, array $input ): array {
+	private function execute_create_term( array $input ): array {
 		$args = [
 			'name'        => sanitize_text_field( $input['name'] ),
 			'slug'        => sanitize_title( $input['slug'] ?? '' ),
@@ -336,19 +333,19 @@ class TaxonomyAbilities {
 			'parent'      => (int) ( $input['parent'] ?? 0 ),
 		];
 
-		$result = wp_insert_term( $args['name'], $slug, $args );
+		$result = wp_insert_term( $args['name'], $this->slug, $args );
 
 		if ( is_wp_error( $result ) ) {
 			return [];
 		}
 
-		$term = get_term( $result['term_id'], $slug );
+		$term = get_term( $result['term_id'], $this->slug );
 		return $this->format_term( $term );
 	}
 
-	public function execute_update_term( string $slug, array $input ): array {
+	private function execute_update_term( array $input ): array {
 		$term_id = (int) $input['id'];
-		$term    = get_term( $term_id, $slug );
+		$term    = get_term( $term_id, $this->slug );
 
 		if ( ! $term || is_wp_error( $term ) ) {
 			return [];
@@ -368,19 +365,19 @@ class TaxonomyAbilities {
 			$args['parent'] = (int) $input['parent'];
 		}
 
-		$result = wp_update_term( $term_id, $slug, $args );
+		$result = wp_update_term( $term_id, $this->slug, $args );
 
 		if ( is_wp_error( $result ) ) {
 			return [];
 		}
 
-		$term = get_term( $term_id, $slug );
+		$term = get_term( $term_id, $this->slug );
 		return $this->format_term( $term );
 	}
 
-	public function execute_delete_term( string $slug, array $input ): array {
+	private function execute_delete_term( array $input ): array {
 		$term_id = (int) $input['id'];
-		$term    = get_term( $term_id, $slug );
+		$term    = get_term( $term_id, $this->slug );
 
 		if ( ! $term || is_wp_error( $term ) ) {
 			return [];
@@ -391,7 +388,7 @@ class TaxonomyAbilities {
 			'name' => $term->name,
 		];
 
-		$result = wp_delete_term( $term_id, $slug );
+		$result = wp_delete_term( $term_id, $this->slug );
 
 		if ( ! $result ) {
 			return [];
@@ -403,8 +400,8 @@ class TaxonomyAbilities {
 		];
 	}
 
-	public function execute_get_taxonomy( string $slug ): array {
-		$taxonomy = get_taxonomy( $slug );
+	private function execute_get_taxonomy(): array {
+		$taxonomy = get_taxonomy( $this->slug );
 
 		if ( ! $taxonomy ) {
 			return [];
