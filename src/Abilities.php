@@ -107,9 +107,9 @@ class Abilities {
 					'mcp'          => [ 'public' => true ],
 					'show_in_rest' => true,
 					'annotations'  => [
-						'readOnlyHint'    => true,
-						'destructiveHint' => false,
-						'idempotentHint'  => true,
+						'readonly'    => true,
+						'destructive' => false,
+						'idempotent'  => true,
 					],
 				],
 			]
@@ -138,9 +138,9 @@ class Abilities {
 					'mcp'          => [ 'public' => true ],
 					'show_in_rest' => true,
 					'annotations'  => [
-						'readOnlyHint'    => true,
-						'destructiveHint' => false,
-						'idempotentHint'  => true,
+						'readonly'    => true,
+						'destructive' => false,
+						'idempotent'  => true,
 					],
 				],
 			]
@@ -192,9 +192,9 @@ class Abilities {
 					'mcp'          => [ 'public' => true ],
 					'show_in_rest' => true,
 					'annotations'  => [
-						'readOnlyHint'    => false,
-						'destructiveHint' => false,
-						'idempotentHint'  => false,
+						'readonly'    => false,
+						'destructive' => false,
+						'idempotent'  => false,
 					],
 				],
 			]
@@ -247,9 +247,9 @@ class Abilities {
 					'mcp'          => [ 'public' => true ],
 					'show_in_rest' => true,
 					'annotations'  => [
-						'readOnlyHint'    => false,
-						'destructiveHint' => false,
-						'idempotentHint'  => true,
+						'readonly'    => false,
+						'destructive' => false,
+						'idempotent'  => true,
 					],
 				],
 			]
@@ -302,9 +302,9 @@ class Abilities {
 					'mcp'          => [ 'public' => true ],
 					'show_in_rest' => true,
 					'annotations'  => [
-						'readOnlyHint'    => false,
-						'destructiveHint' => true,
-						'idempotentHint'  => false,
+						'readonly'    => false,
+						'destructive' => true,
+						'idempotent'  => false,
 					],
 				],
 			]
