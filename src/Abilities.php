@@ -1,8 +1,8 @@
 <?php
 namespace MBCPT;
 
-use MetaBox\Support\Arr;
 use MetaBox\Support\Data;
+use WP_Post_Type;
 
 class Abilities {
 
@@ -36,10 +36,9 @@ class Abilities {
 		}
 	}
 
-	private function register_post_type_abilities( string $slug, $post_type ): void {
-		$post_type = 
-		$singular = Arr::get( (array) $post_type, 'labels.singular_name', $slug );
-		$label    = Arr::get( (array) $post_type, 'labels.name', $slug );
+	private function register_post_type_abilities( string $slug, WP_Post_Type $post_type ): void {
+		$singular = $post_type->labels->singular_name ?? $slug;
+		$label    = $post_type->labels->name ?? $slug;
 
 		$this->register_get_ability( $slug, $singular, $label );
 		$this->register_create_ability( $slug, $singular );
