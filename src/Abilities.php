@@ -348,11 +348,11 @@ class Abilities {
 		return $posts;
 	}
 
-	public function execute_get_post_type( string $slug ): array|\WP_Error {
+	public function execute_get_post_type( string $slug ): array {
 		$post_type = get_post_type_object( $slug );
 
 		if ( ! $post_type ) {
-			return new \WP_Error( 'post_type_not_found', __( 'Post type not found.', 'mb-custom-post-type' ) );
+			return [];
 		}
 
 		return [
@@ -373,7 +373,7 @@ class Abilities {
 		];
 	}
 
-	public function execute_create( string $slug, array $input ): \WP_Error|array {
+	public function execute_create( string $slug, array $input ): array {
 		$post_id = wp_insert_post( [
 			'post_type'    => $slug,
 			'post_title'   => sanitize_text_field( $input['title'] ),
@@ -383,18 +383,18 @@ class Abilities {
 		], true );
 
 		if ( is_wp_error( $post_id ) ) {
-			return $post_id;
+			return [];
 		}
 
 		return $this->format_post( get_post( $post_id ) );
 	}
 
-	public function execute_update( string $slug, array $input ): \WP_Error|array {
+	public function execute_update( string $slug, array $input ): array {
 		$post_id = (int) $input['id'];
 		$post    = get_post( $post_id );
 
 		if ( ! $post || $post->post_type !== $slug ) {
-			return new \WP_Error( 'post_not_found', __( 'Post not found.', 'mb-custom-post-type' ) );
+			return [];
 		}
 
 		$postarr = [ 'ID' => $post_id ];
@@ -424,12 +424,12 @@ class Abilities {
 		return $this->format_post( get_post( $post_id ) );
 	}
 
-	public function execute_delete( array $input ): array|\WP_Error {
+	public function execute_delete( array $input ): array {
 		$post_id = (int) $input['id'];
 		$post    = get_post( $post_id );
 
 		if ( ! $post ) {
-			return new \WP_Error( 'post_not_found', __( 'Post not found.', 'mb-custom-post-type' ) );
+			return [];
 		}
 
 		$previous = [
@@ -441,7 +441,7 @@ class Abilities {
 		$result = wp_delete_post( $post_id, $force );
 
 		if ( ! $result ) {
-			return new \WP_Error( 'delete_failed', __( 'Failed to delete post.', 'mb-custom-post-type' ) );
+			return [];
 		}
 
 		return [
