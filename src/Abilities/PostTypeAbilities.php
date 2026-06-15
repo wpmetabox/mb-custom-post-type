@@ -149,25 +149,58 @@ class PostTypeAbilities {
 					'type'       => 'object',
 					'required'   => [ 'title' ],
 					'properties' => [
-						'title'   => [
+						'title'            => [
 							'type'        => 'string',
 							'description' => __( 'Post title.', 'mb-custom-post-type' ),
 						],
-						'content' => [
+						'content'          => [
 							'type'        => 'string',
 							'description' => __( 'Post content.', 'mb-custom-post-type' ),
 							'default'     => '',
 						],
-						'excerpt' => [
+						'excerpt'          => [
 							'type'        => 'string',
 							'description' => __( 'Post excerpt.', 'mb-custom-post-type' ),
 							'default'     => '',
 						],
-						'status'  => [
+						'status'           => [
 							'type'        => 'string',
 							'description' => __( 'Post status.', 'mb-custom-post-type' ),
 							'enum'        => [ 'draft', 'publish', 'pending', 'private' ],
 							'default'     => 'draft',
+						],
+						'slug'             => [
+							'type'        => 'string',
+							'description' => __( 'Post slug.', 'mb-custom-post-type' ),
+						],
+
+						'featured_media'   => [
+							'type'        => 'integer',
+							'description' => __( 'Featured image media ID.', 'mb-custom-post-type' ),
+						],
+						'parent'           => [
+							'type'        => 'integer',
+							'description' => __( 'Parent post ID.', 'mb-custom-post-type' ),
+							'default'     => 0,
+						],
+						'menu_order'       => [
+							'type'        => 'integer',
+							'description' => __( 'Menu order.', 'mb-custom-post-type' ),
+							'default'     => 0,
+						],
+						'comment_status'   => [
+							'type'        => 'string',
+							'description' => __( 'Comment status.', 'mb-custom-post-type' ),
+							'enum'        => [ 'open', 'closed' ],
+						],
+						'ping_status'      => [
+							'type'        => 'string',
+							'description' => __( 'Ping status.', 'mb-custom-post-type' ),
+							'enum'        => [ 'open', 'closed' ],
+						],
+						'template'         => [
+							'type'        => 'string',
+							'description' => __( 'Page template.', 'mb-custom-post-type' ),
 						],
 					],
 				],
@@ -203,26 +236,57 @@ class PostTypeAbilities {
 					'type'       => 'object',
 					'required'   => [ 'id' ],
 					'properties' => [
-						'id'      => [
+						'id'               => [
 							'type'        => 'integer',
 							'description' => __( 'Post ID to update.', 'mb-custom-post-type' ),
 						],
-						'title'   => [
+						'title'            => [
 							'type'        => 'string',
 							'description' => __( 'New post title.', 'mb-custom-post-type' ),
 						],
-						'content' => [
+						'content'          => [
 							'type'        => 'string',
 							'description' => __( 'New post content.', 'mb-custom-post-type' ),
 						],
-						'excerpt' => [
+						'excerpt'          => [
 							'type'        => 'string',
 							'description' => __( 'New post excerpt.', 'mb-custom-post-type' ),
 						],
-						'status'  => [
+						'status'           => [
 							'type'        => 'string',
 							'description' => __( 'New post status.', 'mb-custom-post-type' ),
 							'enum'        => [ 'draft', 'publish', 'pending', 'private' ],
+						],
+						'slug'             => [
+							'type'        => 'string',
+							'description' => __( 'New post slug.', 'mb-custom-post-type' ),
+						],
+
+						'featured_media'   => [
+							'type'        => 'integer',
+							'description' => __( 'New featured image media ID.', 'mb-custom-post-type' ),
+						],
+						'parent'           => [
+							'type'        => 'integer',
+							'description' => __( 'New parent post ID.', 'mb-custom-post-type' ),
+						],
+						'menu_order'       => [
+							'type'        => 'integer',
+							'description' => __( 'New menu order.', 'mb-custom-post-type' ),
+						],
+						'comment_status'   => [
+							'type'        => 'string',
+							'description' => __( 'New comment status.', 'mb-custom-post-type' ),
+							'enum'        => [ 'open', 'closed' ],
+						],
+						'ping_status'      => [
+							'type'        => 'string',
+							'description' => __( 'New ping status.', 'mb-custom-post-type' ),
+							'enum'        => [ 'open', 'closed' ],
+						],
+						'template'         => [
+							'type'        => 'string',
+							'description' => __( 'New page template.', 'mb-custom-post-type' ),
 						],
 					],
 				],
@@ -364,17 +428,28 @@ class PostTypeAbilities {
 
 	private function execute_create( array $input ): array {
 		$args = [
-			'post_title'   => sanitize_text_field( $input['title'] ),
-			'post_content' => wp_kses_post( $input['content'] ?? '' ),
-			'post_excerpt' => sanitize_textarea_field( $input['excerpt'] ?? '' ),
-			'post_status'  => $input['status'] ?? 'draft',
-			'post_type'    => $this->slug,
+			'post_title'      => sanitize_text_field( $input['title'] ),
+			'post_content'    => wp_kses_post( $input['content'] ?? '' ),
+			'post_excerpt'    => sanitize_textarea_field( $input['excerpt'] ?? '' ),
+			'post_status'     => $input['status'] ?? 'draft',
+			'post_type'       => $this->slug,
+			'post_name'       => isset( $input['slug'] ) ? sanitize_title( $input['slug'] ) : '',
+
+			'menu_order'      => isset( $input['menu_order'] ) ? (int) $input['menu_order'] : 0,
+			'comment_status'  => isset( $input['comment_status'] ) ? $input['comment_status'] : '',
+			'ping_status'     => isset( $input['ping_status'] ) ? $input['ping_status'] : '',
+			'post_parent'     => isset( $input['parent'] ) ? (int) $input['parent'] : 0,
+			'template'        => isset( $input['template'] ) ? $input['template'] : '',
 		];
 
 		$post_id = wp_insert_post( $args, true );
 
 		if ( is_wp_error( $post_id ) ) {
 			return [];
+		}
+
+		if ( isset( $input['featured_media'] ) ) {
+			set_post_thumbnail( $post_id, (int) $input['featured_media'] );
 		}
 
 		$post = get_post( $post_id );
@@ -402,11 +477,34 @@ class PostTypeAbilities {
 		if ( isset( $input['status'] ) ) {
 			$args['post_status'] = $input['status'];
 		}
+		if ( isset( $input['slug'] ) ) {
+			$args['post_name'] = sanitize_title( $input['slug'] );
+		}
+
+		if ( isset( $input['menu_order'] ) ) {
+			$args['menu_order'] = (int) $input['menu_order'];
+		}
+		if ( isset( $input['comment_status'] ) ) {
+			$args['comment_status'] = $input['comment_status'];
+		}
+		if ( isset( $input['ping_status'] ) ) {
+			$args['ping_status'] = $input['ping_status'];
+		}
+		if ( isset( $input['parent'] ) ) {
+			$args['post_parent'] = (int) $input['parent'];
+		}
+		if ( isset( $input['template'] ) ) {
+			$args['template'] = $input['template'];
+		}
 
 		$result = wp_update_post( $args, true );
 
 		if ( is_wp_error( $result ) ) {
 			return [];
+		}
+
+		if ( isset( $input['featured_media'] ) ) {
+			set_post_thumbnail( $post_id, (int) $input['featured_media'] );
 		}
 
 		$post = get_post( $post_id );
@@ -441,16 +539,27 @@ class PostTypeAbilities {
 
 	private function format_post( \WP_Post $post ): array {
 		return [
-			'id'        => $post->ID,
-			'title'     => $post->post_title,
-			'content'   => $post->post_content,
-			'excerpt'   => $post->post_excerpt,
-			'status'    => $post->post_status,
-			'type'      => $post->post_type,
-			'date'      => $post->post_date,
-			'modified'  => $post->post_modified,
-			'link'      => get_permalink( $post->ID ),
-			'edit_link' => get_edit_post_link( $post->ID, 'raw' ),
+			'id'              => $post->ID,
+			'date'            => $post->post_date,
+			'date_gmt'        => $post->post_date_gmt,
+			'guid'            => $post->guid,
+			'modified'        => $post->post_modified,
+			'modified_gmt'    => $post->post_modified_gmt,
+			'slug'            => $post->post_name,
+			'status'          => $post->post_status,
+			'type'            => $post->post_type,
+			'title'           => $post->post_title,
+			'content'         => $post->post_content,
+			'excerpt'         => $post->post_excerpt,
+			'author'          => (int) $post->post_author,
+			'featured_media'  => (int) get_post_thumbnail_id( $post->ID ),
+			'parent'          => (int) $post->post_parent,
+			'menu_order'      => (int) $post->menu_order,
+			'comment_status'  => $post->comment_status,
+			'ping_status'     => $post->ping_status,
+			'template'        => get_page_template_slug( $post ) ?: '',
+			'link'            => get_permalink( $post->ID ),
+			'edit_link'       => get_edit_post_link( $post->ID, 'raw' ),
 		];
 	}
 
@@ -458,16 +567,27 @@ class PostTypeAbilities {
 		return [
 			'type'       => 'object',
 			'properties' => [
-				'id'        => [ 'type' => 'integer' ],
-				'title'     => [ 'type' => 'string' ],
-				'content'   => [ 'type' => 'string' ],
-				'excerpt'   => [ 'type' => 'string' ],
-				'status'    => [ 'type' => 'string' ],
-				'type'      => [ 'type' => 'string' ],
-				'date'      => [ 'type' => 'string' ],
-				'modified'  => [ 'type' => 'string' ],
-				'link'      => [ 'type' => 'string' ],
-				'edit_link' => [ 'type' => 'string' ],
+				'id'              => [ 'type' => 'integer' ],
+				'date'            => [ 'type' => 'string' ],
+				'date_gmt'        => [ 'type' => 'string' ],
+				'guid'            => [ 'type' => 'string' ],
+				'modified'        => [ 'type' => 'string' ],
+				'modified_gmt'    => [ 'type' => 'string' ],
+				'slug'            => [ 'type' => 'string' ],
+				'status'          => [ 'type' => 'string' ],
+				'type'            => [ 'type' => 'string' ],
+				'title'           => [ 'type' => 'string' ],
+				'content'         => [ 'type' => 'string' ],
+				'excerpt'         => [ 'type' => 'string' ],
+				'author'          => [ 'type' => 'integer' ],
+				'featured_media'  => [ 'type' => 'integer' ],
+				'parent'          => [ 'type' => 'integer' ],
+				'menu_order'      => [ 'type' => 'integer' ],
+				'comment_status'  => [ 'type' => 'string' ],
+				'ping_status'     => [ 'type' => 'string' ],
+				'template'        => [ 'type' => 'string' ],
+				'link'            => [ 'type' => 'string' ],
+				'edit_link'       => [ 'type' => 'string' ],
 			],
 		];
 	}
