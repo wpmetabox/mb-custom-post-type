@@ -59,7 +59,7 @@ class Abilities {
 
 			$post_type = get_post_type_object( $settings['slug'] );
 			if ( $post_type ) {
-				$this->post_type_abilities->register( $settings['slug'], $post_type );
+				$this->post_type_abilities->register( $settings['slug'], $post_type, $settings );
 			}
 		}
 	}
@@ -83,7 +83,7 @@ class Abilities {
 
 			$taxonomy = get_taxonomy( $settings['slug'] );
 			if ( $taxonomy ) {
-				$this->taxonomy_abilities->register( $settings['slug'], $taxonomy );
+				$this->taxonomy_abilities->register( $settings['slug'], $taxonomy, $settings );
 			}
 		}
 	}

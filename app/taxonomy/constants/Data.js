@@ -394,4 +394,44 @@ if ( MBCPT.abilities ) {
 		label: __( 'Enable abilities', 'mb-custom-post-type' ),
 		description: __( 'Allow AI agents to get, edit, create or delete terms of this taxonomy via the Abilities API.', 'mb-custom-post-type' ),
 	} );
+
+	FeatureControls.push( {
+		type: 'toggle',
+		name: 'abilities_get_data',
+		label: __( 'Get taxonomy data', 'mb-custom-post-type' ),
+		dependency: 'abilities:true',
+		nested: true,
+	} );
+
+	FeatureControls.push( {
+		type: 'toggle',
+		name: 'abilities_get',
+		label: __( 'Get terms', 'mb-custom-post-type' ),
+		dependency: 'abilities:true',
+		nested: true,
+	} );
+
+	FeatureControls.push( {
+		type: 'toggle',
+		name: 'abilities_create',
+		label: __( 'Create terms', 'mb-custom-post-type' ),
+		dependency: 'abilities:true',
+		nested: true,
+	} );
+
+	FeatureControls.push( {
+		type: 'toggle',
+		name: 'abilities_update',
+		label: __( 'Update terms', 'mb-custom-post-type' ),
+		dependency: 'abilities:true',
+		nested: true,
+	} );
+
+	FeatureControls.push( {
+		type: 'toggle',
+		name: 'abilities_delete',
+		label: __( 'Delete terms', 'mb-custom-post-type' ),
+		dependency: 'abilities:true',
+		nested: true,
+	} );
 }

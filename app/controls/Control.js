@@ -90,6 +90,12 @@ const Control = ( { field, autoFills = [] } ) => {
 		let newSettings = { ...settings };
 		setProperty( newSettings, name, value );
 
+		if ( 'abilities' === name && value ) {
+			[ 'abilities_get_data', 'abilities_get', 'abilities_create', 'abilities_update', 'abilities_delete' ].forEach( key => {
+				setProperty( newSettings, key, true );
+			} );
+		}
+
 		updateSettings( newSettings );
 	};
 

@@ -494,6 +494,46 @@ if ( MBCPT.abilities ) {
 		label: __( 'Enable abilities', 'mb-custom-post-type' ),
 		description: __( 'Allow AI agents to get, edit, create or delete posts of this post type via the Abilities API.', 'mb-custom-post-type' ),
 	} );
+
+	FeatureControls.push( {
+		type: 'toggle',
+		name: 'abilities_get_data',
+		label: __( 'Get post type data', 'mb-custom-post-type' ),
+		dependency: 'abilities:true',
+		nested: true,
+	} );
+
+	FeatureControls.push( {
+		type: 'toggle',
+		name: 'abilities_get',
+		label: __( 'Get posts', 'mb-custom-post-type' ),
+		dependency: 'abilities:true',
+		nested: true,
+	} );
+
+	FeatureControls.push( {
+		type: 'toggle',
+		name: 'abilities_create',
+		label: __( 'Create posts', 'mb-custom-post-type' ),
+		dependency: 'abilities:true',
+		nested: true,
+	} );
+
+	FeatureControls.push( {
+		type: 'toggle',
+		name: 'abilities_update',
+		label: __( 'Update posts', 'mb-custom-post-type' ),
+		dependency: 'abilities:true',
+		nested: true,
+	} );
+
+	FeatureControls.push( {
+		type: 'toggle',
+		name: 'abilities_delete',
+		label: __( 'Delete posts', 'mb-custom-post-type' ),
+		dependency: 'abilities:true',
+		nested: true,
+	} );
 };
 
 export { FeatureControls };

@@ -85,6 +85,19 @@
 		margin-bottom: 24px;
 		display: flex;
 		justify-content: space-between;
+
+		&--nested {
+			margin-left: 40px;
+			margin-bottom: 12px;
+
+			.components-base-control__field {
+				margin-bottom: 0;
+			}
+
+			.components-toggle-control__label {
+				font-size: 13px;
+			}
+		}
 	}
 
 	&-label {

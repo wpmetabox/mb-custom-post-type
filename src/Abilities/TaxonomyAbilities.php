@@ -3,15 +3,25 @@ namespace MBCPT\Abilities;
 
 class TaxonomyAbilities {
 
-	public function register( string $slug, $taxonomy ): void {
+	public function register( string $slug, $taxonomy, array $settings ): void {
 		$singular = $taxonomy->labels->singular_name ?? $slug;
 		$label    = $taxonomy->labels->name ?? $slug;
 
-		$this->register_get_term_ability( $slug, $singular, $label );
-		$this->register_create_term_ability( $slug, $singular );
-		$this->register_update_term_ability( $slug, $singular );
-		$this->register_delete_term_ability( $slug, $singular );
-		$this->register_get_taxonomy_ability( $slug, $singular );
+		if ( ! empty( $settings['abilities_get_data'] ) ) {
+			$this->register_get_taxonomy_ability( $slug, $singular );
+		}
+		if ( ! empty( $settings['abilities_get'] ) ) {
+			$this->register_get_term_ability( $slug, $singular, $label );
+		}
+		if ( ! empty( $settings['abilities_create'] ) ) {
+			$this->register_create_term_ability( $slug, $singular );
+		}
+		if ( ! empty( $settings['abilities_update'] ) ) {
+			$this->register_update_term_ability( $slug, $singular );
+		}
+		if ( ! empty( $settings['abilities_delete'] ) ) {
+			$this->register_delete_term_ability( $slug, $singular );
+		}
 	}
 
 	private function register_get_term_ability( string $slug, string $singular, string $label ): void {

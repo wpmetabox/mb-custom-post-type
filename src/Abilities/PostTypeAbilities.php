@@ -5,15 +5,25 @@ use WP_Post_Type;
 
 class PostTypeAbilities {
 
-	public function register( string $slug, WP_Post_Type $post_type ): void {
+	public function register( string $slug, WP_Post_Type $post_type, array $settings ): void {
 		$singular = $post_type->labels->singular_name ?? $slug;
 		$label    = $post_type->labels->name ?? $slug;
 
-		$this->register_get_ability( $slug, $singular, $label );
-		$this->register_create_ability( $slug, $singular );
-		$this->register_update_ability( $slug, $singular );
-		$this->register_delete_ability( $slug, $singular );
-		$this->register_get_post_type_ability( $slug, $singular );
+		if ( ! empty( $settings['abilities_get_data'] ) ) {
+			$this->register_get_post_type_ability( $slug, $singular );
+		}
+		if ( ! empty( $settings['abilities_get'] ) ) {
+			$this->register_get_ability( $slug, $singular, $label );
+		}
+		if ( ! empty( $settings['abilities_create'] ) ) {
+			$this->register_create_ability( $slug, $singular );
+		}
+		if ( ! empty( $settings['abilities_update'] ) ) {
+			$this->register_update_ability( $slug, $singular );
+		}
+		if ( ! empty( $settings['abilities_delete'] ) ) {
+			$this->register_delete_ability( $slug, $singular );
+		}
 	}
 
 	private function register_get_ability( string $slug, string $singular, string $label ): void {
