@@ -48,7 +48,7 @@ class Abilities {
 
 	private function register_get_ability( string $slug, string $singular, string $label ): void {
 		wp_register_ability(
-			"meta-box/post-type-{$slug}",
+			"meta-box/get-post-{$slug}",
 			[
 				'label'               => sprintf( __( 'Get %s', 'mb-custom-post-type' ), $singular ),
 				'description'         => sprintf( __( 'Search and list %s.', 'mb-custom-post-type' ), $label ),
@@ -113,7 +113,7 @@ class Abilities {
 
 	private function register_create_ability( string $slug, string $singular ): void {
 		wp_register_ability(
-			"meta-box/create-post-type-{$slug}",
+			"meta-box/create-post-{$slug}",
 			[
 				'label'               => sprintf( __( 'Create %s', 'mb-custom-post-type' ), $singular ),
 				'description'         => sprintf( __( 'Create a new %s.', 'mb-custom-post-type' ), strtolower( $singular ) ),
@@ -167,7 +167,7 @@ class Abilities {
 
 	private function register_update_ability( string $slug, string $singular ): void {
 		wp_register_ability(
-			"meta-box/update-post-type-{$slug}",
+			"meta-box/update-post-{$slug}",
 			[
 				'label'               => sprintf( __( 'Update %s', 'mb-custom-post-type' ), $singular ),
 				'description'         => sprintf( __( 'Update an existing %s. Only provided fields are modified.', 'mb-custom-post-type' ), strtolower( $singular ) ),
@@ -222,7 +222,7 @@ class Abilities {
 
 	private function register_delete_ability( string $slug, string $singular ): void {
 		wp_register_ability(
-			"meta-box/delete-post-type-{$slug}",
+			"meta-box/delete-post-{$slug}",
 			[
 				'label'               => sprintf( __( 'Delete %s', 'mb-custom-post-type' ), $singular ),
 				'description'         => sprintf( __( 'Delete a %s.', 'mb-custom-post-type' ), strtolower( $singular ) ),
