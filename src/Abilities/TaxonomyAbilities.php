@@ -1,15 +1,17 @@
 <?php
 namespace MBCPT\Abilities;
 
+use WP_Taxonomy;
+
 class TaxonomyAbilities {
 
 	private string $slug;
 	private string $singular;
 	private string $label;
-	private $taxonomy;
+	private WP_Taxonomy $taxonomy;
 	private array $settings;
 
-	public function __construct( string $slug, $taxonomy, array $settings ) {
+	public function __construct( string $slug, WP_Taxonomy $taxonomy, array $settings ) {
 		$this->slug     = $slug;
 		$this->taxonomy = $taxonomy;
 		$this->singular = $taxonomy->labels->singular_name ?? $slug;
@@ -271,14 +273,7 @@ class TaxonomyAbilities {
 					return current_user_can( $this->taxonomy->cap->assign_terms );
 				},
 				'input_schema'        => [
-					'type'       => 'object',
-					'required'   => [ 'slug' ],
-					'properties' => [
-						'slug' => [
-							'type'        => 'string',
-							'description' => __( 'Taxonomy slug.', 'mb-custom-post-type' ),
-						],
-					],
+					'type' => 'object',
 				],
 				'output_schema'       => $this->taxonomy_output_schema(),
 				'meta'                => [

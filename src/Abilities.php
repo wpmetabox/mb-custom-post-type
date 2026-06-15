@@ -47,7 +47,7 @@ class Abilities {
 		foreach ( $posts as $post ) {
 			$settings = json_decode( $post->post_content, true );
 
-			if ( empty( $settings['slug'] ) || empty( $settings['abilities'] ) ) {
+			if ( ! is_array( $settings ) || empty( $settings['slug'] ) || empty( $settings['abilities'] ) ) {
 				continue;
 			}
 
@@ -71,7 +71,7 @@ class Abilities {
 		foreach ( $posts as $post ) {
 			$settings = json_decode( $post->post_content, true );
 
-			if ( empty( $settings['slug'] ) || empty( $settings['abilities'] ) ) {
+			if ( ! is_array( $settings ) || empty( $settings['slug'] ) || empty( $settings['abilities'] ) ) {
 				continue;
 			}
 

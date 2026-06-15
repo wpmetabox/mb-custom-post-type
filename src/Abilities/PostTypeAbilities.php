@@ -112,14 +112,7 @@ class PostTypeAbilities {
 					return current_user_can( $this->post_type->cap->read );
 				},
 				'input_schema'        => [
-					'type'       => 'object',
-					'required'   => [ 'slug' ],
-					'properties' => [
-						'slug' => [
-							'type'        => 'string',
-							'description' => __( 'Post type slug.', 'mb-custom-post-type' ),
-						],
-					],
+					'type' => 'object',
 				],
 				'output_schema'       => $this->post_type_output_schema(),
 				'meta'                => [
@@ -432,7 +425,7 @@ class PostTypeAbilities {
 
 	private function execute_create( array $input ): array {
 		$args = [
-			'post_title'      => sanitize_text_field( $input['title'] ),
+			'post_title'      => sanitize_text_field( $input['title'] ?? '' ),
 			'post_content'    => wp_kses_post( $input['content'] ?? '' ),
 			'post_excerpt'    => sanitize_textarea_field( $input['excerpt'] ?? '' ),
 			'post_status'     => $input['status'] ?? 'draft',
@@ -610,8 +603,10 @@ class PostTypeAbilities {
 				'publicly_queryable'  => [ 'type' => 'boolean' ],
 				'embeddable'          => [ 'type' => 'boolean' ],
 				'show_ui'             => [ 'type' => 'boolean' ],
+				'show_in_menu'        => [ 'type' => [ 'boolean', 'string' ] ],
 				'show_in_nav_menus'   => [ 'type' => 'boolean' ],
 				'show_in_admin_bar'   => [ 'type' => 'boolean' ],
+				'menu_position'       => [ 'type' => 'integer' ],
 				'menu_icon'           => [ 'type' => 'string' ],
 				'capability_type'     => [ 'type' => 'string' ],
 				'capabilities'        => [ 'type' => 'object' ],
