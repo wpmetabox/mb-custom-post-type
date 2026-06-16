@@ -164,11 +164,6 @@ class PostTypeAbilities {
 							'type'        => 'boolean',
 							'description' => __( 'Limit result set to items that are sticky.', 'mb-custom-post-type' ),
 						],
-						'tax_relation'    => [
-							'type'        => 'string',
-							'description' => __( 'Limit result set based on relationship between multiple taxonomies.', 'mb-custom-post-type' ),
-							'enum'        => [ 'AND', 'OR' ],
-						],
 						'taxonomies'      => [
 							'type'        => 'object',
 							'description' => __( 'Limit result set to items with specific terms assigned in taxonomies. Each key is a taxonomy slug; each value is an array of term IDs, IDs to exclude, or an object with terms/operator/field.', 'mb-custom-post-type' ),
@@ -494,21 +489,7 @@ class PostTypeAbilities {
 		$request->set_query_params( $this->map_input_to_rest_params( $input ) );
 		$request['context'] = $context;
 
-		$tax_relation    = ! empty( $input['tax_relation'] ) ? strtoupper( (string) $input['tax_relation'] ) : null;
-		$relation_filter = null;
-		if ( $tax_relation && in_array( $tax_relation, [ 'AND', 'OR' ], true ) ) {
-			$relation_filter = $this->make_tax_relation_filter( $request, $tax_relation );
-			add_filter( 'rest_post_query', $relation_filter, 10, 2 );
-		}
-
-		try {
-			$response = $controller->get_items( $request );
-		} finally {
-			if ( $relation_filter ) {
-				remove_filter( 'rest_post_query', $relation_filter, 10 );
-			}
-		}
-
+		$response = $controller->get_items( $request );
 		if ( is_wp_error( $response ) ) {
 			return [];
 		}
@@ -586,41 +567,6 @@ class PostTypeAbilities {
 			}
 		}
 		return array_map( 'intval', (array) $value );
-	}
-
-	private function make_tax_relation_filter( WP_REST_Request $request, string $relation ): callable {
-		$query_params = $request->get_query_params();
-		$taxonomies   = array_keys( $this->get_taxonomy_args( $query_params ) );
-
-		if ( count( $taxonomies ) < 2 ) {
-			return static function ( $args ) {
-				return $args;
-			};
-		}
-
-		return static function ( $args ) use ( $taxonomies, $relation ) {
-			if ( ! isset( $args['tax_query'] ) || ! is_array( $args['tax_query'] ) ) {
-				return $args;
-			}
-			$matched = array_intersect( $taxonomies, array_column( $args['tax_query'], 'taxonomy' ) );
-			if ( count( $matched ) < 2 ) {
-				return $args;
-			}
-			$args['tax_query']['relation'] = $relation;
-			return $args;
-		};
-	}
-
-	private function get_taxonomy_args( array $query_params ): array {
-		$registered = get_object_taxonomies( $this->slug, 'objects' );
-		$args       = [];
-		foreach ( $registered as $taxonomy ) {
-			$arg_name = ! empty( $taxonomy->rest_base ) ? $taxonomy->rest_base : $taxonomy->name;
-			if ( array_key_exists( $arg_name, $query_params ) ) {
-				$args[ $arg_name ] = $query_params[ $arg_name ];
-			}
-		}
-		return $args;
 	}
 
 	private function is_associative( array $arr ): bool {
