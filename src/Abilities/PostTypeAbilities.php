@@ -506,7 +506,7 @@ class PostTypeAbilities {
 			$request['context'] = $context;
 
 			$response = $controller->get_item( $request );
-			if ( is_wp_error( $response ) || 404 === $response->get_status() ) {
+			if ( is_wp_error( $response ) ) {
 				return [];
 			}
 			return [ $rest->response_to_data( $response, true ) ];
@@ -560,12 +560,9 @@ class PostTypeAbilities {
 		'date_gmt',
 	];
 
-	private function map_input_to_rest_params( array $input, array $exclude = [] ): array {
+	private function map_input_to_rest_params( array $input ): array {
 		$params = [];
 		foreach ( self::REST_PASSTHROUGH as $key ) {
-			if ( in_array( $key, $exclude, true ) ) {
-				continue;
-			}
 			if ( array_key_exists( $key, $input ) ) {
 				$params[ $key ] = $input[ $key ];
 			}
@@ -587,11 +584,7 @@ class PostTypeAbilities {
 
 
 	private function execute_get_post_type(): array {
-		$post_type = get_post_type_object( $this->slug );
-
-		if ( ! $post_type ) {
-			return [];
-		}
+		$post_type = $this->post_type;
 
 		return [
 			'name'                => $post_type->name,
@@ -613,7 +606,7 @@ class PostTypeAbilities {
 			'capabilities'        => (array) $post_type->cap,
 			'map_meta_cap'        => $post_type->map_meta_cap,
 			'supports'            => array_keys( get_all_post_type_supports( $this->slug ) ),
-			'taxonomies'          => get_object_taxonomies( $this->slug ),
+			'taxonomies'          => $post_type->taxonomies,
 			'has_archive'         => $post_type->has_archive,
 			'rewrite'             => (array) $post_type->rewrite,
 			'query_var'           => $post_type->query_var,
@@ -632,7 +625,7 @@ class PostTypeAbilities {
 		$base       = '/' . ( $this->post_type->rest_base ?: $this->slug );
 
 		$request = new WP_REST_Request( 'POST', $base );
-		$request->set_body_params( $this->map_input_to_rest_params( $input, [ 'id' ] ) );
+		$request->set_body_params( $this->map_input_to_rest_params( $input ) );
 		$request['context'] = $context;
 
 		$response = $controller->create_item( $request );
@@ -649,7 +642,7 @@ class PostTypeAbilities {
 		$base       = '/' . ( $this->post_type->rest_base ?: $this->slug );
 
 		$request = new WP_REST_Request( 'PUT', $base . '/' . (int) $input['id'] );
-		$request->set_body_params( $this->map_input_to_rest_params( $input, [ 'id' ] ) );
+		$request->set_body_params( $this->map_input_to_rest_params( $input ) );
 		$request['context'] = $context;
 
 		$response = $controller->update_item( $request );
