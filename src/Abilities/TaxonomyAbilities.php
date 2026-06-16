@@ -2,6 +2,8 @@
 namespace MBCPT\Abilities;
 
 use WP_Taxonomy;
+use WP_REST_Request;
+use WP_REST_Terms_Controller;
 
 class TaxonomyAbilities {
 
@@ -54,31 +56,44 @@ class TaxonomyAbilities {
 							'type'        => 'integer',
 							'description' => __( 'Term ID to retrieve.', 'mb-custom-post-type' ),
 						],
+						'context'    => [
+							'type'        => 'string',
+							'description' => __( 'Scope under which the request is made.', 'mb-custom-post-type' ),
+							'enum'        => [ 'view', 'embed', 'edit' ],
+							'default'     => 'view',
+						],
 						'search'     => [
 							'type'        => 'string',
 							'description' => __( 'Search keyword.', 'mb-custom-post-type' ),
 						],
 						'parent'     => [
 							'type'        => 'integer',
-							'description' => __( 'Parent term ID to filter by.', 'mb-custom-post-type' ),
-							'default'     => 0,
+							'description' => __( 'Limit result set to terms assigned to a specific parent ID.', 'mb-custom-post-type' ),
 						],
-						'limit'      => [
+						'per_page'   => [
 							'type'        => 'integer',
 							'description' => __( 'Maximum number of terms to return (1-100).', 'mb-custom-post-type' ),
 							'default'     => 10,
+							'minimum'     => 1,
+							'maximum'     => 100,
+						],
+						'page'       => [
+							'type'        => 'integer',
+							'description' => __( 'Current page of the collection.', 'mb-custom-post-type' ),
+							'default'     => 1,
+							'minimum'     => 1,
 						],
 						'orderby'    => [
 							'type'        => 'string',
-							'description' => __( 'Order results by.', 'mb-custom-post-type' ),
-							'enum'        => [ 'name', 'slug', 'count', 'term_group', 'description', 'term_id' ],
+							'description' => __( 'Sort collection by term attribute.', 'mb-custom-post-type' ),
+							'enum'        => [ 'id', 'include', 'name', 'slug', 'include_slugs', 'term_group', 'description', 'count' ],
 							'default'     => 'name',
 						],
 						'order'      => [
 							'type'        => 'string',
-							'description' => __( 'Sort direction.', 'mb-custom-post-type' ),
-							'enum'        => [ 'ASC', 'DESC' ],
-							'default'     => 'ASC',
+							'description' => __( 'Order sort attribute ascending or descending.', 'mb-custom-post-type' ),
+							'enum'        => [ 'asc', 'desc' ],
+							'default'     => 'asc',
 						],
 						'hide_empty' => [
 							'type'        => 'boolean',
@@ -87,7 +102,10 @@ class TaxonomyAbilities {
 						],
 					],
 				],
-				'output_schema'       => $this->term_output_schema(),
+				'output_schema'       => [
+					'type'  => 'array',
+					'items' => $this->term_output_schema(),
+				],
 				'meta'                => [
 					'annotations' => [
 						'readonly'    => true,
@@ -136,7 +154,10 @@ class TaxonomyAbilities {
 						'parent'      => [
 							'type'        => 'integer',
 							'description' => __( 'Parent term ID.', 'mb-custom-post-type' ),
-							'default'     => 0,
+						],
+						'meta'        => [
+							'type'        => 'object',
+							'description' => __( 'Term meta values keyed by meta key. Only meta keys registered with show_in_rest are persisted.', 'mb-custom-post-type' ),
 						],
 					],
 				],
@@ -192,6 +213,10 @@ class TaxonomyAbilities {
 							'type'        => 'integer',
 							'description' => __( 'New parent term ID.', 'mb-custom-post-type' ),
 						],
+						'meta'        => [
+							'type'        => 'object',
+							'description' => __( 'New term meta values keyed by meta key. Only meta keys registered with show_in_rest are persisted.', 'mb-custom-post-type' ),
+						],
 					],
 				],
 				'output_schema'       => $this->term_output_schema(),
@@ -226,25 +251,18 @@ class TaxonomyAbilities {
 					'type'       => 'object',
 					'required'   => [ 'id' ],
 					'properties' => [
-						'id' => [
+						'id'    => [
 							'type'        => 'integer',
 							'description' => __( 'Term ID to delete.', 'mb-custom-post-type' ),
 						],
-					],
-				],
-				'output_schema'       => [
-					'type'       => 'object',
-					'properties' => [
-						'deleted'  => [ 'type' => 'boolean' ],
-						'previous' => [
-							'type'       => 'object',
-							'properties' => [
-								'id'   => [ 'type' => 'integer' ],
-								'name' => [ 'type' => 'string' ],
-							],
+						'force' => [
+							'type'        => 'boolean',
+							'description' => __( 'Required to be true, as terms do not support trashing.', 'mb-custom-post-type' ),
+							'default'     => false,
 						],
 					],
 				],
+				'output_schema'       => $this->term_output_schema(),
 				'meta'                => [
 					'annotations' => [
 						'readonly'    => false,
@@ -294,117 +312,117 @@ class TaxonomyAbilities {
 	}
 
 	private function execute_get_terms( array $input ): array {
-		$args = [
-			'taxonomy'   => $this->slug,
-			'hide_empty' => $input['hide_empty'] ?? false,
-			'number'     => min( $input['limit'] ?? 10, 100 ),
-			'orderby'    => $input['orderby'] ?? 'name',
-			'order'      => $input['order'] ?? 'ASC',
-		];
+		$context    = $input['context'] ?? 'view';
+		$rest       = rest_get_server();
+		$base       = '/' . ( $this->taxonomy->rest_base ?: $this->slug );
+		$controller = new WP_REST_Terms_Controller( $this->slug );
 
 		if ( ! empty( $input['id'] ) ) {
-			$term = get_term( (int) $input['id'], $this->slug );
-			return $term && ! is_wp_error( $term ) ? [ $this->format_term( $term ) ] : [];
+			$request            = new WP_REST_Request( 'GET', $base . '/' . (int) $input['id'] );
+			$request['context'] = $context;
+
+			$response = $controller->get_item( $request );
+			if ( is_wp_error( $response ) ) {
+				return [];
+			}
+			return [ $rest->response_to_data( $response, true ) ];
 		}
 
-		if ( ! empty( $input['search'] ) ) {
-			$args['search'] = sanitize_text_field( $input['search'] );
-		}
+		$request = new WP_REST_Request( 'GET', $base );
+		$request->set_query_params( $this->map_input_to_rest_params( $input ) );
+		$request['context'] = $context;
 
-		if ( isset( $input['parent'] ) ) {
-			$args['parent'] = (int) $input['parent'];
-		}
-
-		$terms = get_terms( $args );
-
-		if ( is_wp_error( $terms ) ) {
+		$response = $controller->get_items( $request );
+		if ( is_wp_error( $response ) ) {
 			return [];
 		}
 
-		return array_map( [ $this, 'format_term' ], $terms );
+		return $rest->response_to_data( $response, true );
+	}
+
+	private const REST_PASSTHROUGH = [
+		'context',
+		'page',
+		'per_page',
+		'search',
+		'exclude',
+		'include',
+		'orderby',
+		'order',
+		'hide_empty',
+		'parent',
+		'parent_exclude',
+		'post',
+		'slug',
+		'name',
+		'description',
+		'meta',
+	];
+
+	private function map_input_to_rest_params( array $input ): array {
+		$params = [];
+		foreach ( self::REST_PASSTHROUGH as $key ) {
+			if ( array_key_exists( $key, $input ) ) {
+				$params[ $key ] = $input[ $key ];
+			}
+		}
+
+		return $params;
 	}
 
 	private function execute_create_term( array $input ): array {
-		$args = [
-			'name'        => sanitize_text_field( $input['name'] ),
-			'slug'        => sanitize_title( $input['slug'] ?? '' ),
-			'description' => sanitize_textarea_field( $input['description'] ?? '' ),
-			'parent'      => (int) ( $input['parent'] ?? 0 ),
-		];
+		$context    = $input['context'] ?? 'view';
+		$controller = new WP_REST_Terms_Controller( $this->slug );
+		$base       = '/' . ( $this->taxonomy->rest_base ?: $this->slug );
 
-		$result = wp_insert_term( $args['name'], $this->slug, $args );
+		$request = new WP_REST_Request( 'POST', $base );
+		$request->set_body_params( $this->map_input_to_rest_params( $input ) );
+		$request['context'] = $context;
 
-		if ( is_wp_error( $result ) ) {
+		$response = $controller->create_item( $request );
+		if ( is_wp_error( $response ) ) {
 			return [];
 		}
 
-		$term = get_term( $result['term_id'], $this->slug );
-		return $this->format_term( $term );
+		return rest_get_server()->response_to_data( $response, true );
 	}
 
 	private function execute_update_term( array $input ): array {
-		$term_id = (int) $input['id'];
-		$term    = get_term( $term_id, $this->slug );
+		$context    = $input['context'] ?? 'view';
+		$controller = new WP_REST_Terms_Controller( $this->slug );
+		$base       = '/' . ( $this->taxonomy->rest_base ?: $this->slug );
 
-		if ( ! $term || is_wp_error( $term ) ) {
+		$request = new WP_REST_Request( 'PUT', $base . '/' . (int) $input['id'] );
+		$request->set_body_params( $this->map_input_to_rest_params( $input ) );
+		$request['context'] = $context;
+
+		$response = $controller->update_item( $request );
+		if ( is_wp_error( $response ) ) {
 			return [];
 		}
 
-		$args = [];
-		if ( isset( $input['name'] ) ) {
-			$args['name'] = sanitize_text_field( $input['name'] );
-		}
-		if ( isset( $input['slug'] ) ) {
-			$args['slug'] = sanitize_title( $input['slug'] );
-		}
-		if ( isset( $input['description'] ) ) {
-			$args['description'] = sanitize_textarea_field( $input['description'] );
-		}
-		if ( isset( $input['parent'] ) ) {
-			$args['parent'] = (int) $input['parent'];
-		}
-
-		$result = wp_update_term( $term_id, $this->slug, $args );
-
-		if ( is_wp_error( $result ) ) {
-			return [];
-		}
-
-		$term = get_term( $term_id, $this->slug );
-		return $this->format_term( $term );
+		return rest_get_server()->response_to_data( $response, true );
 	}
 
 	private function execute_delete_term( array $input ): array {
-		$term_id = (int) $input['id'];
-		$term    = get_term( $term_id, $this->slug );
+		$context    = $input['context'] ?? 'view';
+		$controller = new WP_REST_Terms_Controller( $this->slug );
+		$base       = '/' . ( $this->taxonomy->rest_base ?: $this->slug );
 
-		if ( ! $term || is_wp_error( $term ) ) {
+		$request            = new WP_REST_Request( 'DELETE', $base . '/' . (int) $input['id'] );
+		$request['context'] = $context;
+		$request['force']   = ! empty( $input['force'] );
+
+		$response = $controller->delete_item( $request );
+		if ( is_wp_error( $response ) ) {
 			return [];
 		}
 
-		$previous = [
-			'id'   => $term->term_id,
-			'name' => $term->name,
-		];
-
-		$result = wp_delete_term( $term_id, $this->slug );
-
-		if ( ! $result ) {
-			return [];
-		}
-
-		return [
-			'deleted'  => true,
-			'previous' => $previous,
-		];
+		return rest_get_server()->response_to_data( $response, true );
 	}
 
 	private function execute_get_taxonomy(): array {
-		$taxonomy = get_taxonomy( $this->slug );
-
-		if ( ! $taxonomy ) {
-			return [];
-		}
+		$taxonomy = $this->taxonomy;
 
 		return [
 			'name'               => $taxonomy->name,
@@ -430,19 +448,6 @@ class TaxonomyAbilities {
 		];
 	}
 
-	private function format_term( \WP_Term $term ): array {
-		return [
-			'id'          => $term->term_id,
-			'name'        => $term->name,
-			'slug'        => $term->slug,
-			'description' => $term->description,
-			'parent'      => $term->parent,
-			'count'       => $term->count,
-			'taxonomy'    => $term->taxonomy,
-			'link'        => get_term_link( $term ),
-		];
-	}
-
 	private function term_output_schema(): array {
 		return [
 			'type'       => 'object',
@@ -455,6 +460,7 @@ class TaxonomyAbilities {
 				'count'       => [ 'type' => 'integer' ],
 				'taxonomy'    => [ 'type' => 'string' ],
 				'link'        => [ 'type' => 'string' ],
+				'meta'        => [ 'type' => 'object' ],
 			],
 		];
 	}
