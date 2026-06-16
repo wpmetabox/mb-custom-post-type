@@ -50,31 +50,31 @@ class TaxonomyAbilities {
 				'input_schema'        => [
 					'type'       => 'object',
 					'properties' => [
-						'id' => [
+						'id'         => [
 							'type'        => 'integer',
 							'description' => __( 'Term ID to retrieve.', 'mb-custom-post-type' ),
 						],
-						'search' => [
+						'search'     => [
 							'type'        => 'string',
 							'description' => __( 'Search keyword.', 'mb-custom-post-type' ),
 						],
-						'parent' => [
+						'parent'     => [
 							'type'        => 'integer',
 							'description' => __( 'Parent term ID to filter by.', 'mb-custom-post-type' ),
 							'default'     => 0,
 						],
-						'limit' => [
+						'limit'      => [
 							'type'        => 'integer',
 							'description' => __( 'Maximum number of terms to return (1-100).', 'mb-custom-post-type' ),
 							'default'     => 10,
 						],
-						'orderby' => [
+						'orderby'    => [
 							'type'        => 'string',
 							'description' => __( 'Order results by.', 'mb-custom-post-type' ),
 							'enum'        => [ 'name', 'slug', 'count', 'term_group', 'description', 'term_id' ],
 							'default'     => 'name',
 						],
-						'order' => [
+						'order'      => [
 							'type'        => 'string',
 							'description' => __( 'Sort direction.', 'mb-custom-post-type' ),
 							'enum'        => [ 'ASC', 'DESC' ],
@@ -94,7 +94,7 @@ class TaxonomyAbilities {
 						'destructive' => false,
 						'idempotent'  => true,
 					],
-					'mcp'          => [
+					'mcp'         => [
 						'public' => true,
 					],
 				],
@@ -119,11 +119,11 @@ class TaxonomyAbilities {
 					'type'       => 'object',
 					'required'   => [ 'name' ],
 					'properties' => [
-						'name' => [
+						'name'        => [
 							'type'        => 'string',
 							'description' => __( 'Term name.', 'mb-custom-post-type' ),
 						],
-						'slug' => [
+						'slug'        => [
 							'type'        => 'string',
 							'description' => __( 'Term slug.', 'mb-custom-post-type' ),
 							'default'     => '',
@@ -133,7 +133,7 @@ class TaxonomyAbilities {
 							'description' => __( 'Term description.', 'mb-custom-post-type' ),
 							'default'     => '',
 						],
-						'parent' => [
+						'parent'      => [
 							'type'        => 'integer',
 							'description' => __( 'Parent term ID.', 'mb-custom-post-type' ),
 							'default'     => 0,
@@ -147,7 +147,7 @@ class TaxonomyAbilities {
 						'destructive' => false,
 						'idempotent'  => false,
 					],
-					'mcp'          => [
+					'mcp'         => [
 						'public' => true,
 					],
 				],
@@ -172,15 +172,15 @@ class TaxonomyAbilities {
 					'type'       => 'object',
 					'required'   => [ 'id' ],
 					'properties' => [
-						'id' => [
+						'id'          => [
 							'type'        => 'integer',
 							'description' => __( 'Term ID to update.', 'mb-custom-post-type' ),
 						],
-						'name' => [
+						'name'        => [
 							'type'        => 'string',
 							'description' => __( 'New term name.', 'mb-custom-post-type' ),
 						],
-						'slug' => [
+						'slug'        => [
 							'type'        => 'string',
 							'description' => __( 'New term slug.', 'mb-custom-post-type' ),
 						],
@@ -188,7 +188,7 @@ class TaxonomyAbilities {
 							'type'        => 'string',
 							'description' => __( 'New term description.', 'mb-custom-post-type' ),
 						],
-						'parent' => [
+						'parent'      => [
 							'type'        => 'integer',
 							'description' => __( 'New parent term ID.', 'mb-custom-post-type' ),
 						],
@@ -201,7 +201,7 @@ class TaxonomyAbilities {
 						'destructive' => false,
 						'idempotent'  => true,
 					],
-					'mcp'          => [
+					'mcp'         => [
 						'public' => true,
 					],
 				],
@@ -251,7 +251,7 @@ class TaxonomyAbilities {
 						'destructive' => true,
 						'idempotent'  => true,
 					],
-					'mcp'          => [
+					'mcp'         => [
 						'public' => true,
 					],
 				],
@@ -282,7 +282,7 @@ class TaxonomyAbilities {
 						'destructive' => false,
 						'idempotent'  => true,
 					],
-					'mcp'          => [
+					'mcp'         => [
 						'public' => true,
 					],
 				],
