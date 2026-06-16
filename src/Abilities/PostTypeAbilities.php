@@ -1,6 +1,7 @@
 <?php
 namespace MBCPT\Abilities;
 
+use WP_Error;
 use WP_Post_Type;
 use WP_REST_Posts_Controller;
 use WP_REST_Post_Types_Controller;
@@ -48,8 +49,8 @@ class PostTypeAbilities {
 				'label'               => sprintf( __( 'Get %s', 'mb-custom-post-type' ), strtolower( $this->singular ) ),
 				'description'         => sprintf( __( 'Search and list %s.', 'mb-custom-post-type' ), strtolower( $this->label ) ),
 				'category'            => 'meta-box',
-				'permission_callback' => function () {
-					return current_user_can( $this->post_type->cap->read );
+				'permission_callback' => function ( $input = [] ) {
+					return $this->user_can( $this->post_type->cap->read, is_array( $input ) ? $input : [] );
 				},
 				'input_schema'        => [
 					'type'       => 'object',
@@ -67,9 +68,7 @@ class PostTypeAbilities {
 					],
 					'mcp'         => [ 'public' => true ],
 				],
-				'execute_callback'    => function ( array $input ): array {
-					return $this->execute_get( $input );
-				},
+				'execute_callback'    => [ $this, 'execute_get_posts' ],
 			]
 		);
 	}
@@ -81,8 +80,8 @@ class PostTypeAbilities {
 				'label'               => sprintf( __( 'Get %s post type', 'mb-custom-post-type' ), strtolower( $this->singular ) ),
 				'description'         => sprintf( __( 'Get %s post type data.', 'mb-custom-post-type' ), strtolower( $this->singular ) ),
 				'category'            => 'meta-box',
-				'permission_callback' => function () {
-					return current_user_can( $this->post_type->cap->read );
+				'permission_callback' => function ( $input = [] ) {
+					return $this->user_can( $this->post_type->cap->read, is_array( $input ) ? $input : [] );
 				},
 				'input_schema'        => [ 'type' => 'object' ],
 				'output_schema'       => ( new WP_REST_Post_Types_Controller( $this->slug ) )->get_item_schema(),
@@ -94,9 +93,7 @@ class PostTypeAbilities {
 					],
 					'mcp'         => [ 'public' => true ],
 				],
-				'execute_callback'    => function (): array {
-					return $this->execute_get_post_type();
-				},
+				'execute_callback'    => [ $this, 'execute_get_post_type' ],
 			]
 		);
 	}
@@ -108,8 +105,8 @@ class PostTypeAbilities {
 				'label'               => sprintf( __( 'Create %s', 'mb-custom-post-type' ), strtolower( $this->singular ) ),
 				'description'         => sprintf( __( 'Create a new %s.', 'mb-custom-post-type' ), strtolower( $this->singular ) ),
 				'category'            => 'meta-box',
-				'permission_callback' => function () {
-					return current_user_can( $this->post_type->cap->create_posts );
+				'permission_callback' => function ( $input = [] ) {
+					return $this->user_can( $this->post_type->cap->create_posts, is_array( $input ) ? $input : [] );
 				},
 				'input_schema'        => [
 					'type'       => 'object',
@@ -128,9 +125,7 @@ class PostTypeAbilities {
 					],
 					'mcp'         => [ 'public' => true ],
 				],
-				'execute_callback'    => function ( array $input ): array {
-					return $this->execute_create( $input );
-				},
+				'execute_callback'    => [ $this, 'execute_create_post' ],
 			]
 		);
 	}
@@ -142,8 +137,8 @@ class PostTypeAbilities {
 				'label'               => sprintf( __( 'Update %s', 'mb-custom-post-type' ), strtolower( $this->singular ) ),
 				'description'         => sprintf( __( 'Update an existing %s. Only provided fields are modified.', 'mb-custom-post-type' ), strtolower( $this->singular ) ),
 				'category'            => 'meta-box',
-				'permission_callback' => function () {
-					return current_user_can( $this->post_type->cap->edit_post );
+				'permission_callback' => function ( $input = [] ) {
+					return $this->user_can( $this->post_type->cap->edit_post, is_array( $input ) ? $input : [] );
 				},
 				'input_schema'        => [
 					'type'       => 'object',
@@ -159,9 +154,7 @@ class PostTypeAbilities {
 					],
 					'mcp'         => [ 'public' => true ],
 				],
-				'execute_callback'    => function ( array $input ): array {
-					return $this->execute_update( $input );
-				},
+				'execute_callback'    => [ $this, 'execute_update_post' ],
 			]
 		);
 	}
@@ -191,7 +184,14 @@ class PostTypeAbilities {
 						],
 					],
 				],
-				'output_schema'       => $this->post_controller()->get_item_schema(),
+				'output_schema'       => [
+					'type'       => 'object',
+					'required'   => [ 'deleted' ],
+					'properties' => [
+						'deleted'  => [ 'type' => 'boolean' ],
+						'previous' => $this->post_controller()->get_item_schema(),
+					],
+				],
 				'meta'                => [
 					'annotations' => [
 						'readonly'    => false,
@@ -200,77 +200,112 @@ class PostTypeAbilities {
 					],
 					'mcp'         => [ 'public' => true ],
 				],
-				'execute_callback'    => function ( array $input ): array {
-					return $this->execute_delete( $input );
-				},
+				'execute_callback'    => [ $this, 'execute_delete_post' ],
 			]
 		);
 	}
 
-	private function execute_get( array $input ): array {
+	/**
+	 * @return array|WP_Error
+	 */
+	public function execute_get_posts( array $input ) {
 		$context = $input['context'] ?? 'view';
 		$base    = '/' . ( $this->post_type->rest_base ?: $this->slug );
 		$rest    = rest_get_server();
 
 		if ( ! empty( $input['id'] ) ) {
 			$request            = new WP_REST_Request( 'GET', $base . '/' . (int) $input['id'] );
+			$request['id']      = (int) $input['id'];
 			$request['context'] = $context;
 			$response           = $this->post_controller()->get_item( $request );
-		} else {
-			$request = new WP_REST_Request( 'GET', $base );
-			$request->set_query_params( $this->passthrough( $input, $this->post_controller()->get_collection_params() ) );
-			$request['context'] = $context;
-			$response           = $this->post_controller()->get_items( $request );
+
+			if ( is_wp_error( $response ) ) {
+				return $response;
+			}
+
+			$data = $rest->response_to_data( $response, true );
+			return is_array( $data ) ? [ $data ] : [];
 		}
+
+		$request = new WP_REST_Request( 'GET', $base );
+		$request->set_query_params( $this->collection_query( $input ) );
+		$request['context'] = $context;
+		$response           = $this->post_controller()->get_items( $request );
 
 		if ( is_wp_error( $response ) ) {
-			return [];
+			return $response;
 		}
 
-		$data = $rest->response_to_data( $response, true );
-		return empty( $input['id'] ) ? $data : [ $data ];
+		return $rest->response_to_data( $response, true );
 	}
 
-	private function execute_get_post_type(): array {
+	/**
+	 * @return array|WP_Error
+	 */
+	public function execute_get_post_type() {
 		$controller = new WP_REST_Post_Types_Controller( $this->slug );
 		$request    = new WP_REST_Request( 'GET', '/types/' . $this->slug );
 		$response   = $controller->get_item( $request );
-		return is_wp_error( $response ) ? [] : rest_get_server()->response_to_data( $response, true );
+		return is_wp_error( $response ) ? $response : rest_get_server()->response_to_data( $response, true );
 	}
 
-	private function execute_create( array $input ): array {
+	/**
+	 * @return array|WP_Error
+	 */
+	public function execute_create_post( array $input ) {
 		return $this->dispatch( 'POST', '', $input );
 	}
 
-	private function execute_update( array $input ): array {
+	/**
+	 * @return array|WP_Error
+	 */
+	public function execute_update_post( array $input ) {
 		return $this->dispatch( 'PUT', (int) $input['id'], $input );
 	}
 
-	private function execute_delete( array $input ): array {
+	/**
+	 * @return array|WP_Error
+	 */
+	public function execute_delete_post( array $input ) {
 		$context            = $input['context'] ?? 'view';
 		$base               = '/' . ( $this->post_type->rest_base ?: $this->slug );
 		$request            = new WP_REST_Request( 'DELETE', $base . '/' . (int) $input['id'] );
+		$request['id']      = (int) $input['id'];
 		$request['context'] = $context;
 		$request['force']   = ! empty( $input['force'] );
 
 		$response = $this->post_controller()->delete_item( $request );
-		return is_wp_error( $response ) ? [] : rest_get_server()->response_to_data( $response, true );
+		return is_wp_error( $response ) ? $response : $response->get_data();
 	}
 
-	private function dispatch( string $method, string $path_suffix, array $input ): array {
+	/**
+	 * @return array|WP_Error
+	 */
+	private function dispatch( string $method, string $path_suffix, array $input ) {
 		$context = $input['context'] ?? 'view';
 		$base    = '/' . ( $this->post_type->rest_base ?: $this->slug );
 		$request = new WP_REST_Request( $method, $base . $path_suffix );
+		if ( $path_suffix !== '' ) {
+			$id = (int) ltrim( (string) $path_suffix, '/' );
+			$request->set_url_params( [ 'id' => $id ] );
+			$request['id'] = $id;
+		}
 		$request->set_body_params( $this->passthrough( $input, $this->post_controller()->get_endpoint_args_for_item_schema( 'PUT' === $method ? WP_REST_Server::EDITABLE : WP_REST_Server::CREATABLE ) ) );
 		$request['context'] = $context;
 
 		$controller = $this->post_controller();
 		$response   = 'PUT' === $method ? $controller->update_item( $request ) : $controller->create_item( $request );
-		return is_wp_error( $response ) ? [] : rest_get_server()->response_to_data( $response, true );
+		return is_wp_error( $response ) ? $response : rest_get_server()->response_to_data( $response, true );
 	}
 
 	private function post_controller(): WP_REST_Posts_Controller {
 		return new WP_REST_Posts_Controller( $this->slug );
+	}
+
+	private function user_can( string $cap, array $input ): bool {
+		return ! empty( $input['id'] )
+			? current_user_can( $cap, (int) $input['id'] )
+			: current_user_can( $cap );
 	}
 
 	private function collection_input_schema(): array {
@@ -294,6 +329,19 @@ class PostTypeAbilities {
 
 	private function passthrough( array $input, array $allowed ): array {
 		return array_intersect_key( $input, $allowed );
+	}
+
+	private function collection_query( array $input ): array {
+		$params     = $this->post_controller()->get_collection_params();
+		$query      = [];
+		foreach ( $params as $key => $args ) {
+			if ( array_key_exists( $key, $input ) ) {
+				$query[ $key ] = $input[ $key ];
+			} elseif ( isset( $args['default'] ) ) {
+				$query[ $key ] = $args['default'];
+			}
+		}
+		return $query;
 	}
 
 	private function context_param(): array {

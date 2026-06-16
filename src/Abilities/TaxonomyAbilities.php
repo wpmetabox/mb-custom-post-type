@@ -1,6 +1,7 @@
 <?php
 namespace MBCPT\Abilities;
 
+use WP_Error;
 use WP_Taxonomy;
 use WP_REST_Request;
 use WP_REST_Taxonomies_Controller;
@@ -48,8 +49,8 @@ class TaxonomyAbilities {
 				'label'               => sprintf( __( 'Get %s', 'mb-custom-post-type' ), strtolower( $this->singular ) ),
 				'description'         => sprintf( __( 'Search and list %s.', 'mb-custom-post-type' ), strtolower( $this->label ) ),
 				'category'            => 'meta-box',
-				'permission_callback' => function () {
-					return current_user_can( $this->taxonomy->cap->assign_terms );
+				'permission_callback' => function ( $input = [] ) {
+					return $this->user_can( $this->taxonomy->cap->assign_terms, is_array( $input ) ? $input : [] );
 				},
 				'input_schema'        => [
 					'type'       => 'object',
@@ -67,9 +68,7 @@ class TaxonomyAbilities {
 					],
 					'mcp'         => [ 'public' => true ],
 				],
-				'execute_callback'    => function ( array $input ): array {
-					return $this->execute_get_terms( $input );
-				},
+				'execute_callback'    => [ $this, 'execute_get_terms' ],
 			]
 		);
 	}
@@ -81,8 +80,8 @@ class TaxonomyAbilities {
 				'label'               => sprintf( __( 'Create %s', 'mb-custom-post-type' ), strtolower( $this->singular ) ),
 				'description'         => sprintf( __( 'Create a new %s.', 'mb-custom-post-type' ), strtolower( $this->singular ) ),
 				'category'            => 'meta-box',
-				'permission_callback' => function () {
-					return current_user_can( $this->taxonomy->cap->manage_terms );
+				'permission_callback' => function ( $input = [] ) {
+					return $this->user_can( $this->taxonomy->cap->manage_terms, is_array( $input ) ? $input : [] );
 				},
 				'input_schema'        => [
 					'type'       => 'object',
@@ -101,9 +100,7 @@ class TaxonomyAbilities {
 					],
 					'mcp'         => [ 'public' => true ],
 				],
-				'execute_callback'    => function ( array $input ): array {
-					return $this->execute_create_term( $input );
-				},
+				'execute_callback'    => [ $this, 'execute_create_term' ],
 			]
 		);
 	}
@@ -115,8 +112,8 @@ class TaxonomyAbilities {
 				'label'               => sprintf( __( 'Update %s', 'mb-custom-post-type' ), strtolower( $this->singular ) ),
 				'description'         => sprintf( __( 'Update an existing %s. Only provided fields are modified.', 'mb-custom-post-type' ), strtolower( $this->singular ) ),
 				'category'            => 'meta-box',
-				'permission_callback' => function () {
-					return current_user_can( $this->taxonomy->cap->edit_terms );
+				'permission_callback' => function ( $input = [] ) {
+					return $this->user_can( $this->taxonomy->cap->edit_terms, is_array( $input ) ? $input : [] );
 				},
 				'input_schema'        => [
 					'type'       => 'object',
@@ -132,9 +129,7 @@ class TaxonomyAbilities {
 					],
 					'mcp'         => [ 'public' => true ],
 				],
-				'execute_callback'    => function ( array $input ): array {
-					return $this->execute_update_term( $input );
-				},
+				'execute_callback'    => [ $this, 'execute_update_term' ],
 			]
 		);
 	}
@@ -146,8 +141,8 @@ class TaxonomyAbilities {
 				'label'               => sprintf( __( 'Delete %s', 'mb-custom-post-type' ), strtolower( $this->singular ) ),
 				'description'         => sprintf( __( 'Delete a %s.', 'mb-custom-post-type' ), strtolower( $this->singular ) ),
 				'category'            => 'meta-box',
-				'permission_callback' => function () {
-					return current_user_can( $this->taxonomy->cap->delete_terms );
+				'permission_callback' => function ( $input = [] ) {
+					return $this->user_can( $this->taxonomy->cap->delete_terms, is_array( $input ) ? $input : [] );
 				},
 				'input_schema'        => [
 					'type'       => 'object',
@@ -164,7 +159,14 @@ class TaxonomyAbilities {
 						],
 					],
 				],
-				'output_schema'       => $this->term_controller()->get_item_schema(),
+				'output_schema'       => [
+					'type'       => 'object',
+					'required'   => [ 'deleted' ],
+					'properties' => [
+						'deleted'  => [ 'type' => 'boolean' ],
+						'previous' => $this->term_controller()->get_item_schema(),
+					],
+				],
 				'meta'                => [
 					'annotations' => [
 						'readonly'    => false,
@@ -173,9 +175,7 @@ class TaxonomyAbilities {
 					],
 					'mcp'         => [ 'public' => true ],
 				],
-				'execute_callback'    => function ( array $input ): array {
-					return $this->execute_delete_term( $input );
-				},
+				'execute_callback'    => [ $this, 'execute_delete_term' ],
 			]
 		);
 	}
@@ -187,8 +187,8 @@ class TaxonomyAbilities {
 				'label'               => sprintf( __( 'Get %s taxonomy', 'mb-custom-post-type' ), strtolower( $this->singular ) ),
 				'description'         => sprintf( __( 'Get %s taxonomy data.', 'mb-custom-post-type' ), strtolower( $this->singular ) ),
 				'category'            => 'meta-box',
-				'permission_callback' => function () {
-					return current_user_can( $this->taxonomy->cap->assign_terms );
+				'permission_callback' => function ( $input = [] ) {
+					return $this->user_can( $this->taxonomy->cap->assign_terms, is_array( $input ) ? $input : [] );
 				},
 				'input_schema'        => [ 'type' => 'object' ],
 				'output_schema'       => ( new WP_REST_Taxonomies_Controller( $this->slug ) )->get_item_schema(),
@@ -200,77 +200,108 @@ class TaxonomyAbilities {
 					],
 					'mcp'         => [ 'public' => true ],
 				],
-				'execute_callback'    => function (): array {
-					return $this->execute_get_taxonomy();
-				},
+				'execute_callback'    => [ $this, 'execute_get_taxonomy' ],
 			]
 		);
 	}
 
-	private function execute_get_terms( array $input ): array {
+	/**
+	 * @return array|WP_Error
+	 */
+	public function execute_get_terms( array $input ) {
 		$context = $input['context'] ?? 'view';
 		$base    = '/' . ( $this->taxonomy->rest_base ?: $this->slug );
 		$rest    = rest_get_server();
 
 		if ( ! empty( $input['id'] ) ) {
 			$request            = new WP_REST_Request( 'GET', $base . '/' . (int) $input['id'] );
+			$request['id']      = (int) $input['id'];
 			$request['context'] = $context;
 			$response           = $this->term_controller()->get_item( $request );
-		} else {
-			$request = new WP_REST_Request( 'GET', $base );
-			$request->set_query_params( $this->passthrough( $input, $this->term_controller()->get_collection_params() ) );
-			$request['context'] = $context;
-			$response           = $this->term_controller()->get_items( $request );
+
+			if ( is_wp_error( $response ) ) {
+				return $response;
+			}
+
+			$data = $rest->response_to_data( $response, true );
+			return is_array( $data ) ? [ $data ] : [];
 		}
 
-		if ( is_wp_error( $response ) ) {
-			return [];
-		}
+		$request = new WP_REST_Request( 'GET', $base );
+		$request->set_query_params( $this->collection_query( $input ) );
+		$request['context'] = $context;
+		$response           = $this->term_controller()->get_items( $request );
 
-		$data = $rest->response_to_data( $response, true );
-		return empty( $input['id'] ) ? $data : [ $data ];
+		return is_wp_error( $response ) ? $response : $rest->response_to_data( $response, true );
 	}
 
-	private function execute_get_taxonomy(): array {
+	/**
+	 * @return array|WP_Error
+	 */
+	public function execute_get_taxonomy() {
 		$controller = new WP_REST_Taxonomies_Controller( $this->slug );
 		$request    = new WP_REST_Request( 'GET', '/taxonomies/' . $this->slug );
 		$response   = $controller->get_item( $request );
-		return is_wp_error( $response ) ? [] : rest_get_server()->response_to_data( $response, true );
+		return is_wp_error( $response ) ? $response : rest_get_server()->response_to_data( $response, true );
 	}
 
-	private function execute_create_term( array $input ): array {
+	/**
+	 * @return array|WP_Error
+	 */
+	public function execute_create_term( array $input ) {
 		return $this->dispatch( 'POST', '', $input );
 	}
 
-	private function execute_update_term( array $input ): array {
+	/**
+	 * @return array|WP_Error
+	 */
+	public function execute_update_term( array $input ) {
 		return $this->dispatch( 'PUT', (int) $input['id'], $input );
 	}
 
-	private function execute_delete_term( array $input ): array {
+	/**
+	 * @return array|WP_Error
+	 */
+	public function execute_delete_term( array $input ) {
 		$context            = $input['context'] ?? 'view';
 		$base               = '/' . ( $this->taxonomy->rest_base ?: $this->slug );
 		$request            = new WP_REST_Request( 'DELETE', $base . '/' . (int) $input['id'] );
+		$request['id']      = (int) $input['id'];
 		$request['context'] = $context;
 		$request['force']   = ! empty( $input['force'] );
 
 		$response = $this->term_controller()->delete_item( $request );
-		return is_wp_error( $response ) ? [] : rest_get_server()->response_to_data( $response, true );
+		return is_wp_error( $response ) ? $response : $response->get_data();
 	}
 
-	private function dispatch( string $method, string $path_suffix, array $input ): array {
+	/**
+	 * @return array|WP_Error
+	 */
+	private function dispatch( string $method, string $path_suffix, array $input ) {
 		$context = $input['context'] ?? 'view';
 		$base    = '/' . ( $this->taxonomy->rest_base ?: $this->slug );
 		$request = new WP_REST_Request( $method, $base . $path_suffix );
+		if ( $path_suffix !== '' ) {
+			$id = (int) ltrim( (string) $path_suffix, '/' );
+			$request->set_url_params( [ 'id' => $id ] );
+			$request['id'] = $id;
+		}
 		$request->set_body_params( $this->passthrough( $input, $this->term_controller()->get_endpoint_args_for_item_schema( 'PUT' === $method ? WP_REST_Server::EDITABLE : WP_REST_Server::CREATABLE ) ) );
 		$request['context'] = $context;
 
 		$controller = $this->term_controller();
 		$response   = 'PUT' === $method ? $controller->update_item( $request ) : $controller->create_item( $request );
-		return is_wp_error( $response ) ? [] : rest_get_server()->response_to_data( $response, true );
+		return is_wp_error( $response ) ? $response : rest_get_server()->response_to_data( $response, true );
 	}
 
 	private function term_controller(): WP_REST_Terms_Controller {
 		return new WP_REST_Terms_Controller( $this->slug );
+	}
+
+	private function user_can( string $cap, array $input ): bool {
+		return ! empty( $input['id'] )
+			? current_user_can( $cap, (int) $input['id'] )
+			: current_user_can( $cap );
 	}
 
 	private function collection_input_schema(): array {
@@ -294,6 +325,19 @@ class TaxonomyAbilities {
 
 	private function passthrough( array $input, array $allowed ): array {
 		return array_intersect_key( $input, $allowed );
+	}
+
+	private function collection_query( array $input ): array {
+		$params     = $this->term_controller()->get_collection_params();
+		$query      = [];
+		foreach ( $params as $key => $args ) {
+			if ( array_key_exists( $key, $input ) ) {
+				$query[ $key ] = $input[ $key ];
+			} elseif ( isset( $args['default'] ) ) {
+				$query[ $key ] = $args['default'];
+			}
+		}
+		return $query;
 	}
 
 	private function context_param(): array {

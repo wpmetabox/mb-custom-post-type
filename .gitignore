@@ -5,3 +5,4 @@ node_modules
 vendor
 *.LICENSE.txt
 .mcp.json
+mcp.log
