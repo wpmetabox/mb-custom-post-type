@@ -1,7 +1,6 @@
 <?php
 namespace MBCPT\Abilities;
 
-use WP_Post;
 use WP_Post_Type;
 use WP_REST_Posts_Controller;
 use WP_REST_Request;
@@ -306,6 +305,26 @@ class PostTypeAbilities {
 							'type'        => 'string',
 							'description' => __( 'Page template.', 'mb-custom-post-type' ),
 						],
+						'password'       => [
+							'type'        => 'string',
+							'description' => __( 'Post password.', 'mb-custom-post-type' ),
+						],
+						'date'           => [
+							'type'        => 'string',
+							'description' => __( 'Publication date (site timezone).', 'mb-custom-post-type' ),
+						],
+						'date_gmt'       => [
+							'type'        => 'string',
+							'description' => __( 'Publication date (GMT).', 'mb-custom-post-type' ),
+						],
+						'taxonomies'     => [
+							'type'        => 'object',
+							'description' => __( 'Taxonomy terms to assign. Each key is a taxonomy slug; the value is an array of term IDs, or an object with terms/operator/field matching the REST API shape.', 'mb-custom-post-type' ),
+						],
+						'meta'           => [
+							'type'        => 'object',
+							'description' => __( 'Post meta values keyed by meta key. Only meta keys registered with show_in_rest are persisted.', 'mb-custom-post-type' ),
+						],
 					],
 				],
 				'output_schema'       => $this->post_output_schema(),
@@ -392,6 +411,26 @@ class PostTypeAbilities {
 							'type'        => 'string',
 							'description' => __( 'New page template.', 'mb-custom-post-type' ),
 						],
+						'password'       => [
+							'type'        => 'string',
+							'description' => __( 'New post password.', 'mb-custom-post-type' ),
+						],
+						'date'           => [
+							'type'        => 'string',
+							'description' => __( 'New publication date (site timezone).', 'mb-custom-post-type' ),
+						],
+						'date_gmt'       => [
+							'type'        => 'string',
+							'description' => __( 'New publication date (GMT).', 'mb-custom-post-type' ),
+						],
+						'taxonomies'     => [
+							'type'        => 'object',
+							'description' => __( 'Taxonomy terms to assign. Each key is a taxonomy slug; the value is an array of term IDs, or an object with terms/operator/field matching the REST API shape.', 'mb-custom-post-type' ),
+						],
+						'meta'           => [
+							'type'        => 'object',
+							'description' => __( 'Post meta values keyed by meta key. Only meta keys registered with show_in_rest are persisted.', 'mb-custom-post-type' ),
+						],
 					],
 				],
 				'output_schema'       => $this->post_output_schema(),
@@ -437,19 +476,7 @@ class PostTypeAbilities {
 						],
 					],
 				],
-				'output_schema'       => [
-					'type'       => 'object',
-					'properties' => [
-						'deleted'  => [ 'type' => 'boolean' ],
-						'previous' => [
-							'type'       => 'object',
-							'properties' => [
-								'id'    => [ 'type' => 'integer' ],
-								'title' => [ 'type' => 'string' ],
-							],
-						],
-					],
-				],
+				'output_schema'       => $this->post_output_schema(),
 				'meta'                => [
 					'annotations' => [
 						'readonly'    => false,
@@ -497,32 +524,48 @@ class PostTypeAbilities {
 		return $rest->response_to_data( $response, true );
 	}
 
-	private function map_input_to_rest_params( array $input ): array {
-		$passthrough = [
-			'context',
-			'page',
-			'per_page',
-			'search',
-			'search_columns',
-			'after',
-			'before',
-			'modified_after',
-			'modified_before',
-			'author',
-			'author_exclude',
-			'exclude',
-			'include',
-			'offset',
-			'order',
-			'orderby',
-			'slug',
-			'status',
-			'sticky',
-			'meta_query',
-		];
+	private const REST_PASSTHROUGH = [
+		'context',
+		'page',
+		'per_page',
+		'search',
+		'search_columns',
+		'after',
+		'before',
+		'modified_after',
+		'modified_before',
+		'author',
+		'author_exclude',
+		'exclude',
+		'include',
+		'offset',
+		'order',
+		'orderby',
+		'slug',
+		'status',
+		'sticky',
+		'meta_query',
+		'title',
+		'content',
+		'excerpt',
+		'featured_media',
+		'parent',
+		'menu_order',
+		'comment_status',
+		'ping_status',
+		'template',
+		'meta',
+		'password',
+		'date',
+		'date_gmt',
+	];
 
+	private function map_input_to_rest_params( array $input, array $exclude = [] ): array {
 		$params = [];
-		foreach ( $passthrough as $key ) {
+		foreach ( self::REST_PASSTHROUGH as $key ) {
+			if ( in_array( $key, $exclude, true ) ) {
+				continue;
+			}
 			if ( array_key_exists( $key, $input ) ) {
 				$params[ $key ] = $input[ $key ];
 			}
@@ -584,130 +627,54 @@ class PostTypeAbilities {
 	}
 
 	private function execute_create( array $input ): array {
-		$args = [
-			'post_title'     => sanitize_text_field( $input['title'] ?? '' ),
-			'post_content'   => wp_kses_post( $input['content'] ?? '' ),
-			'post_excerpt'   => sanitize_textarea_field( $input['excerpt'] ?? '' ),
-			'post_status'    => $input['status'] ?? 'draft',
-			'post_type'      => $this->slug,
-			'post_name'      => isset( $input['slug'] ) ? sanitize_title( $input['slug'] ) : '',
+		$context    = $input['context'] ?? 'view';
+		$controller = new WP_REST_Posts_Controller( $this->slug );
+		$base       = '/' . ( $this->post_type->rest_base ?: $this->slug );
 
-			'menu_order'     => isset( $input['menu_order'] ) ? (int) $input['menu_order'] : 0,
-			'comment_status' => isset( $input['comment_status'] ) ? $input['comment_status'] : '',
-			'ping_status'    => isset( $input['ping_status'] ) ? $input['ping_status'] : '',
-			'post_parent'    => isset( $input['parent'] ) ? (int) $input['parent'] : 0,
-			'template'       => isset( $input['template'] ) ? $input['template'] : '',
-		];
+		$request = new WP_REST_Request( 'POST', $base );
+		$request->set_body_params( $this->map_input_to_rest_params( $input, [ 'id' ] ) );
+		$request['context'] = $context;
 
-		$post_id = wp_insert_post( $args, true );
-
-		if ( is_wp_error( $post_id ) ) {
+		$response = $controller->create_item( $request );
+		if ( is_wp_error( $response ) ) {
 			return [];
 		}
 
-		if ( isset( $input['featured_media'] ) ) {
-			set_post_thumbnail( $post_id, (int) $input['featured_media'] );
-		}
-
-		$post = get_post( $post_id );
-		return $this->format_post( $post, $input['context'] ?? 'view' );
+		return rest_get_server()->response_to_data( $response, true );
 	}
 
 	private function execute_update( array $input ): array {
-		$post_id = (int) $input['id'];
-		$post    = get_post( $post_id );
+		$context    = $input['context'] ?? 'view';
+		$controller = new WP_REST_Posts_Controller( $this->slug );
+		$base       = '/' . ( $this->post_type->rest_base ?: $this->slug );
 
-		if ( ! $post ) {
+		$request = new WP_REST_Request( 'PUT', $base . '/' . (int) $input['id'] );
+		$request->set_body_params( $this->map_input_to_rest_params( $input, [ 'id' ] ) );
+		$request['context'] = $context;
+
+		$response = $controller->update_item( $request );
+		if ( is_wp_error( $response ) ) {
 			return [];
 		}
 
-		$args = [ 'ID' => $post_id ];
-		if ( isset( $input['title'] ) ) {
-			$args['post_title'] = sanitize_text_field( $input['title'] );
-		}
-		if ( isset( $input['content'] ) ) {
-			$args['post_content'] = wp_kses_post( $input['content'] );
-		}
-		if ( isset( $input['excerpt'] ) ) {
-			$args['post_excerpt'] = sanitize_textarea_field( $input['excerpt'] );
-		}
-		if ( isset( $input['status'] ) ) {
-			$args['post_status'] = $input['status'];
-		}
-		if ( isset( $input['slug'] ) ) {
-			$args['post_name'] = sanitize_title( $input['slug'] );
-		}
-
-		if ( isset( $input['menu_order'] ) ) {
-			$args['menu_order'] = (int) $input['menu_order'];
-		}
-		if ( isset( $input['comment_status'] ) ) {
-			$args['comment_status'] = $input['comment_status'];
-		}
-		if ( isset( $input['ping_status'] ) ) {
-			$args['ping_status'] = $input['ping_status'];
-		}
-		if ( isset( $input['parent'] ) ) {
-			$args['post_parent'] = (int) $input['parent'];
-		}
-		if ( isset( $input['template'] ) ) {
-			$args['template'] = $input['template'];
-		}
-
-		$result = wp_update_post( $args, true );
-
-		if ( is_wp_error( $result ) ) {
-			return [];
-		}
-
-		if ( isset( $input['featured_media'] ) ) {
-			set_post_thumbnail( $post_id, (int) $input['featured_media'] );
-		}
-
-		$post = get_post( $post_id );
-		return $this->format_post( $post, $input['context'] ?? 'view' );
+		return rest_get_server()->response_to_data( $response, true );
 	}
 
 	private function execute_delete( array $input ): array {
-		$post_id = (int) $input['id'];
-		$post    = get_post( $post_id );
+		$context    = $input['context'] ?? 'view';
+		$controller = new WP_REST_Posts_Controller( $this->slug );
+		$base       = '/' . ( $this->post_type->rest_base ?: $this->slug );
 
-		if ( ! $post ) {
-			return [];
-		}
-
-		$previous = [
-			'id'    => $post->ID,
-			'title' => $post->post_title,
-		];
-
-		$force  = ! empty( $input['force'] );
-		$result = wp_delete_post( $post_id, $force );
-
-		if ( ! $result ) {
-			return [];
-		}
-
-		return [
-			'deleted'  => true,
-			'previous' => $previous,
-		];
-	}
-
-	private function format_post( WP_Post $post, string $context = 'view' ): array {
-		$controller         = new WP_REST_Posts_Controller( $post->post_type );
-		$request            = new WP_REST_Request( 'GET', '/' . ( $this->post_type->rest_base ?: $this->slug ) . '/' . $post->ID );
+		$request            = new WP_REST_Request( 'DELETE', $base . '/' . (int) $input['id'] );
 		$request['context'] = $context;
+		$request['force']   = ! empty( $input['force'] );
 
-		$response = $controller->prepare_item_for_response( $post, $request );
-
-		$data = rest_get_server()->response_to_data( $response, true );
-
-		if ( 'edit' === $context ) {
-			$data['edit_link'] = get_edit_post_link( $post->ID, 'raw' );
+		$response = $controller->delete_item( $request );
+		if ( is_wp_error( $response ) ) {
+			return [];
 		}
 
-		return $data;
+		return rest_get_server()->response_to_data( $response, true );
 	}
 
 	private function post_output_schema(): array {
