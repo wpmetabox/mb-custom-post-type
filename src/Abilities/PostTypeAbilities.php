@@ -1,7 +1,11 @@
 <?php
 namespace MBCPT\Abilities;
 
+use WP_Post;
 use WP_Post_Type;
+use WP_Query;
+use WP_REST_Posts_Controller;
+use WP_REST_Request;
 
 class PostTypeAbilities {
 
@@ -555,7 +559,7 @@ class PostTypeAbilities {
 			$query_args['meta_query'] = $meta_query;
 		}
 
-		$query = new \WP_Query( $query_args );
+		$query = new WP_Query( $query_args );
 		$posts = $query->posts;
 
 		return array_map( function ( $post ) use ( $context ) {
@@ -862,9 +866,9 @@ class PostTypeAbilities {
 		];
 	}
 
-	private function format_post( \WP_Post $post, string $context = 'view' ): array {
-		$controller         = new \WP_REST_Posts_Controller( $post->post_type );
-		$request            = new \WP_REST_Request( 'GET', '/' . ( $this->post_type->rest_base ?: $this->slug ) . '/' . $post->ID );
+	private function format_post( WP_Post $post, string $context = 'view' ): array {
+		$controller         = new WP_REST_Posts_Controller( $post->post_type );
+		$request            = new WP_REST_Request( 'GET', '/' . ( $this->post_type->rest_base ?: $this->slug ) . '/' . $post->ID );
 		$request['context'] = $context;
 
 		$response = $controller->prepare_item_for_response( $post, $request );
