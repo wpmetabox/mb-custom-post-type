@@ -166,7 +166,7 @@ class PostTypeAbilities {
 						],
 						'taxonomies'      => [
 							'type'        => 'object',
-							'description' => __( 'Limit result set to items with specific terms assigned in taxonomies. Each key is a taxonomy slug; each value is an array of term IDs, IDs to exclude, or an object with terms/operator/field.', 'mb-custom-post-type' ),
+							'description' => __( 'Limit result set to items with specific terms assigned in taxonomies. Each key is a taxonomy slug; the value is an array of term IDs, or an object with terms/operator/field matching the REST API shape.', 'mb-custom-post-type' ),
 						],
 						'meta_query'      => [
 							'type'        => 'array',
@@ -535,45 +535,11 @@ class PostTypeAbilities {
 					continue;
 				}
 				$arg_name            = ! empty( $tax_object->rest_base ) ? $tax_object->rest_base : $taxonomy;
-				$params[ $arg_name ] = $this->normalize_taxonomy_arg( $value );
+				$params[ $arg_name ] = $value;
 			}
 		}
 
 		return $params;
-	}
-
-	private function normalize_taxonomy_arg( $value ) {
-		if ( is_array( $value ) && $this->is_associative( $value ) ) {
-			if ( isset( $value['exclude'] ) ) {
-				return [
-					'terms'    => array_map( 'intval', (array) $value['exclude'] ),
-					'operator' => 'NOT IN',
-				];
-			}
-			if ( isset( $value['operator'] ) ) {
-				$arg = [ 'operator' => (string) $value['operator'] ];
-				if ( isset( $value['terms'] ) ) {
-					$arg['terms'] = array_map( 'intval', (array) $value['terms'] );
-				} elseif ( isset( $value['term_id'] ) ) {
-					$arg['terms'] = array_map( 'intval', (array) $value['term_id'] );
-				}
-				return $arg;
-			}
-			if ( isset( $value['terms'] ) ) {
-				return array_map( 'intval', (array) $value['terms'] );
-			}
-			if ( isset( $value['term_id'] ) ) {
-				return array_map( 'intval', (array) $value['term_id'] );
-			}
-		}
-		return array_map( 'intval', (array) $value );
-	}
-
-	private function is_associative( array $arr ): bool {
-		if ( [] === $arr ) {
-			return false;
-		}
-		return array_keys( $arr ) !== range( 0, count( $arr ) - 1 );
 	}
 
 
