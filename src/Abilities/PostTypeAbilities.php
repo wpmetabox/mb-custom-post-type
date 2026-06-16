@@ -710,12 +710,6 @@ class PostTypeAbilities {
 		return array_keys( $arr ) !== range( 0, count( $arr ) - 1 );
 	}
 
-	private function render_post_content( \WP_Post $post ): string {
-		if ( ! empty( $post->post_password ) ) {
-			return '';
-		}
-		return apply_filters( 'the_content', $post->post_content );
-	}
 
 	private function execute_get_post_type(): array {
 		$post_type = get_post_type_object( $this->slug );
@@ -784,7 +778,7 @@ class PostTypeAbilities {
 		}
 
 		$post = get_post( $post_id );
-		return $this->format_post( $post );
+		return $this->format_post( $post, $input['context'] ?? 'view' );
 	}
 
 	private function execute_update( array $input ): array {
@@ -839,7 +833,7 @@ class PostTypeAbilities {
 		}
 
 		$post = get_post( $post_id );
-		return $this->format_post( $post );
+		return $this->format_post( $post, $input['context'] ?? 'view' );
 	}
 
 	private function execute_delete( array $input ): array {
@@ -869,40 +863,16 @@ class PostTypeAbilities {
 	}
 
 	private function format_post( \WP_Post $post, string $context = 'view' ): array {
-		$data = [
-			'id'             => $post->ID,
-			'date'           => $post->post_date,
-			'date_gmt'       => $post->post_date_gmt,
-			'guid'           => [ 'rendered' => $post->guid ],
-			'modified'       => $post->post_modified,
-			'modified_gmt'   => $post->post_modified_gmt,
-			'slug'           => $post->post_name,
-			'status'         => $post->post_status,
-			'type'           => $post->post_type,
-			'title'          => [ 'rendered' => get_the_title( $post ) ],
-			'content'        => [
-				'rendered'  => $this->render_post_content( $post ),
-				'protected' => ! empty( $post->post_password ),
-			],
-			'excerpt'        => [
-				'rendered'  => get_the_excerpt( $post ),
-				'protected' => ! empty( $post->post_password ),
-			],
-			'author'         => (int) $post->post_author,
-			'featured_media' => (int) get_post_thumbnail_id( $post->ID ),
-			'parent'         => (int) $post->post_parent,
-			'menu_order'     => (int) $post->menu_order,
-			'comment_status' => $post->comment_status,
-			'ping_status'    => $post->ping_status,
-			'template'       => get_page_template_slug( $post ) ?: '',
-			'sticky'         => is_sticky( $post->ID ),
-			'link'           => get_permalink( $post->ID ),
-		];
+		$controller         = new \WP_REST_Posts_Controller( $post->post_type );
+		$request            = new \WP_REST_Request( 'GET', '/' . ( $this->post_type->rest_base ?: $this->slug ) . '/' . $post->ID );
+		$request['context'] = $context;
+
+		$response = $controller->prepare_item_for_response( $post, $request );
+
+		$data = rest_get_server()->response_to_data( $response, true );
 
 		if ( 'edit' === $context ) {
 			$data['edit_link'] = get_edit_post_link( $post->ID, 'raw' );
-		} else {
-			$data['edit_link'] = null;
 		}
 
 		return $data;
@@ -912,50 +882,59 @@ class PostTypeAbilities {
 		return [
 			'type'       => 'object',
 			'properties' => [
-				'id'             => [ 'type' => 'integer' ],
-				'date'           => [ 'type' => 'string' ],
-				'date_gmt'       => [ 'type' => 'string' ],
-				'guid'           => [
+				'id'                 => [ 'type' => 'integer' ],
+				'date'               => [ 'type' => 'string' ],
+				'date_gmt'           => [ 'type' => 'string' ],
+				'guid'               => [
 					'type'       => 'object',
 					'properties' => [
 						'rendered' => [ 'type' => 'string' ],
+						'raw'      => [ 'type' => [ 'string', 'null' ] ],
 					],
 				],
-				'modified'       => [ 'type' => 'string' ],
-				'modified_gmt'   => [ 'type' => 'string' ],
-				'slug'           => [ 'type' => 'string' ],
-				'status'         => [ 'type' => 'string' ],
-				'type'           => [ 'type' => 'string' ],
-				'title'          => [
+				'modified'           => [ 'type' => 'string' ],
+				'modified_gmt'       => [ 'type' => 'string' ],
+				'slug'               => [ 'type' => 'string' ],
+				'status'             => [ 'type' => 'string' ],
+				'type'               => [ 'type' => 'string' ],
+				'title'              => [
 					'type'       => 'object',
 					'properties' => [
 						'rendered' => [ 'type' => 'string' ],
+						'raw'      => [ 'type' => [ 'string', 'null' ] ],
 					],
 				],
-				'content'        => [
+				'content'            => [
+					'type'       => 'object',
+					'properties' => [
+						'rendered'      => [ 'type' => 'string' ],
+						'raw'           => [ 'type' => [ 'string', 'null' ] ],
+						'protected'     => [ 'type' => 'boolean' ],
+						'block_version' => [ 'type' => [ 'integer', 'null' ] ],
+					],
+				],
+				'excerpt'            => [
 					'type'       => 'object',
 					'properties' => [
 						'rendered'  => [ 'type' => 'string' ],
+						'raw'       => [ 'type' => [ 'string', 'null' ] ],
 						'protected' => [ 'type' => 'boolean' ],
 					],
 				],
-				'excerpt'        => [
-					'type'       => 'object',
-					'properties' => [
-						'rendered'  => [ 'type' => 'string' ],
-						'protected' => [ 'type' => 'boolean' ],
-					],
-				],
-				'author'         => [ 'type' => 'integer' ],
-				'featured_media' => [ 'type' => 'integer' ],
-				'parent'         => [ 'type' => 'integer' ],
-				'menu_order'     => [ 'type' => 'integer' ],
-				'comment_status' => [ 'type' => 'string' ],
-				'ping_status'    => [ 'type' => 'string' ],
-				'template'       => [ 'type' => 'string' ],
-				'sticky'         => [ 'type' => 'boolean' ],
-				'link'           => [ 'type' => 'string' ],
-				'edit_link'      => [ 'type' => [ 'string', 'null' ] ],
+				'author'             => [ 'type' => 'integer' ],
+				'featured_media'     => [ 'type' => 'integer' ],
+				'parent'             => [ 'type' => 'integer' ],
+				'menu_order'         => [ 'type' => 'integer' ],
+				'comment_status'     => [ 'type' => 'string' ],
+				'ping_status'        => [ 'type' => 'string' ],
+				'template'           => [ 'type' => 'string' ],
+				'sticky'             => [ 'type' => 'boolean' ],
+				'link'               => [ 'type' => 'string' ],
+				'edit_link'          => [ 'type' => [ 'string', 'null' ] ],
+				'permalink_template' => [ 'type' => [ 'string', 'null' ] ],
+				'generated_slug'     => [ 'type' => [ 'string', 'null' ] ],
+				'meta'               => [ 'type' => 'object' ],
+				'class_list'         => [ 'type' => 'array' ],
 			],
 		];
 	}
