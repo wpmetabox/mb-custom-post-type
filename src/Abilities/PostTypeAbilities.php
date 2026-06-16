@@ -3,7 +3,6 @@ namespace MBCPT\Abilities;
 
 use WP_Post;
 use WP_Post_Type;
-use WP_Query;
 use WP_REST_Posts_Controller;
 use WP_REST_Request;
 
@@ -475,233 +474,153 @@ class PostTypeAbilities {
 
 	private function execute_get( array $input ): array {
 		$context = $input['context'] ?? 'view';
+		$rest    = rest_get_server();
+		$base    = '/' . ( $this->post_type->rest_base ?: $this->slug );
+
+		$controller = new WP_REST_Posts_Controller( $this->slug );
 
 		if ( ! empty( $input['id'] ) ) {
-			$post = get_post( (int) $input['id'] );
-			if ( ! $post || $post->post_type !== $this->slug ) {
+			$request            = new WP_REST_Request( 'GET', $base . '/' . (int) $input['id'] );
+			$request['context'] = $context;
+
+			$response = $controller->get_item( $request );
+			if ( is_wp_error( $response ) || 404 === $response->get_status() ) {
 				return [];
 			}
-			return [ $this->format_post( $post, $context ) ];
+			return [ $rest->response_to_data( $response, true ) ];
 		}
 
-		$per_page = isset( $input['per_page'] ) ? max( 1, min( 100, (int) $input['per_page'] ) ) : 10;
-		$page     = isset( $input['page'] ) ? max( 1, (int) $input['page'] ) : 1;
-		$orderby  = $input['orderby'] ?? 'date';
-		$order    = strtoupper( $input['order'] ?? 'desc' );
+		$request = new WP_REST_Request( 'GET', $base );
+		$request->set_query_params( $this->map_input_to_rest_params( $input ) );
+		$request['context'] = $context;
 
-		$query_args = [
-			'post_type'      => $this->slug,
-			'post_status'    => $this->parse_status( $input['status'] ?? [ 'publish' ] ),
-			'posts_per_page' => $per_page,
-			'paged'          => $page,
-			'orderby'        => $this->map_orderby( $orderby ),
-			'order'          => $order,
-			'no_found_rows'  => false,
-		];
-
-		if ( ! empty( $input['search'] ) ) {
-			$query_args['s'] = sanitize_text_field( $input['search'] );
+		$tax_relation    = ! empty( $input['tax_relation'] ) ? strtoupper( (string) $input['tax_relation'] ) : null;
+		$relation_filter = null;
+		if ( $tax_relation && in_array( $tax_relation, [ 'AND', 'OR' ], true ) ) {
+			$relation_filter = $this->make_tax_relation_filter( $request, $tax_relation );
+			add_filter( 'rest_post_query', $relation_filter, 10, 2 );
 		}
 
-		if ( ! empty( $input['search_columns'] ) ) {
-			$query_args['search_columns'] = array_map( 'sanitize_key', (array) $input['search_columns'] );
-		}
-
-		$date_query = $this->build_date_query( $input );
-		if ( $date_query ) {
-			$query_args['date_query'] = $date_query;
-		}
-
-		if ( ! empty( $input['author'] ) ) {
-			$query_args['author__in'] = array_map( 'intval', (array) $input['author'] );
-		}
-		if ( ! empty( $input['author_exclude'] ) ) {
-			$query_args['author__not_in'] = array_map( 'intval', (array) $input['author_exclude'] );
-		}
-
-		if ( ! empty( $input['exclude'] ) ) {
-			$query_args['post__not_in'] = array_map( 'intval', (array) $input['exclude'] );
-		}
-		if ( ! empty( $input['include'] ) ) {
-			$include                = array_map( 'intval', (array) $input['include'] );
-			$query_args['post__in'] = $include;
-			$query_args['orderby']  = 'post__in';
-		}
-
-		if ( isset( $input['offset'] ) ) {
-			$query_args['offset'] = max( 0, (int) $input['offset'] );
-		}
-
-		if ( ! empty( $input['slug'] ) ) {
-			$query_args['post_name__in'] = array_map( 'sanitize_title', (array) $input['slug'] );
-			if ( 'slug' !== $orderby && 'include_slugs' !== $orderby ) {
-				$query_args['orderby'] = 'post_name__in';
+		try {
+			$response = $controller->get_items( $request );
+		} finally {
+			if ( $relation_filter ) {
+				remove_filter( 'rest_post_query', $relation_filter, 10 );
 			}
 		}
 
-		if ( ! empty( $input['sticky'] ) ) {
-			$query_args['ignore_sticky_posts'] = false;
-			$sticky                            = get_option( 'sticky_posts', [] );
-			if ( ! empty( $sticky ) ) {
-				$query_args['post__in'] = ! empty( $query_args['post__in'] )
-					? array_intersect( $query_args['post__in'], $sticky )
-					: $sticky;
-			}
-		}
-
-		$tax_query = $this->build_tax_query( $input );
-		if ( $tax_query ) {
-			$query_args['tax_query'] = $tax_query;
-		}
-
-		$meta_query = $this->build_meta_query( $input );
-		if ( $meta_query ) {
-			$query_args['meta_query'] = $meta_query;
-		}
-
-		$query = new WP_Query( $query_args );
-		$posts = $query->posts;
-
-		return array_map( function ( $post ) use ( $context ) {
-			return $this->format_post( $post, $context );
-		}, $posts );
-	}
-
-	private function parse_status( $status ): array {
-		$statuses = array_map( 'sanitize_key', (array) $status );
-		$valid    = [ 'publish', 'future', 'draft', 'pending', 'private', 'trash', 'any' ];
-		$statuses = array_intersect( $statuses, $valid );
-		return empty( $statuses ) ? [ 'publish' ] : $statuses;
-	}
-
-	private function map_orderby( string $orderby ): string {
-		$map = [
-			'id'            => 'ID',
-			'include'       => 'post__in',
-			'include_slugs' => 'post_name__in',
-			'relevance'     => 'relevance',
-		];
-		return $map[ $orderby ] ?? $orderby;
-	}
-
-	private function build_date_query( array $input ): array {
-		$clauses = [];
-		$map     = [
-			'after'           => 'after',
-			'before'          => 'before',
-			'modified_after'  => 'modified_after',
-			'modified_before' => 'modified_before',
-		];
-		foreach ( $map as $key => $column ) {
-			if ( empty( $input[ $key ] ) ) {
-				continue;
-			}
-			$is_modified = 'modified_after' === $column || 'modified_before' === $column;
-			$clauses[]   = [
-				'after'     => $is_modified ? null : $input[ $key ],
-				'before'    => $is_modified ? null : $input[ $key ],
-				'column'    => $is_modified ? 'post_modified' : 'post_date',
-				'inclusive' => true,
-			];
-		}
-		return $clauses;
-	}
-
-	private function build_tax_query( array $input ): array {
-		if ( empty( $input['taxonomies'] ) || ! is_array( $input['taxonomies'] ) ) {
+		if ( is_wp_error( $response ) ) {
 			return [];
 		}
 
-		$tax_query = [];
-		foreach ( $input['taxonomies'] as $taxonomy => $value ) {
-			if ( ! taxonomy_exists( $taxonomy ) ) {
-				continue;
-			}
-			$clauses = $this->parse_tax_term_clause( $taxonomy, $value );
-			if ( $clauses ) {
-				$tax_query[] = $clauses;
-			}
-		}
-
-		if ( count( $tax_query ) > 1 && ! empty( $input['tax_relation'] ) ) {
-			$relation              = strtoupper( (string) $input['tax_relation'] );
-			$valid                 = [ 'AND', 'OR' ];
-			$tax_query['relation'] = in_array( $relation, $valid, true ) ? $relation : 'AND';
-		}
-
-		return $tax_query;
+		return $rest->response_to_data( $response, true );
 	}
 
-	private function parse_tax_term_clause( string $taxonomy, $value ): ?array {
-		if ( is_array( $value ) && $this->is_associative( $value ) ) {
-			$clause = [
-				'taxonomy' => $taxonomy,
-				'field'    => 'term_id',
-				'terms'    => [],
-				'operator' => 'IN',
-			];
-			if ( isset( $value['terms'] ) ) {
-				$clause['terms'] = array_map( 'intval', (array) $value['terms'] );
-			} elseif ( isset( $value['term_id'] ) ) {
-				$clause['terms'] = array_map( 'intval', (array) $value['term_id'] );
+	private function map_input_to_rest_params( array $input ): array {
+		$passthrough = [
+			'context',
+			'page',
+			'per_page',
+			'search',
+			'search_columns',
+			'after',
+			'before',
+			'modified_after',
+			'modified_before',
+			'author',
+			'author_exclude',
+			'exclude',
+			'include',
+			'offset',
+			'order',
+			'orderby',
+			'slug',
+			'status',
+			'sticky',
+			'meta_query',
+		];
+
+		$params = [];
+		foreach ( $passthrough as $key ) {
+			if ( array_key_exists( $key, $input ) ) {
+				$params[ $key ] = $input[ $key ];
 			}
+		}
+
+		if ( ! empty( $input['taxonomies'] ) && is_array( $input['taxonomies'] ) ) {
+			foreach ( $input['taxonomies'] as $taxonomy => $value ) {
+				$tax_object = get_taxonomy( $taxonomy );
+				if ( ! $tax_object ) {
+					continue;
+				}
+				$arg_name            = ! empty( $tax_object->rest_base ) ? $tax_object->rest_base : $taxonomy;
+				$params[ $arg_name ] = $this->normalize_taxonomy_arg( $value );
+			}
+		}
+
+		return $params;
+	}
+
+	private function normalize_taxonomy_arg( $value ) {
+		if ( is_array( $value ) && $this->is_associative( $value ) ) {
 			if ( isset( $value['exclude'] ) ) {
-				$clause['terms']    = array_map( 'intval', (array) $value['exclude'] );
-				$clause['operator'] = 'NOT IN';
+				return [
+					'terms'    => array_map( 'intval', (array) $value['exclude'] ),
+					'operator' => 'NOT IN',
+				];
 			}
 			if ( isset( $value['operator'] ) ) {
-				$clause['operator'] = (string) $value['operator'];
+				$arg = [ 'operator' => (string) $value['operator'] ];
+				if ( isset( $value['terms'] ) ) {
+					$arg['terms'] = array_map( 'intval', (array) $value['terms'] );
+				} elseif ( isset( $value['term_id'] ) ) {
+					$arg['terms'] = array_map( 'intval', (array) $value['term_id'] );
+				}
+				return $arg;
 			}
-			if ( isset( $value['field'] ) ) {
-				$clause['field'] = (string) $value['field'];
+			if ( isset( $value['terms'] ) ) {
+				return array_map( 'intval', (array) $value['terms'] );
 			}
-			if ( empty( $clause['terms'] ) ) {
-				return null;
+			if ( isset( $value['term_id'] ) ) {
+				return array_map( 'intval', (array) $value['term_id'] );
 			}
-			return $clause;
 		}
-
-		$terms = array_map( 'intval', (array) $value );
-		if ( empty( $terms ) ) {
-			return null;
-		}
-		return [
-			'taxonomy' => $taxonomy,
-			'field'    => 'term_id',
-			'terms'    => $terms,
-		];
+		return array_map( 'intval', (array) $value );
 	}
 
-	private function build_meta_query( array $input ): array {
-		if ( empty( $input['meta_query'] ) || ! is_array( $input['meta_query'] ) ) {
-			return [];
+	private function make_tax_relation_filter( WP_REST_Request $request, string $relation ): callable {
+		$query_params = $request->get_query_params();
+		$taxonomies   = array_keys( $this->get_taxonomy_args( $query_params ) );
+
+		if ( count( $taxonomies ) < 2 ) {
+			return static function ( $args ) {
+				return $args;
+			};
 		}
 
-		$meta_query = [];
-		foreach ( $input['meta_query'] as $clause ) {
-			if ( ! is_array( $clause ) || empty( $clause['key'] ) ) {
-				continue;
+		return static function ( $args ) use ( $taxonomies, $relation ) {
+			if ( ! isset( $args['tax_query'] ) || ! is_array( $args['tax_query'] ) ) {
+				return $args;
 			}
-			$built = [
-				'key' => sanitize_key( $clause['key'] ),
-			];
-			if ( isset( $clause['value'] ) ) {
-				$built['value'] = $clause['value'];
+			$matched = array_intersect( $taxonomies, array_column( $args['tax_query'], 'taxonomy' ) );
+			if ( count( $matched ) < 2 ) {
+				return $args;
 			}
-			if ( isset( $clause['compare'] ) ) {
-				$built['compare'] = (string) $clause['compare'];
-			}
-			if ( isset( $clause['type'] ) ) {
-				$built['type'] = (string) $clause['type'];
-			}
-			$meta_query[] = $built;
-		}
+			$args['tax_query']['relation'] = $relation;
+			return $args;
+		};
+	}
 
-		if ( count( $meta_query ) > 1 ) {
-			$meta_query['relation'] = strtoupper( (string) ( $input['meta_relation'] ?? 'AND' ) );
+	private function get_taxonomy_args( array $query_params ): array {
+		$registered = get_object_taxonomies( $this->slug, 'objects' );
+		$args       = [];
+		foreach ( $registered as $taxonomy ) {
+			$arg_name = ! empty( $taxonomy->rest_base ) ? $taxonomy->rest_base : $taxonomy->name;
+			if ( array_key_exists( $arg_name, $query_params ) ) {
+				$args[ $arg_name ] = $query_params[ $arg_name ];
+			}
 		}
-
-		return $meta_query;
+		return $args;
 	}
 
 	private function is_associative( array $arr ): bool {
