@@ -596,16 +596,13 @@ class PostTypeAbilities {
 			if ( empty( $input[ $key ] ) ) {
 				continue;
 			}
-			try {
-				$clauses[] = [
-					'after'     => 'modified_after' === $column || 'modified_before' === $column ? null : $input[ $key ],
-					'before'    => 'modified_after' === $column || 'modified_before' === $column ? null : $input[ $key ],
-					'column'    => 'modified_after' === $column || 'modified_before' === $column ? 'post_modified' : 'post_date',
-					'inclusive' => true,
-				];
-			} catch ( \Exception $e ) {
-				continue;
-			}
+			$is_modified = 'modified_after' === $column || 'modified_before' === $column;
+			$clauses[]   = [
+				'after'     => $is_modified ? null : $input[ $key ],
+				'before'    => $is_modified ? null : $input[ $key ],
+				'column'    => $is_modified ? 'post_modified' : 'post_date',
+				'inclusive' => true,
+			];
 		}
 		return $clauses;
 	}
