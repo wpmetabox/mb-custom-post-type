@@ -114,6 +114,10 @@
 		color: var(--color-gray);
 	}
 
+	&-toggle {
+		margin-top: 12px;
+	}
+
 	&-error {
 		font-style: italic;
 		color: var(--color-red);

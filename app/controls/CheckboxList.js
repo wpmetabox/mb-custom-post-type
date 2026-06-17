@@ -23,7 +23,7 @@ const CheckboxList = ( { name, options, description } ) => {
 				{ description && <p className="mb-cpt-description">{ description }</p> }
 				{
 					Object.entries( options ).map( ( [ value, label ] ) => (
-						<ToggleControl key={ value } checked={ saved.includes( value ) } label={ label } onChange={ checked => update( value, checked ) } />
+						<ToggleControl key={ value } checked={ saved.includes( value ) } label={ label } onChange={ checked => update( value, checked ) } className="mb-cpt-toggle" />
 					) )
 				}
 			</div>
