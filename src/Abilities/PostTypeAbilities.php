@@ -8,22 +8,10 @@ use WP_REST_Post_Types_Controller;
 use WP_REST_Request;
 use WP_REST_Server;
 
-class PostTypeAbilities {
+class PostTypeAbilities extends BaseAbilities {
 
-	private string $slug;
-	private string $singular;
-	private string $label;
 	private WP_Post_Type $post_type;
-	private array $settings;
 	private ?WP_REST_Posts_Controller $controller = null;
-
-	private const ABILITY_MAP = [
-		'abilities_get_data' => 'register_get_metadata',
-		'abilities_get'      => 'register_get',
-		'abilities_create'   => 'register_create',
-		'abilities_update'   => 'register_update',
-		'abilities_delete'   => 'register_delete',
-	];
 
 	public function __construct( string $slug, WP_Post_Type $post_type, array $settings ) {
 		$this->slug      = $slug;
@@ -33,15 +21,7 @@ class PostTypeAbilities {
 		$this->settings  = $settings;
 	}
 
-	public function register(): void {
-		foreach ( self::ABILITY_MAP as $key => $method ) {
-			if ( ! empty( $this->settings[ $key ] ) ) {
-				$this->$method();
-			}
-		}
-	}
-
-	private function register_get(): void {
+	protected function register_get(): void {
 		wp_register_ability(
 			"meta-box/get-post-{$this->slug}",
 			[
@@ -51,11 +31,19 @@ class PostTypeAbilities {
 				'permission_callback' => $this->permission( $this->post_type->cap->read ),
 				'input_schema'        => [
 					'type'       => 'object',
-					'properties' => $this->collection_input_schema(),
+					'properties' => array_merge(
+						$this->controller()->get_collection_params(),
+						[
+							'id' => [
+								'type'        => 'integer',
+								'description' => __( 'Post ID to retrieve a single item.', 'mb-custom-post-type' ),
+							],
+						]
+					),
 				],
 				'output_schema'       => [
 					'type'  => 'array',
-					'items' => $this->output_schema(),
+					'items' => $this->get_item_schema(),
 				],
 				'meta'                => $this->meta( true ),
 				'execute_callback'    => [ $this, 'execute_get_posts' ],
@@ -63,7 +51,7 @@ class PostTypeAbilities {
 		);
 	}
 
-	private function register_get_metadata(): void {
+	protected function register_get_metadata(): void {
 		wp_register_ability(
 			"meta-box/get-post-type-{$this->slug}",
 			[
@@ -79,7 +67,7 @@ class PostTypeAbilities {
 		);
 	}
 
-	private function register_create(): void {
+	protected function register_create(): void {
 		wp_register_ability(
 			"meta-box/create-post-{$this->slug}",
 			[
@@ -89,20 +77,16 @@ class PostTypeAbilities {
 				'permission_callback' => $this->permission( $this->post_type->cap->create_posts ),
 				'input_schema'        => [
 					'type'       => 'object',
-					'required'   => [ 'title' ],
-					'properties' => array_merge(
-						$this->flatten_string_fields( $this->controller()->get_endpoint_args_for_item_schema( WP_REST_Server::CREATABLE ) ),
-						[ 'context' => $this->context_param() ]
-					),
+					'properties' => $this->flatten_string_fields( $this->controller()->get_endpoint_args_for_item_schema( WP_REST_Server::CREATABLE ) ),
 				],
-				'output_schema'       => $this->output_schema(),
+				'output_schema'       => $this->get_item_schema(),
 				'meta'                => $this->meta(),
 				'execute_callback'    => [ $this, 'execute_create_post' ],
 			]
 		);
 	}
 
-	private function register_update(): void {
+	protected function register_update(): void {
 		wp_register_ability(
 			"meta-box/update-post-{$this->slug}",
 			[
@@ -114,33 +98,20 @@ class PostTypeAbilities {
 					'type'       => 'object',
 					'required'   => [ 'id' ],
 					'properties' => $this->flatten_string_fields( $this->controller()->get_endpoint_args_for_item_schema( WP_REST_Server::EDITABLE ) + [
-						'id'      => [
+						'id' => [
 							'type'        => 'integer',
 							'description' => __( 'Post ID to update.', 'mb-custom-post-type' ),
 						],
-						'context' => $this->context_param(),
 					] ),
 				],
-				'output_schema'       => $this->output_schema(),
+				'output_schema'       => $this->get_item_schema(),
 				'meta'                => $this->meta(),
 				'execute_callback'    => [ $this, 'execute_update_post' ],
 			]
 		);
 	}
 
-	private function flatten_string_fields( array $args ): array {
-		foreach ( [ 'title', 'content', 'excerpt' ] as $field ) {
-			if ( isset( $args[ $field ]['properties']['raw']['type'] ) ) {
-				$args[ $field ] = [
-					'type'        => 'string',
-					'description' => $args[ $field ]['description'] ?? '',
-				];
-			}
-		}
-		return $args;
-	}
-
-	private function register_delete(): void {
+	protected function register_delete(): void {
 		wp_register_ability(
 			"meta-box/delete-post-{$this->slug}",
 			[
@@ -154,7 +125,7 @@ class PostTypeAbilities {
 					'required'   => [ 'deleted' ],
 					'properties' => [
 						'deleted'  => [ 'type' => 'boolean' ],
-						'previous' => $this->output_schema(),
+						'previous' => $this->get_item_schema(),
 					],
 				],
 				'meta'                => $this->meta( false, true ),
@@ -163,18 +134,24 @@ class PostTypeAbilities {
 		);
 	}
 
+	protected function get_item_schema(): array {
+		$schema = $this->controller()->get_item_schema();
+		if ( isset( $schema['properties']['status']['enum'] ) ) {
+			$schema['properties']['status']['enum'][] = 'trash';
+		}
+		return $schema;
+	}
+
 	/**
 	 * @return array|WP_Error
 	 */
 	public function execute_get_posts( array $input ) {
-		$context = $input['context'] ?? 'view';
-
 		if ( ! empty( $input['id'] ) ) {
 			$post = get_post( (int) $input['id'] );
 			if ( ! $post || $this->slug !== $post->post_type ) {
 				return new WP_Error( 'mb_cpt_not_found', __( 'Post not found.', 'mb-custom-post-type' ) );
 			}
-			return [ $this->format_post( $post, $context ) ];
+			return [ $this->format_post( $post ) ];
 		}
 
 		$query = [
@@ -204,7 +181,7 @@ class PostTypeAbilities {
 		}
 
 		$posts = get_posts( $query );
-		return array_map( fn( $p ) => $this->format_post( $p, $context ), $posts );
+		return array_map( [ $this, 'format_post' ], $posts );
 	}
 
 	/**
@@ -227,7 +204,7 @@ class PostTypeAbilities {
 			return $id;
 		}
 		$this->apply_terms_and_meta( $id, $input );
-		return $this->format_post( get_post( $id ), $input['context'] ?? 'view' );
+		return $this->format_post( get_post( $id ) );
 	}
 
 	/**
@@ -249,7 +226,7 @@ class PostTypeAbilities {
 			return $result;
 		}
 		$this->apply_terms_and_meta( $id, $input );
-		return $this->format_post( get_post( $id ), $input['context'] ?? 'view' );
+		return $this->format_post( get_post( $id ) );
 	}
 
 	/**
@@ -261,7 +238,7 @@ class PostTypeAbilities {
 		if ( ! $post || $this->slug !== $post->post_type ) {
 			return new WP_Error( 'mb_cpt_not_found', __( 'Post not found.', 'mb-custom-post-type' ) );
 		}
-		$previous = $this->format_post( $post, $input['context'] ?? 'view' );
+		$previous = $this->format_post( $post );
 		$result   = wp_delete_post( $id, ! empty( $input['force'] ) );
 		if ( ! $result ) {
 			return new WP_Error( 'mb_cpt_delete_failed', __( 'Could not delete post.', 'mb-custom-post-type' ) );
@@ -277,69 +254,16 @@ class PostTypeAbilities {
 		return $this->controller;
 	}
 
-	private function permission( string $cap ): callable {
-		return function ( $input = [] ) use ( $cap ) {
-			$input = is_array( $input ) ? $input : [];
-			return ! empty( $input['id'] )
-				? current_user_can( $cap, (int) $input['id'] )
-				: current_user_can( $cap );
-		};
-	}
-
-	private function meta( bool $readonly = false, bool $destructive = false, bool $idempotent = true ): array {
-		return [
-			'annotations' => [
-				'readonly'    => $readonly,
-				'destructive' => $destructive,
-				'idempotent'  => $idempotent,
-			],
-			'mcp'         => [ 'public' => true ],
-		];
-	}
-
-	private function collection_input_schema(): array {
-		$properties            = $this->controller()->get_collection_params();
-		$properties['id']      = [
-			'type'        => 'integer',
-			'description' => __( 'Post ID to retrieve a single item.', 'mb-custom-post-type' ),
-		];
-		$properties['context'] = $this->context_param();
-		return $properties;
-	}
-
-	private function delete_input_schema( string $label ): array {
-		return [
-			'type'       => 'object',
-			'required'   => [ 'id' ],
-			'properties' => [
-				'id'    => [
-					'type'        => 'integer',
-					'description' => sprintf( __( '%s ID to delete.', 'mb-custom-post-type' ), $label ),
-				],
-				'force' => [
-					'type'        => 'boolean',
-					'description' => __( 'Skip trash and delete permanently.', 'mb-custom-post-type' ),
-					'default'     => false,
-				],
-			],
-		];
-	}
-
-	private function output_schema(): array {
-		$schema = $this->controller()->get_item_schema();
-		if ( isset( $schema['properties']['status']['enum'] ) ) {
-			$schema['properties']['status']['enum'][] = 'trash';
+	private function flatten_string_fields( array $args ): array {
+		foreach ( [ 'title', 'content', 'excerpt' ] as $field ) {
+			if ( isset( $args[ $field ]['properties']['raw']['type'] ) ) {
+				$args[ $field ] = [
+					'type'        => 'string',
+					'description' => $args[ $field ]['description'] ?? '',
+				];
+			}
 		}
-		return $schema;
-	}
-
-	private function context_param(): array {
-		return [
-			'type'        => 'string',
-			'description' => __( 'Scope under which the request is made.', 'mb-custom-post-type' ),
-			'enum'        => [ 'view', 'embed', 'edit' ],
-			'default'     => 'view',
-		];
+		return $args;
 	}
 
 	private function build_postarr( array $input ): array {
@@ -390,7 +314,7 @@ class PostTypeAbilities {
 		}
 	}
 
-	private function format_post( $post, string $context ): array {
+	private function format_post( $post ): array {
 		if ( ! $post ) {
 			return [];
 		}
