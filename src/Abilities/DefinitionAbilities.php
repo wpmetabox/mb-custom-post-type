@@ -38,7 +38,6 @@ abstract class DefinitionAbilities {
 	}
 
 	protected function register_get(): void {
-		$context = $this->context_param();
 		wp_register_ability(
 			'meta-box/get-' . $this->ability_slug_plural(),
 			[
@@ -106,7 +105,6 @@ abstract class DefinitionAbilities {
 							'type'        => 'integer',
 							'description' => sprintf( __( '%s definition ID to retrieve a single item.', 'mb-custom-post-type' ), ucfirst( $this->singular_label() ) ),
 						],
-						'context'  => $context,
 					],
 				],
 				'output_schema'       => [
@@ -120,7 +118,6 @@ abstract class DefinitionAbilities {
 	}
 
 	protected function register_create(): void {
-		$context = $this->context_param();
 		wp_register_ability(
 			'meta-box/create-' . $this->ability_slug(),
 			[
@@ -146,7 +143,6 @@ abstract class DefinitionAbilities {
 							'enum'        => [ 'publish', 'future', 'draft', 'pending', 'private' ],
 							'default'     => 'publish',
 						],
-						'context'  => $context,
 					],
 				],
 				'output_schema'       => $this->output_schema(),
@@ -157,7 +153,6 @@ abstract class DefinitionAbilities {
 	}
 
 	protected function register_update(): void {
-		$context = $this->context_param();
 		wp_register_ability(
 			'meta-box/update-' . $this->ability_slug(),
 			[
@@ -186,7 +181,6 @@ abstract class DefinitionAbilities {
 							'type'        => 'object',
 							'description' => sprintf( __( 'Partial %s settings to merge into the existing configuration.', 'mb-custom-post-type' ), $this->singular_label() ),
 						],
-						'context'  => $context,
 					],
 				],
 				'output_schema'       => $this->output_schema(),
@@ -422,15 +416,6 @@ abstract class DefinitionAbilities {
 				'modified_gmt' => [ 'type' => 'string' ],
 				'settings'     => [ 'type' => 'object' ],
 			],
-		];
-	}
-
-	protected function context_param(): array {
-		return [
-			'type'        => 'string',
-			'description' => __( 'Scope under which the request is made.', 'mb-custom-post-type' ),
-			'enum'        => [ 'view', 'embed', 'edit' ],
-			'default'     => 'view',
 		];
 	}
 
