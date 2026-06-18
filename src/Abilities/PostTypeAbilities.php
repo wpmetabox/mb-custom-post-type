@@ -88,7 +88,7 @@ class PostTypeAbilities {
 					'type'       => 'object',
 					'required'   => [ 'title' ],
 					'properties' => array_merge(
-						$this->controller()->get_endpoint_args_for_item_schema( WP_REST_Server::CREATABLE ),
+						$this->flatten_string_fields( $this->controller()->get_endpoint_args_for_item_schema( WP_REST_Server::CREATABLE ) ),
 						[ 'context' => $this->context_param() ]
 					),
 				],
@@ -110,13 +110,25 @@ class PostTypeAbilities {
 				'input_schema'        => [
 					'type'       => 'object',
 					'required'   => [ 'id' ],
-					'properties' => $this->update_input_schema(),
+					'properties' => $this->flatten_string_fields( $this->controller()->get_endpoint_args_for_item_schema( WP_REST_Server::EDITABLE ) + [ 'id' => [ 'type' => 'integer', 'description' => __( 'Post ID to update.', 'mb-custom-post-type' ) ], 'context' => $this->context_param() ] ),
 				],
 				'output_schema'       => $this->output_schema(),
 				'meta'                => $this->meta(),
 				'execute_callback'    => [ $this, 'execute_update_post' ],
 			]
 		);
+	}
+
+	private function flatten_string_fields( array $args ): array {
+		foreach ( [ 'title', 'content', 'excerpt' ] as $field ) {
+			if ( isset( $args[ $field ]['properties']['raw']['type'] ) ) {
+				$args[ $field ] = [
+					'type'        => 'string',
+					'description' => $args[ $field ]['description'] ?? '',
+				];
+			}
+		}
+		return $args;
 	}
 
 	private function register_delete(): void {
@@ -140,29 +152,43 @@ class PostTypeAbilities {
 	 */
 	public function execute_get_posts( array $input ) {
 		$context = $input['context'] ?? 'view';
-		$base    = $this->rest_base();
-		$rest    = rest_get_server();
 
 		if ( ! empty( $input['id'] ) ) {
-			$request            = new WP_REST_Request( 'GET', $base . '/' . (int) $input['id'] );
-			$request['id']      = (int) $input['id'];
-			$request['context'] = $context;
-			$response           = $this->controller()->get_item( $request );
-
-			if ( is_wp_error( $response ) ) {
-				return $response;
+			$post = get_post( (int) $input['id'] );
+			if ( ! $post || $this->slug !== $post->post_type ) {
+				return new WP_Error( 'mb_cpt_not_found', __( 'Post not found.', 'mb-custom-post-type' ) );
 			}
-
-			$data = $rest->response_to_data( $response, true );
-			return is_array( $data ) ? [ $data ] : [];
+			return [ $this->format_post( $post, $context ) ];
 		}
 
-		$request = new WP_REST_Request( 'GET', $base );
-		$request->set_query_params( $this->collection_query( $input ) );
-		$request['context'] = $context;
-		$response           = $this->controller()->get_items( $request );
+		$query = [
+			'post_type'      => $this->slug,
+			'post_status'    => $input['status'] ?? 'any',
+			'posts_per_page' => isset( $input['per_page'] ) ? (int) $input['per_page'] : 10,
+			'paged'          => isset( $input['page'] ) ? (int) $input['page'] : 1,
+		];
+		if ( ! empty( $input['search'] ) ) {
+			$query['s'] = $input['search'];
+		}
+		if ( ! empty( $input['author'] ) ) {
+			$query['author'] = (int) $input['author'];
+		}
+		if ( ! empty( $input['parent'] ) ) {
+			$query['post_parent'] = (int) $input['parent'];
+		}
+		if ( ! empty( $input['include'] ) ) {
+			$query['post__in'] = array_map( 'intval', (array) $input['include'] );
+		}
+		if ( ! empty( $input['exclude'] ) ) {
+			$query['post__not_in'] = array_map( 'intval', (array) $input['exclude'] );
+		}
+		if ( ! empty( $input['orderby'] ) ) {
+			$query['orderby'] = $input['orderby'];
+			$query['order']   = $input['order'] ?? 'DESC';
+		}
 
-		return is_wp_error( $response ) ? $response : $rest->response_to_data( $response, true );
+		$posts = get_posts( $query );
+		return array_map( fn( $p ) => $this->format_post( $p, $context ), $posts );
 	}
 
 	/**
@@ -179,68 +205,60 @@ class PostTypeAbilities {
 	 * @return array|WP_Error
 	 */
 	public function execute_create_post( array $input ) {
-		return $this->dispatch( 'POST', '', $input );
+		$postarr = $this->build_postarr( $input );
+		$id      = wp_insert_post( $postarr, true );
+		if ( is_wp_error( $id ) ) {
+			return $id;
+		}
+		$this->apply_terms_and_meta( $id, $input );
+		return $this->format_post( get_post( $id ), $input['context'] ?? 'view' );
 	}
 
 	/**
 	 * @return array|WP_Error
 	 */
 	public function execute_update_post( array $input ) {
-		return $this->dispatch( 'PUT', (int) $input['id'], $input );
+		$id = (int) ( $input['id'] ?? 0 );
+		if ( ! $id ) {
+			return new WP_Error( 'mb_cpt_invalid_id', __( 'Invalid post ID.', 'mb-custom-post-type' ) );
+		}
+		$existing = get_post( $id );
+		if ( ! $existing || $this->slug !== $existing->post_type ) {
+			return new WP_Error( 'mb_cpt_not_found', __( 'Post not found.', 'mb-custom-post-type' ) );
+		}
+		$postarr       = $this->build_postarr( $input );
+		$postarr['ID'] = $id;
+		$result        = wp_update_post( $postarr, true );
+		if ( is_wp_error( $result ) ) {
+			return $result;
+		}
+		$this->apply_terms_and_meta( $id, $input );
+		return $this->format_post( get_post( $id ), $input['context'] ?? 'view' );
 	}
 
 	/**
 	 * @return array|WP_Error
 	 */
 	public function execute_delete_post( array $input ) {
-		$request            = new WP_REST_Request( 'DELETE', $this->rest_base() . '/' . (int) $input['id'] );
-		$request['id']      = (int) $input['id'];
-		$request['context'] = $input['context'] ?? 'view';
-		$request['force']   = ! empty( $input['force'] );
-
-		$response = $this->controller()->delete_item( $request );
-		if ( is_wp_error( $response ) ) {
-			return $response;
+		$id   = (int) ( $input['id'] ?? 0 );
+		$post = get_post( $id );
+		if ( ! $post || $this->slug !== $post->post_type ) {
+			return new WP_Error( 'mb_cpt_not_found', __( 'Post not found.', 'mb-custom-post-type' ) );
 		}
-
-		$data = $response->get_data();
-		if ( isset( $data['deleted'] ) ) {
-			return $data;
+		$previous = $this->format_post( $post, $input['context'] ?? 'view' );
+		$result   = wp_delete_post( $id, ! empty( $input['force'] ) );
+		if ( ! $result ) {
+			return new WP_Error( 'mb_cpt_delete_failed', __( 'Could not delete post.', 'mb-custom-post-type' ) );
 		}
-
 		return [
 			'deleted'  => true,
-			'previous' => $data,
+			'previous' => $previous,
 		];
-	}
-
-	/**
-	 * @return array|WP_Error
-	 */
-	private function dispatch( string $method, string $path_suffix, array $input ) {
-		$request = new WP_REST_Request( $method, $this->rest_base() . $path_suffix );
-		if ( $path_suffix !== '' ) {
-			$id = (int) ltrim( (string) $path_suffix, '/' );
-			$request->set_url_params( [ 'id' => $id ] );
-			$request['id'] = $id;
-		}
-		$request->set_body_params( $this->passthrough( $input, $this->controller()->get_endpoint_args_for_item_schema( 'PUT' === $method ? WP_REST_Server::EDITABLE : WP_REST_Server::CREATABLE ) ) );
-		$request['context'] = $input['context'] ?? 'view';
-
-		$response = 'PUT' === $method
-			? $this->controller()->update_item( $request )
-			: $this->controller()->create_item( $request );
-
-		return is_wp_error( $response ) ? $response : rest_get_server()->response_to_data( $response, true );
 	}
 
 	private function controller(): WP_REST_Posts_Controller {
 		$this->controller ??= new WP_REST_Posts_Controller( $this->slug );
 		return $this->controller;
-	}
-
-	private function rest_base(): string {
-		return '/' . ( $this->post_type->rest_base ?: $this->slug );
 	}
 
 	private function permission( string $cap ): callable {
@@ -268,16 +286,6 @@ class PostTypeAbilities {
 		$properties['id']      = [
 			'type'        => 'integer',
 			'description' => __( 'Post ID to retrieve a single item.', 'mb-custom-post-type' ),
-		];
-		$properties['context'] = $this->context_param();
-		return $properties;
-	}
-
-	private function update_input_schema(): array {
-		$properties            = $this->controller()->get_endpoint_args_for_item_schema( WP_REST_Server::EDITABLE );
-		$properties['id']      = [
-			'type'        => 'integer',
-			'description' => __( 'Post ID to update.', 'mb-custom-post-type' ),
 		];
 		$properties['context'] = $this->context_param();
 		return $properties;
@@ -327,29 +335,97 @@ class PostTypeAbilities {
 		return $schema;
 	}
 
-	private function passthrough( array $input, array $allowed ): array {
-		return array_intersect_key( $input, $allowed );
-	}
-
-	private function collection_query( array $input ): array {
-		$params = $this->controller()->get_collection_params();
-		$query  = [];
-		foreach ( $params as $key => $args ) {
-			if ( array_key_exists( $key, $input ) ) {
-				$query[ $key ] = $input[ $key ];
-			} elseif ( isset( $args['default'] ) ) {
-				$query[ $key ] = $args['default'];
-			}
-		}
-		return $query;
-	}
-
 	private function context_param(): array {
 		return [
 			'type'        => 'string',
 			'description' => __( 'Scope under which the request is made.', 'mb-custom-post-type' ),
 			'enum'        => [ 'view', 'embed', 'edit' ],
 			'default'     => 'view',
+		];
+	}
+
+	private function build_postarr( array $input ): array {
+		$map = [
+			'title'          => 'post_title',
+			'content'        => 'post_content',
+			'excerpt'        => 'post_excerpt',
+			'status'         => 'post_status',
+			'password'       => 'post_password',
+			'name'           => 'post_name',
+			'slug'           => 'post_name',
+			'parent'         => 'post_parent',
+			'menu_order'     => 'menu_order',
+			'comment_status' => 'comment_status',
+			'ping_status'    => 'ping_status',
+			'author'         => 'post_author',
+			'date'           => 'post_date',
+			'date_gmt'       => 'post_date_gmt',
+		];
+		$postarr = [ 'post_type' => $this->slug ];
+		foreach ( $map as $in => $out ) {
+			if ( array_key_exists( $in, $input ) ) {
+				$postarr[ $out ] = $input[ $in ];
+			}
+		}
+		return $postarr;
+	}
+
+	private function apply_terms_and_meta( int $id, array $input ): void {
+		foreach ( array_keys( $input ) as $key ) {
+			if ( ! taxonomy_exists( $key ) || ! is_array( $input[ $key ] ?? null ) ) {
+				continue;
+			}
+			if ( ! is_object_in_taxonomy( $this->slug, $key ) ) {
+				register_taxonomy_for_object_type( $key, $this->slug );
+			}
+			$terms = (array) $input[ $key ];
+			$ids   = array_filter( array_map( fn( $t ) => is_numeric( $t ) ? (int) $t : null, $terms ) );
+			wp_set_object_terms( $id, $ids, $key );
+		}
+		if ( ! empty( $input['meta'] ) && is_array( $input['meta'] ) ) {
+			foreach ( $input['meta'] as $key => $value ) {
+				update_post_meta( $id, $key, $value );
+			}
+		}
+		if ( ! empty( $input['featured_media'] ) ) {
+			set_post_thumbnail( $id, (int) $input['featured_media'] );
+		}
+	}
+
+	private function format_post( $post, string $context ): array {
+		if ( ! $post ) {
+			return [];
+		}
+		return [
+			'id'             => (int) $post->ID,
+			'date'           => mysql2date( 'c', $post->post_date_gmt ?: $post->post_date, false ),
+			'date_gmt'       => mysql2date( 'c', $post->post_date_gmt, false ),
+			'modified'       => mysql2date( 'c', $post->post_modified_gmt ?: $post->post_modified, false ),
+			'modified_gmt'   => mysql2date( 'c', $post->post_modified_gmt, false ),
+			'slug'           => $post->post_name,
+			'status'         => $post->post_status,
+			'type'           => $post->post_type,
+			'link'           => get_permalink( $post ),
+			'title'          => [
+				'raw'      => $post->post_title,
+				'rendered' => get_the_title( $post ),
+			],
+			'content'        => [
+				'raw'      => $post->post_content,
+				'rendered' => apply_filters( 'the_content', $post->post_content ),
+			],
+			'excerpt'        => [
+				'raw'      => $post->post_excerpt,
+				'rendered' => apply_filters( 'the_excerpt', $post->post_excerpt ),
+			],
+			'author'         => (int) $post->post_author,
+			'featured_media' => (int) get_post_thumbnail_id( $post ),
+			'parent'         => (int) $post->post_parent,
+			'menu_order'     => (int) $post->menu_order,
+			'password'       => $post->post_password,
+			'comment_status' => $post->comment_status,
+			'ping_status'    => $post->ping_status,
+			'sticky'         => is_sticky( $post->ID ),
 		];
 	}
 }
