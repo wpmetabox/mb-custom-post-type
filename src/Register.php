@@ -31,6 +31,10 @@ abstract class Register {
 
 
 	protected function sanitize_labels( &$settings ): void {
+		self::sanitize_labels_static( $settings );
+	}
+
+	public static function sanitize_labels_static( array &$settings ): void {
 		$labels = Arr::get( $settings, 'labels', [] );
 		$labels = array_map( 'sanitize_text_field', $labels );
 		$labels = array_map( function ( $text ) {

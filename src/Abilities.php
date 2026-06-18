@@ -2,7 +2,9 @@
 namespace MBCPT;
 
 use MBCPT\Abilities\PostTypeAbilities;
+use MBCPT\Abilities\PostTypeDefinitionAbilities;
 use MBCPT\Abilities\TaxonomyAbilities;
+use MBCPT\Abilities\TaxonomyDefinitionAbilities;
 
 class Abilities {
 
@@ -32,6 +34,9 @@ class Abilities {
 	public function register_abilities(): void {
 		$this->register_post_type_abilities_for_enabled();
 		$this->register_taxonomy_abilities_for_enabled();
+
+		( new PostTypeDefinitionAbilities() )->register();
+		( new TaxonomyDefinitionAbilities() )->register();
 	}
 
 	private function register_post_type_abilities_for_enabled(): void {
