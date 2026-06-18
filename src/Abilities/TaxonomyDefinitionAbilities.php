@@ -3,6 +3,7 @@ namespace MBCPT\Abilities;
 
 use MBCPT\Register;
 use WP_Error;
+use WP_Post_Type;
 use WP_REST_Posts_Controller;
 use WP_REST_Request;
 use WP_REST_Server;
@@ -11,10 +12,9 @@ class TaxonomyDefinitionAbilities {
 
 	private const POST_TYPE = 'mb-taxonomy';
 	private const SLUG      = 'taxonomy';
-	private const LABEL     = 'taxonomy';
-	private const LABEL_PL = 'taxonomies';
 
 	private ?WP_REST_Posts_Controller $controller = null;
+	private ?WP_Post_Type $post_type_object = null;
 
 	public function register(): void {
 		$this->register_get();
@@ -23,12 +23,25 @@ class TaxonomyDefinitionAbilities {
 		$this->register_delete();
 	}
 
+	private function post_type_object(): WP_Post_Type {
+		$this->post_type_object ??= get_post_type_object( self::POST_TYPE );
+		return $this->post_type_object;
+	}
+
+	private function singular_label(): string {
+		return strtolower( $this->post_type_object()->labels->singular_name );
+	}
+
+	private function plural_label(): string {
+		return strtolower( $this->post_type_object()->labels->name );
+	}
+
 	private function register_get(): void {
 		wp_register_ability(
-			"meta-box/get-{self::LABEL_PL}",
+			'meta-box/get-' . self::SLUG . 'ies',
 			[
-				'label'               => sprintf( __( 'Get %s', 'mb-custom-post-type' ), self::LABEL_PL ),
-				'description'         => sprintf( __( 'List or read %s definitions.', 'mb-custom-post-type' ), self::LABEL_PL ),
+				'label'               => sprintf( __( 'Get %s', 'mb-custom-post-type' ), $this->plural_label() ),
+				'description'         => sprintf( __( 'List or read %s definitions.', 'mb-custom-post-type' ), $this->plural_label() ),
 				'category'            => 'meta-box',
 				'permission_callback' => $this->permission(),
 				'input_schema'        => [
@@ -44,10 +57,10 @@ class TaxonomyDefinitionAbilities {
 
 	private function register_create(): void {
 		wp_register_ability(
-			"meta-box/create-{self::SLUG}",
+			'meta-box/create-' . self::SLUG,
 			[
-				'label'               => sprintf( __( 'Create %s', 'mb-custom-post-type' ), self::LABEL ),
-				'description'         => sprintf( __( 'Create a new %s definition.', 'mb-custom-post-type' ), self::LABEL ),
+				'label'               => sprintf( __( 'Create %s', 'mb-custom-post-type' ), $this->singular_label() ),
+				'description'         => sprintf( __( 'Create a new %s definition.', 'mb-custom-post-type' ), $this->singular_label() ),
 				'category'            => 'meta-box',
 				'permission_callback' => $this->permission(),
 				'input_schema'        => [
@@ -58,7 +71,7 @@ class TaxonomyDefinitionAbilities {
 						[
 							'settings' => [
 								'type'        => 'object',
-								'description' => sprintf( __( 'The %s settings object (slug, labels, types, etc.).', 'mb-custom-post-type' ), self::LABEL ),
+								'description' => sprintf( __( 'The %s settings object (slug, labels, types, etc.).', 'mb-custom-post-type' ), $this->singular_label() ),
 							],
 							'context'  => $this->context_param(),
 						]
@@ -73,10 +86,10 @@ class TaxonomyDefinitionAbilities {
 
 	private function register_update(): void {
 		wp_register_ability(
-			"meta-box/update-{self::SLUG}",
+			'meta-box/update-' . self::SLUG,
 			[
-				'label'               => sprintf( __( 'Update %s', 'mb-custom-post-type' ), self::LABEL ),
-				'description'         => sprintf( __( 'Update an existing %s definition. Only provided fields are modified; settings are merged into the existing configuration.', 'mb-custom-post-type' ), self::LABEL ),
+				'label'               => sprintf( __( 'Update %s', 'mb-custom-post-type' ), $this->singular_label() ),
+				'description'         => sprintf( __( 'Update an existing %s definition. Only provided fields are modified; settings are merged into the existing configuration.', 'mb-custom-post-type' ), $this->singular_label() ),
 				'category'            => 'meta-box',
 				'permission_callback' => $this->permission(),
 				'input_schema'        => [
@@ -93,10 +106,10 @@ class TaxonomyDefinitionAbilities {
 
 	private function register_delete(): void {
 		wp_register_ability(
-			"meta-box/delete-{self::SLUG}",
+			'meta-box/delete-' . self::SLUG,
 			[
-				'label'               => sprintf( __( 'Delete %s', 'mb-custom-post-type' ), self::LABEL ),
-				'description'         => sprintf( __( 'Delete a %s definition.', 'mb-custom-post-type' ), self::LABEL ),
+				'label'               => sprintf( __( 'Delete %s', 'mb-custom-post-type' ), $this->singular_label() ),
+				'description'         => sprintf( __( 'Delete a %s definition.', 'mb-custom-post-type' ), $this->singular_label() ),
 				'category'            => 'meta-box',
 				'permission_callback' => $this->permission(),
 				'input_schema'        => $this->delete_input_schema(),
@@ -147,9 +160,9 @@ class TaxonomyDefinitionAbilities {
 			$input['settings'] = $settings;
 		}
 
-		$post_content = $this->encode_settings( $input['settings'] ?? [] );
-		$body         = $this->passthrough( $input, $this->controller()->get_endpoint_args_for_item_schema( WP_REST_Server::CREATABLE ) );
-		$body['content'] = $post_content;
+		$post_content     = $this->encode_settings( $input['settings'] ?? [] );
+		$body             = $this->passthrough( $input, $this->controller()->get_endpoint_args_for_item_schema( WP_REST_Server::CREATABLE ) );
+		$body['content']  = $post_content;
 
 		$request = new WP_REST_Request( 'POST', '/' . self::POST_TYPE );
 		$request->set_body_params( $body );
@@ -166,7 +179,7 @@ class TaxonomyDefinitionAbilities {
 		$id   = (int) $input['id'];
 		$post = get_post( $id );
 		if ( ! $post || $post->post_type !== self::POST_TYPE ) {
-			return new WP_Error( 'mbcpt_not_found', sprintf( __( '%s definition not found.', 'mb-custom-post-type' ), ucfirst( self::LABEL ) ), [ 'status' => 404 ] );
+			return new WP_Error( 'mbcpt_not_found', sprintf( __( '%s definition not found.', 'mb-custom-post-type' ), ucfirst( $this->singular_label() ) ), [ 'status' => 404 ] );
 		}
 
 		$body = $this->passthrough( $input, $this->controller()->get_endpoint_args_for_item_schema( WP_REST_Server::EDITABLE ) );
@@ -248,7 +261,7 @@ class TaxonomyDefinitionAbilities {
 		$properties            = $this->controller()->get_collection_params();
 		$properties['id']      = [
 			'type'        => 'integer',
-			'description' => sprintf( __( '%s definition ID to retrieve a single item.', 'mb-custom-post-type' ), ucfirst( self::LABEL ) ),
+			'description' => sprintf( __( '%s definition ID to retrieve a single item.', 'mb-custom-post-type' ), ucfirst( $this->singular_label() ) ),
 		];
 		$properties['context'] = $this->context_param();
 		return $properties;
@@ -258,11 +271,11 @@ class TaxonomyDefinitionAbilities {
 		$properties             = $this->controller()->get_endpoint_args_for_item_schema( WP_REST_Server::EDITABLE );
 		$properties['id']       = [
 			'type'        => 'integer',
-			'description' => sprintf( __( '%s definition ID to update.', 'mb-custom-post-type' ), ucfirst( self::LABEL ) ),
+			'description' => sprintf( __( '%s definition ID to update.', 'mb-custom-post-type' ), ucfirst( $this->singular_label() ) ),
 		];
 		$properties['settings'] = [
 			'type'        => 'object',
-			'description' => sprintf( __( 'Partial %s settings to merge into the existing configuration.', 'mb-custom-post-type' ), self::LABEL ),
+			'description' => sprintf( __( 'Partial %s settings to merge into the existing configuration.', 'mb-custom-post-type' ), $this->singular_label() ),
 		];
 		$properties['context']  = $this->context_param();
 		return $properties;
@@ -275,7 +288,7 @@ class TaxonomyDefinitionAbilities {
 			'properties' => [
 				'id'    => [
 					'type'        => 'integer',
-					'description' => sprintf( __( '%s definition ID to delete.', 'mb-custom-post-type' ), ucfirst( self::LABEL ) ),
+					'description' => sprintf( __( '%s definition ID to delete.', 'mb-custom-post-type' ), ucfirst( $this->singular_label() ) ),
 				],
 				'force' => [
 					'type'        => 'boolean',
