@@ -8,22 +8,10 @@ use WP_REST_Taxonomies_Controller;
 use WP_REST_Terms_Controller;
 use WP_REST_Server;
 
-class TaxonomyAbilities {
+class TaxonomyAbilities extends BaseAbilities {
 
-	private string $slug;
-	private string $singular;
-	private string $label;
 	private WP_Taxonomy $taxonomy;
-	private array $settings;
 	private ?WP_REST_Terms_Controller $controller = null;
-
-	private const ABILITY_MAP = [
-		'abilities_get_data' => 'register_get_metadata',
-		'abilities_get'      => 'register_get',
-		'abilities_create'   => 'register_create',
-		'abilities_update'   => 'register_update',
-		'abilities_delete'   => 'register_delete',
-	];
 
 	public function __construct( string $slug, WP_Taxonomy $taxonomy, array $settings ) {
 		$this->slug     = $slug;
@@ -33,15 +21,7 @@ class TaxonomyAbilities {
 		$this->settings = $settings;
 	}
 
-	public function register(): void {
-		foreach ( self::ABILITY_MAP as $key => $method ) {
-			if ( ! empty( $this->settings[ $key ] ) ) {
-				$this->$method();
-			}
-		}
-	}
-
-	private function register_get(): void {
+	protected function register_get(): void {
 		wp_register_ability(
 			"meta-box/get-term-{$this->slug}",
 			[
@@ -51,16 +31,27 @@ class TaxonomyAbilities {
 				'permission_callback' => $this->permission( $this->taxonomy->cap->assign_terms ),
 				'input_schema'        => [
 					'type'       => 'object',
-					'properties' => $this->collection_input_schema(),
+					'properties' => array_merge(
+						$this->controller()->get_collection_params(),
+						[
+							'id' => [
+								'type'        => 'integer',
+								'description' => __( 'Term ID to retrieve a single item.', 'mb-custom-post-type' ),
+							],
+						]
+					),
 				],
-				'output_schema'       => $this->items_schema(),
+				'output_schema'       => [
+					'type'  => 'array',
+					'items' => $this->get_item_schema(),
+				],
 				'meta'                => $this->meta( true ),
 				'execute_callback'    => [ $this, 'execute_get_terms' ],
 			]
 		);
 	}
 
-	private function register_get_metadata(): void {
+	protected function register_get_metadata(): void {
 		wp_register_ability(
 			"meta-box/get-taxonomy-{$this->slug}",
 			[
@@ -76,7 +67,7 @@ class TaxonomyAbilities {
 		);
 	}
 
-	private function register_create(): void {
+	protected function register_create(): void {
 		wp_register_ability(
 			"meta-box/create-term-{$this->slug}",
 			[
@@ -87,19 +78,16 @@ class TaxonomyAbilities {
 				'input_schema'        => [
 					'type'       => 'object',
 					'required'   => [ 'name' ],
-					'properties' => array_merge(
-						$this->controller()->get_endpoint_args_for_item_schema( WP_REST_Server::CREATABLE ),
-						[ 'context' => $this->context_param() ]
-					),
+					'properties' => $this->controller()->get_endpoint_args_for_item_schema( WP_REST_Server::CREATABLE ),
 				],
-				'output_schema'       => $this->controller()->get_item_schema(),
+				'output_schema'       => $this->get_item_schema(),
 				'meta'                => $this->meta(),
 				'execute_callback'    => [ $this, 'execute_create_term' ],
 			]
 		);
 	}
 
-	private function register_update(): void {
+	protected function register_update(): void {
 		wp_register_ability(
 			"meta-box/update-term-{$this->slug}",
 			[
@@ -112,14 +100,14 @@ class TaxonomyAbilities {
 					'required'   => [ 'id' ],
 					'properties' => $this->update_input_schema(),
 				],
-				'output_schema'       => $this->controller()->get_item_schema(),
+				'output_schema'       => $this->get_item_schema(),
 				'meta'                => $this->meta(),
 				'execute_callback'    => [ $this, 'execute_update_term' ],
 			]
 		);
 	}
 
-	private function register_delete(): void {
+	protected function register_delete(): void {
 		wp_register_ability(
 			"meta-box/delete-term-{$this->slug}",
 			[
@@ -128,11 +116,22 @@ class TaxonomyAbilities {
 				'category'            => 'meta-box',
 				'permission_callback' => $this->permission( $this->taxonomy->cap->delete_terms ),
 				'input_schema'        => $this->delete_input_schema( 'Term' ),
-				'output_schema'       => $this->delete_output_schema(),
+				'output_schema'       => [
+					'type'       => 'object',
+					'required'   => [ 'deleted' ],
+					'properties' => [
+						'deleted'  => [ 'type' => 'boolean' ],
+						'previous' => $this->get_item_schema(),
+					],
+				],
 				'meta'                => $this->meta( false, true ),
 				'execute_callback'    => [ $this, 'execute_delete_term' ],
 			]
 		);
+	}
+
+	protected function get_item_schema(): array {
+		return $this->controller()->get_item_schema();
 	}
 
 	/**
@@ -241,93 +240,17 @@ class TaxonomyAbilities {
 		return $this->controller;
 	}
 
-	private function permission( string $cap ): callable {
-		return function ( $input = [] ) use ( $cap ) {
-			$input = is_array( $input ) ? $input : [];
-			return ! empty( $input['id'] )
-				? current_user_can( $cap, (int) $input['id'] )
-				: current_user_can( $cap );
-		};
-	}
-
-	private function meta( bool $readonly = false, bool $destructive = false, bool $idempotent = true ): array {
-		return [
-			'annotations' => [
-				'readonly'    => $readonly,
-				'destructive' => $destructive,
-				'idempotent'  => $idempotent,
-			],
-			'mcp'         => [ 'public' => true ],
-		];
-	}
-
-	private function collection_input_schema(): array {
-		$properties            = $this->controller()->get_collection_params();
-		$properties['id']      = [
-			'type'        => 'integer',
-			'description' => __( 'Term ID to retrieve a single item.', 'mb-custom-post-type' ),
-		];
-		$properties['context'] = $this->context_param();
-		return $properties;
-	}
-
 	private function update_input_schema(): array {
 		$properties            = $this->controller()->get_endpoint_args_for_item_schema( WP_REST_Server::EDITABLE );
-		$properties['id']      = [
+		$properties['id'] = [
 			'type'        => 'integer',
 			'description' => __( 'Term ID to update.', 'mb-custom-post-type' ),
 		];
-		$properties['context'] = $this->context_param();
 		return $properties;
 	}
 
-	private function delete_input_schema( string $label ): array {
-		return [
-			'type'       => 'object',
-			'required'   => [ 'id' ],
-			'properties' => [
-				'id'    => [
-					'type'        => 'integer',
-					'description' => sprintf( __( '%s ID to delete.', 'mb-custom-post-type' ), $label ),
-				],
-				'force' => [
-					'type'        => 'boolean',
-					'description' => __( 'Required to be true, as terms do not support trashing.', 'mb-custom-post-type' ),
-					'default'     => false,
-				],
-			],
-		];
-	}
-
-	private function delete_output_schema(): array {
-		return [
-			'type'       => 'object',
-			'required'   => [ 'deleted' ],
-			'properties' => [
-				'deleted'  => [ 'type' => 'boolean' ],
-				'previous' => $this->controller()->get_item_schema(),
-			],
-		];
-	}
-
-	private function items_schema(): array {
-		return [
-			'type'  => 'array',
-			'items' => $this->controller()->get_item_schema(),
-		];
-	}
-
-	private function context_param(): array {
-		return [
-			'type'        => 'string',
-			'description' => __( 'Scope under which the request is made.', 'mb-custom-post-type' ),
-			'enum'        => [ 'view', 'embed', 'edit' ],
-			'default'     => 'view',
-		];
-	}
-
 	private function build_term_args( array $input ): array {
-		$map = [
+		$map  = [
 			'name'        => 'name',
 			'slug'        => 'slug',
 			'description' => 'description',

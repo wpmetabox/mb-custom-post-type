@@ -6,16 +6,19 @@ use WP_Error;
 use WP_Post;
 use WP_Post_Type;
 
-abstract class DefinitionAbilities {
+class DefinitionAbilities {
 
-	abstract protected function post_type(): string;
-	abstract protected function ability_slug(): string;
-	abstract protected function ability_slug_plural(): string;
-	abstract protected function settings_description(): string;
-	abstract protected function label_singular(): string;
-	abstract protected function label_plural(): string;
+	private string $post_type;
+	private string $ability_slug;
+	private string $ability_slug_plural;
+	private WP_Post_Type $post_type_object;
 
-	private ?WP_Post_Type $post_type_object = null;
+	public function __construct( string $post_type, string $ability_slug, string $ability_slug_plural ) {
+		$this->post_type           = $post_type;
+		$this->post_type_object    = get_post_type_object( $post_type );
+		$this->ability_slug        = $ability_slug;
+		$this->ability_slug_plural = $ability_slug_plural;
+	}
 
 	public function register(): void {
 		$this->register_get();
@@ -24,26 +27,12 @@ abstract class DefinitionAbilities {
 		$this->register_delete();
 	}
 
-	protected function post_type_object(): WP_Post_Type {
-		$this->post_type_object ??= get_post_type_object( $this->post_type() );
-		return $this->post_type_object;
-	}
-
-	protected function singular_label(): string {
-		return strtolower( $this->post_type_object()->labels->singular_name );
-	}
-
-	protected function plural_label(): string {
-		return strtolower( $this->post_type_object()->labels->name );
-	}
-
 	protected function register_get(): void {
-		$context = $this->context_param();
 		wp_register_ability(
-			'meta-box/get-' . $this->ability_slug_plural(),
+			'meta-box/get-' . $this->ability_slug_plural,
 			[
-				'label'               => sprintf( __( 'Get %s', 'mb-custom-post-type' ), $this->label_plural() ),
-				'description'         => sprintf( __( 'List or read %s definitions.', 'mb-custom-post-type' ), $this->label_plural() ),
+				'label'               => sprintf( __( 'Get %s', 'mb-custom-post-type' ), strtolower( $this->post_type_object->labels->name ) ),
+				'description'         => sprintf( __( 'List or read %s.', 'mb-custom-post-type' ), strtolower( $this->post_type_object->labels->name ) ),
 				'category'            => 'meta-box',
 				'permission_callback' => $this->permission(),
 				'input_schema'        => [
@@ -69,17 +58,17 @@ abstract class DefinitionAbilities {
 						'slug'     => [
 							'type'        => 'array',
 							'items'       => [ 'type' => 'string' ],
-							'description' => __( 'Limit result set to definitions with one or more specific slugs.', 'mb-custom-post-type' ),
+							'description' => __( 'Limit result set to items with one or more specific slugs.', 'mb-custom-post-type' ),
 						],
 						'include'  => [
 							'type'        => 'array',
 							'items'       => [ 'type' => 'integer' ],
-							'description' => __( 'Limit result set to specific definition IDs.', 'mb-custom-post-type' ),
+							'description' => __( 'Limit result set to specific item IDs.', 'mb-custom-post-type' ),
 						],
 						'exclude'  => [
 							'type'        => 'array',
 							'items'       => [ 'type' => 'integer' ],
-							'description' => __( 'Ensure result set excludes specific definition IDs.', 'mb-custom-post-type' ),
+							'description' => __( 'Ensure result set excludes specific item IDs.', 'mb-custom-post-type' ),
 						],
 						'orderby'  => [
 							'type'        => 'string',
@@ -99,14 +88,13 @@ abstract class DefinitionAbilities {
 								'type' => 'string',
 								'enum' => [ 'publish', 'future', 'draft', 'pending', 'private', 'trash', 'any' ],
 							],
-							'description' => __( 'Limit result set to definitions assigned one or more statuses.', 'mb-custom-post-type' ),
+							'description' => __( 'Limit result set to items assigned one or more statuses.', 'mb-custom-post-type' ),
 							'default'     => [ 'publish' ],
 						],
 						'id'       => [
 							'type'        => 'integer',
-							'description' => sprintf( __( '%s definition ID to retrieve a single item.', 'mb-custom-post-type' ), ucfirst( $this->singular_label() ) ),
+							'description' => sprintf( __( '%s ID to retrieve a single item.', 'mb-custom-post-type' ), ucfirst( strtolower( $this->post_type_object->labels->singular_name ) ) ),
 						],
-						'context'  => $context,
 					],
 				],
 				'output_schema'       => [
@@ -120,12 +108,11 @@ abstract class DefinitionAbilities {
 	}
 
 	protected function register_create(): void {
-		$context = $this->context_param();
 		wp_register_ability(
-			'meta-box/create-' . $this->ability_slug(),
+			'meta-box/create-' . $this->ability_slug,
 			[
-				'label'               => sprintf( __( 'Create %s', 'mb-custom-post-type' ), $this->label_singular() ),
-				'description'         => sprintf( __( 'Create a new %s definition.', 'mb-custom-post-type' ), $this->label_singular() ),
+				'label'               => sprintf( __( 'Create %s', 'mb-custom-post-type' ), strtolower( $this->post_type_object->labels->singular_name ) ),
+				'description'         => sprintf( __( 'Create a new %s.', 'mb-custom-post-type' ), strtolower( $this->post_type_object->labels->singular_name ) ),
 				'category'            => 'meta-box',
 				'permission_callback' => $this->permission(),
 				'input_schema'        => [
@@ -134,11 +121,11 @@ abstract class DefinitionAbilities {
 					'properties' => [
 						'title'    => [
 							'type'        => 'string',
-							'description' => sprintf( __( '%s definition title.', 'mb-custom-post-type' ), ucfirst( $this->singular_label() ) ),
+							'description' => sprintf( __( '%s title.', 'mb-custom-post-type' ), ucfirst( strtolower( $this->post_type_object->labels->singular_name ) ) ),
 						],
 						'settings' => [
 							'type'        => 'object',
-							'description' => sprintf( $this->settings_description(), $this->singular_label() ),
+							'description' => sprintf( __( 'Settings object (slug, labels, etc.).', 'mb-custom-post-type' ), strtolower( $this->post_type_object->labels->singular_name ) ),
 						],
 						'status'   => [
 							'type'        => 'string',
@@ -146,7 +133,6 @@ abstract class DefinitionAbilities {
 							'enum'        => [ 'publish', 'future', 'draft', 'pending', 'private' ],
 							'default'     => 'publish',
 						],
-						'context'  => $context,
 					],
 				],
 				'output_schema'       => $this->output_schema(),
@@ -157,12 +143,11 @@ abstract class DefinitionAbilities {
 	}
 
 	protected function register_update(): void {
-		$context = $this->context_param();
 		wp_register_ability(
-			'meta-box/update-' . $this->ability_slug(),
+			'meta-box/update-' . $this->ability_slug,
 			[
-				'label'               => sprintf( __( 'Update %s', 'mb-custom-post-type' ), $this->label_singular() ),
-				'description'         => sprintf( __( 'Update an existing %s definition. Only provided fields are modified; settings are merged into the existing configuration.', 'mb-custom-post-type' ), $this->label_singular() ),
+				'label'               => sprintf( __( 'Update %s', 'mb-custom-post-type' ), strtolower( $this->post_type_object->labels->singular_name ) ),
+				'description'         => sprintf( __( 'Update an existing %s. Only provided fields are modified; settings are merged into the existing configuration.', 'mb-custom-post-type' ), strtolower( $this->post_type_object->labels->singular_name ) ),
 				'category'            => 'meta-box',
 				'permission_callback' => $this->permission(),
 				'input_schema'        => [
@@ -171,11 +156,11 @@ abstract class DefinitionAbilities {
 					'properties' => [
 						'id'       => [
 							'type'        => 'integer',
-							'description' => sprintf( __( '%s definition ID to update.', 'mb-custom-post-type' ), ucfirst( $this->singular_label() ) ),
+							'description' => sprintf( __( '%s ID to update.', 'mb-custom-post-type' ), ucfirst( strtolower( $this->post_type_object->labels->singular_name ) ) ),
 						],
 						'title'    => [
 							'type'        => 'string',
-							'description' => sprintf( __( '%s definition title.', 'mb-custom-post-type' ), ucfirst( $this->singular_label() ) ),
+							'description' => sprintf( __( '%s title.', 'mb-custom-post-type' ), ucfirst( strtolower( $this->post_type_object->labels->singular_name ) ) ),
 						],
 						'status'   => [
 							'type'        => 'string',
@@ -184,9 +169,8 @@ abstract class DefinitionAbilities {
 						],
 						'settings' => [
 							'type'        => 'object',
-							'description' => sprintf( __( 'Partial %s settings to merge into the existing configuration.', 'mb-custom-post-type' ), $this->singular_label() ),
+							'description' => sprintf( __( 'Partial settings to merge into the existing configuration.', 'mb-custom-post-type' ), strtolower( $this->post_type_object->labels->singular_name ) ),
 						],
-						'context'  => $context,
 					],
 				],
 				'output_schema'       => $this->output_schema(),
@@ -198,10 +182,10 @@ abstract class DefinitionAbilities {
 
 	protected function register_delete(): void {
 		wp_register_ability(
-			'meta-box/delete-' . $this->ability_slug(),
+			'meta-box/delete-' . $this->ability_slug,
 			[
-				'label'               => sprintf( __( 'Delete %s', 'mb-custom-post-type' ), $this->label_singular() ),
-				'description'         => sprintf( __( 'Delete a %s definition.', 'mb-custom-post-type' ), $this->label_singular() ),
+				'label'               => sprintf( __( 'Delete %s', 'mb-custom-post-type' ), strtolower( $this->post_type_object->labels->singular_name ) ),
+				'description'         => sprintf( __( 'Delete a %s.', 'mb-custom-post-type' ), strtolower( $this->post_type_object->labels->singular_name ) ),
 				'category'            => 'meta-box',
 				'permission_callback' => $this->permission(),
 				'input_schema'        => [
@@ -210,7 +194,7 @@ abstract class DefinitionAbilities {
 					'properties' => [
 						'id'    => [
 							'type'        => 'integer',
-							'description' => sprintf( __( '%s definition ID to delete.', 'mb-custom-post-type' ), ucfirst( $this->singular_label() ) ),
+							'description' => sprintf( __( '%s ID to delete.', 'mb-custom-post-type' ), ucfirst( strtolower( $this->post_type_object->labels->singular_name ) ) ),
 						],
 						'force' => [
 							'type'        => 'boolean',
@@ -238,11 +222,8 @@ abstract class DefinitionAbilities {
 	 */
 	public function execute_get( array $input ) {
 		if ( ! empty( $input['id'] ) ) {
-			$post = $this->find_definition( (int) $input['id'] );
-			if ( is_wp_error( $post ) ) {
-				return $post;
-			}
-			return [ $this->format_post( $post ) ];
+			$post = $this->find( (int) $input['id'] );
+			return is_wp_error( $post ) ? $post : [ $this->format_post( $post ) ];
 		}
 
 		$posts = get_posts( $this->build_collection_query( $input ) );
@@ -261,24 +242,20 @@ abstract class DefinitionAbilities {
 		$settings = $this->extract_settings( $input );
 
 		$post_id = wp_insert_post( [
-			'post_type'    => $this->post_type(),
+			'post_type'    => $this->post_type,
 			'post_status'  => (string) ( $input['status'] ?? 'publish' ),
 			'post_title'   => $title,
 			'post_content' => $this->encode_settings( $settings ),
 		], true );
 
-		if ( is_wp_error( $post_id ) ) {
-			return $post_id;
-		}
-
-		return $this->format_post( get_post( $post_id ) );
+		return is_wp_error( $post_id ) ? $post_id : $this->format_post( get_post( $post_id ) );
 	}
 
 	/**
 	 * @return array|WP_Error
 	 */
 	public function execute_update( array $input ) {
-		$post = $this->find_definition( (int) ( $input['id'] ?? 0 ) );
+		$post = $this->find( (int) ( $input['id'] ?? 0 ) );
 		if ( is_wp_error( $post ) ) {
 			return $post;
 		}
@@ -298,18 +275,15 @@ abstract class DefinitionAbilities {
 		}
 
 		$result = wp_update_post( $post_data, true );
-		if ( is_wp_error( $result ) ) {
-			return $result;
-		}
 
-		return $this->format_post( get_post( $post->ID ) );
+		return is_wp_error( $result ) ? $result : $this->format_post( get_post( $post->ID ) );
 	}
 
 	/**
 	 * @return array|WP_Error
 	 */
 	public function execute_delete( array $input ) {
-		$post = $this->find_definition( (int) ( $input['id'] ?? 0 ) );
+		$post = $this->find( (int) ( $input['id'] ?? 0 ) );
 		if ( is_wp_error( $post ) ) {
 			return $post;
 		}
@@ -317,7 +291,7 @@ abstract class DefinitionAbilities {
 		$previous = $this->format_post( $post );
 		$result   = wp_delete_post( $post->ID, ! empty( $input['force'] ) );
 		if ( ! $result ) {
-			return new WP_Error( 'mbcpt_delete_failed', __( 'Could not delete the definition.', 'mb-custom-post-type' ), [ 'status' => 500 ] );
+			return new WP_Error( 'mbcpt_delete_failed', sprinf( __( 'Could not delete the %s.', 'mb-custom-post-type' ), strtolower( $this->post_type_object->labels->singular_name ) ), [ 'status' => 500 ] );
 		}
 
 		return [
@@ -329,17 +303,17 @@ abstract class DefinitionAbilities {
 	/**
 	 * @return WP_Post|WP_Error
 	 */
-	protected function find_definition( int $id ) {
+	protected function find( int $id ) {
 		$post = $id ? get_post( $id ) : null;
-		if ( ! $post || $post->post_type !== $this->post_type() ) {
-			return new WP_Error( 'mbcpt_not_found', sprintf( __( '%s definition not found.', 'mb-custom-post-type' ), ucfirst( $this->singular_label() ) ), [ 'status' => 404 ] );
+		if ( ! $post || $post->post_type !== $this->post_type ) {
+			return new WP_Error( 'mbcpt_not_found', sprintf( __( '%s not found.', 'mb-custom-post-type' ), ucfirst( strtolower( $this->post_type_object->labels->singular_name ) ) ), [ 'status' => 404 ] );
 		}
 		return $post;
 	}
 
 	protected function build_collection_query( array $input ): array {
 		$query = [
-			'post_type'              => $this->post_type(),
+			'post_type'              => $this->post_type,
 			'post_status'            => $this->normalize_status( $input['status'] ?? 'publish' ),
 			'posts_per_page'         => isset( $input['per_page'] ) ? max( 1, (int) $input['per_page'] ) : 10,
 			'paged'                  => isset( $input['page'] ) ? max( 1, (int) $input['page'] ) : 1,
@@ -422,15 +396,6 @@ abstract class DefinitionAbilities {
 				'modified_gmt' => [ 'type' => 'string' ],
 				'settings'     => [ 'type' => 'object' ],
 			],
-		];
-	}
-
-	protected function context_param(): array {
-		return [
-			'type'        => 'string',
-			'description' => __( 'Scope under which the request is made.', 'mb-custom-post-type' ),
-			'enum'        => [ 'view', 'embed', 'edit' ],
-			'default'     => 'view',
 		];
 	}
 
