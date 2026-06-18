@@ -139,30 +139,44 @@ class TaxonomyAbilities {
 	 * @return array|WP_Error
 	 */
 	public function execute_get_terms( array $input ) {
-		$context = $input['context'] ?? 'view';
-		$base    = $this->rest_base();
-		$rest    = rest_get_server();
-
 		if ( ! empty( $input['id'] ) ) {
-			$request            = new WP_REST_Request( 'GET', $base . '/' . (int) $input['id'] );
-			$request['id']      = (int) $input['id'];
-			$request['context'] = $context;
-			$response           = $this->controller()->get_item( $request );
-
-			if ( is_wp_error( $response ) ) {
-				return $response;
+			$term = get_term( (int) $input['id'], $this->slug );
+			if ( is_wp_error( $term ) || ! $term ) {
+				return new WP_Error( 'mb_cpt_not_found', __( 'Term not found.', 'mb-custom-post-type' ) );
 			}
-
-			$data = $rest->response_to_data( $response, true );
-			return is_array( $data ) ? [ $data ] : [];
+			return [ $this->format_term( $term ) ];
 		}
 
-		$request = new WP_REST_Request( 'GET', $base );
-		$request->set_query_params( $this->collection_query( $input ) );
-		$request['context'] = $context;
-		$response           = $this->controller()->get_items( $request );
+		$per_page = isset( $input['per_page'] ) ? (int) $input['per_page'] : 10;
+		$page     = isset( $input['page'] ) ? (int) $input['page'] : 1;
+		$query    = [
+			'taxonomy'   => $this->slug,
+			'hide_empty' => false,
+			'number'     => $per_page,
+			'offset'     => max( 0, ( $page - 1 ) * $per_page ),
+		];
+		if ( ! empty( $input['search'] ) ) {
+			$query['search'] = $input['search'];
+		}
+		if ( ! empty( $input['parent'] ) ) {
+			$query['parent'] = (int) $input['parent'];
+		}
+		if ( ! empty( $input['include'] ) ) {
+			$query['include'] = array_map( 'intval', (array) $input['include'] );
+		}
+		if ( ! empty( $input['exclude'] ) ) {
+			$query['exclude'] = array_map( 'intval', (array) $input['exclude'] );
+		}
+		if ( ! empty( $input['orderby'] ) ) {
+			$query['orderby'] = $input['orderby'];
+			$query['order']   = $input['order'] ?? 'ASC';
+		}
 
-		return is_wp_error( $response ) ? $response : $rest->response_to_data( $response, true );
+		$terms = get_terms( $query );
+		if ( is_wp_error( $terms ) ) {
+			return $terms;
+		}
+		return array_map( fn( $t ) => $this->format_term( $t ), $terms );
 	}
 
 	/**
@@ -179,68 +193,52 @@ class TaxonomyAbilities {
 	 * @return array|WP_Error
 	 */
 	public function execute_create_term( array $input ) {
-		return $this->dispatch( 'POST', '', $input );
+		$name   = $input['name'] ?? '';
+		$result = wp_insert_term( $name, $this->slug, $this->build_term_args( $input ) );
+		if ( is_wp_error( $result ) ) {
+			return $result;
+		}
+		return $this->format_term( get_term( $result['term_id'], $this->slug ) );
 	}
 
 	/**
 	 * @return array|WP_Error
 	 */
 	public function execute_update_term( array $input ) {
-		return $this->dispatch( 'PUT', (int) $input['id'], $input );
+		$id = (int) ( $input['id'] ?? 0 );
+		if ( ! $id ) {
+			return new WP_Error( 'mb_cpt_invalid_id', __( 'Invalid term ID.', 'mb-custom-post-type' ) );
+		}
+		$result = wp_update_term( $id, $this->slug, $this->build_term_args( $input ) );
+		if ( is_wp_error( $result ) ) {
+			return $result;
+		}
+		return $this->format_term( get_term( $id, $this->slug ) );
 	}
 
 	/**
 	 * @return array|WP_Error
 	 */
 	public function execute_delete_term( array $input ) {
-		$request            = new WP_REST_Request( 'DELETE', $this->rest_base() . '/' . (int) $input['id'] );
-		$request['id']      = (int) $input['id'];
-		$request['context'] = $input['context'] ?? 'view';
-		$request['force']   = ! empty( $input['force'] );
-
-		$response = $this->controller()->delete_item( $request );
-		if ( is_wp_error( $response ) ) {
-			return $response;
+		$id   = (int) ( $input['id'] ?? 0 );
+		$term = get_term( $id, $this->slug );
+		if ( is_wp_error( $term ) || ! $term ) {
+			return new WP_Error( 'mb_cpt_not_found', __( 'Term not found.', 'mb-custom-post-type' ) );
 		}
-
-		$data = $response->get_data();
-		if ( isset( $data['deleted'] ) ) {
-			return $data;
+		$previous = $this->format_term( $term );
+		$result   = wp_delete_term( $id, $this->slug );
+		if ( is_wp_error( $result ) || ! $result ) {
+			return new WP_Error( 'mb_cpt_delete_failed', __( 'Could not delete term.', 'mb-custom-post-type' ) );
 		}
-
 		return [
 			'deleted'  => true,
-			'previous' => $data,
+			'previous' => $previous,
 		];
-	}
-
-	/**
-	 * @return array|WP_Error
-	 */
-	private function dispatch( string $method, string $path_suffix, array $input ) {
-		$request = new WP_REST_Request( $method, $this->rest_base() . $path_suffix );
-		if ( $path_suffix !== '' ) {
-			$id = (int) ltrim( (string) $path_suffix, '/' );
-			$request->set_url_params( [ 'id' => $id ] );
-			$request['id'] = $id;
-		}
-		$request->set_body_params( $this->passthrough( $input, $this->controller()->get_endpoint_args_for_item_schema( 'PUT' === $method ? WP_REST_Server::EDITABLE : WP_REST_Server::CREATABLE ) ) );
-		$request['context'] = $input['context'] ?? 'view';
-
-		$response = 'PUT' === $method
-			? $this->controller()->update_item( $request )
-			: $this->controller()->create_item( $request );
-
-		return is_wp_error( $response ) ? $response : rest_get_server()->response_to_data( $response, true );
 	}
 
 	private function controller(): WP_REST_Terms_Controller {
 		$this->controller ??= new WP_REST_Terms_Controller( $this->slug );
 		return $this->controller;
-	}
-
-	private function rest_base(): string {
-		return '/' . ( $this->taxonomy->rest_base ?: $this->slug );
 	}
 
 	private function permission( string $cap ): callable {
@@ -319,29 +317,44 @@ class TaxonomyAbilities {
 		];
 	}
 
-	private function passthrough( array $input, array $allowed ): array {
-		return array_intersect_key( $input, $allowed );
-	}
-
-	private function collection_query( array $input ): array {
-		$params = $this->controller()->get_collection_params();
-		$query  = [];
-		foreach ( $params as $key => $args ) {
-			if ( array_key_exists( $key, $input ) ) {
-				$query[ $key ] = $input[ $key ];
-			} elseif ( isset( $args['default'] ) ) {
-				$query[ $key ] = $args['default'];
-			}
-		}
-		return $query;
-	}
-
 	private function context_param(): array {
 		return [
 			'type'        => 'string',
 			'description' => __( 'Scope under which the request is made.', 'mb-custom-post-type' ),
 			'enum'        => [ 'view', 'embed', 'edit' ],
 			'default'     => 'view',
+		];
+	}
+
+	private function build_term_args( array $input ): array {
+		$map = [
+			'name'        => 'name',
+			'slug'        => 'slug',
+			'description' => 'description',
+			'parent'      => 'parent',
+		];
+		$args = [];
+		foreach ( $map as $in => $out ) {
+			if ( array_key_exists( $in, $input ) ) {
+				$args[ $out ] = $input[ $in ];
+			}
+		}
+		return $args;
+	}
+
+	private function format_term( $term ): array {
+		if ( ! $term || is_wp_error( $term ) ) {
+			return [];
+		}
+		return [
+			'id'          => (int) $term->term_id,
+			'count'       => (int) $term->count,
+			'description' => $term->description,
+			'link'        => get_term_link( $term ),
+			'name'        => $term->name,
+			'slug'        => $term->slug,
+			'taxonomy'    => $term->taxonomy,
+			'parent'      => (int) $term->parent,
 		];
 	}
 }
