@@ -110,7 +110,13 @@ class PostTypeAbilities {
 				'input_schema'        => [
 					'type'       => 'object',
 					'required'   => [ 'id' ],
-					'properties' => $this->flatten_string_fields( $this->controller()->get_endpoint_args_for_item_schema( WP_REST_Server::EDITABLE ) + [ 'id' => [ 'type' => 'integer', 'description' => __( 'Post ID to update.', 'mb-custom-post-type' ) ], 'context' => $this->context_param() ] ),
+					'properties' => $this->flatten_string_fields( $this->controller()->get_endpoint_args_for_item_schema( WP_REST_Server::EDITABLE ) + [
+						'id'      => [
+							'type'        => 'integer',
+							'description' => __( 'Post ID to update.', 'mb-custom-post-type' ),
+						],
+						'context' => $this->context_param(),
+					] ),
 				],
 				'output_schema'       => $this->output_schema(),
 				'meta'                => $this->meta(),
@@ -345,7 +351,7 @@ class PostTypeAbilities {
 	}
 
 	private function build_postarr( array $input ): array {
-		$map = [
+		$map     = [
 			'title'          => 'post_title',
 			'content'        => 'post_content',
 			'excerpt'        => 'post_excerpt',

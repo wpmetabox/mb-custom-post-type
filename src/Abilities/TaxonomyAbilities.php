@@ -327,7 +327,7 @@ class TaxonomyAbilities {
 	}
 
 	private function build_term_args( array $input ): array {
-		$map = [
+		$map  = [
 			'name'        => 'name',
 			'slug'        => 'slug',
 			'description' => 'description',

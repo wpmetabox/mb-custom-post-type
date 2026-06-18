@@ -1,10 +1,9 @@
 <?php
 namespace MBCPT;
 
+use MBCPT\Abilities\DefinitionAbilities;
 use MBCPT\Abilities\PostTypeAbilities;
-use MBCPT\Abilities\PostTypeDefinitionAbilities;
 use MBCPT\Abilities\TaxonomyAbilities;
-use MBCPT\Abilities\TaxonomyDefinitionAbilities;
 
 class Abilities {
 
@@ -35,8 +34,8 @@ class Abilities {
 		$this->register_post_type_abilities_for_enabled();
 		$this->register_taxonomy_abilities_for_enabled();
 
-		( new PostTypeDefinitionAbilities() )->register();
-		( new TaxonomyDefinitionAbilities() )->register();
+		( new DefinitionAbilities( 'mb-post-type', 'post-type', 'post-types' ) )->register();
+		( new DefinitionAbilities( 'mb-taxonomy', 'taxonomy', 'taxonomies' ) )->register();
 	}
 
 	private function register_post_type_abilities_for_enabled(): void {
