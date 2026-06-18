@@ -135,7 +135,7 @@ class TaxonomyRegister extends Register {
 		// phpcs:ignore
 		$settings = empty( $post->post_content ) || isset( $_GET['mbcpt-force'] ) ? $this->migrate_data( $post ) : json_decode( $post->post_content, true );
 
-		$this->sanitize_labels( $settings );
+		self::sanitize_labels( $settings );
 
 		return $settings;
 	}

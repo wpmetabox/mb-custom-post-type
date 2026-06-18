@@ -113,7 +113,7 @@ class PostTypeRegister extends Register {
 		// phpcs:ignore
 		$settings = empty( $post->post_content ) || isset( $_GET['mbcpt-force'] ) ? $this->migrate_data( $post ) : json_decode( $post->post_content, true );
 
-		$this->sanitize_labels( $settings );
+		self::sanitize_labels( $settings );
 		$this->parse_archive_slug( $settings );
 
 		if ( $this->has_font_awesome( $settings ) ) {

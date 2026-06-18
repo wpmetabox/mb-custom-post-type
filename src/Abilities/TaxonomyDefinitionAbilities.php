@@ -143,7 +143,7 @@ class TaxonomyDefinitionAbilities {
 	public function execute_create( array $input ) {
 		if ( ! empty( $input['settings'] ) && is_array( $input['settings'] ) ) {
 			$settings = $input['settings'];
-			Register::sanitize_labels_static( $settings );
+			Register::sanitize_labels( $settings );
 			$input['settings'] = $settings;
 		}
 
@@ -177,7 +177,7 @@ class TaxonomyDefinitionAbilities {
 				$existing = [];
 			}
 			$merged            = array_merge( $existing, $input['settings'] );
-			Register::sanitize_labels_static( $merged );
+			Register::sanitize_labels( $merged );
 			$body['content']   = $this->encode_settings( $merged );
 		}
 
