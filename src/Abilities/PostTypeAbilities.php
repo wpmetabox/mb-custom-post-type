@@ -53,7 +53,10 @@ class PostTypeAbilities {
 					'type'       => 'object',
 					'properties' => $this->collection_input_schema(),
 				],
-				'output_schema'       => $this->items_schema(),
+				'output_schema'       => [
+					'type'  => 'array',
+					'items' => $this->output_schema(),
+				],
 				'meta'                => $this->meta( true ),
 				'execute_callback'    => [ $this, 'execute_get_posts' ],
 			]
@@ -146,7 +149,14 @@ class PostTypeAbilities {
 				'category'            => 'meta-box',
 				'permission_callback' => $this->permission( $this->post_type->cap->delete_post ),
 				'input_schema'        => $this->delete_input_schema( 'Post' ),
-				'output_schema'       => $this->delete_output_schema(),
+				'output_schema'       => [
+					'type'       => 'object',
+					'required'   => [ 'deleted' ],
+					'properties' => [
+						'deleted'  => [ 'type' => 'boolean' ],
+						'previous' => $this->output_schema(),
+					],
+				],
 				'meta'                => $this->meta( false, true ),
 				'execute_callback'    => [ $this, 'execute_delete_post' ],
 			]
@@ -315,24 +325,6 @@ class PostTypeAbilities {
 		];
 	}
 
-	private function delete_output_schema(): array {
-		return [
-			'type'       => 'object',
-			'required'   => [ 'deleted' ],
-			'properties' => [
-				'deleted'  => [ 'type' => 'boolean' ],
-				'previous' => $this->output_schema(),
-			],
-		];
-	}
-
-	private function items_schema(): array {
-		return [
-			'type'  => 'array',
-			'items' => $this->output_schema(),
-		];
-	}
-
 	private function output_schema(): array {
 		$schema = $this->controller()->get_item_schema();
 		if ( isset( $schema['properties']['status']['enum'] ) ) {
@@ -402,12 +394,15 @@ class PostTypeAbilities {
 		if ( ! $post ) {
 			return [];
 		}
+
+		$date = $this->format_date( $post->post_date_gmt ?: $post->post_date );
+
 		return [
 			'id'             => (int) $post->ID,
-			'date'           => mysql2date( 'c', $post->post_date_gmt ?: $post->post_date, false ),
-			'date_gmt'       => mysql2date( 'c', $post->post_date_gmt, false ),
-			'modified'       => mysql2date( 'c', $post->post_modified_gmt ?: $post->post_modified, false ),
-			'modified_gmt'   => mysql2date( 'c', $post->post_modified_gmt, false ),
+			'date'           => $date,
+			'date_gmt'       => $this->format_date( $post->post_date_gmt ),
+			'modified'       => $this->format_date( $post->post_modified_gmt ?: $post->post_modified ) ?: $date ?: wp_date( 'c' ),
+			'modified_gmt'   => $this->format_date( $post->post_modified_gmt ) ?: $this->format_date( $post->post_date_gmt ) ?: wp_date( 'c' ),
 			'slug'           => $post->post_name,
 			'status'         => $post->post_status,
 			'type'           => $post->post_type,
@@ -433,5 +428,13 @@ class PostTypeAbilities {
 			'ping_status'    => $post->ping_status,
 			'sticky'         => is_sticky( $post->ID ),
 		];
+	}
+
+	private function format_date( ?string $date ): ?string {
+		if ( ! $date || $date === '0000-00-00 00:00:00' ) {
+			return null;
+		}
+		$timestamp = strtotime( $date );
+		return $timestamp ? wp_date( 'Y-m-d\TH:i:sP', $timestamp ) : null;
 	}
 }
