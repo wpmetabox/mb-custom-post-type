@@ -21,7 +21,7 @@ class PostTypeAbilities extends BaseAbilities {
 		$this->settings  = $settings;
 	}
 
-	protected function register_get(): void {
+	protected function register_get_ability(): void {
 		wp_register_ability(
 			"meta-box/get-post-{$this->slug}",
 			[
@@ -46,12 +46,12 @@ class PostTypeAbilities extends BaseAbilities {
 					'items' => $this->get_item_schema(),
 				],
 				'meta'                => $this->meta( true ),
-				'execute_callback'    => [ $this, 'execute_get_posts' ],
+				'execute_callback'    => [ $this, 'get_posts' ],
 			]
 		);
 	}
 
-	protected function register_get_metadata(): void {
+	protected function register_get_metadata_ability(): void {
 		wp_register_ability(
 			"meta-box/get-post-type-{$this->slug}",
 			[
@@ -62,12 +62,12 @@ class PostTypeAbilities extends BaseAbilities {
 				'input_schema'        => [ 'type' => 'object' ],
 				'output_schema'       => ( new WP_REST_Post_Types_Controller( $this->slug ) )->get_item_schema(),
 				'meta'                => $this->meta( true ),
-				'execute_callback'    => [ $this, 'execute_get_post_type' ],
+				'execute_callback'    => [ $this, 'get_post_type' ],
 			]
 		);
 	}
 
-	protected function register_create(): void {
+	protected function register_create_ability(): void {
 		wp_register_ability(
 			"meta-box/create-post-{$this->slug}",
 			[
@@ -81,12 +81,12 @@ class PostTypeAbilities extends BaseAbilities {
 				],
 				'output_schema'       => $this->get_item_schema(),
 				'meta'                => $this->meta(),
-				'execute_callback'    => [ $this, 'execute_create_post' ],
+				'execute_callback'    => [ $this, 'create_post' ],
 			]
 		);
 	}
 
-	protected function register_update(): void {
+	protected function register_update_ability(): void {
 		wp_register_ability(
 			"meta-box/update-post-{$this->slug}",
 			[
@@ -106,12 +106,12 @@ class PostTypeAbilities extends BaseAbilities {
 				],
 				'output_schema'       => $this->get_item_schema(),
 				'meta'                => $this->meta(),
-				'execute_callback'    => [ $this, 'execute_update_post' ],
+				'execute_callback'    => [ $this, 'update_post' ],
 			]
 		);
 	}
 
-	protected function register_delete(): void {
+	protected function register_delete_ability(): void {
 		wp_register_ability(
 			"meta-box/delete-post-{$this->slug}",
 			[
@@ -129,7 +129,7 @@ class PostTypeAbilities extends BaseAbilities {
 					],
 				],
 				'meta'                => $this->meta( false, true ),
-				'execute_callback'    => [ $this, 'execute_delete_post' ],
+				'execute_callback'    => [ $this, 'delete_post' ],
 			]
 		);
 	}
@@ -145,7 +145,7 @@ class PostTypeAbilities extends BaseAbilities {
 	/**
 	 * @return array|WP_Error
 	 */
-	public function execute_get_posts( array $input ) {
+	public function get_posts( array $input ) {
 		if ( ! empty( $input['id'] ) ) {
 			$post = get_post( (int) $input['id'] );
 			if ( ! $post || $this->slug !== $post->post_type ) {
@@ -187,7 +187,7 @@ class PostTypeAbilities extends BaseAbilities {
 	/**
 	 * @return array|WP_Error
 	 */
-	public function execute_get_post_type() {
+	public function get_post_type() {
 		$controller = new WP_REST_Post_Types_Controller( $this->slug );
 		$request    = new WP_REST_Request( 'GET', '/types/' . $this->slug );
 		$response   = $controller->get_item( $request );
@@ -197,7 +197,7 @@ class PostTypeAbilities extends BaseAbilities {
 	/**
 	 * @return array|WP_Error
 	 */
-	public function execute_create_post( array $input ) {
+	public function create_post( array $input ) {
 		$postarr = $this->build_postarr( $input );
 		$id      = wp_insert_post( $postarr, true );
 		if ( is_wp_error( $id ) ) {
@@ -210,7 +210,7 @@ class PostTypeAbilities extends BaseAbilities {
 	/**
 	 * @return array|WP_Error
 	 */
-	public function execute_update_post( array $input ) {
+	public function update_post( array $input ) {
 		$id = (int) ( $input['id'] ?? 0 );
 		if ( ! $id ) {
 			return new WP_Error( 'mb_cpt_invalid_id', __( 'Invalid post ID.', 'mb-custom-post-type' ) );
@@ -232,7 +232,7 @@ class PostTypeAbilities extends BaseAbilities {
 	/**
 	 * @return array|WP_Error
 	 */
-	public function execute_delete_post( array $input ) {
+	public function delete_post( array $input ) {
 		$id   = (int) ( $input['id'] ?? 0 );
 		$post = get_post( $id );
 		if ( ! $post || $this->slug !== $post->post_type ) {

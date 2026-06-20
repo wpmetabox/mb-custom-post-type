@@ -21,7 +21,7 @@ class TaxonomyAbilities extends BaseAbilities {
 		$this->settings = $settings;
 	}
 
-	protected function register_get(): void {
+	protected function register_get_ability(): void {
 		wp_register_ability(
 			"meta-box/get-term-{$this->slug}",
 			[
@@ -46,12 +46,12 @@ class TaxonomyAbilities extends BaseAbilities {
 					'items' => $this->get_item_schema(),
 				],
 				'meta'                => $this->meta( true ),
-				'execute_callback'    => [ $this, 'execute_get_terms' ],
+				'execute_callback'    => [ $this, 'get_terms' ],
 			]
 		);
 	}
 
-	protected function register_get_metadata(): void {
+	protected function register_get_metadata_ability(): void {
 		wp_register_ability(
 			"meta-box/get-taxonomy-{$this->slug}",
 			[
@@ -62,12 +62,12 @@ class TaxonomyAbilities extends BaseAbilities {
 				'input_schema'        => [ 'type' => 'object' ],
 				'output_schema'       => ( new WP_REST_Taxonomies_Controller( $this->slug ) )->get_item_schema(),
 				'meta'                => $this->meta( true ),
-				'execute_callback'    => [ $this, 'execute_get_taxonomy' ],
+				'execute_callback'    => [ $this, 'get_taxonomy' ],
 			]
 		);
 	}
 
-	protected function register_create(): void {
+	protected function register_create_ability(): void {
 		wp_register_ability(
 			"meta-box/create-term-{$this->slug}",
 			[
@@ -82,12 +82,12 @@ class TaxonomyAbilities extends BaseAbilities {
 				],
 				'output_schema'       => $this->get_item_schema(),
 				'meta'                => $this->meta(),
-				'execute_callback'    => [ $this, 'execute_create_term' ],
+				'execute_callback'    => [ $this, 'create_term' ],
 			]
 		);
 	}
 
-	protected function register_update(): void {
+	protected function register_update_ability(): void {
 		wp_register_ability(
 			"meta-box/update-term-{$this->slug}",
 			[
@@ -102,12 +102,12 @@ class TaxonomyAbilities extends BaseAbilities {
 				],
 				'output_schema'       => $this->get_item_schema(),
 				'meta'                => $this->meta(),
-				'execute_callback'    => [ $this, 'execute_update_term' ],
+				'execute_callback'    => [ $this, 'update_term' ],
 			]
 		);
 	}
 
-	protected function register_delete(): void {
+	protected function register_delete_ability(): void {
 		wp_register_ability(
 			"meta-box/delete-term-{$this->slug}",
 			[
@@ -125,7 +125,7 @@ class TaxonomyAbilities extends BaseAbilities {
 					],
 				],
 				'meta'                => $this->meta( false, true ),
-				'execute_callback'    => [ $this, 'execute_delete_term' ],
+				'execute_callback'    => [ $this, 'delete_term' ],
 			]
 		);
 	}
@@ -137,7 +137,7 @@ class TaxonomyAbilities extends BaseAbilities {
 	/**
 	 * @return array|WP_Error
 	 */
-	public function execute_get_terms( array $input ) {
+	public function get_terms( array $input ) {
 		if ( ! empty( $input['id'] ) ) {
 			$term = get_term( (int) $input['id'], $this->slug );
 			if ( is_wp_error( $term ) || ! $term ) {
@@ -181,7 +181,7 @@ class TaxonomyAbilities extends BaseAbilities {
 	/**
 	 * @return array|WP_Error
 	 */
-	public function execute_get_taxonomy() {
+	public function get_taxonomy() {
 		$controller = new WP_REST_Taxonomies_Controller( $this->slug );
 		$request    = new WP_REST_Request( 'GET', '/taxonomies/' . $this->slug );
 		$response   = $controller->get_item( $request );
@@ -191,7 +191,7 @@ class TaxonomyAbilities extends BaseAbilities {
 	/**
 	 * @return array|WP_Error
 	 */
-	public function execute_create_term( array $input ) {
+	public function create_term( array $input ) {
 		$name   = $input['name'] ?? '';
 		$result = wp_insert_term( $name, $this->slug, $this->build_term_args( $input ) );
 		if ( is_wp_error( $result ) ) {
@@ -203,7 +203,7 @@ class TaxonomyAbilities extends BaseAbilities {
 	/**
 	 * @return array|WP_Error
 	 */
-	public function execute_update_term( array $input ) {
+	public function update_term( array $input ) {
 		$id = (int) ( $input['id'] ?? 0 );
 		if ( ! $id ) {
 			return new WP_Error( 'mb_cpt_invalid_id', __( 'Invalid term ID.', 'mb-custom-post-type' ) );
@@ -218,7 +218,7 @@ class TaxonomyAbilities extends BaseAbilities {
 	/**
 	 * @return array|WP_Error
 	 */
-	public function execute_delete_term( array $input ) {
+	public function delete_term( array $input ) {
 		$id   = (int) ( $input['id'] ?? 0 );
 		$term = get_term( $id, $this->slug );
 		if ( is_wp_error( $term ) || ! $term ) {

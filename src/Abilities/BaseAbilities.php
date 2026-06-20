@@ -9,18 +9,18 @@ abstract class BaseAbilities {
 	protected array $settings;
 
 	private const ABILITY_MAP = [
-		'abilities_get_data' => 'register_get_metadata',
-		'abilities_get'      => 'register_get',
-		'abilities_create'   => 'register_create',
-		'abilities_update'   => 'register_update',
-		'abilities_delete'   => 'register_delete',
+		'abilities_get_data' => 'register_get_metadata_ability',
+		'abilities_get'      => 'register_get_ability',
+		'abilities_create'   => 'register_create_ability',
+		'abilities_update'   => 'register_update_ability',
+		'abilities_delete'   => 'register_delete_ability',
 	];
 
-	abstract protected function register_get(): void;
-	abstract protected function register_get_metadata(): void;
-	abstract protected function register_create(): void;
-	abstract protected function register_update(): void;
-	abstract protected function register_delete(): void;
+	abstract protected function register_get_ability(): void;
+	abstract protected function register_get_metadata_ability(): void;
+	abstract protected function register_create_ability(): void;
+	abstract protected function register_update_ability(): void;
+	abstract protected function register_delete_ability(): void;
 	abstract protected function get_item_schema(): array;
 
 	public function register(): void {
