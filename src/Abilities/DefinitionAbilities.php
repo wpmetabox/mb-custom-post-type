@@ -21,13 +21,13 @@ class DefinitionAbilities {
 	}
 
 	public function register(): void {
-		$this->register_get();
-		$this->register_create();
-		$this->register_update();
-		$this->register_delete();
+		$this->register_get_ability();
+		$this->register_create_ability();
+		$this->register_update_ability();
+		$this->register_delete_ability();
 	}
 
-	protected function register_get(): void {
+	private function register_get_ability(): void {
 		wp_register_ability(
 			'meta-box/get-' . $this->ability_slug_plural,
 			[
@@ -102,12 +102,12 @@ class DefinitionAbilities {
 					'items' => $this->output_schema(),
 				],
 				'meta'                => $this->meta( true ),
-				'execute_callback'    => [ $this, 'execute_get' ],
+				'execute_callback'    => [ $this, 'get' ],
 			]
 		);
 	}
 
-	protected function register_create(): void {
+	private function register_create_ability(): void {
 		wp_register_ability(
 			'meta-box/create-' . $this->ability_slug,
 			[
@@ -137,12 +137,12 @@ class DefinitionAbilities {
 				],
 				'output_schema'       => $this->output_schema(),
 				'meta'                => $this->meta(),
-				'execute_callback'    => [ $this, 'execute_create' ],
+				'execute_callback'    => [ $this, 'create' ],
 			]
 		);
 	}
 
-	protected function register_update(): void {
+	private function register_update_ability(): void {
 		wp_register_ability(
 			'meta-box/update-' . $this->ability_slug,
 			[
@@ -175,12 +175,12 @@ class DefinitionAbilities {
 				],
 				'output_schema'       => $this->output_schema(),
 				'meta'                => $this->meta(),
-				'execute_callback'    => [ $this, 'execute_update' ],
+				'execute_callback'    => [ $this, 'update' ],
 			]
 		);
 	}
 
-	protected function register_delete(): void {
+	private function register_delete_ability(): void {
 		wp_register_ability(
 			'meta-box/delete-' . $this->ability_slug,
 			[
@@ -212,7 +212,7 @@ class DefinitionAbilities {
 					],
 				],
 				'meta'                => $this->meta( false, true ),
-				'execute_callback'    => [ $this, 'execute_delete' ],
+				'execute_callback'    => [ $this, 'delete' ],
 			]
 		);
 	}
@@ -220,7 +220,7 @@ class DefinitionAbilities {
 	/**
 	 * @return array|WP_Error
 	 */
-	public function execute_get( array $input ) {
+	public function get( array $input ) {
 		if ( ! empty( $input['id'] ) ) {
 			$post = $this->find( (int) $input['id'] );
 			return is_wp_error( $post ) ? $post : [ $this->format_post( $post ) ];
@@ -233,7 +233,7 @@ class DefinitionAbilities {
 	/**
 	 * @return array|WP_Error
 	 */
-	public function execute_create( array $input ) {
+	public function create( array $input ) {
 		$title = (string) ( $input['title'] ?? '' );
 		if ( $title === '' ) {
 			return new WP_Error( 'mbcpt_invalid_title', __( 'Title is required.', 'mb-custom-post-type' ), [ 'status' => 400 ] );
@@ -254,7 +254,7 @@ class DefinitionAbilities {
 	/**
 	 * @return array|WP_Error
 	 */
-	public function execute_update( array $input ) {
+	public function update( array $input ) {
 		$post = $this->find( (int) ( $input['id'] ?? 0 ) );
 		if ( is_wp_error( $post ) ) {
 			return $post;
@@ -282,7 +282,7 @@ class DefinitionAbilities {
 	/**
 	 * @return array|WP_Error
 	 */
-	public function execute_delete( array $input ) {
+	public function delete( array $input ) {
 		$post = $this->find( (int) ( $input['id'] ?? 0 ) );
 		if ( is_wp_error( $post ) ) {
 			return $post;
@@ -303,7 +303,7 @@ class DefinitionAbilities {
 	/**
 	 * @return WP_Post|WP_Error
 	 */
-	protected function find( int $id ) {
+	private function find( int $id ) {
 		$post = $id ? get_post( $id ) : null;
 		if ( ! $post || $post->post_type !== $this->post_type ) {
 			return new WP_Error( 'mbcpt_not_found', sprintf( __( '%s not found.', 'mb-custom-post-type' ), ucfirst( strtolower( $this->post_type_object->labels->singular_name ) ) ), [ 'status' => 404 ] );
@@ -311,7 +311,7 @@ class DefinitionAbilities {
 		return $post;
 	}
 
-	protected function build_collection_query( array $input ): array {
+	private function build_collection_query( array $input ): array {
 		$query = [
 			'post_type'              => $this->post_type,
 			'post_status'            => $this->normalize_status( $input['status'] ?? 'publish' ),
@@ -343,7 +343,7 @@ class DefinitionAbilities {
 		return $query;
 	}
 
-	protected function normalize_status( $status ): array {
+	private function normalize_status( $status ): array {
 		if ( is_array( $status ) ) {
 			return $status;
 		}
@@ -353,7 +353,7 @@ class DefinitionAbilities {
 		return [ (string) $status ];
 	}
 
-	protected function extract_settings( array $input ): array {
+	private function extract_settings( array $input ): array {
 		if ( empty( $input['settings'] ) || ! is_array( $input['settings'] ) ) {
 			return [];
 		}
@@ -362,7 +362,7 @@ class DefinitionAbilities {
 		return $settings;
 	}
 
-	protected function format_post( WP_Post $post ): array {
+	private function format_post( WP_Post $post ): array {
 		$settings = json_decode( (string) $post->post_content, true );
 		return [
 			'id'           => (int) $post->ID,
@@ -377,11 +377,11 @@ class DefinitionAbilities {
 		];
 	}
 
-	protected function encode_settings( array $settings ): string {
+	private function encode_settings( array $settings ): string {
 		return wp_slash( wp_json_encode( $settings ) );
 	}
 
-	protected function output_schema(): array {
+	private function output_schema(): array {
 		return [
 			'type'       => 'object',
 			'required'   => [ 'id' ],
@@ -399,7 +399,7 @@ class DefinitionAbilities {
 		];
 	}
 
-	protected function meta( bool $readonly = false, bool $destructive = false, bool $idempotent = true ): array {
+	private function meta( bool $readonly = false, bool $destructive = false, bool $idempotent = true ): array {
 		return [
 			'annotations' => [
 				'readonly'    => $readonly,
@@ -410,7 +410,7 @@ class DefinitionAbilities {
 		];
 	}
 
-	protected function permission(): callable {
+	private function permission(): callable {
 		return static function () {
 			return current_user_can( 'manage_options' );
 		};
