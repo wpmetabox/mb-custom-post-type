@@ -1,3 +1,11 @@
+### 2.12.0 - 2026-07-06
+
+**Highlights:**
+
+This release introduces **Abilities**, enabling you to manage custom post types and taxonomies, as well as create, retrieve, update, and delete posts and terms.
+
+See our [blog post](https://metabox.io/introducing-abilities/) for an overview or the [documentation](https://docs.metabox.io/abilities/) for usage details.
+
 ### 2.11.5 - 2026-05-13
 
 - Fix reorder posts not clearing object cache
