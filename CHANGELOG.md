@@ -1,3 +1,7 @@
+### 2.12.1 - 2026-07-16
+
+- Fix fatal error when post content contains invalid JSON
+
 ### 2.12.0 - 2026-07-06
 
 **Highlights:**
