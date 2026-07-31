@@ -14,11 +14,9 @@
 }
 
 .mb-cpt {
-	--color-gray: #999;
-	--color-light: #e0e0e0;
+	// Color variables are inherited from MB Builder, which is enqueue from CDN.
 	--color-red: #e53e3e;
 	--color-pink: #ffebe8;
-	--color: var(--wp-admin-theme-color, #2271b1);
 
 	// Elements
 	input[type="text"],
@@ -199,7 +197,7 @@
 
 			&:checked~.dashicons {
 				color: #fff;
-				background: var(--color);
+				background: var(--color-primary);
 			}
 		}
 	}
@@ -210,7 +208,7 @@
 		}
 
 		.react-codemirror2 {
-			border: 1px solid var(--color-light);
+			border: var(--border);
 			margin-bottom: 24px;
 		}
 
@@ -287,20 +285,20 @@
 	}
 
 	.components-tab-panel__tabs {
-		border-bottom: 1px solid var(--color-light);
-		align-items: center;
+		border-bottom: var(--border);
 		flex-wrap: wrap;
 		padding-inline: 24px;
 		margin-bottom: 24px;
-		gap: 32px;
+		gap: 24px;
 	}
 
 	.components-tab-panel__tabs-item {
+		--wp-admin-border-width-focus: 3px;
 		padding: 0;
 	}
 
 	.components-tab-panel__tab-content {
-		padding: 0 24px;
+		padding-inline: 24px;
 	}
 
 	.components-form-token-field__help {
@@ -310,22 +308,20 @@
 
 #tab-panel-0-general-view .mb-cpt-field:nth-child(3) {
 	padding-bottom: 24px;
-	border-bottom: 1px solid var(--color-light);
+	border-bottom: var(--border);
 }
 
 .post-type-mb-post-type #tab-panel-0-general-view {
-
 	.mb-cpt-field:nth-child(6) {
-		padding-bottom: 12px;
-		border-bottom: 1px solid var(--color-light);
+		padding-bottom: 24px;
+		border-bottom: var(--border);
 	}
 }
 
 .post-type-mb-taxonomy #tab-panel-0-general-view {
-
 	.mb-cpt-field:nth-child(5) {
-		padding-bottom: 12px;
-		border-bottom: 1px solid var(--color-light);
+		padding-bottom: 24px;
+		border-bottom: var(--border);
 	}
 }
 
@@ -333,39 +329,6 @@
 	img {
 		max-width: 20px;
 	}
-}
-
-/* Admin color schemes */
-.admin-color-blue .mb-cpt {
-	--color: var(--wp-admin-theme-color, #e1a948);
-}
-
-.admin-color-coffee .mb-cpt {
-	--color: var(--wp-admin-theme-color, #c7a589);
-}
-
-.admin-color-ectoplasm .mb-cpt {
-	--color: var(--wp-admin-theme-color, #a3b745);
-}
-
-.admin-color-light .mb-cpt {
-	--color: var(--wp-admin-theme-color, #04a4cc);
-}
-
-.admin-color-midnight .mb-cpt {
-	--color: var(--wp-admin-theme-color, #e14d43);
-}
-
-.admin-color-modern .mb-cpt {
-	--color: var(--wp-admin-theme-color, #3858e9);
-}
-
-.admin-color-ocean .mb-cpt {
-	--color: var(--wp-admin-theme-color, #9ebaa0);
-}
-
-.admin-color-sunrise .mb-cpt {
-	--color: var(--wp-admin-theme-color, #dd823b);
 }
 
 .mb-cpt-message {
