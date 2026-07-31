@@ -3,7 +3,7 @@ import { SettingsProvider } from '../SettingsContext';
 import DefaultSettings from './constants/DefaultSettings';
 import MainTabs from './MainTabs';
 
-const App = () => <SettingsProvider value={ MBCPT.settings || DefaultSettings }>
+const App = () => <SettingsProvider value={ { ...DefaultSettings, ...MBCPT.settings } }>
 	<MainTabs />
 </SettingsProvider>;
 
