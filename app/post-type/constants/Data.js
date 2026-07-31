@@ -24,6 +24,9 @@ export const BasicControls = [
 		tooltip: __( 'Post type key. Must not exceed 20 characters and may only contain lowercase alphanumeric characters, dashes, and underscores', 'mb-custom-post-type' ),
 	},
 	{
+		type: 'divider',
+	},
+	{
 		type: 'checkbox',
 		name: 'public',
 		label: __( 'Public', 'mb-custom-post-type' ),
@@ -40,6 +43,9 @@ export const BasicControls = [
 		name: 'show_in_rest',
 		label: __( 'Enable block editor?', 'mb-custom-post-type' ),
 		description: __( 'Enable this option will also expose this post type in the REST API.', 'mb-custom-post-type' ),
+	},
+	{
+		type: 'divider',
 	},
 	{
 		type: 'select',
@@ -431,6 +437,7 @@ export const AdvancedControls = [
 		label: __( 'Custom archive slug', 'mb-custom-post-type' ),
 		description: __( 'Default is the post type slug.', 'mb-custom-post-type' ),
 		tooltip: __( 'The custom archive slug', 'mb-custom-post-type' ),
+		dependency: 'has_archive:true',
 	},
 	{
 		type: 'text',

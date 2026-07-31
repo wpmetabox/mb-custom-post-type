@@ -25,6 +25,9 @@ export const BasicControls = [
 		limit: 32,
 	},
 	{
+		type: 'divider',
+	},
+	{
 		type: 'checkbox',
 		name: 'public',
 		label: __( 'Public', 'mb-custom-post-type' ),

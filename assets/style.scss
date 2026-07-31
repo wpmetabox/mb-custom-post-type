@@ -306,23 +306,9 @@
 	}
 }
 
-#tab-panel-0-general-view .mb-cpt-field:nth-child(3) {
-	padding-bottom: 24px;
-	border-bottom: var(--border);
-}
-
-.post-type-mb-post-type #tab-panel-0-general-view {
-	.mb-cpt-field:nth-child(6) {
-		padding-bottom: 24px;
-		border-bottom: var(--border);
-	}
-}
-
-.post-type-mb-taxonomy #tab-panel-0-general-view {
-	.mb-cpt-field:nth-child(5) {
-		padding-bottom: 24px;
-		border-bottom: var(--border);
-	}
+.mb-cpt-divider {
+	border-top: var(--border);
+	margin-bottom: 24px;
 }
 
 .wp-menu-image {

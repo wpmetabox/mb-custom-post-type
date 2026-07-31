@@ -3,6 +3,7 @@ import { getProperty, setProperty } from 'dot-prop';
 import slugify from 'slugify';
 import { SettingsContext } from '../SettingsContext';
 import Checkbox from './Checkbox';
+import Divider from './Divider';
 import Fontawesome from './Fontawesome';
 import Icon from './Icon';
 import Input from './Input';
@@ -104,6 +105,8 @@ const Control = ( { field, autoFills = [] } ) => {
 		return '';
 	}
 	switch ( field.type ) {
+		case 'divider':
+			return <Divider />;
 		case 'text':
 			return <Input { ...field } value={ _value } update={ update } />;
 		case 'textarea':
