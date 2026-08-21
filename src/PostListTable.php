@@ -6,7 +6,7 @@ class PostListTable {
 		add_action( 'admin_head-edit.php', [ $this, 'init' ] );
 	}
 
-	public function init() {
+	public function init(): void {
 		if ( ! in_array( get_current_screen()->id, [ 'edit-mb-post-type', 'edit-mb-taxonomy' ], true ) ) {
 			return;
 		}
@@ -15,13 +15,13 @@ class PostListTable {
 		$this->remove_excerpt();
 	}
 
-	private function output_css() {
+	private function output_css(): void {
 		?>
 		<style>.view-mode{ display: none; }</style>
 		<?php
 	}
 
-	private function remove_excerpt() {
+	private function remove_excerpt(): void {
 		add_filter( 'get_the_excerpt', '__return_empty_string' );
 	}
 }

@@ -113,7 +113,7 @@ class PostType {
 		];
 	}
 
-	public function delete_package( int $post_id, WP_Post $post ) {
+	public function delete_package( int $post_id, WP_Post $post ): void {
 		$package = $this->get_package( $post );
 		do_action( 'wpml_delete_package', $package['name'], $package['kind'] );
 	}

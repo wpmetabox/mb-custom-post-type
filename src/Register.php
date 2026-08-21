@@ -10,25 +10,24 @@ abstract class Register {
 		add_filter( 'bulk_post_updated_messages', [ $this, 'bulk_updated_messages' ], 10, 2 );
 	}
 
-	abstract public function register();
+	abstract public function register(): void;
 
-	protected function unarray( &$value, $key, $ignore = [] ) {
+	protected function unarray( &$value, string $key, array $ignore = [] ): void {
 		$value = 1 === count( $value ) && ! in_array( $key, $ignore, true ) ? $value[0] : $value;
 	}
 
-	protected function normalize_checkbox( &$value ) {
+	protected function normalize_checkbox( &$value ): void {
 		if ( is_numeric( $value ) && in_array( $value, [ 0, 1 ] ) ) { // phpcs:ignore
 			$value = 1 === (int) $value;
 		}
 	}
 
-	protected function change_key( &$arr, $from, $to ) {
+	protected function change_key( array &$arr, string $from, string $to ): void {
 		if ( isset( $arr[ $from ] ) ) {
 			$arr[ $to ] = $arr[ $from ];
 		}
 		unset( $arr[ $from ] );
 	}
-
 
 	public static function sanitize_labels( array &$settings ): void {
 		$labels = Arr::get( $settings, 'labels', [] );

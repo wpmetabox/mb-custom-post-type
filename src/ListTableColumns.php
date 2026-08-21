@@ -103,7 +103,7 @@ class ListTableColumns {
 		foreach ( [ 'public', 'hierarchical', 'block_editor', 'has_archive' ] as $column ) {
 			$selectors[] = '.column-' . self::PREFIX . $column;
 		}
-		$selectors = implode( ', ', $selectors );
+		$selectors    = implode( ', ', $selectors );
 		$th_selectors = str_replace( '.column-', '.widefat thead th.column-', $selectors );
 		?>
 		<style>

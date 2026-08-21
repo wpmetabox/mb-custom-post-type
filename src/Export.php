@@ -24,7 +24,7 @@ class Export {
 		return $actions;
 	}
 
-	public function export() {
+	public function export(): void {
 		$action  = isset( $_REQUEST['action'] ) && 'mbcpt-export' === $_REQUEST['action'];
 		$action2 = isset( $_REQUEST['action2'] ) && 'mbcpt-export' === $_REQUEST['action2'];
 

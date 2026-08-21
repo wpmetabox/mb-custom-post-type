@@ -241,7 +241,7 @@ class TaxonomyAbilities extends BaseAbilities {
 	}
 
 	private function update_input_schema(): array {
-		$properties            = $this->controller()->get_endpoint_args_for_item_schema( WP_REST_Server::EDITABLE );
+		$properties       = $this->controller()->get_endpoint_args_for_item_schema( WP_REST_Server::EDITABLE );
 		$properties['id'] = [
 			'type'        => 'integer',
 			'description' => __( 'Term ID to update.', 'mb-custom-post-type' ),

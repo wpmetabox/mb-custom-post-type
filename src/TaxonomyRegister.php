@@ -13,11 +13,11 @@ class TaxonomyRegister extends Register {
 	/**
 	 * Hide the meta box for taxonomy if set 'meta_box_cb' = false in Gutenberg.
 	 *
-	 * @param  object $response REST response object.
-	 * @param  object $taxonomy Taxonomy object.
-	 * @param  object $request  REST request object.
+	 * @param  WP_REST_Response $response REST response object.
+	 * @param  WP_Taxonomy      $taxonomy Taxonomy object.
+	 * @param  WP_REST_Request  $request  REST request object.
 	 *
-	 * @return object
+	 * @return WP_REST_Response
 	 */
 	public function hide_taxonomy_meta_box( $response, $taxonomy, $request ) {
 		$context = ! empty( $request['context'] ) ? $request['context'] : 'view';
@@ -32,7 +32,7 @@ class TaxonomyRegister extends Register {
 		return $response;
 	}
 
-	public function register() {
+	public function register(): void {
 		// Register post type of the plugin 'mb-taxonomy'.
 		$labels = [
 			'name'               => _x( 'Taxonomies', 'Taxonomy General Name', 'mb-custom-post-type' ),
@@ -104,7 +104,7 @@ class TaxonomyRegister extends Register {
 		}
 	}
 
-	public function get_taxonomies() {
+	public function get_taxonomies(): array {
 		$taxonomies = [];
 
 		$posts = get_posts( [
@@ -131,7 +131,7 @@ class TaxonomyRegister extends Register {
 		return $taxonomies;
 	}
 
-	public function get_taxonomy_data( WP_Post $post ) {
+	public function get_taxonomy_data( WP_Post $post ): array {
 		// phpcs:ignore
 		$settings = empty( $post->post_content ) || isset( $_GET['mbcpt-force'] ) ? $this->migrate_data( $post ) : json_decode( $post->post_content, true );
 
@@ -144,7 +144,7 @@ class TaxonomyRegister extends Register {
 		return $settings;
 	}
 
-	public function migrate_data( WP_Post $post ) {
+	public function migrate_data( WP_Post $post ): array {
 		$args      = [ 'labels' => [] ];
 		$post_meta = get_post_meta( $post->ID );
 
@@ -168,7 +168,8 @@ class TaxonomyRegister extends Register {
 
 		// Bypass new post types.
 		if ( isset( $_GET['mbcpt-force'] ) && empty( $args['slug'] ) ) { // phpcs:ignore
-			return json_decode( $post->post_content, true );
+			$settings = json_decode( $post->post_content, true );
+			return is_array( $settings ) ? $settings : [];
 		}
 
 		// Rewrite.
@@ -188,7 +189,7 @@ class TaxonomyRegister extends Register {
 		return $args;
 	}
 
-	public function updated_message( $messages ) {
+	public function updated_message( $messages ): array {
 		$post     = get_post();
 		$revision = (int) filter_input( INPUT_GET, 'revision' );
 
@@ -225,7 +226,7 @@ class TaxonomyRegister extends Register {
 		return $messages;
 	}
 
-	public function bulk_updated_messages( $bulk_messages, $bulk_counts ) {
+	public function bulk_updated_messages( $bulk_messages, $bulk_counts ): array {
 		$bulk_messages['mb-taxonomy'] = [
 			// Translators: %s - taxonomy label in singular and plural forms.
 			'updated'   => sprintf( _n( '%s taxonomy updated.', '%s taxonomies updated.', $bulk_counts['updated'], 'mb-custom-post-type' ), $bulk_counts['updated'] ),
@@ -249,7 +250,7 @@ class TaxonomyRegister extends Register {
 	 * @param string $post_type Post type.
 	 * @return WP_Post|null
 	 */
-	private function get_post_by_slug( $slug, $post_type ) {
+	private function get_post_by_slug( string $slug, string $post_type ): ?WP_Post {
 		$posts = get_posts( [
 			'name'        => $slug,
 			'post_type'   => $post_type,

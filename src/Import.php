@@ -9,7 +9,7 @@ class Import {
 		add_action( 'admin_init', [ $this, 'import' ] );
 	}
 
-	public function enqueue() {
+	public function enqueue(): void {
 		if ( ! in_array( get_current_screen()->id, [ 'edit-mb-post-type', 'edit-mb-taxonomy' ], true ) ) {
 			return;
 		}
@@ -23,7 +23,7 @@ class Import {
 		] );
 	}
 
-	public function output_js_templates() {
+	public function output_js_templates(): void {
 		if ( ! in_array( get_current_screen()->id, [ 'edit-mb-post-type', 'edit-mb-taxonomy' ], true ) ) {
 			return;
 		}
@@ -46,7 +46,7 @@ class Import {
 		<?php
 	}
 
-	public function import() {
+	public function import(): void {
 		if ( empty( $_FILES['mbcpt_file'] ) || empty( $_FILES['mbcpt_file']['tmp_name'] ) || empty( $_POST['mbcpt_post_type'] ) ) {
 			return;
 		}
@@ -67,7 +67,7 @@ class Import {
 		die;
 	}
 
-	private function import_json( $data ) {
+	private function import_json( $data ): bool {
 		$posts = json_decode( $data, true );
 		if ( json_last_error() !== JSON_ERROR_NONE ) {
 			return false;

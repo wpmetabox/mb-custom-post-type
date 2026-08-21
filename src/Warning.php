@@ -8,7 +8,7 @@ class Warning {
 		}
 	}
 
-	public function permalink_warning() {
+	public function permalink_warning(): void {
 		?>
 		<div class="notice notice-warning">
 			<?php // Translators: %s - URl to permalink settings page ?>

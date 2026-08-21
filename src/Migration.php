@@ -6,7 +6,7 @@ class Migration {
 		add_action( 'admin_menu', [ $this, 'add_menu' ] );
 	}
 
-	public function add_menu() {
+	public function add_menu(): void {
 		$slug      = defined( 'RWMB_VER' ) ? 'meta-box' : 'edit.php?post_type=mb-post-type';
 		$page_hook = add_submenu_page(
 			$slug,
@@ -19,7 +19,7 @@ class Migration {
 		add_action( "admin_print_styles-$page_hook", [ $this, 'enqueue' ] );
 	}
 
-	public function enqueue() {
+	public function enqueue(): void {
 		wp_enqueue_script( 'mb-cpt', MB_CPT_URL . 'assets/migrate.js', [], MB_CPT_VER, true );
 		wp_localize_script( 'mb-cpt', 'MbCpt', [
 			'nonce'               => wp_create_nonce( 'mbcpt-migrate' ),
@@ -30,7 +30,7 @@ class Migration {
 		] );
 	}
 
-	public function render() {
+	public function render(): void {
 		?>
 		<div class="wrap">
 			<h1><?php echo esc_html( get_admin_page_title() ) ?></h1>

@@ -9,7 +9,7 @@ class Ajax {
 		add_action( 'wp_ajax_mbcpt_migrate_taxonomies', [ $this, 'migrate_taxonomies' ] );
 	}
 
-	public function migrate_post_types() {
+	public function migrate_post_types(): void {
 		check_ajax_referer( 'mbcpt-migrate', 'nonce' );
 
 		if ( ! current_user_can( 'manage_options' ) ) {
@@ -95,7 +95,7 @@ class Ajax {
 		wp_send_json_success();
 	}
 
-	public function migrate_taxonomies() {
+	public function migrate_taxonomies(): void {
 		check_ajax_referer( 'mbcpt-migrate', 'nonce' );
 
 		if ( ! current_user_can( 'manage_options' ) ) {
