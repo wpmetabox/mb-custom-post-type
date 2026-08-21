@@ -1,6 +1,7 @@
+import { Dropdown } from "@wordpress/components";
 import { useState } from "@wordpress/element";
-import Tooltip from './Tooltip';
 import { __ } from "@wordpress/i18n";
+import Tooltip from './Tooltip';
 
 const getIconLabel = icon => {
 	let label = icon.replace( /-/g, ' ' ).trim();
@@ -40,8 +41,8 @@ const getIconLabel = icon => {
 };
 
 const Icon = ( { label, name, update, value, required = false, tooltip = '' } ) => {
-	const [ query, setQuery ] = useState( "" );
-	let data = MBCPT.icons.map( icon => [ icon, getIconLabel( icon ) ] )
+	const [ query, setQuery ] = useState( '' );
+	const icons = MBCPT.icons.map( icon => [ icon, getIconLabel( icon ) ] )
 		.filter( item => query === '' || item[ 1 ].includes( query.toLowerCase() ) );
 
 	return (
@@ -52,23 +53,43 @@ const Icon = ( { label, name, update, value, required = false, tooltip = '' } ) 
 				{ tooltip && <Tooltip id={ name } content={ tooltip } /> }
 			</label>
 			<div className='mb-cpt-input'>
-				<div className='mb-cpt-icon-selected'>
-					<span className={ `dashicons ${ value }` }></span>
-					<input type="text" className="mb-cpt-search" placeholder={ __( 'Search...', 'mb-custom-post-type' ) } value={ query } onChange={ event => setQuery( event.target.value ) } />
-				</div>
-				<div className="mb-cpt-items">
-					{
-						data.map( ( [ icon, label ] ) => (
-							<div key={ icon } className='mb-cpt-item'>
-								<label className="mb-cpt-icon">
-									<input type="radio" name={ name } value={ `dashicons-${ icon }` } checked={ `dashicons-${ icon }` === value } onChange={ update } />
-									<span className={ `dashicons dashicons-${ icon }` }></span>
-								</label>
-								<span className='mb-cpt-item__text'>{ label }</span>
+				<Dropdown
+					popoverProps={ { placement: 'left-start' } }
+					contentClassName="mb-cpt-icon__dropdown"
+					renderToggle={ ( { onToggle } ) => (
+						<button type="button" onClick={ onToggle } className="button button-secondary mb-cpt-icon__pick">
+							<span className={ `dashicons ${ value }` }></span>
+						</button>
+					) }
+					renderContent={ ( { onToggle } ) => (
+						<>
+							<input
+								type="text"
+								className="mb-cpt-icon__search"
+								placeholder={ __( 'Search...', 'mb-custom-post-type' ) }
+								value={ query }
+								onChange={ event => setQuery( event.target.value ) }
+							/>
+							<div className="mb-cpt-icon__items">
+								{
+									icons.map( ( [ icon, label ] ) => (
+										<div
+											key={ icon }
+											className={ `mb-cpt-icon__item ${ `dashicons-${ icon }` === value ? 'mb-cpt-icon__item--selected' : '' }` }
+											onClick={ () => {
+												update( { target: { name, value: `dashicons-${ icon }` } } );
+												onToggle();
+											} }
+										>
+											<span className={ `dashicons dashicons-${ icon }` }></span>
+											<div className='mb-cpt-icon__text'>{ label }</div>
+										</div>
+									) )
+								}
 							</div>
-						) )
-					}
-				</div>
+						</>
+					) }
+				/>
 			</div>
 		</div>
 	);

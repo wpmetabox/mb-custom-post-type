@@ -121,84 +121,76 @@
 		color: var(--color-red);
 	}
 
-	// search icon
-	&-icon-selected {
-		display: flex;
-
-		span {
-			width: 36px;
-			height: 36px;
-			padding: 4px;
-			box-sizing: border-box;
-			font-size: 24px;
-			border-radius: 4px;
-			border: 1px solid #8c8f94;
-			margin-right: 10px;
-			display: grid;
-			place-items: center;
+	// Icon picker.
+	&-icon {
+		&__pick.button {
+			border-color: var(--color-gray);
+			color: inherit;
+			width: 40px;
+			padding: 0;
 		}
 
-		.icon-fontawesome {
-			position: relative;
+		&__dropdown .components-popover__content {
+			overflow-x: hidden !important;
+		}
 
-			&:before {
+		&__search {
+			width: 100%;
+			margin-bottom: 12px;
+		}
+
+		&__items {
+			display: grid;
+			grid-template-columns: repeat(3, 80px);
+			gap: 8px;
+			max-height: 240px;
+			width: calc(3 * 80px + 2 * 8px + 12px);
+		}
+
+		&__item {
+			border-radius: 2px;
+			padding: 6px;
+			cursor: pointer;
+			border: 1px solid transparent;
+
+			.dashicons {
 				font-size: 18px;
 			}
-		}
-	}
 
-	&-items {
-		display: grid;
-		grid-template-columns: repeat(auto-fit, 65px);
-		gap: 10px 15px;
-		max-height: 25em;
-		overflow: auto;
-		padding: 1px;
-		margin-top: 15px;
-	}
+			&:hover {
+				border-color: var(--color-light);
+			}
 
-	&-item {
-		display: flex;
-		flex-direction: column;
-		justify-content: start;
-		align-items: center;
-		text-align: center;
-
-		&:hover .mb-cpt-icon {
-			box-shadow: 0 0 0 1px rgba(0, 0, 0, .3);
-		}
-
-		&:has(input:checked):hover .mb-cpt-icon {
-			box-shadow: none;
+			&--selected,
+			&--selected:hover {
+				border-color: var(--color-primary);
+				color: var(--color-primary);
+			}
 		}
 
 		&__text {
 			color: var(--color-gray);
 			font-size: 11px;
 			line-height: 1.1;
-			margin-top: 4px;
 		}
 	}
 
-	&-icon {
-		border-radius: 4px;
+	&-icon-selected {
+		display: flex;
+		gap: 8px;
 
-		.dashicons {
-			width: 36px;
-			height: 36px;
-			padding: 4px;
+		span {
+			min-width: 40px;
+			height: 40px;
 			box-sizing: border-box;
-			font-size: 24px;
-			border-radius: 4px;
+			border: 1px solid var(--color-gray);
+			border-radius: 2px;
+			display: grid;
+			place-items: center;
 		}
 
-		input {
-			display: none;
-
-			&:checked~.dashicons {
-				color: #fff;
-				background: var(--color-primary);
-			}
+		.icon-fontawesome::before {
+			font-size: 16px;
 		}
 	}
 
