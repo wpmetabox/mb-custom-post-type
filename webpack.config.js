@@ -5,10 +5,6 @@ const path = require( 'path' );
 
 const postType = {
 	...defaultConfig,
-	externals: {
-		...defaultConfig.externals,
-		codemirror: 'wp.CodeMirror',
-	},
 	entry: './app/post-type/App.js',
 	output: {
 		filename: 'post-type.js',
@@ -18,10 +14,6 @@ const postType = {
 
 const taxonomy = {
 	...defaultConfig,
-	externals: {
-		...defaultConfig.externals,
-		codemirror: 'wp.CodeMirror',
-	},
 	entry: './app/taxonomy/App.js',
 	output: {
 		filename: 'taxonomy.js',

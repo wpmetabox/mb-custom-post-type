@@ -7,15 +7,12 @@
     "start": "wp-scripts start"
   },
   "dependencies": {
-    "dot-prop": "^10.1.0",
-    "react-codemirror2": "^9.0.1",
-    "slugify": "^1.6.6"
+    "dot-prop": "^10.2.0",
+    "slugify": "^1.6.9"
   },
   "devDependencies": {
-    "@svgr/webpack": "^8.1.0",
-    "@wordpress/icons": "^11.8.0",
-    "@wordpress/scripts": "^31.6.0",
-    "sass": "^1.97.3",
-    "url-loader": "^4.1.1"
+    "@wordpress/icons": "^15.4.0",
+    "@wordpress/scripts": "^34.1.0",
+    "sass": "^1.103.0"
   }
 }

@@ -37,6 +37,7 @@ class Edit {
 		wp_enqueue_code_editor( [ 'type' => 'application/x-httpd-php' ] );
 
 		$asset = require MB_CPT_DIR . "/assets/build/$object.asset.php";
+		$asset['dependencies'] = array_merge( $asset['dependencies'], [ 'code-editor' ] );
 		wp_enqueue_script( $this->post_type, MB_CPT_URL . "assets/build/$object.js", $asset['dependencies'], $asset['version'], true );
 		wp_localize_script( $this->post_type, 'MBCPT', $this->js_vars() );
 

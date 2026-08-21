@@ -2,7 +2,7 @@ import { ClipboardButton } from '@wordpress/components';
 import { withState } from '@wordpress/compose';
 import { useContext } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
-import { UnControlled as CodeMirror } from 'react-codemirror2';
+import CodeMirror from '../controls/CodeMirror';
 import { SettingsContext } from '../SettingsContext';
 import PhpCode from './constants/PhpCode';
 
