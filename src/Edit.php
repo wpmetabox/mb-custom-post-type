@@ -99,7 +99,7 @@ class Edit {
 				],
 			];
 			$vars['menu_position_options'] = $this->get_menu_position_options();
-			$vars['show_in_menu_options']  = $this->get_show_in_menu_options();
+			$vars['menu_parents']           = $this->get_menu_parents();
 		}
 
 		if ( 'mb-taxonomy' === get_current_screen()->id ) {
@@ -128,25 +128,15 @@ class Edit {
 		return $update_checker->has_extensions();
 	}
 
-	private function get_show_in_menu_options(): array {
+	private function get_menu_parents(): array {
 		global $menu;
 
-		$options = [
-			[
-				'value' => 'true',
-				'label' => esc_html__( 'Show as top-level menu', 'mb-custom-post-type' ),
-			],
-			[
-				'value' => 'false',
-				'label' => esc_html__( 'Do not show in the admin menu', 'mb-custom-post-type' ),
-			],
-		];
+		$options = [];
 		foreach ( $menu as $params ) {
 			if ( ! empty( $params[0] ) && ! empty( $params[2] ) ) {
 				$options[] = [
 					'value' => $params[2],
-					// Translators: %s is the main menu label.
-					'label' => sprintf( __( 'Show as sub-menu of %s', 'mb-custom-post-type' ), $this->strip_span( $params[0] ) ),
+					'label' => $this->strip_span( $params[0] ),
 				];
 			}
 		}

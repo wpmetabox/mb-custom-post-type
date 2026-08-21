@@ -11,6 +11,7 @@ import Select from './Select';
 import Slug from './Slug';
 import Textarea from './Textarea';
 import Toggle from './Toggle';
+import ToggleGroup from './ToggleGroup';
 
 const ucfirst = str => str.length ? str[ 0 ].toUpperCase() + str.slice( 1 ) : str;
 const normalizeBool = value => {
@@ -40,7 +41,7 @@ const Control = ( { field, autoFills = [] } ) => {
 			}
 			const depName = match[ 1 ];
 			const depValue = normalizeBool( match[ 2 ] );
-			const currentValue = getProperty( settings, depName );
+			const currentValue = normalizeBool( getProperty( settings, depName ) );
 
 			if ( currentValue !== depValue ) {
 				return false;
@@ -113,6 +114,8 @@ const Control = ( { field, autoFills = [] } ) => {
 			return <Textarea { ...field } value={ _value } update={ update } />;
 		case 'toggle':
 			return <Toggle { ...field } checked={ _value } update={ updateCheckbox } />;
+		case 'toggle-group':
+			return <ToggleGroup { ...field } value={ _value } update={ update } />;
 		case 'checkbox':
 			return <Checkbox { ...field } checked={ _value } update={ updateCheckbox } />;
 		case 'icon':

@@ -2,6 +2,8 @@
 /.github
 /node_modules
 
+.commandcode
+
 .DS_Store
 Thumbs.db
 

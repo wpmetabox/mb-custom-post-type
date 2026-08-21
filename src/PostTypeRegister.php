@@ -113,12 +113,13 @@ class PostTypeRegister extends Register {
 		// phpcs:ignore
 		$settings = empty( $post->post_content ) || isset( $_GET['mbcpt-force'] ) ? $this->migrate_data( $post ) : json_decode( $post->post_content, true );
 
-		if ( empty( $settings ) ) {
+		if ( empty( $settings ) || ! is_array( $settings ) ) {
 			return [];
 		}
 
 		self::sanitize_labels( $settings );
 		$this->parse_archive_slug( $settings );
+		$this->parse_show_in_menu( $settings );
 
 		if ( $this->has_font_awesome( $settings ) ) {
 			$this->add_font_awesome_hooks();
@@ -305,6 +306,27 @@ class PostTypeRegister extends Register {
 		}
 		Arr::set( $settings, 'has_archive', $settings['archive_slug'] );
 	}
+
+	private function parse_show_in_menu( array &$settings ): void {
+		$show_in_menu = Arr::get( $settings, 'show_in_menu' );
+
+		if ( 'true' === $show_in_menu || true === $show_in_menu ) {
+			Arr::set( $settings, 'show_in_menu', true );
+			return;
+		}
+		if ( 'false' === $show_in_menu || false === $show_in_menu ) {
+			Arr::set( $settings, 'show_in_menu', false );
+			return;
+		}
+		if ( 'custom' !== $show_in_menu ) {
+			return;
+		}
+
+		$parent = Arr::get( $settings, 'parent' );
+		Arr::set( $settings, 'show_in_menu', $parent ?: 'index.php' );
+		unset( $settings['parent'] );
+	}
+
 	private function parse_capabilities( &$settings ) {
 		if ( 'custom' !== Arr::get( $settings, 'capability_type' ) ) {
 			return;

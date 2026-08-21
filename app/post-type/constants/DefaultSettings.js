@@ -52,6 +52,7 @@ const DefaultSettings = {
 	show_in_rest       : true,
 	rest_base          : '',
 	menu_position      : '',
+	parent             : 'index.php',
 	icon_type		   : 'dashicons',
 	icon          	   : 'dashicons-admin-generic',
 	capability_type    : 'post',
