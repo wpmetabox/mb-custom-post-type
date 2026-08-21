@@ -22,6 +22,7 @@ class Migration {
 	public function enqueue() {
 		wp_enqueue_script( 'mb-cpt', MB_CPT_URL . 'assets/migrate.js', [], MB_CPT_VER, true );
 		wp_localize_script( 'mb-cpt', 'MbCpt', [
+			'nonce'               => wp_create_nonce( 'mbcpt-migrate' ),
 			'start'               => __( 'Start...', 'mb-custom-post-type' ),
 			'migratingPostTypes'  => __( 'Migrating post types...', 'mb-custom-post-type' ),
 			'migratingTaxonomies' => __( 'Migrating taxonomies...', 'mb-custom-post-type' ),
