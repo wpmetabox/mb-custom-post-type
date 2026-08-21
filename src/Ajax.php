@@ -10,6 +10,12 @@ class Ajax {
 	}
 
 	public function migrate_post_types() {
+		check_ajax_referer( 'mbcpt-migrate', 'nonce' );
+
+		if ( ! current_user_can( 'manage_options' ) ) {
+			wp_send_json_error( __( 'You do not have permission to access this request', 'mb-custom-post-type' ), 403 );
+		}
+
 		if ( session_status() !== PHP_SESSION_ACTIVE ) {
 			session_start();
 		}
@@ -90,6 +96,12 @@ class Ajax {
 	}
 
 	public function migrate_taxonomies() {
+		check_ajax_referer( 'mbcpt-migrate', 'nonce' );
+
+		if ( ! current_user_can( 'manage_options' ) ) {
+			wp_send_json_error( __( 'You do not have permission to access this request', 'mb-custom-post-type' ), 403 );
+		}
+
 		if ( session_status() !== PHP_SESSION_ACTIVE ) {
 			session_start();
 		}
