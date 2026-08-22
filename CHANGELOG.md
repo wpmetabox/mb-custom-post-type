@@ -1,3 +1,10 @@
+### 2.12.2 - 2026-08-22
+
+- Add info columns to post type and taxonomy list tables
+- Update UI to match the style of [MB Builder](https://metabox.io/plugins/meta-box-builder/)
+- Fix security bug with migration (#108)
+- Fix icon picker not showing for existing post types
+
 ### 2.12.1 - 2026-07-16
 
 - Fix fatal error when post content contains invalid JSON
