@@ -4,6 +4,9 @@ import DefaultSettings from './constants/DefaultSettings';
 import MainTabs from './MainTabs';
 
 const normalizeSettings = settings => {
+	if ( !settings ) {
+		return {};
+	}
 	const { show_in_menu } = settings;
 	if ( [ true, false, 'true', 'false' ].includes( show_in_menu ) ) {
 		return {
