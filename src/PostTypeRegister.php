@@ -85,7 +85,6 @@ class PostTypeRegister extends Register {
 		// Remove CPT slug base from permalinks when enabled.
 		if ( ! empty( $this->remove_base_types ) ) {
 			add_filter( 'post_type_link', [ $this, 'remove_cpt_base_from_link' ], 10, 2 );
-			add_action( 'pre_get_posts', [ $this, 'parse_request_without_cpt_base' ] );
 			add_filter( 'request', [ $this, 'request_without_cpt_base' ] );
 		}
 	}
@@ -379,9 +378,7 @@ class PostTypeRegister extends Register {
 		unset( $settings['remove_base'] );
 	}
 
-	/**
-	 * Remove CPT slug from generated permalink.
-	 */
+	// Remove CPT slug from generated permalink.
 	public function remove_cpt_base_from_link( string $post_link, WP_Post $post ): string {
 		if ( ! in_array( $post->post_type, $this->remove_base_types, true ) || 'publish' !== $post->post_status ) {
 			return $post_link;
@@ -397,32 +394,10 @@ class PostTypeRegister extends Register {
 		return str_replace( '/' . $slug . '/', '/', $post_link );
 	}
 
-	/**
-	 * Make WP resolve /post-name as a CPT post when base is removed.
-	 */
-	public function parse_request_without_cpt_base( \WP_Query $query ): void {
-		if ( ! $query->is_main_query() || is_admin() ) {
-			return;
-		}
-
-		if ( ! empty( $query->query['name'] ) || ! empty( $query->query['pagename'] ) ) {
-			return;
-		}
-
-		// Handled via request filter.
-	}
-
-	/**
-	 * On front-end request: if URL has no matching page/post, try CPT without base.
-	 */
+	// On front-end request: if URL has no matching page/post, try CPT without base.
 	public function request_without_cpt_base( array $query_vars ): array {
 		if ( is_admin() ) {
 			return $query_vars;
-		}
-
-		// Already resolved as page or post.
-		if ( ! empty( $query_vars['pagename'] ) || ! empty( $query_vars['name'] ) && empty( $query_vars['post_type'] ) ) {
-			// Fall through: may still need CPT fallback.
 		}
 
 		$name = '';
@@ -437,17 +412,10 @@ class PostTypeRegister extends Register {
 		}
 
 		// Prefer existing page/post.
-		$page = get_page_by_path( $name );
-		if ( $page ) {
+		if ( get_page_by_path( $name ) || get_page_by_path( $name, OBJECT, 'post' ) ) {
 			return $query_vars;
 		}
 
-		$post = get_page_by_path( $name, OBJECT, 'post' );
-		if ( $post ) {
-			return $query_vars;
-		}
-
-		// Try each CPT that has remove_base enabled.
 		foreach ( $this->remove_base_types as $post_type ) {
 			$cpt_post = get_page_by_path( $name, OBJECT, $post_type );
 			if ( $cpt_post ) {
