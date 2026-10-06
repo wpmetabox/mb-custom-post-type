@@ -7,6 +7,7 @@ use MetaBox\Support\Arr;
 class PostTypeRegister extends Register {
 	private $menu_positions       = [];
 	private $font_awesome_classes = [ 'fa', 'fa-classic', 'fa-sharp', 'fas', 'fa-solid', 'far', 'fa-regular', 'fab', 'fa-brands' ];
+	private $remove_base_types    = [];
 
 	public function register(): void {
 		// Register main post type 'mb-post-type'.
@@ -80,6 +81,13 @@ class PostTypeRegister extends Register {
 		if ( ! empty( $this->menu_positions ) ) {
 			add_action( 'admin_menu', [ $this, 'fix_menu_positions' ] );
 		}
+
+		// Remove CPT slug base from permalinks when enabled.
+		if ( ! empty( $this->remove_base_types ) ) {
+			add_filter( 'post_type_link', [ $this, 'remove_cpt_base_from_link' ], 10, 2 );
+			add_action( 'pre_get_posts', [ $this, 'parse_request_without_cpt_base' ] );
+			add_filter( 'request', [ $this, 'request_without_cpt_base' ] );
+		}
 	}
 
 	public function get_post_types(): array {
@@ -128,6 +136,7 @@ class PostTypeRegister extends Register {
 
 		$this->parse_supports( $settings );
 		$this->parse_capabilities( $settings );
+		$this->parse_remove_base( $settings );
 
 		return $settings;
 	}
@@ -347,6 +356,109 @@ class PostTypeRegister extends Register {
 			return;
 		}
 		Arr::set( $settings, 'supports', false );
+	}
+
+	/**
+	 * Handle Remove CPT slug base setting.
+	 * When enabled, post type slug is stripped from permalinks.
+	 * Setting key in post_content JSON: "remove_base": true
+	 */
+	private function parse_remove_base( array &$settings ): void {
+		$remove_base = Arr::get( $settings, 'remove_base' );
+		if ( empty( $remove_base ) ) {
+			unset( $settings['remove_base'] );
+			return;
+		}
+
+		$slug = Arr::get( $settings, 'slug' );
+		if ( $slug ) {
+			$this->remove_base_types[] = $slug;
+		}
+
+		// Do not pass unknown arg to register_post_type().
+		unset( $settings['remove_base'] );
+	}
+
+	/**
+	 * Remove CPT slug from generated permalink.
+	 */
+	public function remove_cpt_base_from_link( string $post_link, WP_Post $post ): string {
+		if ( ! in_array( $post->post_type, $this->remove_base_types, true ) || 'publish' !== $post->post_status ) {
+			return $post_link;
+		}
+
+		$post_type_object = get_post_type_object( $post->post_type );
+		if ( ! $post_type_object || empty( $post_type_object->rewrite['slug'] ) ) {
+			$slug = $post->post_type;
+		} else {
+			$slug = $post_type_object->rewrite['slug'];
+		}
+
+		return str_replace( '/' . $slug . '/', '/', $post_link );
+	}
+
+	/**
+	 * Make WP resolve /post-name as a CPT post when base is removed.
+	 */
+	public function parse_request_without_cpt_base( \WP_Query $query ): void {
+		if ( ! $query->is_main_query() || is_admin() ) {
+			return;
+		}
+
+		if ( ! empty( $query->query['name'] ) || ! empty( $query->query['pagename'] ) ) {
+			return;
+		}
+
+		// Handled via request filter.
+	}
+
+	/**
+	 * On front-end request: if URL has no matching page/post, try CPT without base.
+	 */
+	public function request_without_cpt_base( array $query_vars ): array {
+		if ( is_admin() ) {
+			return $query_vars;
+		}
+
+		// Already resolved as page or post.
+		if ( ! empty( $query_vars['pagename'] ) || ! empty( $query_vars['name'] ) && empty( $query_vars['post_type'] ) ) {
+			// Fall through: may still need CPT fallback.
+		}
+
+		$name = '';
+		if ( ! empty( $query_vars['name'] ) ) {
+			$name = $query_vars['name'];
+		} elseif ( ! empty( $query_vars['pagename'] ) ) {
+			$name = $query_vars['pagename'];
+		}
+
+		if ( ! $name || str_contains( $name, '/' ) ) {
+			return $query_vars;
+		}
+
+		// Prefer existing page/post.
+		$page = get_page_by_path( $name );
+		if ( $page ) {
+			return $query_vars;
+		}
+
+		$post = get_page_by_path( $name, OBJECT, 'post' );
+		if ( $post ) {
+			return $query_vars;
+		}
+
+		// Try each CPT that has remove_base enabled.
+		foreach ( $this->remove_base_types as $post_type ) {
+			$cpt_post = get_page_by_path( $name, OBJECT, $post_type );
+			if ( $cpt_post ) {
+				$query_vars['post_type'] = $post_type;
+				$query_vars['name']      = $name;
+				unset( $query_vars['pagename'] );
+				return $query_vars;
+			}
+		}
+
+		return $query_vars;
 	}
 
 	private function parse_icon( array &$settings ): void {
