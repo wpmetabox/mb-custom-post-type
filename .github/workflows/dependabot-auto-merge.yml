@@ -1,0 +1,12 @@
+name: Auto-merge Dependabot PRs
+on:
+  pull_request:
+    types: [opened, reopened, synchronize]
+jobs:
+  call-workflow:
+    if: github.actor == 'dependabot[bot]'
+    permissions:
+      contents: write
+      pull-requests: write
+    uses: wpmetabox/meta-box/.github/workflows/dependabot-auto-merge.yml@master
+
