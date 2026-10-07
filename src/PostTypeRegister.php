@@ -378,7 +378,14 @@ class PostTypeRegister extends Register {
 		unset( $settings['remove_base'] );
 	}
 
-	// Remove CPT slug from generated permalink.
+	/**
+	 * Removes the Custom Post Type slug from the generated post permalink.
+	 *
+	 * @param string  $post_link The original post permalink URL.
+	 * @param WP_Post $post      The post object.
+	 *
+	 * @return string The modified permalink URL without the post type slug.
+	 */
 	public function remove_cpt_base_from_link( string $post_link, WP_Post $post ): string {
 		if ( ! in_array( $post->post_type, $this->remove_base_types, true ) || 'publish' !== $post->post_status ) {
 			return $post_link;
@@ -394,7 +401,9 @@ class PostTypeRegister extends Register {
 		return str_replace( '/' . $slug . '/', '/', $post_link );
 	}
 
-	// On front-end request: if URL has no matching page/post, try CPT without base.
+	/**
+	 * On front-end request: if URL has no matching page/post, try CPT without base.
+	 */
 	public function request_without_cpt_base( array $query_vars ): array {
 		if ( is_admin() ) {
 			return $query_vars;
@@ -411,7 +420,7 @@ class PostTypeRegister extends Register {
 			return $query_vars;
 		}
 
-		// Prefer existing page/post.
+		// Use existing page/post first
 		if ( get_page_by_path( $name ) || get_page_by_path( $name, OBJECT, 'post' ) ) {
 			return $query_vars;
 		}

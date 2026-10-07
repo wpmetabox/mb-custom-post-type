@@ -24,12 +24,6 @@ export const BasicControls = [
 		tooltip: __( 'Post type key. Must not exceed 20 characters and may only contain lowercase alphanumeric characters, dashes, and underscores', 'mb-custom-post-type' ),
 	},
 	{
-		type: 'checkbox',
-		name: 'remove_base',
-		label: 'Remove CPT slug base',
-		description: 'Remove post type slug from URL (e.g. /my-slug/post-name → /post-name). Flush permalinks after change.',
-	},
-	{
 		type: 'divider',
 	},
 	{
@@ -563,6 +557,15 @@ if ( MBCPT.abilities ) {
 		label: __( 'Delete posts', 'mb-custom-post-type' ),
 		dependency: 'abilities:true',
 		nested: true,
+	} );
+};
+
+if ( MBCPT.mbb ) {
+	FeatureControls.push( {
+		type: 'toggle',
+		name: 'remove_base',
+		label: __( 'Remove post type slug from URL', 'mb-custom-post-type' ),
+		description: __( 'Remove post type slug from URL (e.g. /my-slug/post-name → /post-name). Flush permalinks after change. This feature is experimental and can conflict with other plugins.', 'mb-custom-post-type' ),
 	} );
 };
 
