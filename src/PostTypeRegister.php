@@ -85,7 +85,7 @@ class PostTypeRegister extends Register {
 		// Remove CPT slug base from permalinks when enabled.
 		if ( ! empty( $this->remove_base_types ) ) {
 			add_filter( 'post_type_link', [ $this, 'remove_cpt_base_from_link' ], 10, 2 );
-			add_filter( 'request', [ $this, 'request_without_cpt_base' ] );
+			add_action( 'pre_get_posts', [ $this, 'parse_request_without_cpt_base' ] );
 		}
 	}
 
@@ -402,40 +402,41 @@ class PostTypeRegister extends Register {
 	}
 
 	/**
-	 * On front-end request: if URL has no matching page/post, try CPT without base.
+	 * Resolve single URL without CPT base via one main query.
+	 *
+	 * @param \WP_Query $query The main WP_Query instance.
+	 * @return void
 	 */
-	public function request_without_cpt_base( array $query_vars ): array {
-		if ( is_admin() ) {
-			return $query_vars;
+	public function parse_request_without_cpt_base( \WP_Query $query ): void {
+		if ( is_admin() || ! $query->is_main_query() ) {
+			return;
 		}
 
-		$name = '';
-		if ( ! empty( $query_vars['name'] ) ) {
-			$name = $query_vars['name'];
-		} elseif ( ! empty( $query_vars['pagename'] ) ) {
-			$name = $query_vars['pagename'];
+		$name     = (string) $query->get( 'name' );
+		$pagename = (string) $query->get( 'pagename' );
+
+		// Bail early if the query does not target a single entity path.
+		if ( ! $name && ! $pagename ) {
+			return;
 		}
 
-		if ( ! $name || str_contains( $name, '/' ) ) {
-			return $query_vars;
+		$post_types = array_merge( [ 'post', 'page' ], $this->remove_base_types );
+		$post_types = array_unique( $post_types );
+
+		// Flat single slug already identified.
+		if ( $name ) {
+			$query->set( 'post_type', $post_types );
+			return;
 		}
 
-		// Use existing page/post first
-		if ( get_page_by_path( $name ) || get_page_by_path( $name, OBJECT, 'post' ) ) {
-			return $query_vars;
-		}
+		// Handled via pagename: assign target post types.
+		$query->set( 'post_type', $post_types );
 
-		foreach ( $this->remove_base_types as $post_type ) {
-			$cpt_post = get_page_by_path( $name, OBJECT, $post_type );
-			if ( $cpt_post ) {
-				$query_vars['post_type'] = $post_type;
-				$query_vars['name']      = $name;
-				unset( $query_vars['pagename'] );
-				return $query_vars;
-			}
-		}
+		// Normalize leaf slug into 'name' to preserve redirect_guess_404_permalink() resolution.
+		$query->set( 'name', str_contains( $pagename, '/' ) ? basename( $pagename ) : $pagename );
 
-		return $query_vars;
+		// clear so WP treats it as post name, not page path
+		$query->set( 'pagename', '' );
 	}
 
 	private function parse_icon( array &$settings ): void {
