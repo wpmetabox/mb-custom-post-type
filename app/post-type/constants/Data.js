@@ -560,13 +560,11 @@ if ( MBCPT.abilities ) {
 	} );
 };
 
-if ( MBCPT.mbb ) {
-	FeatureControls.push( {
-		type: 'toggle',
-		name: 'remove_base',
-		label: __( 'Remove post type slug from URL', 'mb-custom-post-type' ),
-		description: __( 'Remove post type slug from URL (e.g. /my-slug/post-name → /post-name). Flush permalinks after change. This feature is experimental and can conflict with other plugins.', 'mb-custom-post-type' ),
-	} );
-};
+FeatureControls.push( {
+	type: 'toggle',
+	name: 'remove_base',
+	label: __( 'Remove post type slug from URL', 'mb-custom-post-type' ),
+	description: __( 'Turns /post-type/post-name into /post-name. Note: experimental, may conflict with other plugins.', 'mb-custom-post-type' ),
+} );
 
 export { FeatureControls };

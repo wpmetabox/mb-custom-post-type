@@ -84,8 +84,8 @@ class PostTypeRegister extends Register {
 
 		// Remove CPT slug base from permalinks when enabled.
 		if ( ! empty( $this->remove_base_types ) ) {
-			add_filter( 'post_type_link', [ $this, 'remove_cpt_base_from_link' ], 10, 2 );
-			add_action( 'pre_get_posts', [ $this, 'parse_request_without_cpt_base' ] );
+			add_filter( 'post_type_link', [ $this, 'remove_cpt_base' ], 10, 2 );
+			add_action( 'pre_get_posts', [ $this, 'query_single_without_base' ] );
 		}
 	}
 
@@ -386,7 +386,7 @@ class PostTypeRegister extends Register {
 	 *
 	 * @return string The modified permalink URL without the post type slug.
 	 */
-	public function remove_cpt_base_from_link( string $post_link, WP_Post $post ): string {
+	public function remove_cpt_base( string $post_link, WP_Post $post ): string {
 		if ( ! in_array( $post->post_type, $this->remove_base_types, true ) || 'publish' !== $post->post_status ) {
 			return $post_link;
 		}
@@ -407,9 +407,19 @@ class PostTypeRegister extends Register {
 	 * @param \WP_Query $query The main WP_Query instance.
 	 * @return void
 	 */
-	public function parse_request_without_cpt_base( \WP_Query $query ): void {
+	public function query_single_without_base( \WP_Query $query ): void {
 		if ( is_admin() || ! $query->is_main_query() ) {
 			return;
+		}
+
+		$existing = $query->get( 'post_type' );
+		if ( ! empty( $existing ) && $existing !== 'any' ) {
+			return;
+		}
+		foreach ( $this->remove_base_types as $pt ) {
+			if ( $query->get( $pt ) ) {
+				return;
+			}
 		}
 
 		$name     = (string) $query->get( 'name' );
@@ -420,8 +430,7 @@ class PostTypeRegister extends Register {
 			return;
 		}
 
-		$post_types = array_merge( [ 'post', 'page' ], $this->remove_base_types );
-		$post_types = array_unique( $post_types );
+		$post_types = array_values( array_unique( array_merge( [ 'post', 'page' ], $this->remove_base_types ) ) );
 
 		// Flat single slug already identified.
 		if ( $name ) {
