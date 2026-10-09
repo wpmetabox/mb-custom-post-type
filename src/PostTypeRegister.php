@@ -7,6 +7,7 @@ use MetaBox\Support\Arr;
 class PostTypeRegister extends Register {
 	private $menu_positions       = [];
 	private $font_awesome_classes = [ 'fa', 'fa-classic', 'fa-sharp', 'fas', 'fa-solid', 'far', 'fa-regular', 'fab', 'fa-brands' ];
+	private $remove_base_types    = [];
 
 	public function register(): void {
 		// Register main post type 'mb-post-type'.
@@ -80,6 +81,12 @@ class PostTypeRegister extends Register {
 		if ( ! empty( $this->menu_positions ) ) {
 			add_action( 'admin_menu', [ $this, 'fix_menu_positions' ] );
 		}
+
+		// Remove CPT slug base from permalinks when enabled.
+		if ( ! empty( $this->remove_base_types ) ) {
+			add_filter( 'post_type_link', [ $this, 'remove_cpt_base' ], 10, 2 );
+			add_action( 'pre_get_posts', [ $this, 'query_single_without_base' ] );
+		}
 	}
 
 	public function get_post_types(): array {
@@ -128,6 +135,7 @@ class PostTypeRegister extends Register {
 
 		$this->parse_supports( $settings );
 		$this->parse_capabilities( $settings );
+		$this->parse_remove_base( $settings );
 
 		return $settings;
 	}
@@ -347,6 +355,97 @@ class PostTypeRegister extends Register {
 			return;
 		}
 		Arr::set( $settings, 'supports', false );
+	}
+
+	/**
+	 * Handle Remove CPT slug base setting.
+	 * When enabled, post type slug is stripped from permalinks.
+	 * Setting key in post_content JSON: "remove_base": true
+	 */
+	private function parse_remove_base( array &$settings ): void {
+		$remove_base = Arr::get( $settings, 'remove_base' );
+		if ( empty( $remove_base ) ) {
+			unset( $settings['remove_base'] );
+			return;
+		}
+
+		$slug = Arr::get( $settings, 'slug' );
+		if ( $slug ) {
+			$this->remove_base_types[] = $slug;
+		}
+
+		// Do not pass unknown arg to register_post_type().
+		unset( $settings['remove_base'] );
+	}
+
+	/**
+	 * Removes the Custom Post Type slug from the generated post permalink.
+	 *
+	 * @param string  $post_link The original post permalink URL.
+	 * @param WP_Post $post      The post object.
+	 *
+	 * @return string The modified permalink URL without the post type slug.
+	 */
+	public function remove_cpt_base( string $post_link, WP_Post $post ): string {
+		if ( ! in_array( $post->post_type, $this->remove_base_types, true ) || 'publish' !== $post->post_status ) {
+			return $post_link;
+		}
+
+		$post_type_object = get_post_type_object( $post->post_type );
+		if ( ! $post_type_object || empty( $post_type_object->rewrite['slug'] ) ) {
+			$slug = $post->post_type;
+		} else {
+			$slug = $post_type_object->rewrite['slug'];
+		}
+
+		return str_replace( '/' . $slug . '/', '/', $post_link );
+	}
+
+	/**
+	 * Resolve single URL without CPT base via one main query.
+	 *
+	 * @param \WP_Query $query The main WP_Query instance.
+	 * @return void
+	 */
+	public function query_single_without_base( \WP_Query $query ): void {
+		if ( is_admin() || ! $query->is_main_query() ) {
+			return;
+		}
+
+		$existing = $query->get( 'post_type' );
+		if ( ! empty( $existing ) && $existing !== 'any' ) {
+			return;
+		}
+		foreach ( $this->remove_base_types as $pt ) {
+			if ( $query->get( $pt ) ) {
+				return;
+			}
+		}
+
+		$name     = (string) $query->get( 'name' );
+		$pagename = (string) $query->get( 'pagename' );
+
+		// Bail early if the query does not target a single entity path.
+		if ( ! $name && ! $pagename ) {
+			return;
+		}
+
+		$post_types = array_values( array_unique( array_merge( [ 'post', 'page' ], $this->remove_base_types ) ) );
+
+		// Flat single slug already identified.
+		if ( $name ) {
+			$query->set( 'post_type', $post_types );
+			return;
+		}
+
+		// Handled via pagename: assign target post types.
+		$query->set( 'post_type', $post_types );
+
+		// Normalize leaf slug into 'name' to preserve redirect_guess_404_permalink() resolution.
+		$query->set( 'name', str_contains( $pagename, '/' ) ? basename( $pagename ) : $pagename );
+
+		// clear so WP treats it as post name, not page path
+		$query->set( 'pagename', '' );
 	}
 
 	private function parse_icon( array &$settings ): void {
