@@ -7,6 +7,7 @@ use MetaBox\Support\Arr;
 class PostTypeRegister extends Register {
 	private $menu_positions       = [];
 	private $font_awesome_classes = [ 'fa', 'fa-classic', 'fa-sharp', 'fas', 'fa-solid', 'far', 'fa-regular', 'fab', 'fa-brands' ];
+	private $remove_base_types    = [];
 
 	public function register(): void {
 		// Register main post type 'mb-post-type'.
@@ -80,6 +81,12 @@ class PostTypeRegister extends Register {
 		if ( ! empty( $this->menu_positions ) ) {
 			add_action( 'admin_menu', [ $this, 'fix_menu_positions' ] );
 		}
+
+		// Remove CPT slug base from permalinks when enabled.
+		if ( ! empty( $this->remove_base_types ) ) {
+			add_filter( 'post_type_link', [ $this, 'remove_cpt_base' ], 10, 2 );
+			add_filter( 'request', [ $this, 'request_single_without_base' ] );
+		}
 	}
 
 	public function get_post_types(): array {
@@ -128,6 +135,7 @@ class PostTypeRegister extends Register {
 
 		$this->parse_supports( $settings );
 		$this->parse_capabilities( $settings );
+		$this->parse_remove_base( $settings );
 
 		return $settings;
 	}
@@ -349,6 +357,51 @@ class PostTypeRegister extends Register {
 		Arr::set( $settings, 'supports', false );
 	}
 
+	/**
+	 * Handle Remove CPT slug base setting.
+	 * When enabled, post type slug is stripped from permalinks.
+	 * Setting key in post_content JSON: "remove_base": true
+	 */
+	private function parse_remove_base( array &$settings ): void {
+		$remove_base = Arr::get( $settings, 'remove_base' );
+		if ( empty( $remove_base ) ) {
+			unset( $settings['remove_base'] );
+			return;
+		}
+
+		$slug = Arr::get( $settings, 'slug' );
+		if ( $slug ) {
+			$this->remove_base_types[] = $slug;
+		}
+
+		// Do not pass unknown arg to register_post_type().
+		unset( $settings['remove_base'] );
+	}
+
+	/**
+	 * Removes the Custom Post Type slug from the generated post permalink.
+	 *
+	 * @param string  $post_link The original post permalink URL.
+	 * @param WP_Post $post      The post object.
+	 *
+	 * @return string The modified permalink URL without the post type slug.
+	 */
+	public function remove_cpt_base( string $post_link, WP_Post $post ): string {
+		if ( ! in_array( $post->post_type, $this->remove_base_types, true ) || 'publish' !== $post->post_status ) {
+			return $post_link;
+		}
+
+		$post_type_object = get_post_type_object( $post->post_type );
+		if ( ! $post_type_object || empty( $post_type_object->rewrite['slug'] ) ) {
+			$slug = $post->post_type;
+		} else {
+			$slug = $post_type_object->rewrite['slug'];
+		}
+
+		return str_replace( '/' . $slug . '/', '/', $post_link );
+	}
+
+
 	private function parse_icon( array &$settings ): void {
 		$default = Arr::get( $settings, 'menu_icon', 'dashicons-admin-generic' );
 
@@ -447,5 +500,80 @@ class PostTypeRegister extends Register {
 			// Re-add the menu with new position.
 			$menu[ $position ] = $args; // phpcs:ignore
 		}
+	}
+
+	/**
+	 * Resolve URL without CPT base with flat and hierarchical mode
+	 *
+	 * @param array $query_vars Parsed request query vars.
+	 * @return array
+	 */
+	public function request_single_without_base( array $query_vars ): array {
+		if ( is_admin() ) {
+			return $query_vars;
+		}
+
+		// Already resolved to a post type (URL still has CPT base).
+		if ( ! empty( $query_vars['post_type'] ) ) {
+			return $query_vars;
+		}
+		foreach ( $this->remove_base_types as $pt ) {
+			if ( ! empty( $query_vars[ $pt ] ) ) {
+				return $query_vars;
+			}
+		}
+
+		$candidates = isset( $query_vars['error'] )
+			|| isset( $query_vars['pagename'] )
+			|| isset( $query_vars['name'] )
+			|| isset( $query_vars['attachment'] )
+			|| isset( $query_vars['category_name'] );
+
+		if ( ! $candidates ) {
+			return $query_vars;
+		}
+
+		$path = $this->get_request_path();
+		if ( $path === '' ) {
+			return $query_vars;
+		}
+
+		// Prefer existing page/post.
+		if ( get_page_by_path( $path, OBJECT, 'page' ) || get_page_by_path( $path, OBJECT, 'post' ) ) {
+			return $query_vars;
+		}
+
+		// Match hierarchical or flat CPT path.
+		$found = get_page_by_path( $path, OBJECT, $this->remove_base_types );
+		if ( ! ( $found instanceof WP_Post ) ) {
+			return $query_vars;
+		}
+
+		unset( $query_vars['error'], $query_vars['pagename'], $query_vars['attachment'], $query_vars['category_name'] );
+
+		// Full path required for hierarchical children (parent/child/...).
+		$query_vars['page']      = '';
+		$query_vars['name']      = $path;
+		$query_vars['post_type'] = $found->post_type;
+		$query_vars[ $found->post_type ] = $path;
+
+		return $query_vars;
+	}
+
+	/**
+	 * Current request path relative to home, without query string.
+	 */
+	private function get_request_path(): string {
+		$home = home_url( '/' );
+		$uri  = isset( $_SERVER['REQUEST_URI'] ) ? wp_unslash( $_SERVER['REQUEST_URI'] ) : ''; // phpcs:ignore
+		$uri  = strtok( $uri, '?' );
+
+		$path = $uri;
+		$home_path = wp_parse_url( $home, PHP_URL_PATH );
+		if ( $home_path && $home_path !== '/' && str_starts_with( $path, $home_path ) ) {
+			$path = substr( $path, strlen( $home_path ) );
+		}
+
+		return trim( (string) $path, '/' );
 	}
 }
