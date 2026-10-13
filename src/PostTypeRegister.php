@@ -85,7 +85,7 @@ class PostTypeRegister extends Register {
 		// Remove CPT slug base from permalinks when enabled.
 		if ( ! empty( $this->remove_base_types ) ) {
 			add_filter( 'post_type_link', [ $this, 'remove_cpt_base' ], 10, 2 );
-			add_action( 'pre_get_posts', [ $this, 'query_single_without_base' ] );
+			add_filter( 'request', [ $this, 'request_single_without_base' ] );
 		}
 	}
 
@@ -401,52 +401,6 @@ class PostTypeRegister extends Register {
 		return str_replace( '/' . $slug . '/', '/', $post_link );
 	}
 
-	/**
-	 * Resolve single URL without CPT base via one main query.
-	 *
-	 * @param \WP_Query $query The main WP_Query instance.
-	 * @return void
-	 */
-	public function query_single_without_base( \WP_Query $query ): void {
-		if ( is_admin() || ! $query->is_main_query() ) {
-			return;
-		}
-
-		$existing = $query->get( 'post_type' );
-		if ( ! empty( $existing ) && $existing !== 'any' ) {
-			return;
-		}
-		foreach ( $this->remove_base_types as $pt ) {
-			if ( $query->get( $pt ) ) {
-				return;
-			}
-		}
-
-		$name     = (string) $query->get( 'name' );
-		$pagename = (string) $query->get( 'pagename' );
-
-		// Bail early if the query does not target a single entity path.
-		if ( ! $name && ! $pagename ) {
-			return;
-		}
-
-		$post_types = array_values( array_unique( array_merge( [ 'post', 'page' ], $this->remove_base_types ) ) );
-
-		// Flat single slug already identified.
-		if ( $name ) {
-			$query->set( 'post_type', $post_types );
-			return;
-		}
-
-		// Handled via pagename: assign target post types.
-		$query->set( 'post_type', $post_types );
-
-		// Normalize leaf slug into 'name' to preserve redirect_guess_404_permalink() resolution.
-		$query->set( 'name', str_contains( $pagename, '/' ) ? basename( $pagename ) : $pagename );
-
-		// clear so WP treats it as post name, not page path
-		$query->set( 'pagename', '' );
-	}
 
 	private function parse_icon( array &$settings ): void {
 		$default = Arr::get( $settings, 'menu_icon', 'dashicons-admin-generic' );
@@ -546,5 +500,80 @@ class PostTypeRegister extends Register {
 			// Re-add the menu with new position.
 			$menu[ $position ] = $args; // phpcs:ignore
 		}
+	}
+
+	/**
+	 * Resolve URL without CPT base with flat and hierarchical mode
+	 *
+	 * @param array $query_vars Parsed request query vars.
+	 * @return array
+	 */
+	public function request_single_without_base( array $query_vars ): array {
+		if ( is_admin() ) {
+			return $query_vars;
+		}
+
+		// Already resolved to a post type (URL still has CPT base).
+		if ( ! empty( $query_vars['post_type'] ) ) {
+			return $query_vars;
+		}
+		foreach ( $this->remove_base_types as $pt ) {
+			if ( ! empty( $query_vars[ $pt ] ) ) {
+				return $query_vars;
+			}
+		}
+
+		$candidates = isset( $query_vars['error'] )
+			|| isset( $query_vars['pagename'] )
+			|| isset( $query_vars['name'] )
+			|| isset( $query_vars['attachment'] )
+			|| isset( $query_vars['category_name'] );
+
+		if ( ! $candidates ) {
+			return $query_vars;
+		}
+
+		$path = $this->get_request_path();
+		if ( $path === '' ) {
+			return $query_vars;
+		}
+
+		// Prefer existing page/post.
+		if ( get_page_by_path( $path, OBJECT, 'page' ) || get_page_by_path( $path, OBJECT, 'post' ) ) {
+			return $query_vars;
+		}
+
+		// Match hierarchical or flat CPT path.
+		$found = get_page_by_path( $path, OBJECT, $this->remove_base_types );
+		if ( ! ( $found instanceof WP_Post ) ) {
+			return $query_vars;
+		}
+
+		unset( $query_vars['error'], $query_vars['pagename'], $query_vars['attachment'], $query_vars['category_name'] );
+
+		// Full path required for hierarchical children (parent/child/...).
+		$query_vars['page']      = '';
+		$query_vars['name']      = $path;
+		$query_vars['post_type'] = $found->post_type;
+		$query_vars[ $found->post_type ] = $path;
+
+		return $query_vars;
+	}
+
+	/**
+	 * Current request path relative to home, without query string.
+	 */
+	private function get_request_path(): string {
+		$home = home_url( '/' );
+		$uri  = isset( $_SERVER['REQUEST_URI'] ) ? wp_unslash( $_SERVER['REQUEST_URI'] ) : ''; // phpcs:ignore
+		$uri  = strtok( $uri, '?' );
+
+		$path = $uri;
+		$home_path = wp_parse_url( $home, PHP_URL_PATH );
+		if ( $home_path && $home_path !== '/' && str_starts_with( $path, $home_path ) ) {
+			$path = substr( $path, strlen( $home_path ) );
+		}
+
+		return trim( (string) $path, '/' );
 	}
 }
