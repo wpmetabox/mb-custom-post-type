@@ -2,6 +2,7 @@
 namespace MBCPT;
 
 use MetaBox\Support\Arr;
+use WP_Post;
 
 abstract class Register {
 	public function __construct() {
@@ -36,5 +37,32 @@ abstract class Register {
 			return str_replace( [ '&lt;', '&gt;' ], '', $text );
 		}, $labels );
 		Arr::set( $settings, 'labels', $labels );
+	}
+
+	/**
+	 * True when the definition has no saved JSON, or an admin forces re-migration.
+	 */
+	protected function should_migrate( WP_Post $post ): bool {
+		return empty( $post->post_content ) || $this->can_force_migrate();
+	}
+
+	/**
+	 * Force migration requires a logged-in user with manage_options.
+	 */
+	protected function can_force_migrate(): bool {
+		// phpcs:ignore WordPress.Security.NonceVerification.Recommended
+		return isset( $_GET['mbcpt-force'] ) && current_user_can( 'manage_options' );
+	}
+
+	/**
+	 * Delete pre-2.0 per-field meta so migration cannot run again from stale data.
+	 *
+	 * @param int      $post_id Post ID.
+	 * @param string[] $keys    Meta keys to delete.
+	 */
+	protected function delete_legacy_meta( int $post_id, array $keys ): void {
+		foreach ( $keys as $key ) {
+			delete_post_meta( $post_id, $key );
+		}
 	}
 }

@@ -110,8 +110,7 @@ class PostTypeRegister extends Register {
 	}
 
 	public function get_post_type_settings( WP_Post $post ): array {
-		// phpcs:ignore
-		$settings = empty( $post->post_content ) || isset( $_GET['mbcpt-force'] ) ? $this->migrate_data( $post ) : json_decode( $post->post_content, true );
+		$settings = $this->should_migrate( $post ) ? $this->migrate_data( $post ) : json_decode( $post->post_content, true );
 
 		if ( empty( $settings ) || ! is_array( $settings ) ) {
 			return [];
@@ -133,33 +132,32 @@ class PostTypeRegister extends Register {
 	}
 
 	private function migrate_data( WP_Post $post ): array {
-		$args      = [ 'labels' => [] ];
-		$post_meta = get_post_meta( $post->ID );
+		$args        = [ 'labels' => [] ];
+		$legacy_keys = [];
 
-		foreach ( $post_meta as $key => $value ) {
-			if ( 0 !== strpos( $key, 'label_' ) && 0 !== strpos( $key, 'args_' ) ) {
+		foreach ( get_post_meta( $post->ID ) as $key => $value ) {
+			if ( ! str_starts_with( $key, 'label_' ) && ! str_starts_with( $key, 'args_' ) ) {
 				continue;
 			}
+
+			$legacy_keys[] = $key;
 			$this->unarray( $value, $key, [ 'args_taxonomies', 'args_supports' ] );
 			$this->normalize_checkbox( $value );
 
-			if ( 0 === strpos( $key, 'label_' ) ) {
-				$key                    = str_replace( 'label_', '', $key );
-				$args['labels'][ $key ] = $value;
+			if ( str_starts_with( $key, 'label_' ) ) {
+				$args['labels'][ str_replace( 'label_', '', $key ) ] = $value;
 			} else {
-				$key          = str_replace( 'args_', '', $key );
-				$args[ $key ] = $value;
+				$args[ str_replace( 'args_', '', $key ) ] = $value;
 			}
 		}
 		$this->change_key( $args, 'post_type', 'slug' );
 
-		// Bypass new post types.
-		if ( isset( $_GET['mbcpt-force'] ) && empty( $args['slug'] ) ) { // phpcs:ignore
+		// Keep current JSON when there is no legacy slug (definition created after 2.0).
+		if ( empty( $args['slug'] ) ) {
 			$settings = json_decode( $post->post_content, true );
 			return is_array( $settings ) ? $settings : [];
 		}
 
-		// Rewrite.
 		$rewrite = [];
 		if ( isset( $args['rewrite_slug'] ) ) {
 			$rewrite['slug'] = $args['rewrite_slug'];
@@ -172,6 +170,8 @@ class PostTypeRegister extends Register {
 			'ID'           => $post->ID,
 			'post_content' => wp_json_encode( $args, JSON_UNESCAPED_UNICODE ),
 		] );
+		$this->delete_legacy_meta( $post->ID, $legacy_keys );
+
 		return $args;
 	}
 
