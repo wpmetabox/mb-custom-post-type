@@ -40,24 +40,18 @@ abstract class Register {
 	}
 
 	/**
-	 * True when the definition has no saved JSON, or an admin forces re-migration with a valid nonce.
+	 * True when the definition has no saved JSON, or an admin forces re-migration.
 	 */
 	protected function should_migrate( WP_Post $post ): bool {
 		return empty( $post->post_content ) || $this->can_force_migrate();
 	}
 
 	/**
-	 * Force migration requires manage_options and a valid nonce (`mbcpt-force-migrate`).
+	 * Force migration requires a logged-in user with manage_options.
 	 */
 	protected function can_force_migrate(): bool {
 		// phpcs:ignore WordPress.Security.NonceVerification.Recommended
-		if ( ! isset( $_GET['mbcpt-force'] ) ) {
-			return false;
-		}
-
-		// phpcs:ignore WordPress.Security.NonceVerification.Recommended
-		$nonce = sanitize_text_field( wp_unslash( $_GET['_wpnonce'] ?? '' ) );
-		return current_user_can( 'manage_options' ) && (bool) wp_verify_nonce( $nonce, 'mbcpt-force-migrate' );
+		return isset( $_GET['mbcpt-force'] ) && current_user_can( 'manage_options' );
 	}
 
 	/**
