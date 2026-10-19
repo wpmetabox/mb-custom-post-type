@@ -1,3 +1,7 @@
+### 2.12.3 - 2026-10-19
+
+- Fix unauthenticated migration reset and export disclosure
+
 ### 2.12.2 - 2026-08-22
 
 - Add info columns to post type and taxonomy list tables
