@@ -37,4 +37,16 @@ abstract class Register {
 		}, $labels );
 		Arr::set( $settings, 'labels', $labels );
 	}
+
+	/**
+	 * Delete pre-2.0 per-field meta so migration cannot run again from stale data.
+	 *
+	 * @param int      $post_id Post ID.
+	 * @param string[] $keys    Meta keys to delete.
+	 */
+	protected function delete_legacy_meta( int $post_id, array $keys ): void {
+		foreach ( $keys as $key ) {
+			delete_post_meta( $post_id, $key );
+		}
+	}
 }
