@@ -337,7 +337,7 @@ For more details, please see the [blog post](https://metabox.io/mb-custom-post-t
 - Fix migrating data
 
 = 2.0.2 - 2020-10-05 =
-- Fix encoding characters. For users who already upgraded, please add `?mbcpt-force=1` to your website URL to fix the problem.
+- Fix encoding characters.
 - Fix empty page when clicking Taxonomies/Get PHP Code tab
 
 = 2.0.1 - 2020-10-01 =

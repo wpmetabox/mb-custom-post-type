@@ -110,7 +110,7 @@ class PostTypeRegister extends Register {
 	}
 
 	public function get_post_type_settings( WP_Post $post ): array {
-		$settings = $this->should_migrate( $post ) ? $this->migrate_data( $post ) : json_decode( $post->post_content, true );
+		$settings = $post->post_content ? json_decode( $post->post_content, true ) : $this->migrate_data( $post );
 
 		if ( empty( $settings ) || ! is_array( $settings ) ) {
 			return [];

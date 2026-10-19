@@ -132,7 +132,7 @@ class TaxonomyRegister extends Register {
 	}
 
 	public function get_taxonomy_data( WP_Post $post ): array {
-		$settings = $this->should_migrate( $post ) ? $this->migrate_data( $post ) : json_decode( $post->post_content, true );
+		$settings = $post->post_content ? json_decode( $post->post_content, true ) : $this->migrate_data( $post );
 
 		if ( empty( $settings ) ) {
 			return [];
