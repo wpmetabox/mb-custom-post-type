@@ -291,7 +291,7 @@ class DefinitionAbilities {
 		$previous = $this->format_post( $post );
 		$result   = wp_delete_post( $post->ID, ! empty( $input['force'] ) );
 		if ( ! $result ) {
-			return new WP_Error( 'mbcpt_delete_failed', sprinf( __( 'Could not delete the %s.', 'mb-custom-post-type' ), strtolower( $this->post_type_object->labels->singular_name ) ), [ 'status' => 500 ] );
+			return new WP_Error( 'mbcpt_delete_failed', sprintf( __( 'Could not delete the %s.', 'mb-custom-post-type' ), strtolower( $this->post_type_object->labels->singular_name ) ), [ 'status' => 500 ] );
 		}
 
 		return [

@@ -11,9 +11,19 @@ use WP_REST_Server;
 class PostTypeAbilities extends BaseAbilities {
 
 	private WP_Post_Type $post_type;
+	private string $ability_slug;
 	private ?WP_REST_Posts_Controller $controller = null;
 
 	public function __construct( string $slug, WP_Post_Type $post_type, array $settings ) {
+		$this->slug         = $slug;
+		$this->ability_slug = str_replace( '_', '-', $slug );
+		$this->post_type    = $post_type;
+		$this->singular     = $post_type->labels->singular_name ?? $slug;
+		$this->label        = $post_type->labels->name ?? $slug;
+		$this->settings     = $settings;
+	}
+
+	public function __construct1( string $slug, WP_Post_Type $post_type, array $settings ) {
 		$this->slug      = $slug;
 		$this->post_type = $post_type;
 		$this->singular  = $post_type->labels->singular_name ?? $slug;
@@ -23,7 +33,7 @@ class PostTypeAbilities extends BaseAbilities {
 
 	protected function register_get_ability(): void {
 		wp_register_ability(
-			"meta-box/get-post-{$this->slug}",
+			"meta-box/get-post-{$this->ability_slug}",
 			[
 				'label'               => sprintf( __( 'Get %s', 'mb-custom-post-type' ), strtolower( $this->singular ) ),
 				'description'         => sprintf( __( 'Search and list %s.', 'mb-custom-post-type' ), strtolower( $this->label ) ),
@@ -53,7 +63,7 @@ class PostTypeAbilities extends BaseAbilities {
 
 	protected function register_get_metadata_ability(): void {
 		wp_register_ability(
-			"meta-box/get-post-type-{$this->slug}",
+			"meta-box/get-post-type-{$this->ability_slug}",
 			[
 				'label'               => sprintf( __( 'Get %s post type', 'mb-custom-post-type' ), strtolower( $this->singular ) ),
 				'description'         => sprintf( __( 'Get %s post type data.', 'mb-custom-post-type' ), strtolower( $this->singular ) ),
@@ -69,7 +79,7 @@ class PostTypeAbilities extends BaseAbilities {
 
 	protected function register_create_ability(): void {
 		wp_register_ability(
-			"meta-box/create-post-{$this->slug}",
+			"meta-box/create-post-{$this->ability_slug}",
 			[
 				'label'               => sprintf( __( 'Create %s', 'mb-custom-post-type' ), strtolower( $this->singular ) ),
 				'description'         => sprintf( __( 'Create a new %s.', 'mb-custom-post-type' ), strtolower( $this->singular ) ),
@@ -88,7 +98,7 @@ class PostTypeAbilities extends BaseAbilities {
 
 	protected function register_update_ability(): void {
 		wp_register_ability(
-			"meta-box/update-post-{$this->slug}",
+			"meta-box/update-post-{$this->ability_slug}",
 			[
 				'label'               => sprintf( __( 'Update %s', 'mb-custom-post-type' ), strtolower( $this->singular ) ),
 				'description'         => sprintf( __( 'Update an existing %s. Only provided fields are modified.', 'mb-custom-post-type' ), strtolower( $this->singular ) ),
@@ -113,7 +123,7 @@ class PostTypeAbilities extends BaseAbilities {
 
 	protected function register_delete_ability(): void {
 		wp_register_ability(
-			"meta-box/delete-post-{$this->slug}",
+			"meta-box/delete-post-{$this->ability_slug}",
 			[
 				'label'               => sprintf( __( 'Delete %s', 'mb-custom-post-type' ), strtolower( $this->singular ) ),
 				'description'         => sprintf( __( 'Delete a %s.', 'mb-custom-post-type' ), strtolower( $this->singular ) ),
