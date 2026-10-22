@@ -388,8 +388,11 @@ class PostTypeRegister extends Register {
 		$post_type_object = get_post_type_object( $post->post_type );
 		$slug             = is_array( $post_type_object->rewrite ) && ! empty( $post_type_object->rewrite['slug'] ) ? $post_type_object->rewrite['slug'] : $post->post_type;
 
-		// Remove the first occurrence only, which is the post type base.
-		return str_replace( "/{$slug}/", '/', $post_link, $count );
+		// Replace the first occurrence only: it is the post type base.
+		$base = "/{$slug}/";
+		$pos  = strpos( $post_link, $base );
+
+		return false === $pos ? $post_link : substr_replace( $post_link, '/', $pos, strlen( $base ) );
 	}
 
 	private function parse_icon( array &$settings ): void {
