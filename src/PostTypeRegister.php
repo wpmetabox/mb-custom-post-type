@@ -7,6 +7,7 @@ use MetaBox\Support\Arr;
 class PostTypeRegister extends Register {
 	private $menu_positions       = [];
 	private $font_awesome_classes = [ 'fa', 'fa-classic', 'fa-sharp', 'fas', 'fa-solid', 'far', 'fa-regular', 'fab', 'fa-brands' ];
+	private $remove_base_types    = [];
 
 	public function register(): void {
 		// Register main post type 'mb-post-type'.
@@ -80,6 +81,12 @@ class PostTypeRegister extends Register {
 		if ( ! empty( $this->menu_positions ) ) {
 			add_action( 'admin_menu', [ $this, 'fix_menu_positions' ] );
 		}
+
+		// Remove CPT slug base from permalinks when enabled.
+		if ( ! empty( $this->remove_base_types ) ) {
+			add_filter( 'post_type_link', [ $this, 'remove_cpt_base' ], 10, 2 );
+			add_filter( 'request', [ $this, 'request_single_without_base' ] );
+		}
 	}
 
 	public function get_post_types(): array {
@@ -127,6 +134,7 @@ class PostTypeRegister extends Register {
 
 		$this->parse_supports( $settings );
 		$this->parse_capabilities( $settings );
+		$this->parse_remove_base( $settings );
 
 		return $settings;
 	}
@@ -349,6 +357,44 @@ class PostTypeRegister extends Register {
 		Arr::set( $settings, 'supports', false );
 	}
 
+	/**
+	 * Remove the post type slug from single URLs when the setting is enabled.
+	 *
+	 * The setting is stored as "remove_base" in the post content JSON.
+	 */
+	private function parse_remove_base( array &$settings ): void {
+		$remove_base = Arr::get( $settings, 'remove_base' );
+		$slug        = Arr::get( $settings, 'slug' );
+
+		// Do not pass unknown arg to register_post_type().
+		unset( $settings['remove_base'] );
+
+		if ( $remove_base && $slug ) {
+			$this->remove_base_types[ $slug ] = $slug;
+		}
+	}
+
+	/**
+	 * Remove the post type slug from a single post permalink.
+	 *
+	 * @param string  $post_link The original post permalink URL.
+	 * @param WP_Post $post      The post object.
+	 */
+	public function remove_cpt_base( string $post_link, WP_Post $post ): string {
+		if ( empty( $this->remove_base_types[ $post->post_type ] ) ) {
+			return $post_link;
+		}
+
+		$post_type_object = get_post_type_object( $post->post_type );
+		$slug             = is_array( $post_type_object->rewrite ) && ! empty( $post_type_object->rewrite['slug'] ) ? $post_type_object->rewrite['slug'] : $post->post_type;
+
+		// Replace the first occurrence only: it is the post type base.
+		$base = "/{$slug}/";
+		$pos  = strpos( $post_link, $base );
+
+		return false === $pos ? $post_link : substr_replace( $post_link, '/', $pos, strlen( $base ) );
+	}
+
 	private function parse_icon( array &$settings ): void {
 		$default = Arr::get( $settings, 'menu_icon', 'dashicons-admin-generic' );
 
@@ -447,5 +493,73 @@ class PostTypeRegister extends Register {
 			// Re-add the menu with new position.
 			$menu[ $position ] = $args; // phpcs:ignore
 		}
+	}
+
+	/**
+	 * Resolve a single post URL that has the post type slug removed.
+	 *
+	 * @param array $query_vars Parsed request query vars.
+	 */
+	public function request_single_without_base( array $query_vars ): array {
+		global $wp, $wp_rewrite;
+
+		if ( is_admin() || ! empty( $query_vars['post_type'] ) ) {
+			return $query_vars;
+		}
+
+		// Only handle requests that WordPress resolved to a page, a post, an attachment or a category.
+		// Query vars can also be empty: some setups (e.g. Valet) make WordPress clear the error flag.
+		$is_candidate = empty( $query_vars )
+			|| ! empty( $query_vars['error'] )
+			|| ! empty( $query_vars['pagename'] )
+			|| ! empty( $query_vars['name'] )
+			|| ! empty( $query_vars['attachment'] )
+			|| ! empty( $query_vars['category_name'] );
+
+		if ( ! $is_candidate ) {
+			return $query_vars;
+		}
+
+		$path = trim( $wp->request, '/' );
+		if ( ! $path ) {
+			return $query_vars;
+		}
+
+		// Post URLs may start with the permalink front, pages only with the rewrite root.
+		$post_path = $this->remove_prefix( $path, $wp_rewrite->front );
+		$page_path = $this->remove_prefix( $path, $wp_rewrite->root );
+
+		$found = get_page_by_path( $post_path, OBJECT, array_keys( $this->remove_base_types ) );
+		if ( ! ( $found instanceof WP_Post ) || 'publish' !== $found->post_status ) {
+			return $query_vars;
+		}
+
+		// Keep existing pages and posts at the same path.
+		if ( get_page_by_path( $page_path, OBJECT, 'page' ) || get_page_by_path( $post_path, OBJECT, 'post' ) ) {
+			return $query_vars;
+		}
+
+		// Remove query vars from the failed page/post match.
+		unset( $query_vars['error'], $query_vars['pagename'], $query_vars['name'], $query_vars['attachment'], $query_vars['category_name'], $query_vars['page'] );
+
+		$query_vars['post_type'] = $found->post_type;
+
+		// Hierarchical post types need the full path, flat ones use the post name.
+		if ( is_post_type_hierarchical( $found->post_type ) ) {
+			$query_vars['pagename'] = $post_path;
+		} else {
+			$query_vars['name'] = $found->post_name;
+		}
+
+		return $query_vars;
+	}
+
+	/**
+	 * Remove a path prefix, such as the permalink front or the rewrite root.
+	 */
+	private function remove_prefix( string $path, string $prefix ): string {
+		$prefix = trim( $prefix, '/' );
+
+		return $prefix && str_starts_with( $path, "{$prefix}/" ) ? substr( $path, strlen( $prefix ) + 1 ) : $path;
 	}
 }

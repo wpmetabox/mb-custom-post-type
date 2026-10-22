@@ -41,6 +41,7 @@ const DefaultSettings = {
 		item_updated            : '',
 	},
 	description        : '',
+	remove_base        : false,
 	public             : true,
 	hierarchical       : false,
 	exclude_from_search: false,

@@ -560,4 +560,11 @@ if ( MBCPT.abilities ) {
 	} );
 };
 
+FeatureControls.push( {
+	type: 'toggle',
+	name: 'remove_base',
+	label: __( 'Remove post type slug from URL', 'mb-custom-post-type' ),
+	description: __( 'Turns /post-type/post-name into /post-name. Note: experimental, may conflict with other plugins.', 'mb-custom-post-type' ),
+} );
+
 export { FeatureControls };
