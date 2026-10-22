@@ -16,7 +16,8 @@ class TaxonomyAbilities extends BaseAbilities {
 
 	public function __construct( string $slug, WP_Taxonomy $taxonomy, array $settings ) {
 		$this->slug         = $slug;
-		$this->ability_slug = str_replace( '_', '-', $slug );
+		$this->ability_slug = preg_replace( '/[^a-z0-9-]/', '-', strtolower( $slug ) );
+		$this->ability_slug = trim( $this->ability_slug, '-' );
 		$this->taxonomy     = $taxonomy;
 		$this->singular     = $taxonomy->labels->singular_name ?? $slug;
 		$this->label        = $taxonomy->labels->name ?? $slug;

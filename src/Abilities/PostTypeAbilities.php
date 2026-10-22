@@ -16,7 +16,8 @@ class PostTypeAbilities extends BaseAbilities {
 
 	public function __construct( string $slug, WP_Post_Type $post_type, array $settings ) {
 		$this->slug         = $slug;
-		$this->ability_slug = str_replace( '_', '-', $slug );
+		$this->ability_slug = preg_replace( '/[^a-z0-9-]/', '-', strtolower( $slug ) );
+		$this->ability_slug = trim( $this->ability_slug, '-' ); // Strip leading/trailing dashes
 		$this->post_type    = $post_type;
 		$this->singular     = $post_type->labels->singular_name ?? $slug;
 		$this->label        = $post_type->labels->name ?? $slug;
