@@ -358,49 +358,39 @@ class PostTypeRegister extends Register {
 	}
 
 	/**
-	 * Handle Remove CPT slug base setting.
-	 * When enabled, post type slug is stripped from permalinks.
-	 * Setting key in post_content JSON: "remove_base": true
+	 * Remove the post type slug from single URLs when the setting is enabled.
+	 *
+	 * The setting is stored as "remove_base" in the post content JSON.
 	 */
 	private function parse_remove_base( array &$settings ): void {
 		$remove_base = Arr::get( $settings, 'remove_base' );
-		if ( empty( $remove_base ) ) {
-			unset( $settings['remove_base'] );
-			return;
-		}
-
-		$slug = Arr::get( $settings, 'slug' );
-		if ( $slug ) {
-			$this->remove_base_types[] = $slug;
-		}
+		$slug        = Arr::get( $settings, 'slug' );
 
 		// Do not pass unknown arg to register_post_type().
 		unset( $settings['remove_base'] );
+
+		if ( $remove_base && $slug ) {
+			$this->remove_base_types[ $slug ] = $slug;
+		}
 	}
 
 	/**
-	 * Removes the Custom Post Type slug from the generated post permalink.
+	 * Remove the post type slug from a single post permalink.
 	 *
 	 * @param string  $post_link The original post permalink URL.
 	 * @param WP_Post $post      The post object.
-	 *
-	 * @return string The modified permalink URL without the post type slug.
 	 */
 	public function remove_cpt_base( string $post_link, WP_Post $post ): string {
-		if ( ! in_array( $post->post_type, $this->remove_base_types, true ) || 'publish' !== $post->post_status ) {
+		if ( empty( $this->remove_base_types[ $post->post_type ] ) ) {
 			return $post_link;
 		}
 
 		$post_type_object = get_post_type_object( $post->post_type );
-		if ( ! $post_type_object || empty( $post_type_object->rewrite['slug'] ) ) {
-			$slug = $post->post_type;
-		} else {
-			$slug = $post_type_object->rewrite['slug'];
-		}
+		$slug             = is_array( $post_type_object->rewrite ) && ! empty( $post_type_object->rewrite['slug'] ) ? $post_type_object->rewrite['slug'] : $post->post_type;
 
-		return str_replace( '/' . $slug . '/', '/', $post_link );
+		// Remove the first occurrence only, which is the post type base.
+		return str_replace( "/{$slug}/", '/', $post_link, $count );
 	}
-
 
 	private function parse_icon( array &$settings ): void {
 		$default = Arr::get( $settings, 'menu_icon', 'dashicons-admin-generic' );
@@ -503,77 +493,70 @@ class PostTypeRegister extends Register {
 	}
 
 	/**
-	 * Resolve URL without CPT base with flat and hierarchical mode
+	 * Resolve a single post URL that has the post type slug removed.
 	 *
 	 * @param array $query_vars Parsed request query vars.
-	 * @return array
 	 */
 	public function request_single_without_base( array $query_vars ): array {
-		if ( is_admin() ) {
+		global $wp, $wp_rewrite;
+
+		if ( is_admin() || ! empty( $query_vars['post_type'] ) ) {
 			return $query_vars;
 		}
 
-		// Already resolved to a post type (URL still has CPT base).
-		if ( ! empty( $query_vars['post_type'] ) ) {
-			return $query_vars;
-		}
-		foreach ( $this->remove_base_types as $pt ) {
-			if ( ! empty( $query_vars[ $pt ] ) ) {
-				return $query_vars;
-			}
-		}
+		// Only handle requests that WordPress resolved to a page, a post, an attachment or a category.
+		// Query vars can also be empty: some setups (e.g. Valet) make WordPress clear the error flag.
+		$is_candidate = empty( $query_vars )
+			|| ! empty( $query_vars['error'] )
+			|| ! empty( $query_vars['pagename'] )
+			|| ! empty( $query_vars['name'] )
+			|| ! empty( $query_vars['attachment'] )
+			|| ! empty( $query_vars['category_name'] );
 
-		$candidates = isset( $query_vars['error'] )
-			|| isset( $query_vars['pagename'] )
-			|| isset( $query_vars['name'] )
-			|| isset( $query_vars['attachment'] )
-			|| isset( $query_vars['category_name'] );
-
-		if ( ! $candidates ) {
+		if ( ! $is_candidate ) {
 			return $query_vars;
 		}
 
-		$path = $this->get_request_path();
-		if ( $path === '' ) {
+		$path = trim( $wp->request, '/' );
+		if ( ! $path ) {
 			return $query_vars;
 		}
 
-		// Prefer existing page/post.
-		if ( get_page_by_path( $path, OBJECT, 'page' ) || get_page_by_path( $path, OBJECT, 'post' ) ) {
+		// Post URLs may start with the permalink front, pages only with the rewrite root.
+		$post_path = $this->remove_prefix( $path, $wp_rewrite->front );
+		$page_path = $this->remove_prefix( $path, $wp_rewrite->root );
+
+		$found = get_page_by_path( $post_path, OBJECT, array_keys( $this->remove_base_types ) );
+		if ( ! ( $found instanceof WP_Post ) || 'publish' !== $found->post_status ) {
 			return $query_vars;
 		}
 
-		// Match hierarchical or flat CPT path.
-		$found = get_page_by_path( $path, OBJECT, $this->remove_base_types );
-		if ( ! ( $found instanceof WP_Post ) ) {
+		// Keep existing pages and posts at the same path.
+		if ( get_page_by_path( $page_path, OBJECT, 'page' ) || get_page_by_path( $post_path, OBJECT, 'post' ) ) {
 			return $query_vars;
 		}
 
-		unset( $query_vars['error'], $query_vars['pagename'], $query_vars['attachment'], $query_vars['category_name'] );
+		// Remove query vars from the failed page/post match.
+		unset( $query_vars['error'], $query_vars['pagename'], $query_vars['name'], $query_vars['attachment'], $query_vars['category_name'], $query_vars['page'] );
 
-		// Full path required for hierarchical children (parent/child/...).
-		$query_vars['page']      = '';
-		$query_vars['name']      = $path;
 		$query_vars['post_type'] = $found->post_type;
-		$query_vars[ $found->post_type ] = $path;
+
+		// Hierarchical post types need the full path, flat ones use the post name.
+		if ( is_post_type_hierarchical( $found->post_type ) ) {
+			$query_vars['pagename'] = $post_path;
+		} else {
+			$query_vars['name'] = $found->post_name;
+		}
 
 		return $query_vars;
 	}
 
 	/**
-	 * Current request path relative to home, without query string.
+	 * Remove a path prefix, such as the permalink front or the rewrite root.
 	 */
-	private function get_request_path(): string {
-		$home = home_url( '/' );
-		$uri  = isset( $_SERVER['REQUEST_URI'] ) ? wp_unslash( $_SERVER['REQUEST_URI'] ) : ''; // phpcs:ignore
-		$uri  = strtok( $uri, '?' );
+	private function remove_prefix( string $path, string $prefix ): string {
+		$prefix = trim( $prefix, '/' );
 
-		$path = $uri;
-		$home_path = wp_parse_url( $home, PHP_URL_PATH );
-		if ( $home_path && $home_path !== '/' && str_starts_with( $path, $home_path ) ) {
-			$path = substr( $path, strlen( $home_path ) );
-		}
-
-		return trim( (string) $path, '/' );
+		return $prefix && str_starts_with( $path, "{$prefix}/" ) ? substr( $path, strlen( $prefix ) + 1 ) : $path;
 	}
 }

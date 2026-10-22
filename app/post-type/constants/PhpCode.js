@@ -1,7 +1,7 @@
 import { checkboxList, general, labels, spaces, text, translatableText } from '../../code';
 
 const advanced = settings => {
-	const ignore = [ 'slug', 'function_name', 'text_domain', 'label', 'labels', 'description', 'rest_base', 'show_in_menu', 'menu_icon', 'menu_position', 'parent', 'capability_type', 'has_archive', 'archive_slug', 'rewrite', 'supports', 'taxonomies', 'icon_type', 'icon', 'icon_svg', 'icon_custom', 'font_awesome' ];
+	const ignore = [ 'slug', 'function_name', 'text_domain', 'label', 'labels', 'description', 'rest_base', 'show_in_menu', 'menu_icon', 'menu_position', 'parent', 'capability_type', 'has_archive', 'archive_slug', 'rewrite', 'supports', 'taxonomies', 'icon_type', 'icon', 'icon_svg', 'icon_custom', 'font_awesome', 'remove_base' ];
 
 	let keys = Object.keys( settings ).filter( key => !ignore.includes( key ) );
 	return keys.map( key => general( settings, key ) ).join( ",\n\t\t" );
