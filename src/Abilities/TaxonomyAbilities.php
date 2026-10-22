@@ -15,12 +15,12 @@ class TaxonomyAbilities extends BaseAbilities {
 	private ?WP_REST_Terms_Controller $controller = null;
 
 	public function __construct( string $slug, WP_Taxonomy $taxonomy, array $settings ) {
-		$this->slug     = $slug;
+		$this->slug         = $slug;
 		$this->ability_slug = str_replace( '_', '-', $slug );
-		$this->taxonomy = $taxonomy;
-		$this->singular = $taxonomy->labels->singular_name ?? $slug;
-		$this->label    = $taxonomy->labels->name ?? $slug;
-		$this->settings = $settings;
+		$this->taxonomy     = $taxonomy;
+		$this->singular     = $taxonomy->labels->singular_name ?? $slug;
+		$this->label        = $taxonomy->labels->name ?? $slug;
+		$this->settings     = $settings;
 	}
 
 	protected function register_get_ability(): void {

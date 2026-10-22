@@ -23,14 +23,6 @@ class PostTypeAbilities extends BaseAbilities {
 		$this->settings     = $settings;
 	}
 
-	public function __construct1( string $slug, WP_Post_Type $post_type, array $settings ) {
-		$this->slug      = $slug;
-		$this->post_type = $post_type;
-		$this->singular  = $post_type->labels->singular_name ?? $slug;
-		$this->label     = $post_type->labels->name ?? $slug;
-		$this->settings  = $settings;
-	}
-
 	protected function register_get_ability(): void {
 		wp_register_ability(
 			"meta-box/get-post-{$this->ability_slug}",
