@@ -11,19 +11,22 @@ use WP_REST_Server;
 class TaxonomyAbilities extends BaseAbilities {
 
 	private WP_Taxonomy $taxonomy;
+	private string $ability_slug;
 	private ?WP_REST_Terms_Controller $controller = null;
 
 	public function __construct( string $slug, WP_Taxonomy $taxonomy, array $settings ) {
-		$this->slug     = $slug;
-		$this->taxonomy = $taxonomy;
-		$this->singular = $taxonomy->labels->singular_name ?? $slug;
-		$this->label    = $taxonomy->labels->name ?? $slug;
-		$this->settings = $settings;
+		$this->slug         = $slug;
+		$this->ability_slug = preg_replace( '/[^a-z0-9-]/', '-', strtolower( $slug ) );
+		$this->ability_slug = trim( $this->ability_slug, '-' );
+		$this->taxonomy     = $taxonomy;
+		$this->singular     = $taxonomy->labels->singular_name ?? $slug;
+		$this->label        = $taxonomy->labels->name ?? $slug;
+		$this->settings     = $settings;
 	}
 
 	protected function register_get_ability(): void {
 		wp_register_ability(
-			"meta-box/get-term-{$this->slug}",
+			"meta-box/get-term-{$this->ability_slug}",
 			[
 				'label'               => sprintf( __( 'Get %s', 'mb-custom-post-type' ), strtolower( $this->singular ) ),
 				'description'         => sprintf( __( 'Search and list %s.', 'mb-custom-post-type' ), strtolower( $this->label ) ),
@@ -53,7 +56,7 @@ class TaxonomyAbilities extends BaseAbilities {
 
 	protected function register_get_metadata_ability(): void {
 		wp_register_ability(
-			"meta-box/get-taxonomy-{$this->slug}",
+			"meta-box/get-taxonomy-{$this->ability_slug}",
 			[
 				'label'               => sprintf( __( 'Get %s taxonomy', 'mb-custom-post-type' ), strtolower( $this->singular ) ),
 				'description'         => sprintf( __( 'Get %s taxonomy data.', 'mb-custom-post-type' ), strtolower( $this->singular ) ),
@@ -69,7 +72,7 @@ class TaxonomyAbilities extends BaseAbilities {
 
 	protected function register_create_ability(): void {
 		wp_register_ability(
-			"meta-box/create-term-{$this->slug}",
+			"meta-box/create-term-{$this->ability_slug}",
 			[
 				'label'               => sprintf( __( 'Create %s', 'mb-custom-post-type' ), strtolower( $this->singular ) ),
 				'description'         => sprintf( __( 'Create a new %s.', 'mb-custom-post-type' ), strtolower( $this->singular ) ),
@@ -89,7 +92,7 @@ class TaxonomyAbilities extends BaseAbilities {
 
 	protected function register_update_ability(): void {
 		wp_register_ability(
-			"meta-box/update-term-{$this->slug}",
+			"meta-box/update-term-{$this->ability_slug}",
 			[
 				'label'               => sprintf( __( 'Update %s', 'mb-custom-post-type' ), strtolower( $this->singular ) ),
 				'description'         => sprintf( __( 'Update an existing %s. Only provided fields are modified.', 'mb-custom-post-type' ), strtolower( $this->singular ) ),
@@ -109,7 +112,7 @@ class TaxonomyAbilities extends BaseAbilities {
 
 	protected function register_delete_ability(): void {
 		wp_register_ability(
-			"meta-box/delete-term-{$this->slug}",
+			"meta-box/delete-term-{$this->ability_slug}",
 			[
 				'label'               => sprintf( __( 'Delete %s', 'mb-custom-post-type' ), strtolower( $this->singular ) ),
 				'description'         => sprintf( __( 'Delete a %s.', 'mb-custom-post-type' ), strtolower( $this->singular ) ),
