@@ -340,14 +340,30 @@ class PostTypeRegister extends Register {
 		if ( 'custom' !== Arr::get( $settings, 'capability_type' ) ) {
 			return;
 		}
-		$plural_name   = sanitize_key( Arr::get( $settings, 'labels.name' ) );
-		$singular_name = sanitize_key( Arr::get( $settings, 'labels.singular_name' ) );
+		$plural_name   = $this->get_capability_name( (string) Arr::get( $settings, 'labels.name' ) );
+		$singular_name = $this->get_capability_name( (string) Arr::get( $settings, 'labels.singular_name' ) );
 		if ( $plural_name === $singular_name ) {
 			$plural_name .= 's';
 		}
 
 		Arr::set( $settings, 'capability_type', [ $singular_name, $plural_name ] );
 		Arr::set( $settings, 'map_meta_cap', true );
+	}
+
+	private function get_capability_name( string $name ): string {
+		$old = sanitize_key( $name );
+		$new = sanitize_key( remove_accents( $name ) );
+		// Also check "s" suffix, added when singular and plural names are the same.
+		return $old !== $new && ( $this->role_has_cap( "edit_$old" ) || $this->role_has_cap( "edit_{$old}s" ) ) ? $old : $new;
+	}
+
+	private function role_has_cap( string $cap ): bool {
+		foreach ( wp_roles()->roles as $role ) {
+			if ( ! empty( $role['capabilities'][ $cap ] ) ) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 	private function parse_supports( array &$settings ): void {
