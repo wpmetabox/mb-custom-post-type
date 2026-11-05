@@ -340,14 +340,18 @@ class PostTypeRegister extends Register {
 		if ( 'custom' !== Arr::get( $settings, 'capability_type' ) ) {
 			return;
 		}
-		$plural_name   = sanitize_key( Arr::get( $settings, 'labels.name' ) );
-		$singular_name = sanitize_key( Arr::get( $settings, 'labels.singular_name' ) );
+		$plural_name   = $this->sanitize_capability_name( (string) Arr::get( $settings, 'labels.name' ) );
+		$singular_name = $this->sanitize_capability_name( (string) Arr::get( $settings, 'labels.singular_name' ) );
 		if ( $plural_name === $singular_name ) {
 			$plural_name .= 's';
 		}
 
 		Arr::set( $settings, 'capability_type', [ $singular_name, $plural_name ] );
 		Arr::set( $settings, 'map_meta_cap', true );
+	}
+
+	private function sanitize_capability_name( string $name ): string {
+		return sanitize_key( remove_accents( $name ) );
 	}
 
 	private function parse_supports( array &$settings ): void {
