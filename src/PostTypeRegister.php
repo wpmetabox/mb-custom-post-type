@@ -353,7 +353,8 @@ class PostTypeRegister extends Register {
 	private function get_capability_name( string $name ): string {
 		$old = sanitize_key( $name );
 		$new = sanitize_key( remove_accents( $name ) );
-		return $old !== $new && $this->role_has_cap( "edit_$old" ) ? $old : $new;
+		// Also check "s" suffix, added when singular and plural names are the same.
+		return $old !== $new && ( $this->role_has_cap( "edit_$old" ) || $this->role_has_cap( "edit_{$old}s" ) ) ? $old : $new;
 	}
 
 	private function role_has_cap( string $cap ): bool {
