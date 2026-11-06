@@ -5,7 +5,7 @@ Tags: custom post type, custom post types, custom taxonomies, custom taxonomy, p
 Requires at least: 6.7
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 2.12.3
+Stable tag: 2.13.0
 License: GPLv2 or later
 
 Create and manage custom post types and custom taxonomies with an easy-to-use UI in WordPress.
@@ -76,6 +76,17 @@ If you like this plugin, you might also like our other WordPress products:
 1. Edit custom post type - Taxonomies tab
 
 == Changelog ==
+
+= 2.13.0 - 2026-11-06 =
+
+**Highlights:**
+
+Add the "Remove post type slug from URL" option for post types. Posts can now have URLs like `example.com/post-name/` instead of `example.com/post-type/post-name/`. For more details, please see [this blog post](https://metabox.io/remove-custom-post-type-slug/) and the [documentation](https://docs.metabox.io/extensions/mb-custom-post-type/#removing-the-post-type-slug-from-urls).
+
+**Other changes:**
+
+- Fix abilities not registered when the post type or taxonomy slug contains underscores
+- Fix custom capability names for post types with accented characters (#119)
 
 = 2.12.3 - 2026-10-19 =
 
