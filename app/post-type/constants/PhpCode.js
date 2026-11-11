@@ -40,6 +40,24 @@ const menu_icon = settings => {
 
 };
 
+// Same as sanitize_key( remove_accents( $name ) ) in PostTypeRegister::get_capability_name().
+// shortcut: covers accents that NFD removes plus "đ", not every remove_accents() rule or legacy cap names; upgrade if users report it.
+const capabilityName = name => ( name || '' ).normalize( 'NFD' ).replace( /[\u0300-\u036f]/g, '' ).replace( /đ/gi, 'd' ).toLowerCase().replace( /[^a-z0-9_-]/g, '' );
+
+// Custom capability type is converted to [ singular, plural ] + map_meta_cap, see PostTypeRegister::parse_capabilities().
+const capabilityType = settings => {
+	if ( settings.capability_type !== 'custom' ) {
+		return text( settings, 'capability_type' );
+	}
+	const singular = capabilityName( settings.labels?.singular_name );
+	let plural = capabilityName( settings.labels?.name );
+	if ( plural === singular ) {
+		plural += 's';
+	}
+	return `'capability_type'${ spaces( settings, 'capability_type' ) } => ['${ singular }', '${ plural }'],
+		'map_meta_cap'${ spaces( settings, 'map_meta_cap' ) } => true`;
+};
+
 const archive = settings => {
 	let value = settings.archive_slug ? `'${ settings.archive_slug }'` : settings.has_archive;
 	return `'has_archive'${ spaces( settings, 'has_archive' ) } => ${ value }`;
@@ -73,7 +91,7 @@ function ${ settings.function_name || DefaultSettings.function_name }() {
 		${ text( settings, 'rest_base' ) },
 		${ showInMenu( settings ) }
 		${ menu_icon( settings ) },
-		${ text( settings, 'capability_type' ) },
+		${ capabilityType( settings ) },
 		${ checkboxList( settings, 'supports', false ) },
 		${ checkboxList( settings, 'taxonomies', '[]' ) },
 		${ rewrite( settings ) },
