@@ -1,3 +1,7 @@
+### 2.13.1 - 2026-11-12
+
+- Fix "Get PHP Code" for post types with a custom capability type: the code now gives the same permissions as the plugin (edit and delete others' posts, private posts)
+
 ### 2.13.0 - 2026-11-06
 
 **Highlights:**

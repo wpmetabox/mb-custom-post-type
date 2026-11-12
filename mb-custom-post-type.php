@@ -1,13 +1,15 @@
 <?php
 /**
- * Plugin Name: MB Custom Post Types & Custom Taxonomies
- * Plugin URI:  https://metabox.io/plugins/custom-post-type/
- * Description: Create custom post types and custom taxonomies with easy-to-use UI
- * Version:     2.13.0
- * Author:      MetaBox.io
- * Author URI:  https://metabox.io
- * License:     GPL-2.0+
- * Text Domain: mb-custom-post-type
+ * Plugin Name:       MB Custom Post Types & Custom Taxonomies
+ * Plugin URI:        https://metabox.io/plugins/custom-post-type/
+ * Description:       Create custom post types and custom taxonomies with easy-to-use UI
+ * Version:           2.13.1
+ * Requires at least: 6.7
+ * Requires PHP:      7.4
+ * Author:            MetaBox.io
+ * Author URI:        https://metabox.io
+ * License:           GPL-2.0+
+ * Text Domain:       mb-custom-post-type
  *
  * Copyright (C) 2010-2025 Tran Ngoc Tuan Anh. All rights reserved.
  *
@@ -39,7 +41,7 @@ if ( ! function_exists( 'mb_cpt_load' ) ) {
 
 	function mb_cpt_load() {
 		define( 'MB_CPT_DIR', __DIR__ );
-		define( 'MB_CPT_VER', '2.13.0' );
+		define( 'MB_CPT_VER', '2.13.1' );
 
 		if ( class_exists( 'RWMB_Loader' ) ) {
 			list( , $url ) = RWMB_Loader::get_path( __DIR__ );

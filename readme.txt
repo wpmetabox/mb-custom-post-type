@@ -5,7 +5,7 @@ Tags: custom post type, custom post types, custom taxonomies, custom taxonomy, p
 Requires at least: 6.7
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 2.13.0
+Stable tag: 2.13.1
 License: GPLv2 or later
 
 Create and manage custom post types and custom taxonomies with an easy-to-use UI in WordPress.
@@ -76,6 +76,10 @@ If you like this plugin, you might also like our other WordPress products:
 1. Edit custom post type - Taxonomies tab
 
 == Changelog ==
+
+= 2.13.1 - 2026-11-12 =
+
+- Fix "Get PHP Code" for post types with a custom capability type: the code now gives the same permissions as the plugin (edit and delete others' posts, private posts)
 
 = 2.13.0 - 2026-11-06 =
 
