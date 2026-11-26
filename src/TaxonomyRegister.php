@@ -195,7 +195,7 @@ class TaxonomyRegister extends Register {
 
 		$add_fields_link = '';
 		$settings        = json_decode( $post->post_content, true );
-		if ( Helper::has_builder() && is_array( $settings ) && ! empty( $settings['slug'] ) ) {
+		if ( defined( 'MBB_VER' ) && is_array( $settings ) && ! empty( $settings['slug'] ) ) {
 			$link            = add_query_arg( [
 				'post_type'              => 'meta-box',
 				// Translators: %s - taxonomy singular label.
