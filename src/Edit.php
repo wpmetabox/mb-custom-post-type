@@ -69,7 +69,7 @@ class Edit {
 			'saving'          => __( 'Saving...', 'mb-custom-post-type' ),
 			'upgrade'         => ! $this->is_premium_user(),
 			'allCapabilities' => $this->get_all_capabilities(),
-			'mbb'             => defined( 'MBB_VER' ) ? true : false,
+			'mbb'             => Helper::has_builder(),
 			'abilities'       => class_exists( 'WP_Ability' ),
 		];
 
