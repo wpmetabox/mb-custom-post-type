@@ -6,13 +6,6 @@ use MetaBox\Support\Data;
 class ToggleStatusColumn {
 
 	public function __construct() {
-		add_action( 'admin_init', [ $this, 'init' ] );
-	}
-
-	public function init(): void {
-		if ( ! defined( 'MBB_VER' ) ) {
-			return;
-		}
 		add_filter( 'mbb_toggle_status_post_types', [ $this, 'add_toggle_status_column' ] );
 	}
 
