@@ -1,3 +1,7 @@
+### 2.13.2 - 2026-11-28
+
+- Fix the status toggle column missing in Meta Box AIO (#123)
+
 ### 2.13.1 - 2026-11-12
 
 - Fix "Get PHP Code" for post types with a custom capability type: the code now gives the same permissions as the plugin (edit and delete others' posts, private posts)
